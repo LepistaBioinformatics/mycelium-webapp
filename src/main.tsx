@@ -2,9 +2,6 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.tsx'
 import { Auth0Provider } from '@auth0/auth0-react';
-import { OpenAPI } from './services/openapi/mycelium/index.ts';
-
-OpenAPI.BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080";
 
 const CLIENT_ID = import.meta.env.VITE_AUTH0_CLIENT_ID;
 const DOMAIN = import.meta.env.VITE_AUTH0_DOMAIN;
@@ -26,5 +23,5 @@ createRoot(document.getElementById('root')!).render(
     }}
   >
     <App />
-  </Auth0Provider>,
+  </Auth0Provider>
 )

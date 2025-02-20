@@ -1,6 +1,9 @@
+"use client";
+
 import './App.css'
-import { createBrowserRouter, RouterProvider, Link } from "react-router";
+import { createBrowserRouter, RouterProvider } from "react-router";
 import HomePage from './screens/HomePage';
+import { ThemeProvider } from './components/ThemeProvider';
 
 const router = createBrowserRouter([
   {
@@ -9,12 +12,12 @@ const router = createBrowserRouter([
   },
 ]);
 
-function App() {
+export default function App() {
   return (
-    <div className="flex flex-col items-center justify-center h-screen">
-      <RouterProvider router={router} />
-    </div>
+    <ThemeProvider>
+      <div className="h-screen w-full m-0 p-0 bg-slate-50 dark:bg-slate-900">
+        <RouterProvider router={router} />
+      </div>
+    </ThemeProvider>
   )
 }
-
-export default App;
