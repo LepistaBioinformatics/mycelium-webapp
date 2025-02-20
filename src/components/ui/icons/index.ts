@@ -1,1 +1,0 @@
-export { GoogleProvider } from "./GoogleProvider";

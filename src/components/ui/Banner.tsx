@@ -1,7 +1,7 @@
 import { cva, VariantProps } from "class-variance-authority";
 import { ReactNode } from "react";
 
-const styles = cva("p-2 text-sm border-2 dark:border-indigo-900 shadow rounded-lg dark:text-gray-100 text-gray-800 bg-white dark:bg-slate-800", {
+const styles = cva("p-2 text-left text-sm border-2 dark:border-indigo-900 shadow rounded-lg dark:text-gray-100 text-gray-800 bg-white dark:bg-slate-800", {
   variants: {
     maxWidth: {
       none: "max-w-none",

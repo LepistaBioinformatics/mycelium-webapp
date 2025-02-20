@@ -1,118 +1,195 @@
-import { useState } from "react";
-import { useForm, SubmitHandler } from "react-hook-form"
-import { buildPath } from "../../services/openapi/mycelium-api";
-import type { components } from "../../services/openapi/mycelium-schema";
 import Typography from "@/components/ui/Typography";
-import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
-import { User } from "@auth0/auth0-react";
-
-type Inputs = {
-  email: string
-}
+import { useAuth0, User } from "@auth0/auth0-react";
+import FlowContainer, { flowContainerStyles } from "./FlowContainer";
+import { VariantProps } from "class-variance-authority";
+import { useEffect, useMemo, useState } from "react";
+import { buildPath } from "@/services/openapi/mycelium-api";
+import useSWR from "swr";
+import { components } from "@/services/openapi/mycelium-schema";
+import Divider from "@/components/ui/Divider";
+import Button from "@/components/ui/Button";
 
 type CheckEmailStatusResponse = components["schemas"]["CheckEmailStatusResponse"];
 
-interface Props {
-  user: User;
+interface Props extends VariantProps<typeof flowContainerStyles> {
+  user: User | null;
+  setStatus: (status: CheckEmailStatusResponse) => void;
 }
 
-export default function AuthenticatedUser({ user }: Props) {
-  const [isLoading, setIsLoading] = useState(false);
-  const [status, setStatus] = useState<CheckEmailStatusResponse | null>(null);
+export default function AuthenticatedUser({ show, user, setStatus }: Props) {
+  const { getAccessTokenSilently } = useAuth0();
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<Inputs>({
-    defaultValues: {
-      email: user.email,
+  const [
+    registeringUserWithProvider, setRegisteringUserWithProvider
+  ] = useState<boolean>(false);
+
+  const { data: emailStatus, isLoading: isLoadingEmailStatus, mutate: mutateEmailStatus } = useSWR(
+    user?.email
+      ? buildPath("/adm/rs/beginners/users/status", { query: { email: user.email } })
+      : null,
+    (url) => fetch(url).then(res => res.json() as Promise<CheckEmailStatusResponse>),
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      revalidateOnMount: false,
     }
-  })
+  );
 
-  const onSubmit: SubmitHandler<Inputs> = async ({ email }) => {
-    setIsLoading(true);
+  const userSituation = useMemo(() => {
+    if (!emailStatus) return null;
 
-    const response = await fetch(
-      buildPath("/adm/rs/beginners/users/status", { query: { email } }),
-    )
-      .then(res => res.json() as Promise<CheckEmailStatusResponse>)
-      .finally(() => setIsLoading(false));
+    return emailStatus.status;
+  }, [emailStatus]);
 
-    setStatus(response);
+  const handleRegisterUserWithProvider = async () => {
+    setRegisteringUserWithProvider(true);
+
+    try {
+      if (!user?.email) throw new Error("User email is required");
+
+      const token = await getAccessTokenSilently();
+
+      const registeringResponse = await fetch(
+        buildPath("/adm/rs/beginners/users"),
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            email: user?.email,
+            firstName: user?.given_name,
+            lastName: user?.family_name,
+          }),
+        }
+      );
+
+      if (registeringResponse.ok) {
+        mutateEmailStatus();
+        return;
+      }
+
+      console.error(await registeringResponse.text());
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setRegisteringUserWithProvider(false);
+    }
   };
 
+  useEffect(() => {
+    if (!userSituation || !emailStatus) return;
+
+    if (
+      ["RegisteredWithExternalProvider", "RegisteredWithInternalProvider"]
+        .map(s => s.toUpperCase())
+        .includes(userSituation?.toUpperCase())
+    ) {
+      setStatus(emailStatus);
+    }
+  }, [userSituation, emailStatus]);
+
   return (
-    <Card height="full">
-      <Card.Header>
-        <Typography as="title">
-          Welcome, {user.nickname}
-        </Typography>
-      </Card.Header>
+    <FlowContainer show={show}>
+      <Card height="full">
+        <Card.Header>
+          <Typography as="title">
+            {user?.name}
+          </Typography>
+        </Card.Header>
 
-      <Card.Body>
-        <div className="flex flex-col gap-12">
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            className="flex flex-col gap-4 min-w-md"
-          >
-            <input
-              {...register("email", { required: true })}
-              type="email"
-              placeholder="username@domain.com"
-              className="border border-gray-300 rounded-md p-2 text-center text-2xl hover:cursor-not-allowed"
-              disabled
-            />
+        <Card.Body>
+          <Typography>
+            <span className="text-sm">Logged in as</span><br />
+            <span className="font-semibold">{user?.email}</span>
+          </Typography>
 
-            {errors.email && <span>This field is required</span>}
+          <Divider style="partial" />
 
-            <Button
-              type="submit"
-              intent="primary"
-              size="md"
-              rounded
-              disabled={isLoading}
-            >
-              {isLoading ? "Checking..." : "Check"}
-            </Button>
-          </form>
+          {isLoadingEmailStatus && (
+            <div>
+              <Typography>
+                We are checking if you have an account
+                <span className="animate-ping inline-block ml-2 h-2 w-2 rounded-full bg-blue-500" />
+              </Typography>
 
-          {status
-            ? (
-              <div className="flex flex-col gap-4">
-                <Typography as="h2">
-                  <span className="text-slate-50">
-                    {status.status}
-                  </span>
-                </Typography>
-                <Typography as="span">
-                  <p className="text-slate-50">
-                    Is the email <span className="font-semibold">{status.email}</span> registered?
-                  </p>
-                </Typography>
-              </div>
-            )
-            : (
-              <div className="m-auto hidden xl:block">
-                <Typography as="h2">
-                  First time here?
-                </Typography>
-                <Typography width="sm">
-                  Check your email to get started
-                </Typography>
-                <img
-                  alt="Mindfulness"
-                  src="/undraw.co/undraw_to_the_moon_re_q21i.svg"
-                  width={250}
-                  height={250}
-                  className="mt-6 mx-auto"
-                />
+              <img
+                src="/undraw.co/undraw_file-searching_2ne8.svg"
+                alt="Searching for your email address..."
+                width={250}
+                height={250}
+                className="mt-4 mx-auto"
+              />
+            </div>
+          )}
+
+          <div className="flex flex-col gap-2">
+            {!isLoadingEmailStatus && (
+              <div>
+                {userSituation?.toUpperCase() === "NOTREGISTERED" && (
+                  <div>
+                    <Typography as="h2">
+                      {userSituation}
+                    </Typography>
+
+                    <Typography>
+                      Your email was not found in our records
+                    </Typography>
+
+                    <div className="flex flex-col items-center justify-center gap-8 mt-4">
+                      <Button
+                        rounded
+                        onClick={handleRegisterUserWithProvider}
+                        disabled={registeringUserWithProvider}
+                      >
+                        <Typography as="h4">
+                          {registeringUserWithProvider
+                            ? "Registering..."
+                            : "Click to register"}
+                        </Typography>
+                      </Button>
+
+                      <img
+                        src="/undraw.co/undraw_page-not-found_6wni.svg"
+                        alt={userSituation}
+                        width={250}
+                        height={250}
+                        className="mt-4 mx-auto"
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {userSituation && [
+                  "RegisteredWithExternalProvider".toUpperCase(),
+                  "RegisteredWithInternalProvider".toUpperCase(),
+                ].includes(userSituation?.toUpperCase()) && (
+                    <div>
+                      <Typography as="h2">
+                        All ready!
+                      </Typography>
+
+                      <Typography>
+                        User successfully registered
+                      </Typography>
+
+                      <img
+                        src="/undraw.co/undraw_landing-page_tsx8.svg"
+                        alt={userSituation}
+                        width={250}
+                        height={250}
+                        className="mt-4 mx-auto"
+                      />
+                    </div>
+                  )}
               </div>
             )}
-        </div>
-      </Card.Body>
+          </div>
 
-    </Card>
+        </Card.Body>
+      </Card>
+    </FlowContainer>
   );
 }

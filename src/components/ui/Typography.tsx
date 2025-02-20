@@ -39,6 +39,9 @@ const styles = cva("", {
       md: "max-w-md",
       lg: "max-w-lg",
       xl: "max-w-xl",
+    },
+    uppercase: {
+      true: "uppercase",
     }
   },
   defaultVariants: {
@@ -47,19 +50,20 @@ const styles = cva("", {
     padding: "none",
     reverseBackground: false,
     width: "full",
+    uppercase: false,
   },
 });
 
 interface Props extends BaseProps, VariantProps<typeof styles> { }
 
 export default function Typography({
-  as, margin, padding, reverseBackground, width, ...props
+  as, margin, padding, reverseBackground, width, uppercase, ...props
 }: Props) {
   const Element = (as === "title" ? "h1" : as) || "p";
 
   return (
     <Element
-      className={styles({ as, margin, padding, reverseBackground, width })}
+      className={styles({ as, margin, padding, reverseBackground, width, uppercase })}
       {...props}
     />
   );

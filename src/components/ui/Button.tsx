@@ -7,7 +7,8 @@ const styles = cva("text-gray-500 dark:text-gray-50", {
       true: "w-full",
     },
     rounded: {
-      true: "rounded-full",
+      true: "rounded-lg",
+      full: "rounded-full",
       left: "rounded-l-full",
       right: "rounded-r-full",
     },
@@ -16,7 +17,7 @@ const styles = cva("text-gray-500 dark:text-gray-50", {
       secondary: "bg-gray-500 hover:bg-gray-600",
       warning: "bg-yellow-500 hover:bg-yellow-600",
       danger: "bg-red-500 hover:bg-red-600",
-      link: "bg-transparent hover:bg-transparent",
+      link: "bg-transparent hover:bg-transparent border border-transparent hover:border-blue-500",
       info: "bg-blue-500 hover:bg-blue-600",
     },
     size: {
