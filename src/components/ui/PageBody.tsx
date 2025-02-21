@@ -6,7 +6,29 @@ const containerStyles = cva("", {
   variants: {
     flex: {
       true: "flex",
-      column: "flex flex-col"
+      column: "flex flex-col",
+      center: "flex justify-center items-center",
+      around: "flex justify-around items-around",
+      between: "flex justify-between items-between",
+      start: "flex justify-start items-start",
+      end: "flex justify-end items-end"
+    },
+    align: {
+      center: "items-center",
+      start: "items-start",
+      end: "items-end",
+    },
+    justify: {
+      center: "justify-center",
+      start: "justify-start",
+      end: "justify-end",
+    },
+    height: {
+      center: "h-screen",
+      fit: "h-fit",
+      full: "h-full",
+      min: "h-min",
+      max: "h-max",
     },
     width: {
       full: "w-full",
@@ -22,6 +44,7 @@ const containerStyles = cva("", {
     },
     padding: {
       none: "p-0",
+      xs: "p-1",
       sm: "p-2",
       md: "p-4",
       lg: "p-8",
@@ -38,17 +61,20 @@ const containerStyles = cva("", {
   defaultVariants: {
     flex: false,
     width: "full",
+    height: "full",
     padding: "none",
     margin: "none",
+    align: "start",
+    justify: "start",
   }
 });
 
 interface ContainerProps extends
   BaseProps, VariantProps<typeof containerStyles> { }
 
-function Container({ children, flex, gap, padding, margin, ...props }: ContainerProps) {
+function Container({ children, flex, gap, padding, margin, align, justify, height, width, ...props }: ContainerProps) {
   return (
-    <div className={containerStyles({ flex, gap, padding, margin })} {...props}>
+    <div className={containerStyles({ flex, gap, padding, margin, align, justify, height, width })} {...props}>
       {children}
     </div>
   );
