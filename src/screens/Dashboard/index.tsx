@@ -10,7 +10,7 @@ export default function Dashboard() {
       <PageBody padding="sm">
         <PageBody.Breadcrumb>
           <PageBody.Breadcrumb.Item>
-            <Link to="/dashboard">Dashboard</Link>
+            <Link to="/dashboard">Control panel</Link>
           </PageBody.Breadcrumb.Item>
         </PageBody.Breadcrumb>
       </PageBody>
