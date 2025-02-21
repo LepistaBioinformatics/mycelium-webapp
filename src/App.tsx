@@ -20,11 +20,6 @@ export default function App() {
         element: <HomePage />,
         errorElement: <ErrorBoundary />,
       },
-      {
-        path: "*",
-        element: <NotFound />,
-        errorElement: <ErrorBoundary />,
-      },
     ];
 
     if (isAuthenticated && profile) {
@@ -41,7 +36,14 @@ export default function App() {
   return (
     <ThemeProvider>
       <div className="h-screen w-full m-0 p-0 bg-slate-50 dark:bg-slate-900">
-        <RouterProvider router={createBrowserRouter(routes)} />
+        <RouterProvider router={createBrowserRouter([
+          ...routes,
+          {
+            path: "*",
+            element: <NotFound />,
+            errorElement: <ErrorBoundary />,
+          }
+        ])} />
       </div>
     </ThemeProvider>
   )
