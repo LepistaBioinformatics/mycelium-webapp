@@ -6,7 +6,7 @@ import HomePage from './screens/HomePage';
 import { ThemeProvider } from './components/ThemeProvider';
 import Dashboard from './screens/Dashboard';
 import ErrorBoundary from './components/ErrorBoundary';
-import NotFound from './screens/NotFound';
+import NotFound from './components/NotFound';
 
 const router = createBrowserRouter([
   {
@@ -22,6 +22,7 @@ const router = createBrowserRouter([
   {
     path: "*",
     element: <NotFound />,
+    errorElement: <ErrorBoundary />,
   },
 ]);
 
