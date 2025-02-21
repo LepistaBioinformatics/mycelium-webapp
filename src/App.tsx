@@ -5,7 +5,7 @@ import { createBrowserRouter, RouterProvider } from "react-router";
 import HomePage from './screens/HomePage';
 import { ThemeProvider } from './components/ThemeProvider';
 import Dashboard from './screens/Dashboard';
-import ErrorBoundary from './components/ui/ErrorBoundary';
+import ErrorBoundary from './components/ErrorBoundary';
 import NotFound from './screens/NotFound';
 
 const router = createBrowserRouter([

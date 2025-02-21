@@ -1,7 +1,7 @@
 import { useRouteError } from "react-router";
-import PageBody from "./PageBody";
-import Card from "./Card";
-import Typography from "./Typography";
+import PageBody from "./ui/PageBody";
+import Card from "./ui/Card";
+import Typography from "./ui/Typography";
 
 export default function ErrorBoundary() {
   const error = useRouteError();
