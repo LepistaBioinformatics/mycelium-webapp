@@ -169,17 +169,26 @@ const contentStyles = cva("h-screen", {
       4: "gap-4",
       5: "gap-5"
     },
+    padding: {
+      none: "p-0",
+      xs: "p-1",
+      sm: "p-2",
+      md: "p-4",
+      lg: "p-8",
+      xl: "p-16",
+    }
   },
   defaultVariants: {
-    flex: false
+    flex: false,
+    padding: "none"
   }
 });
 
 interface ContentProps extends BaseProps, VariantProps<typeof contentStyles> { }
 
-function Content({ children, flex, gap, ...props }: ContentProps) {
+function Content({ children, flex, gap, padding, ...props }: ContentProps) {
   return (
-    <div className={contentStyles({ flex, gap })} {...props}>
+    <div className={contentStyles({ flex, gap, padding })} {...props}>
       {children}
     </div>
   );

@@ -11,6 +11,11 @@ const cardContainerStyles = cva("border-2 dark:border-indigo-900 shadow rounded-
       min: "h-min",
       max: "h-max"
     },
+    textAlign: {
+      left: "text-left",
+      center: "text-center",
+      right: "text-right"
+    },
     width: {
       full: "w-full",
       sm: "!w-sm w-max",
@@ -22,6 +27,10 @@ const cardContainerStyles = cva("border-2 dark:border-indigo-900 shadow rounded-
       "4xl": "!w-4xl w-max",
       "5xl": "!w-5xl w-max",
       "6xl": "!w-6xl w-max",
+    },
+    dashed: {
+      true: "border-dashed",
+      false: ""
     },
     padding: {
       none: "p-0",
@@ -42,16 +51,17 @@ const cardContainerStyles = cva("border-2 dark:border-indigo-900 shadow rounded-
     height: "full",
     width: "md",
     padding: "md",
-    flex: "none"
+    flex: "none",
+    textAlign: "left"
   }
 });
 
 interface CardContainerProps extends BaseProps, VariantProps<typeof cardContainerStyles> { }
 
-function CardContainer({ height, width, padding, flex, ...props }: CardContainerProps) {
+function CardContainer({ height, width, padding, flex, textAlign, dashed, ...props }: CardContainerProps) {
   return (
     <div
-      className={cardContainerStyles({ height, width, padding, flex })}
+      className={cardContainerStyles({ height, width, padding, flex, textAlign, dashed })}
       {...props}
     />
   );

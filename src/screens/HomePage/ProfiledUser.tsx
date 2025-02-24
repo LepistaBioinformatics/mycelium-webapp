@@ -39,7 +39,7 @@ export default function ValidatedUser({ show }: Props) {
     if (profile?.accId) {
       setTimeout(() => {
         navigate("/dashboard");
-      }, 3000);
+      }, 500);
     }
   }, [profile]);
 

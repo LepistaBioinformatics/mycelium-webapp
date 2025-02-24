@@ -5,11 +5,18 @@ const styles = cva("", {
     as: {
       p: "py-1 text-slate-700 dark:text-slate-200",
       span: "text-sm text-slate-700 dark:text-slate-200",
+      small: "text-xs text-slate-700 dark:text-slate-200",
       title: "text-5xl font-bold",
       h1: "text-3xl font-bold",
       h2: "text-2xl font-bold",
       h3: "text-xl font-bold",
       h4: "text-lg font-bold",
+    },
+    decoration: {
+      underline: "underline",
+      lineThrough: "line-through",
+      smooth: "text-gray-400 dark:text-gray-500",
+      none: "",
     },
     margin: {
       none: "",
@@ -34,11 +41,11 @@ const styles = cva("", {
       full: "w-full",
       min: "w-min",
       max: "w-max",
-      xs: "max-w-xs",
-      sm: "max-w-sm",
-      md: "max-w-md",
-      lg: "max-w-lg",
-      xl: "max-w-xl",
+      xs: "!max-w-xs",
+      sm: "!max-w-sm",
+      md: "!max-w-md",
+      lg: "!max-w-lg",
+      xl: "!max-w-xl",
     },
     uppercase: {
       true: "uppercase",
@@ -57,13 +64,13 @@ const styles = cva("", {
 interface Props extends BaseProps, VariantProps<typeof styles> { }
 
 export default function Typography({
-  as, margin, padding, reverseBackground, width, uppercase, ...props
+  as, margin, padding, reverseBackground, width, uppercase, decoration, ...props
 }: Props) {
   const Element = (as === "title" ? "h1" : as) || "p";
 
   return (
     <Element
-      className={styles({ as, margin, padding, reverseBackground, width, uppercase })}
+      className={styles({ as, margin, padding, reverseBackground, width, uppercase, decoration })}
       {...props}
     />
   );

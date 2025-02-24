@@ -107,7 +107,8 @@ export default function useProfile() {
 
   return {
     isAuthenticated,
-    isLoading: isLoadingUser || isLoadingProfile,
+    isLoadingUser,
+    isLoadingProfile,
     user,
     profile,
   };

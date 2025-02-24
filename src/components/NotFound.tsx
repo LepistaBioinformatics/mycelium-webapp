@@ -10,19 +10,19 @@ import { useCallback } from "react";
 export default function NotFound() {
   const navigate = useNavigate();
 
-  const { profile, isLoading, isAuthenticated } = useProfile();
+  const { profile, isLoadingProfile, isAuthenticated } = useProfile();
 
   const routeUser = useCallback(() => {
-    if (isAuthenticated && profile && !isLoading) {
+    if (isAuthenticated && profile && !isLoadingProfile) {
       navigate("/dashboard");
     } else {
       navigate("/");
     }
-  }, [profile, isAuthenticated, isLoading, navigate]);
+  }, [profile, isAuthenticated, isLoadingProfile, navigate]);
 
   return (
     <PageBody padding="xl" height="fit" flex="center">
-      <Card padding="sm">
+      <Card padding="sm" textAlign="center">
         <Card.Header>
           <Typography as="title">Ops</Typography>
         </Card.Header>
@@ -32,7 +32,7 @@ export default function NotFound() {
             The page you are looking for does not exist
           </Typography>
 
-          {!isLoading && (
+          {!isLoadingProfile && (
             <Button onClick={routeUser} rounded intent="link">
               <div className="flex items-center gap-2 text-lg uppercase">
                 <RiLogoutBoxLine className="inline text-green-400" />
