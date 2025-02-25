@@ -1,52 +1,34 @@
-"use client";
-
 import './App.css'
-import { createBrowserRouter, RouterProvider } from "react-router";
+import { BrowserRouter, Routes, Route } from "react-router";
 import HomePage from './screens/HomePage';
 import Dashboard from './screens/Dashboard';
 import ErrorBoundary from './components/ErrorBoundary';
 import NotFound from './components/NotFound';
 import useProfile from './hooks/use-profile';
-import { useMemo } from 'react';
+import Profile from './screens/Dashboard/Profile';
 
 export default function App() {
   const { profile, isAuthenticated } = useProfile();
 
-  const routes = useMemo(() => {
-    let baseRoutes = [
-      {
-        path: "/",
-        element: <HomePage />,
-        errorElement: <ErrorBoundary />,
-      },
-    ];
-
-    if (isAuthenticated && profile) {
-      baseRoutes.push({
-        path: "/dashboard",
-        element: <Dashboard />,
-        errorElement: <ErrorBoundary />,
-      });
-    }
-
-    baseRoutes.push({
-      path: '/404',
-      element: <NotFound />,
-      errorElement: <ErrorBoundary />,
-    });
-
-    baseRoutes.push({
-      path: '*',
-      element: <NotFound />,
-      errorElement: <ErrorBoundary />,
-    });
-
-    return baseRoutes;
-  }, [profile, isAuthenticated]);
-
   return (
     <div className="h-screen w-full m-0 p-0 bg-slate-50 dark:bg-slate-900">
-      <RouterProvider router={createBrowserRouter(routes)} />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<HomePage />} errorElement={<ErrorBoundary />} />
+
+          <Route path="/dashboard" element={<Dashboard />} errorElement={<ErrorBoundary />}>
+            {isAuthenticated && profile && (
+              <Route index element={<Profile />} errorElement={<ErrorBoundary />} />
+            )}
+
+            {isAuthenticated && profile && (
+              <Route path="profile" element={<Profile />} errorElement={<ErrorBoundary />} />
+            )}
+          </Route>
+
+          <Route path="*" element={<NotFound />} errorElement={<ErrorBoundary />} />
+        </Routes>
+      </BrowserRouter>
     </div>
   )
 }

@@ -112,9 +112,15 @@ export default function ValidatedUser({ show }: Props) {
                   <span className="animate-ping inline-block ml-2 h-2 w-2 rounded-full bg-blue-500" />
                 </>
               )}>
-                <Typography>
-                  We are redirecting you to the dashboard
-                </Typography>
+                <div className="flex flex-col gap-4">
+                  <Typography>
+                    We are redirecting you to the dashboard
+                  </Typography>
+
+                  <Typography as="small">
+                    If you are not redirected, please click <a href="/dashboard" className="text-blue-500">here</a>
+                  </Typography>
+                </div>
               </Banner>
             </Card.Body>
           )}

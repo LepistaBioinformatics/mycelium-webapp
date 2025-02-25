@@ -4,8 +4,9 @@ import { cva, VariantProps } from "class-variance-authority";
 import { Link } from "react-router";
 import Typography from "./Typography";
 import { PiSidebarSimple } from "react-icons/pi";
+import { Tooltip } from "flowbite-react";
 
-const containerStyles = cva("bg-indigo-600 dark:bg-slate-700 h-screen min-w-md px-2 pt-2 pb-12 flex flex-col gap-8 justify-start align-middle items-center border-r-2 dark:border-indigo-900 shadow", {
+const containerStyles = cva("bg-indigo-600 dark:bg-slate-700 h-screen min-w-md px-2 pt-2 pb-12 flex flex-col gap-8 justify-start align-middle border-r-2 dark:border-indigo-900 shadow", {
   variants: {
     open: {
       true: "min-w-64",
@@ -28,14 +29,14 @@ function Container({ children, isOpen: isOpen, toggle, ...props }: ContainerProp
         <PiSidebarSimple className="text-white dark:text-gray-300" />
       </button>
 
-      <div className="flex flex-col gap-8">
+      <div className="flex flex-col gap-8 w-full">
         {children}
       </div>
     </aside>
   )
 }
 
-const sidebarItemStyles = cva("flex items-center align-middle gap-2 border-2 border-white dark:border-lime-500 rounded-full px-4 py-2 dark:text-lime-500 transition-all duration-300 ease-in-out hover:bg-indigo-700 dark:hover:bg-slate-600 ", {
+const sidebarItemStyles = cva("flex items-center align-middle gap-2 border-2 border-white dark:border-lime-500 rounded-full px-4 py-2 dark:text-lime-500 transition-all duration-300 ease-in-out hover:bg-indigo-700 dark:hover:bg-slate-600 w-full", {
   variants: {
     active: {
       true: "bg-indigo-700 dark:bg-slate-600",
@@ -69,7 +70,9 @@ interface SidebarItemProps extends VariantProps<typeof sidebarItemStyles> {
 function SidebarItem({ icon, href, active, text, isOpen: isOpen, ...props }: SidebarItemProps) {
   return (
     <Link to={href} className={sidebarItemStyles({ active, open: isOpen })} {...props}>
-      {icon}
+      <Tooltip content={text} className="px-4 border-2 border-white dark:border-lime-500">
+        {icon}
+      </Tooltip>
       <div className={sidebarItemTextStyles({ open: isOpen })}>
         <Typography>{text}</Typography>
       </div>
