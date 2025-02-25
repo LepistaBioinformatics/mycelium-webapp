@@ -5,30 +5,43 @@ import Dashboard from './screens/Dashboard';
 import ErrorBoundary from './components/ErrorBoundary';
 import NotFound from './components/NotFound';
 import useProfile from './hooks/use-profile';
-import Profile from './screens/Dashboard/Profile';
+import Profile from './screens/Dashboard/components/Profile';
+import Staff from './screens/Dashboard/components/super-users/Staff';
+import store from './states/store';
+import { Provider as ReduxProvider } from 'react-redux';
+import Tenants from './screens/Dashboard/components/Tenants';
 
 export default function App() {
-  const { profile, isAuthenticated } = useProfile();
+  const { profile, isAuthenticated, adminAccess } = useProfile();
 
   return (
-    <div className="h-screen w-full m-0 p-0 bg-slate-50 dark:bg-slate-900">
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<HomePage />} errorElement={<ErrorBoundary />} />
+    <ReduxProvider store={store}>
+      <div className="h-screen w-full m-0 p-0 bg-slate-50 dark:bg-slate-900">
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<HomePage />} errorElement={<ErrorBoundary />} />
 
-          <Route path="/dashboard" element={<Dashboard />} errorElement={<ErrorBoundary />}>
-            {isAuthenticated && profile && (
-              <Route index element={<Profile />} errorElement={<ErrorBoundary />} />
-            )}
+            <Route path="/dashboard" element={<Dashboard />} errorElement={<ErrorBoundary />}>
+              {isAuthenticated && profile && (
+                <>
+                  <Route index element={<Profile />} errorElement={<ErrorBoundary />} />
+                  <Route path="profile" element={<Profile />} errorElement={<ErrorBoundary />} />
 
-            {isAuthenticated && profile && (
-              <Route path="profile" element={<Profile />} errorElement={<ErrorBoundary />} />
-            )}
-          </Route>
+                  {adminAccess && (
+                    <Route path="tenants" element={<Tenants />} errorElement={<ErrorBoundary />} />
+                  )}
 
-          <Route path="*" element={<NotFound />} errorElement={<ErrorBoundary />} />
-        </Routes>
-      </BrowserRouter>
-    </div>
+                  {profile.isStaff && (
+                    <Route path="staff" element={<Staff />} errorElement={<ErrorBoundary />} />
+                  )}
+                </>
+              )}
+            </Route>
+
+            <Route path="*" element={<NotFound />} errorElement={<ErrorBoundary />} />
+          </Routes>
+        </BrowserRouter>
+      </div>
+    </ReduxProvider>
   )
 }

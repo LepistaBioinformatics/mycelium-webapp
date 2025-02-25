@@ -92,7 +92,7 @@ function BreadcrumbContainer({ children, ...props }: BreadcrumbProps) {
   children = React.Children.map(children, (child, index) => (
     <span key={index} className="flex">
       <span className="mr-1 text-slate-500">/</span>
-      <span className="mr-1 text-blue-500 dark:text-lime-500">
+      <span className="mr-1">
         {child}
       </span>
     </span>
@@ -108,7 +108,8 @@ function BreadcrumbContainer({ children, ...props }: BreadcrumbProps) {
 const breadcrumbItemStyles = cva("flex gap-2", {
   variants: {
     withHref: {
-      true: "hover:underline",
+      true: "hover:underline text-blue-500 dark:text-lime-500",
+      false: "text-slate-500"
     }
   },
   defaultVariants: {}
@@ -134,7 +135,7 @@ function BreadcrumbItem({ children, icon, href, ...props }: BreadcrumbItemProps)
     return (
       <Link
         to={href}
-        className={breadcrumbItemStyles({ withHref: !!href })}
+        className={breadcrumbItemStyles({ withHref: true })}
         {...props}
       >
         {content}
@@ -143,7 +144,7 @@ function BreadcrumbItem({ children, icon, href, ...props }: BreadcrumbItemProps)
   }
 
   return (
-    <span className={breadcrumbItemStyles()} {...props}>
+    <span className={breadcrumbItemStyles({ withHref: false })} {...props}>
       {content}
     </span>
   );

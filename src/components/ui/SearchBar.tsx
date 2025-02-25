@@ -1,15 +1,23 @@
-"use client";
-
 import { cva, VariantProps } from "class-variance-authority";
-import { IoMdSend } from "react-icons/io";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
-import Button from "./Button";
+import { TextInput } from "flowbite-react";
 
-const styles = cva("container lg:w-[50%] w-[100%] mx-auto my-12 rounded-lg", {
+const containerStyles = cva("container mx-auto my-12", {
   variants: {
     fullWidth: {
-      true: "w-full",
-      false: "max-w-lg"
+      true: "w-[100%]",
+      false: "md:w-[50%] w-[100%]"
+    },
+  },
+  defaultVariants: {
+    fullWidth: false,
+  },
+});
+
+const inputStyles = cva("rounded-full", {
+  variants: {
+    fullWidth: {
+      true: "w-[100%]",
     },
   },
   defaultVariants: {
@@ -21,7 +29,7 @@ interface IFormInputs {
   term: string;
 }
 
-interface Props extends BaseProps, VariantProps<typeof styles> {
+interface Props extends BaseProps, VariantProps<typeof containerStyles> {
   onSubmit: (term?: string, tag?: string) => void;
   setSkip?: (skip: number) => void;
   setPageSize?: (pageSize: number) => void;
@@ -59,7 +67,7 @@ export default function SearchBar({
   };
 
   return (
-    <div className={styles({ fullWidth })} {...props}>
+    <div className={containerStyles({ fullWidth })} {...props}>
       <form onSubmit={handleSubmit(onSubmitHandler)}>
         <div className="flex">
           <Controller
@@ -67,13 +75,21 @@ export default function SearchBar({
             control={control}
             render={({ field }) => (
               <>
-                <input
+                <TextInput
                   id="term"
                   type="search"
+                  sizing="lg"
                   placeholder={placeholder || "Type to search..."}
                   autoComplete="off"
                   list="autocompleteOff"
-                  className="bg-slate-50 dark:bg-slate-700 text-center text-lg placeholder:text-center w-full  rounded-l-full"
+                  className={inputStyles({ fullWidth })}
+                  theme={{
+                    field: {
+                      input: {
+                        base: "block w-full disabled:cursor-not-allowed disabled:opacity-50",
+                      }
+                    }
+                  }}
                   {...field}
                 />
                 <p className="text-sm text-red-500">{errors?.term?.message}</p>
@@ -81,9 +97,7 @@ export default function SearchBar({
             )}
           />
 
-          <Button intent="primary" role="search" rounded="right">
-            <IoMdSend />
-          </Button>
+          <input type="submit" className="hidden" />
         </div>
       </form>
     </div>

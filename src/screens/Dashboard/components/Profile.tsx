@@ -3,7 +3,6 @@ import Card from "@/components/ui/Card";
 import PageBody from "@/components/ui/PageBody";
 import Typography from "@/components/ui/Typography";
 import useProfile from "@/hooks/use-profile";
-import { Link } from "react-router";
 import { components } from "@/services/openapi/mycelium-schema";
 import Divider from "@/components/ui/Divider";
 import { useMemo } from "react";
@@ -27,7 +26,10 @@ export default function Profile() {
     <PageBody padding="md" height="fit">
       <PageBody.Breadcrumb>
         <PageBody.Breadcrumb.Item>
-          <Link to="/dashboard">Control panel</Link>
+          Control panel
+        </PageBody.Breadcrumb.Item>
+        <PageBody.Breadcrumb.Item href="/dashboard/profile">
+          Profile
         </PageBody.Breadcrumb.Item>
       </PageBody.Breadcrumb>
 

@@ -15,7 +15,7 @@ const styles = cva("", {
     decoration: {
       underline: "underline",
       lineThrough: "line-through",
-      smooth: "text-gray-400 dark:text-gray-500",
+      smooth: "!text-gray-400 dark:!text-gray-500",
       none: "",
     },
     margin: {
@@ -25,6 +25,7 @@ const styles = cva("", {
       md: "m-4",
       lg: "m-8",
       xl: "m-16",
+      auto: "mx-auto",
     },
     padding: {
       none: "",

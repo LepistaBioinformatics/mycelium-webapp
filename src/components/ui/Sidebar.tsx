@@ -1,12 +1,13 @@
 "use client";
 
 import { cva, VariantProps } from "class-variance-authority";
-import { Link } from "react-router";
+import { Link, useLocation } from "react-router";
 import Typography from "./Typography";
 import { PiSidebarSimple } from "react-icons/pi";
 import { Tooltip } from "flowbite-react";
+import ThemeSwitcher from "./ThemeSwitcher";
 
-const containerStyles = cva("bg-indigo-600 dark:bg-slate-700 h-screen min-w-md px-2 pt-2 pb-12 flex flex-col gap-8 justify-start align-middle border-r-2 dark:border-indigo-900 shadow", {
+const containerStyles = cva("bg-indigo-600 dark:bg-slate-700 h-screen min-w-md px-2 pt-2 pb-5 flex flex-col gap-8 justify-between align-middle border-r-2 dark:border-indigo-900 shadow", {
   variants: {
     open: {
       true: "min-w-64",
@@ -20,29 +21,38 @@ const containerStyles = cva("bg-indigo-600 dark:bg-slate-700 h-screen min-w-md p
 interface ContainerProps extends BaseProps, VariantProps<typeof containerStyles> {
   isOpen: boolean;
   toggle: () => void;
+  mainHeader: React.ReactNode;
 }
 
-function Container({ children, isOpen: isOpen, toggle, ...props }: ContainerProps) {
+function Container({ children, isOpen: isOpen, toggle, mainHeader, ...props }: ContainerProps) {
   return (
     <aside className={containerStyles({ open: isOpen })} {...props}>
-      <button onClick={toggle} className="flex justify-center items-center w-full text-center hover:bg-indigo-700 dark:hover:bg-slate-600 rounded-full p-2">
-        <PiSidebarSimple className="text-white dark:text-gray-300" />
-      </button>
+      <div className="flex flex-col gap-2 w-full">
+        {mainHeader}
 
-      <div className="flex flex-col gap-8 w-full">
-        {children}
+        <button onClick={toggle} className="flex justify-center items-center w-full text-center hover:bg-indigo-700 dark:hover:bg-slate-600 rounded-full p-2">
+          <PiSidebarSimple className="text-white dark:text-gray-300" />
+        </button>
+
+        <div className="flex flex-col gap-2 w-full">
+          {children}
+        </div>
+      </div>
+
+      <div className="flex justify-center items-center w-full">
+        <ThemeSwitcher />
       </div>
     </aside>
   )
 }
 
-const sidebarItemStyles = cva("flex items-center align-middle gap-2 border-2 border-white dark:border-lime-500 rounded-full px-4 py-2 dark:text-lime-500 transition-all duration-300 ease-in-out hover:bg-indigo-700 dark:hover:bg-slate-600 w-full", {
+const sidebarItemStyles = cva("flex items-center align-middle gap-2 border border-white dark:border-lime-500 rounded-full p-2 dark:text-lime-500 transition-all duration-300 ease-in-out hover:bg-indigo-700 dark:hover:bg-slate-600 w-full", {
   variants: {
     active: {
       true: "bg-indigo-700 dark:bg-slate-600",
     },
     open: {
-      true: "w-fit",
+      true: "w-fit px-4 py-2",
     },
   },
   defaultVariants: {
@@ -67,10 +77,13 @@ interface SidebarItemProps extends VariantProps<typeof sidebarItemStyles> {
   isOpen: boolean;
 }
 
-function SidebarItem({ icon, href, active, text, isOpen: isOpen, ...props }: SidebarItemProps) {
+function SidebarItem({ icon, href, text, isOpen: isOpen, ...props }: SidebarItemProps) {
+  const { pathname } = useLocation();
+  const isActive = pathname === href;
+
   return (
-    <Link to={href} className={sidebarItemStyles({ active, open: isOpen })} {...props}>
-      <Tooltip content={text} className="px-4 border-2 border-white dark:border-lime-500">
+    <Link to={href} className={sidebarItemStyles({ active: isActive, open: isOpen })} {...props}>
+      <Tooltip placement="right" content={text} className="px-4 border-2 border-white dark:border-lime-500">
         {icon}
       </Tooltip>
       <div className={sidebarItemTextStyles({ open: isOpen })}>

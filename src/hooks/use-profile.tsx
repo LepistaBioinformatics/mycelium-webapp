@@ -111,5 +111,6 @@ export default function useProfile() {
     isLoadingProfile,
     user,
     profile,
+    adminAccess: profile?.isStaff || profile?.isManager,
   };
 }
