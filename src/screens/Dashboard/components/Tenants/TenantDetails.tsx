@@ -1,5 +1,6 @@
 "use client";
 
+import Button from "@/components/ui/Button";
 import SideCurtain from "@/components/ui/SideCurtain";
 import Typography from "@/components/ui/Typography";
 import { formatDDMMYY } from "@/functions/format-dd-mm-yy";
@@ -8,8 +9,10 @@ import { buildPath } from "@/services/openapi/mycelium-api";
 import { components } from "@/services/openapi/mycelium-schema";
 import PaginatedRecords from "@/types/PaginatedRecords";
 import { useAuth0 } from "@auth0/auth0-react";
-import { useMemo } from "react";
+import { Tooltip } from "flowbite-react";
+import { useMemo, useState } from "react";
 import useSWR from "swr";
+import DeleteTenant from "./DeleteTenant";
 
 type Tenant = components["schemas"]["Tenant"];
 type Account = components["schemas"]["Account"];
@@ -23,14 +26,17 @@ interface Props {
 export default function TenantDetails({ isOpen, onClose, tenant }: Props) {
   const { profile } = useProfile();
 
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
   const owners = useMemo(() => {
     if (!tenant) return [];
 
     if ("ids" in tenant.owners) {
       const tenantOwners = tenant.owners.ids;
 
-      if (tenantOwners
-        .includes(profile?.owners.find((owner) => owner.isPrincipal)?.id ?? "")) {
+      if (tenantOwners.includes(
+        profile?.owners.find((owner) => owner.isPrincipal)?.id ?? ""
+      )) {
 
         if (tenantOwners.length === 1) {
           return "You";
@@ -76,6 +82,38 @@ export default function TenantDetails({ isOpen, onClose, tenant }: Props) {
           <AssociatedAccounts tenantId={tenant.id} />
         )}
       </div>
+
+      <details>
+        <summary className="cursor-pointer border-2 border-transparent border-dashed hover:border-slate-500 p-2 my-8 bg-slate-100 dark:bg-slate-800 rounded-lg">
+          <Typography as="span" decoration="smooth">
+            Advanced actions
+          </Typography>
+        </summary>
+
+        <div className="flex justify-between gap-2 my-8">
+          <div className="flex flex-col gap-2">
+            <Typography as="span">
+              Delete tenant
+            </Typography>
+
+            <Typography as="small" decoration="smooth">
+              This action cannot be undone.
+            </Typography>
+          </div>
+
+          <div>
+            <Button intent="danger" onClick={() => setIsDeleteModalOpen(true)}>
+              Delete
+            </Button>
+          </div>
+        </div>
+      </details>
+
+      <DeleteTenant
+        tenant={tenant}
+        isOpen={isDeleteModalOpen}
+        onClose={onClose}
+      />
     </SideCurtain>
   )
 }
@@ -102,13 +140,14 @@ function AssociatedAccounts({ tenantId }: { tenantId: string }) {
     },
     {
       revalidateOnFocus: false,
+      revalidateOnMount: true,
       refreshInterval: 1000 * 60 * 2,
     }
   );
 
   const accountType = (account: Account) => {
     if (typeof account.accountType === "string") {
-      return <Typography as="p">{account.accountType}</Typography>;
+      return <Typography width="max" as="p">{account.accountType}</Typography>;
     }
 
     return (
@@ -129,6 +168,18 @@ function AssociatedAccounts({ tenantId }: { tenantId: string }) {
     );
   }
 
+  const Owners = ({ account }: { account: Account }) => {
+    if ("records" in account.owners) {
+      return (
+        <Typography as="p">
+          {account.owners.records.map((owner) => owner.username).join(", ")}
+        </Typography>
+      );
+    }
+
+    return null;
+  }
+
   return (
     <div className="flex flex-col gap-2 overflow-y-auto">
       <Typography as="span" decoration="smooth">Associated accounts</Typography>
@@ -136,18 +187,22 @@ function AssociatedAccounts({ tenantId }: { tenantId: string }) {
         {accounts?.records.map((account) => (
           <div
             key={account.id}
-            className="flex flex-col gap-2 bg-slate-100 dark:bg-slate-800 px-4 py-2 rounded-md"
+            className="flex flex-col bg-slate-100 dark:bg-slate-800 px-4 py-2 rounded-md"
           >
-            <Typography as="h3">{account.name}</Typography>
+            <div className="flex justify-between gap-2 w-full">
+              <Typography width="max" as="h3">{account.name}</Typography>
+              {accountType(account)}
+            </div>
 
-            <div>
-              <Typography as="span" decoration="smooth">Created</Typography>
-              <Typography as="p">{formatDDMMYY(new Date(account.created), true)}</Typography>
+            <div className="flex align-middle items-center gap-2">
+              <Typography width="max" decoration="smooth" as="span">Owners</Typography>
+              <Owners account={account} />
             </div>
 
             <div>
-              <Typography as="span" decoration="smooth">Account type</Typography>
-              <Typography as="p">{accountType(account)}</Typography>
+              <Tooltip content="Created on" className="px-4">
+                {formatDDMMYY(new Date(account.created), true)}
+              </Tooltip>
             </div>
           </div>
         ))}

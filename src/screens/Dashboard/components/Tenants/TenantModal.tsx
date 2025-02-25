@@ -45,6 +45,7 @@ export default function TenantModal({ isOpen, onClose, onSuccess, tenant }: Tena
     register,
     handleSubmit,
     watch,
+    reset,
     formState: { errors },
   } = useForm<Inputs>({
     defaultValues: {
@@ -56,6 +57,11 @@ export default function TenantModal({ isOpen, onClose, onSuccess, tenant }: Tena
 
   const nameWatch = watch("name");
   const descriptionWatch = watch("description");
+
+  const handleLocalSuccess = () => {
+    onSuccess();
+    reset();
+  }
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     setIsLoading(true);
@@ -84,7 +90,7 @@ export default function TenantModal({ isOpen, onClose, onSuccess, tenant }: Tena
     });
 
     if (response.ok) {
-      onSuccess();
+      handleLocalSuccess();
     }
 
     setIsLoading(false);
@@ -123,7 +129,9 @@ export default function TenantModal({ isOpen, onClose, onSuccess, tenant }: Tena
             type="submit"
             disabled={!nameWatch || !descriptionWatch || isLoading}
           >
-            {isLoading ? "Creating..." : "Create"}
+            {tenant
+              ? isLoading ? "Updating..." : "Update"
+              : isLoading ? "Creating..." : "Create"}
           </Button>
         </form>
       </Modal.Body>

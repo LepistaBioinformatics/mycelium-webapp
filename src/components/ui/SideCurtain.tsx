@@ -1,8 +1,8 @@
 import { cva, VariantProps } from "class-variance-authority";
-import { IoIosClose } from "react-icons/io";
+import { FaLongArrowAltLeft } from "react-icons/fa";
 import Typography from "./Typography";
 
-const containerStyles = cva("fixed z-50 right-0 top-0 bottom-0 w-1/2 bg-opacity-70 bg-black", {
+const containerStyles = cva("fixed z-50 right-0 top-0 bottom-0 w-full xl:w-1/2 bg-opacity-70 bg-black", {
   variants: {
     open: {
       true: "block",
@@ -32,10 +32,10 @@ function Container({
     <div className={containerStyles({ open })} {...props}>
       <div className="flex flex-col w-full max-h-screen min-h-screen overflow-y-auto bg-white dark:bg-gray-900 rounded-lg p-2 border-2 border-gray-300 dark:border-gray-700">
         <div className="flex justify-between items-center gap-2 w-full">
-          <Typography as="h2">{title}</Typography>
           <button onClick={handleClose}>
-            <IoIosClose className="text-2xl" />
+            <FaLongArrowAltLeft className="text-2xl" />
           </button>
+          <Typography as="h2">{title}</Typography>
         </div>
 
         <div className="flex justify-normal text-left flex-col gap-2 p-5">
