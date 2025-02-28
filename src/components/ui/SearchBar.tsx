@@ -31,7 +31,7 @@ interface IFormInputs {
 }
 
 export interface SearchProps extends BaseProps, VariantProps<typeof containerStyles> {
-  onSubmit: (term?: string, tag?: string) => void;
+  onSubmit: (term?: string) => void;
   setSkip?: (skip: number) => void;
   setPageSize?: (pageSize: number) => void;
   placeholder?: string;
@@ -58,14 +58,7 @@ export default function SearchBar({
 
   const onSubmitHandler: SubmitHandler<IFormInputs> = async ({
     term,
-  }: IFormInputs) => {
-    if (term.startsWith("#")) {
-      onSubmit(undefined, term.trim().slice(1));
-      return;
-    }
-
-    onSubmit(term);
-  };
+  }: IFormInputs) => onSubmit(term);
 
   return (
     <div id="SearchBar" className={containerStyles({ fullWidth })} {...props}>
