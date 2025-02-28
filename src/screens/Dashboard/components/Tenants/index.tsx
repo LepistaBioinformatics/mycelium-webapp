@@ -14,7 +14,7 @@ import TenantModal from "./TenantModal";
 import TenantDetails from "./TenantDetails";
 import DashBoardBody from "../DashBoardBody";
 import useSearchBarParams from "@/hooks/use-search-bar-params";
-import Pager from "@/components/ui/Pager";
+import PaginatedContent from "../PaginatedContent";
 
 type Tenant = components["schemas"]["Tenant"];
 
@@ -149,57 +149,40 @@ export default function Tenants() {
           </Button>
         </div>
 
-        {isLoadingTenants ? (
-          <div className="flex gap-4 justify-center mx-auto w-full xl:max-w-4xl items-start">
-            <Typography>Loading...</Typography>
-          </div>
-        ) : (
-          <div className="flex flex-col gap-4 w-full mb-24">
-            <div className="flex flex-col gap-5">
-              <Pager
-                records={tenants}
-                mutation={mutateTenants}
-                skip={skip}
-                setSkip={setSkip}
-                pageSize={pageSize}
-              />
-
-              {tenants?.records?.map((tenant) => (
-                <div
-                  key={tenant?.id}
-                  className="flex flex-col text-left gap-2 border border-gray-300 dark:border-gray-700 px-4 py-2 rounded-md mx-auto w-full xl:max-w-4xl bg-slate-100 dark:bg-slate-800"
-                >
-                  <div className="flex justify-between gap-3">
-                    <Typography as="h3">
-                      <button
-                        className="hover:underline text-blue-500 dark:text-lime-400"
-                        onClick={() => handleViewTenantClick(tenant)}
-                      >
-                        {tenant?.name}
-                      </button>
-                    </Typography>
-                    <div className="flex gap-5">
-                      <CopyToClipboard text={tenant?.id ?? ""} />
-                      <FaEdit
-                        className="cursor-pointer hover:text-blue-500 dark:hover:text-lime-400"
-                        onClick={() => handleEditTenantClick(tenant)}
-                      />
-                    </div>
-                  </div>
-                  <Typography as="span">{tenant?.description}</Typography>
+        <PaginatedContent
+          isLoading={isLoadingTenants}
+          records={tenants}
+          mutation={mutateTenants}
+          skip={skip}
+          setSkip={setSkip}
+          pageSize={pageSize}
+        >
+          {tenants?.records?.map((tenant) => (
+            <div
+              key={tenant?.id}
+              className="flex flex-col text-left gap-2 border border-gray-300 dark:border-gray-700 px-4 py-2 rounded-md mx-auto w-full xl:max-w-4xl bg-slate-100 dark:bg-slate-800"
+            >
+              <div className="flex justify-between gap-3">
+                <Typography as="h3">
+                  <button
+                    className="hover:underline text-blue-500 dark:text-lime-400"
+                    onClick={() => handleViewTenantClick(tenant)}
+                  >
+                    {tenant?.name}
+                  </button>
+                </Typography>
+                <div className="flex gap-5">
+                  <CopyToClipboard text={tenant?.id ?? ""} />
+                  <FaEdit
+                    className="cursor-pointer hover:text-blue-500 dark:hover:text-lime-400"
+                    onClick={() => handleEditTenantClick(tenant)}
+                  />
                 </div>
-              ))}
-
-              <Pager
-                records={tenants}
-                mutation={mutateTenants}
-                skip={skip}
-                setSkip={setSkip}
-                pageSize={pageSize}
-              />
+              </div>
+              <Typography as="span">{tenant?.description}</Typography>
             </div>
-          </div>
-        )}
+          ))}
+        </PaginatedContent>
       </div>
 
       {isViewModalOpen && currentTenant && (

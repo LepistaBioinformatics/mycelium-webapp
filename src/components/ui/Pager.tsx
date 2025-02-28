@@ -1,9 +1,9 @@
 import PaginatedRecords from "@/types/PaginatedRecords";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import Button from "./Button";
 import Typography from "./Typography";
 
-interface Props {
+export interface PagerProps {
   mutation: (records: PaginatedRecords<any>, options?: any) => void;
   records: PaginatedRecords<any> | undefined;
   skip: number;
@@ -17,11 +17,7 @@ export default function Pager({
   skip,
   setSkip,
   pageSize,
-}: Props) {
-  useEffect(() => {
-    console.log(records);
-  }, [records]);
-
+}: PagerProps) {
   const hasMore = useMemo(() => {
     if (!records) return false;
 
@@ -53,7 +49,7 @@ export default function Pager({
     }
   }
 
-  if (records?.count === 0) return null;
+  if (records?.count === 0 || !records?.records) return null;
 
   return (
     <div className="flex justify-between mx-auto w-full xl:max-w-4xl">
@@ -65,11 +61,7 @@ export default function Pager({
 
       <div className="flex gap-4 justify-center mx-auto w-full xl:max-w-4xl">
         <div className="w-full">
-          {records?.records.length === 0 ? (
-            <Typography as="span">No records found</Typography>
-          ) : (
-            <Typography as="span">{records?.count ?? 0} records found</Typography>
-          )}
+          <Typography as="span">{records?.count ?? 0} records found</Typography>
         </div>
       </div>
 

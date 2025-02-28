@@ -13,11 +13,13 @@ import { Tooltip } from "flowbite-react";
 import { useCallback, useMemo, useState } from "react";
 import useSWR from "swr";
 import DeleteTenant from "./DeleteTenant";
-import formatEmail from "@/functions/format-email";
 import { useDispatch, useSelector } from "react-redux";
 import { FaRegStar, FaStar } from "react-icons/fa";
 import { RootState } from "@/states/store";
 import { setTenantInfo } from "@/states/tenant.state";
+import { TENANT_ID_HEADER } from "@/constants/http-headers";
+import AccountType from "@/components/AccountType";
+import Owners from "@/components/Owners";
 
 type Tenant = components["schemas"]["Tenant"];
 type Account = components["schemas"]["Account"];
@@ -186,7 +188,7 @@ function AssociatedAccounts({ tenantId }: { tenantId: string }) {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
-          "x-mycelium-tenant-id": tenantId,
+          [TENANT_ID_HEADER]: tenantId,
         },
       })
         .then((res) => res.json())
@@ -229,51 +231,4 @@ function AssociatedAccounts({ tenantId }: { tenantId: string }) {
       </div>
     </div>
   )
-}
-
-/**
- * Renders the account type
- * 
- * @param account - The account to render the type of
- * @returns The account type
- */
-const AccountType = ({ account }: { account: Account }) => {
-  if (typeof account.accountType === "string") {
-    return <Typography width="max" as="p">{account.accountType}</Typography>;
-  }
-
-  return (
-    <div>
-      <Typography as="span" decoration="smooth">
-        {Object.keys(account.accountType).at(0)}
-      </Typography>
-
-      <div className="flex flex-col gap-2">
-        {Object.entries(account.accountType).map(([key, value]) => (
-          <div key={key} className="flex gap-2">
-            <Typography as="span" decoration="smooth">{key}</Typography>
-            <Typography as="p">{value}</Typography>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-/**
- * Renders the owners of the account
- * 
- * @param account - The account to render the owners of
- * @returns The owners of the account
- */
-const Owners = ({ account }: { account: Account }) => {
-  if ("records" in account.owners) {
-    return (
-      <Typography as="span" decoration="smooth">
-        {account.owners.records.map((owner) => formatEmail(owner.email)).join(", ")}
-      </Typography>
-    );
-  }
-
-  return null;
 }
