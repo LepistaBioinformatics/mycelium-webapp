@@ -1,9 +1,13 @@
-import { configureStore } from '@reduxjs/toolkit'
-import profileReducer from './profile.state'
+import { configureStore } from '@reduxjs/toolkit';
+import profileReducer from './profile.state';
+import tenantReducer from './tenant.state';
+import authReducer from './auth.state';
 
 const store = configureStore({
     reducer: {
         profile: profileReducer,
+        tenant: tenantReducer,
+        auth: authReducer,
     },
 })
 

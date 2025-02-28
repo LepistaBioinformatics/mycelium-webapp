@@ -74,7 +74,7 @@ interface ContainerProps extends
 
 function Container({ children, flex, gap, padding, margin, align, justify, height, width, ...props }: ContainerProps) {
   return (
-    <div className={containerStyles({ flex, gap, padding, margin, align, justify, height, width })} {...props}>
+    <div id="PageBody" className={containerStyles({ flex, gap, padding, margin, align, justify, height, width })} {...props}>
       {children}
     </div>
   );
@@ -144,7 +144,7 @@ function BreadcrumbItem({ children, icon, href, ...props }: BreadcrumbItemProps)
   }
 
   return (
-    <span className={breadcrumbItemStyles({ withHref: false })} {...props}>
+    <span id="PageBodyBreadcrumbItem" className={breadcrumbItemStyles({ withHref: false })} {...props}>
       {content}
     </span>
   );
@@ -154,6 +154,10 @@ const Breadcrumb = Object.assign(BreadcrumbContainer, { Item: BreadcrumbItem });
 
 const contentStyles = cva("h-screen", {
   variants: {
+    container: {
+      true: "container",
+      false: "w-full"
+    },
     flex: {
       true: "flex",
       col: "flex flex-col",
@@ -162,6 +166,10 @@ const contentStyles = cva("h-screen", {
       between: "flex justify-between items-between",
       start: "flex justify-start items-start",
       end: "flex justify-end items-end"
+    },
+    wrap: {
+      true: "flex-wrap",
+      false: "flex-nowrap"
     },
     gap: {
       1: "gap-1",
@@ -187,9 +195,9 @@ const contentStyles = cva("h-screen", {
 
 interface ContentProps extends BaseProps, VariantProps<typeof contentStyles> { }
 
-function Content({ children, flex, gap, padding, ...props }: ContentProps) {
+function Content({ children, flex, gap, padding, container, wrap, ...props }: ContentProps) {
   return (
-    <div className={contentStyles({ flex, gap, padding })} {...props}>
+    <div id="PageBodyContent" className={contentStyles({ flex, gap, padding, container, wrap })} {...props}>
       {children}
     </div>
   );

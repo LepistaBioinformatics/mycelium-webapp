@@ -172,6 +172,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/adm/rs/beginners/tenants/{tenant_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Fetch a user's profile. */
+        get: operations["fetch_tenant_public_info_url"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/adm/rs/beginners/users": {
         parameters: {
             query?: never;
@@ -2404,7 +2421,7 @@ export interface components {
              *      */
             acceptInsecureRouting?: boolean | null;
         };
-        RouteType: "public" | "protected" | {
+        RouteType: "public" | "authenticated" | "protected" | {
             /** @description
              *     Protect the route with the user profile filtered by roles
              *      */
@@ -2551,7 +2568,7 @@ export interface components {
             /** @description The service secrets */
             secrets?: components["schemas"]["ServiceSecret"][] | null;
         };
-        ServiceGuestUserBody: components["schemas"]["Account"];
+        ServiceGuestUserBody: components["schemas"]["Account"] & Record<string, never>;
         ServiceSecret: components["schemas"]["SecretResolver_HttpSecret"] & {
             name: string;
         };
@@ -3412,6 +3429,71 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Profile"];
+                };
+            };
+            /** @description Not found. */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Bad request. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Unauthorized. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Forbidden. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Unknown internal server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+        };
+    };
+    fetch_tenant_public_info_url: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                tenant_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Profile fetching done. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Tenant"];
                 };
             };
             /** @description Not found. */

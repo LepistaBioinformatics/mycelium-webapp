@@ -27,20 +27,22 @@ interface ContainerProps extends BaseProps, VariantProps<typeof containerStyles>
 function Container({ children, isOpen: isOpen, toggle, mainHeader, ...props }: ContainerProps) {
   return (
     <aside className={containerStyles({ open: isOpen })} {...props}>
-      <div className="flex flex-col gap-2 w-full">
+      <div className="flex flex-col gap-5 w-full">
         {mainHeader}
-
-        <button onClick={toggle} className="flex justify-center items-center w-full text-center hover:bg-indigo-700 dark:hover:bg-slate-600 rounded-full p-2">
-          <PiSidebarSimple className="text-white dark:text-gray-300" />
-        </button>
 
         <div className="flex flex-col gap-2 w-full">
           {children}
         </div>
       </div>
 
-      <div className="flex justify-center items-center w-full">
-        <ThemeSwitcher />
+      <div className="flex flex-col gap-2 w-full">
+        <div className="flex justify-center items-center w-full text-center hover:bg-indigo-700 dark:hover:bg-slate-600 rounded-full p-2">
+          <ThemeSwitcher />
+        </div>
+
+        <button onClick={toggle} className="flex justify-center items-center w-full text-center hover:bg-indigo-700 dark:hover:bg-slate-600 rounded-full p-2">
+          <PiSidebarSimple className="text-white dark:text-gray-300" />
+        </button>
       </div>
     </aside>
   )
@@ -53,6 +55,7 @@ const sidebarItemStyles = cva("flex items-center align-middle gap-2 border borde
     },
     open: {
       true: "w-fit px-4 py-2",
+      false: "justify-center"
     },
   },
   defaultVariants: {

@@ -2,11 +2,11 @@ import { cva, VariantProps } from "class-variance-authority";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { TextInput } from "flowbite-react";
 
-const containerStyles = cva("container mx-auto my-12", {
+const containerStyles = cva("mx-auto my-12 sticky top-0", {
   variants: {
     fullWidth: {
       true: "w-[100%]",
-      false: "md:w-[50%] w-[100%]"
+      false: "mx-auto w-full xl:max-w-4xl"
     },
   },
   defaultVariants: {
@@ -14,10 +14,11 @@ const containerStyles = cva("container mx-auto my-12", {
   },
 });
 
-const inputStyles = cva("rounded-full", {
+const inputStyles = cva("", {
   variants: {
     fullWidth: {
       true: "w-[100%]",
+      false: "w-full xl:max-w-4xl",
     },
   },
   defaultVariants: {
@@ -67,7 +68,7 @@ export default function SearchBar({
   };
 
   return (
-    <div className={containerStyles({ fullWidth })} {...props}>
+    <div id="SearchBar" className={containerStyles({ fullWidth })} {...props}>
       <form onSubmit={handleSubmit(onSubmitHandler)}>
         <div className="flex">
           <Controller

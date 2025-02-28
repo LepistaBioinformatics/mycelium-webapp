@@ -4,12 +4,21 @@ import { cva, VariantProps } from "class-variance-authority";
 // ? Card Container
 // ? ---------------------------------------------------------------------------
 
-const cardContainerStyles = cva("border-2 dark:border-indigo-900 shadow rounded-lg text-gray-500 bg-white dark:bg-slate-800 overflow-auto scrollbar", {
+const cardContainerStyles = cva("border-2 dark:border-indigo-900 shadow rounded-lg text-gray-500 bg-white dark:bg-slate-800 overflow-auto scrollbar scrollbar h-min", {
   variants: {
     height: {
       full: "h-full",
       min: "h-min",
-      max: "h-max"
+      max: "h-max",
+      screen: "max-h-screen",
+      "90vh": "max-h-[90vh]",
+      "80vh": "max-h-[80vh]",
+      "70vh": "max-h-[70vh]",
+      "60vh": "max-h-[60vh]",
+      "50vh": "max-h-[50vh]",
+      "40vh": "max-h-[40vh]",
+      "30vh": "max-h-[30vh]",
+      "20vh": "max-h-[20vh]",
     },
     textAlign: {
       left: "text-left",

@@ -83,7 +83,7 @@ export default function Tenants() {
   const onSubmit = (term?: string, _?: string) => {
     setSkip(0);
 
-    if (term) setSearchTerm(term);
+    if (term !== undefined) setSearchTerm(term);
 
     mutateTenants(tenants, { rollbackOnError: true });
   }
@@ -126,7 +126,7 @@ export default function Tenants() {
   }, [profile?.isStaff, isLoadingUser]);
 
   return (
-    <PageBody padding="md" height="fit">
+    <PageBody padding="md">
       <PageBody.Breadcrumb>
         <PageBody.Breadcrumb.Item>
           Control panel
@@ -138,26 +138,25 @@ export default function Tenants() {
 
       <PageBody.Content padding="md">
         <SearchBar
-          fullWidth
           onSubmit={onSubmit}
           setSkip={setSkip}
           setPageSize={setPageSize}
         />
 
         <UnauthorizedUsers>
-          <div className="flex flex-col gap-4 w-full">
-            <div className="flex justify-start">
+          <div id="TenantsContent" className="flex flex-col justify-center gap-4 w-full mx-auto">
+            <div className="flex justify-start mx-auto w-full xl:max-w-4xl">
               <Button
                 onClick={() => setIsNewModalOpen(true)}
                 size="sm"
                 rounded="full"
                 intent="info"
               >
-                Create tenant
+                <span className="mx-2">Create tenant</span>
               </Button>
             </div>
 
-            <div className="flex gap-4 w-full justify-between items-start">
+            <div className="flex gap-4 justify-center mx-auto w-full xl:max-w-4xl items-start">
               <div className="text-left gap-4 w-full">
                 {tenants?.records.length === 0 ? (
                   <Typography as="small">No tenants found</Typography>
@@ -170,11 +169,11 @@ export default function Tenants() {
             {isLoadingTenants ? (
               <Typography>Loading...</Typography>
             ) : (
-              <div className="flex flex-wrap gap-4 w-full">
+              <div className="flex flex-col gap-4 w-full mb-24">
                 {tenants?.records?.map((tenant) => (
                   <div
                     key={tenant?.id}
-                    className="flex flex-col text-left gap-2 border border-gray-300 dark:border-gray-700 px-4 py-2 rounded-md w-full bg-slate-100 dark:bg-slate-800"
+                    className="flex flex-col text-left gap-2 border border-gray-300 dark:border-gray-700 px-4 py-2 rounded-md mx-auto w-full xl:max-w-4xl bg-slate-100 dark:bg-slate-800"
                   >
                     <div className="flex justify-between gap-3">
                       <Typography as="h3">

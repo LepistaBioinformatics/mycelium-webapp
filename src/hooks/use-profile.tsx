@@ -12,7 +12,15 @@ const PROFILE_KEY = "myc-profile";
 
 type Profile = components["schemas"]["Profile"];
 
-export default function useProfile() {
+interface ProfileWithTtl extends Profile {
+  ttl: number;
+}
+
+interface Props {
+  withUrl?: boolean;
+}
+
+export default function useProfile(args?: Props) {
   const {
     user,
     isAuthenticated,
@@ -22,6 +30,7 @@ export default function useProfile() {
 
   const [profile, setProfile] = useState<Profile | null>(null);
   const [isLoadingProfile, setIsLoadingProfile] = useState(false);
+
   /**
    * Try to fetch profile from the session storage. Case it not exists, fetch
    * from the API and save it in the session storage.
@@ -34,7 +43,7 @@ export default function useProfile() {
     const profile = sessionStorage.getItem(PROFILE_KEY);
 
     if (profile) {
-      let parsedProfile: Profile;
+      let parsedProfile: ProfileWithTtl;
 
       try {
         parsedProfile = JSON.parse(profile);
@@ -44,6 +53,11 @@ export default function useProfile() {
           return null;
         }
       } catch (error) {
+        return null;
+      }
+
+      if (parsedProfile.ttl < Date.now()) {
+        sessionStorage.removeItem(PROFILE_KEY);
         return null;
       }
 
@@ -70,7 +84,13 @@ export default function useProfile() {
 
     setIsLoadingProfile(true);
 
-    const response = await fetch(buildPath("/adm/rs/beginners/profile"), {
+    const url = buildPath("/adm/rs/beginners/profile", {
+      query: {
+        withUrl: args?.withUrl ? "true" : "false",
+      },
+    });
+
+    const response = await fetch(url, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
@@ -88,7 +108,12 @@ export default function useProfile() {
       return null;
     }
 
-    sessionStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
+    const profileWithTtl = {
+      ...profile,
+      ttl: Date.now() + 1000 * 60 * 2,
+    } as ProfileWithTtl;
+
+    sessionStorage.setItem(PROFILE_KEY, JSON.stringify(profileWithTtl));
 
     return profile;
   }, [user, localProfile]);

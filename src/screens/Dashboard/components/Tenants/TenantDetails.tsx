@@ -10,9 +10,14 @@ import { components } from "@/services/openapi/mycelium-schema";
 import PaginatedRecords from "@/types/PaginatedRecords";
 import { useAuth0 } from "@auth0/auth0-react";
 import { Tooltip } from "flowbite-react";
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import useSWR from "swr";
 import DeleteTenant from "./DeleteTenant";
+import formatEmail from "@/functions/format-email";
+import { useDispatch, useSelector } from "react-redux";
+import { FaRegStar, FaStar } from "react-icons/fa";
+import { RootState } from "@/states/store";
+import { setTenantInfo } from "@/states/tenant.state";
 
 type Tenant = components["schemas"]["Tenant"];
 type Account = components["schemas"]["Account"];
@@ -26,10 +31,38 @@ interface Props {
 export default function TenantDetails({ isOpen, onClose, tenant }: Props) {
   const { profile } = useProfile();
 
+  const { getAccessTokenSilently } = useAuth0();
+
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
+  const { tenantInfo } = useSelector((state: RootState) => state.tenant);
+
+  const dispatch = useDispatch();
+
+  const setTokenPublicInformation = useCallback(async (tenantId: string | null | undefined) => {
+    if (!tenantId) return;
+
+    if (tenantInfo?.id === tenantId) {
+      dispatch(setTenantInfo(null));
+      return;
+    };
+
+    const token = await getAccessTokenSilently();
+
+    await fetch(
+      buildPath(
+        "/adm/rs/beginners/tenants/{tenant_id}",
+        { path: { tenant_id: tenantId } }
+      ),
+      { headers: { Authorization: `Bearer ${token}` } }
+    )
+      .then((res) => res.json())
+      .then((data) => dispatch(setTenantInfo(data)))
+      .catch((err) => console.error(err));
+  }, [tenantInfo, getAccessTokenSilently]);
+
   const owners = useMemo(() => {
-    if (!tenant) return [];
+    if (!tenant) return null;
 
     if ("ids" in tenant.owners) {
       const tenantOwners = tenant.owners.ids;
@@ -58,7 +91,24 @@ export default function TenantDetails({ isOpen, onClose, tenant }: Props) {
       <div className="flex flex-col gap-8">
         <div>
           <Typography as="span" decoration="smooth">Name</Typography>
-          <Typography as="h2">{tenant.name}</Typography>
+          <Typography as="h2">
+            <div className="flex items-center gap-2">
+              {tenant.name}
+              <span className="cursor-pointer">
+                {tenantInfo?.id === tenant.id ? (
+                  <FaStar
+                    className="text-yellow-500"
+                    onClick={() => setTokenPublicInformation(tenant.id)}
+                  />
+                ) : (
+                  <FaRegStar
+                    className="text-gray-500"
+                    onClick={() => setTokenPublicInformation(tenant.id)}
+                  />
+                )}
+              </span>
+            </div>
+          </Typography>
         </div>
 
         <div>
@@ -71,10 +121,12 @@ export default function TenantDetails({ isOpen, onClose, tenant }: Props) {
           <Typography as="p">{formatDDMMYY(new Date(tenant.created), true)}</Typography>
         </div>
 
-        <div>
-          <Typography as="span" decoration="smooth">Owners</Typography>
-          <Typography as="p">{owners}</Typography>
-        </div>
+        {owners && (
+          <div>
+            <Typography as="span" decoration="smooth">Owners</Typography>
+            <Typography as="p">{owners}</Typography>
+          </div>
+        )}
       </div>
 
       <div>
@@ -171,8 +223,8 @@ function AssociatedAccounts({ tenantId }: { tenantId: string }) {
   const Owners = ({ account }: { account: Account }) => {
     if ("records" in account.owners) {
       return (
-        <Typography as="p">
-          {account.owners.records.map((owner) => owner.username).join(", ")}
+        <Typography as="span" decoration="smooth">
+          {account.owners.records.map((owner) => formatEmail(owner.email)).join(", ")}
         </Typography>
       );
     }
@@ -187,17 +239,14 @@ function AssociatedAccounts({ tenantId }: { tenantId: string }) {
         {accounts?.records.map((account) => (
           <div
             key={account.id}
-            className="flex flex-col bg-slate-100 dark:bg-slate-800 px-4 py-2 rounded-md"
+            className="flex flex-col gap-1 bg-slate-100 dark:bg-slate-800 px-4 py-2 rounded-md"
           >
             <div className="flex justify-between gap-2 w-full">
               <Typography width="max" as="h3">{account.name}</Typography>
               {accountType(account)}
             </div>
 
-            <div className="flex align-middle items-center gap-2">
-              <Typography width="max" decoration="smooth" as="span">Owners</Typography>
-              <Owners account={account} />
-            </div>
+            <Owners account={account} />
 
             <div>
               <Tooltip content="Created on" className="px-4">

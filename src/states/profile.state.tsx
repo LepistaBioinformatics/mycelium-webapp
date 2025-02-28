@@ -2,7 +2,6 @@ import { createReducer, createAsyncThunk } from "@reduxjs/toolkit";
 import { buildPath } from "@/services/openapi/mycelium-api";
 import useSWR from "swr";
 
-// Criar a action async
 export const fetchProfile = createAsyncThunk(
     'profile/fetchProfile',
     async () => {

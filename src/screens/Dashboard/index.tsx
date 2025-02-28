@@ -15,7 +15,7 @@ export default function Dashboard() {
       <Sidebar
         isOpen={isOpen}
         toggle={toggle}
-        mainHeader={<MainHeader />}
+        mainHeader={<MainHeader isOpen={isOpen} />}
       >
         <Sidebar.Item
           icon={<RiDashboardFill />}
@@ -51,18 +51,26 @@ export default function Dashboard() {
  * 
  * @returns 
  */
-function MainHeader() {
-  const { profile } = useSelector((state: RootState) => state.profile);
+function MainHeader({ isOpen }: { isOpen: boolean }) {
+  const { tenantInfo } = useSelector((state: RootState) => state.tenant);
 
-  if (!profile) {
+  if (!tenantInfo) {
     return null;
   }
 
+  const tenantShortName = () => {
+    const splitted = tenantInfo.name.split(" ");
+
+    if (splitted.length === 1) {
+      return splitted[0]?.slice(0, 2).toUpperCase();
+    }
+
+    return splitted.slice(0, 2).map(name => name[0]?.toUpperCase()).join("");
+  };
+
   return (
-    <div>
-      <pre>
-        {JSON.stringify(profile, null, 2)}
-      </pre>
+    <div className="flex justify-center items-center gap-2 bg-slate-100 dark:bg-slate-900 bg-opacity-50 dark:bg-opacity-50 backdrop-blur-sm border border-blue-500 dark:border-lime-500 rounded-full p-2">
+      {isOpen ? tenantInfo.name : tenantShortName()}
     </div>
   )
 }
