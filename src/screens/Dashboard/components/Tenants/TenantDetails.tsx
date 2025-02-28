@@ -170,6 +170,12 @@ export default function TenantDetails({ isOpen, onClose, tenant }: Props) {
   )
 }
 
+/**
+ * Renders the associated accounts of the tenant
+ * 
+ * @param tenantId - The tenant id
+ * @returns The associated accounts of the tenant
+ */
 function AssociatedAccounts({ tenantId }: { tenantId: string }) {
   const { getAccessTokenSilently } = useAuth0();
 
@@ -197,65 +203,79 @@ function AssociatedAccounts({ tenantId }: { tenantId: string }) {
     }
   );
 
-  const accountType = (account: Account) => {
-    if (typeof account.accountType === "string") {
-      return <Typography width="max" as="p">{account.accountType}</Typography>;
-    }
-
-    return (
-      <div>
-        <Typography as="span" decoration="smooth">
-          {Object.keys(account.accountType).at(0)}
-        </Typography>
-
-        <div className="flex flex-col gap-2">
-          {Object.entries(account.accountType).map(([key, value]) => (
-            <div key={key} className="flex gap-2">
-              <Typography as="span" decoration="smooth">{key}</Typography>
-              <Typography as="p">{value}</Typography>
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  }
-
-  const Owners = ({ account }: { account: Account }) => {
-    if ("records" in account.owners) {
-      return (
-        <Typography as="span" decoration="smooth">
-          {account.owners.records.map((owner) => formatEmail(owner.email)).join(", ")}
-        </Typography>
-      );
-    }
-
-    return null;
-  }
-
   return (
     <div className="flex flex-col gap-2 overflow-y-auto">
       <Typography as="span" decoration="smooth">Associated accounts</Typography>
       <div className="flex flex-col gap-2">
-        {accounts?.records.map((account) => (
-          <div
-            key={account.id}
-            className="flex flex-col gap-1 bg-slate-100 dark:bg-slate-800 px-4 py-2 rounded-md"
-          >
-            <div className="flex justify-between gap-2 w-full">
-              <Typography width="max" as="h3">{account.name}</Typography>
-              {accountType(account)}
-            </div>
+        {accounts?.records.map((account) => {
+          return (
+            <div
+              key={account.id}
+              className="flex flex-col gap-1 bg-slate-100 dark:bg-slate-800 px-4 py-2 rounded-md"
+            >
+              <div className="flex justify-between gap-2 w-full">
+                <Typography width="max" as="h3">{account.name}</Typography>
+                <AccountType account={account} />
+              </div>
 
-            <Owners account={account} />
+              <Owners account={account} />
 
-            <div>
-              <Tooltip content="Created on" className="px-4">
-                {formatDDMMYY(new Date(account.created), true)}
-              </Tooltip>
+              <div>
+                <Tooltip content="Created on" className="px-4">
+                  {formatDDMMYY(new Date(account.created), true)}
+                </Tooltip>
+              </div>
             </div>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
+/**
+ * Renders the account type
+ * 
+ * @param account - The account to render the type of
+ * @returns The account type
+ */
+const AccountType = ({ account }: { account: Account }) => {
+  if (typeof account.accountType === "string") {
+    return <Typography width="max" as="p">{account.accountType}</Typography>;
+  }
+
+  return (
+    <div>
+      <Typography as="span" decoration="smooth">
+        {Object.keys(account.accountType).at(0)}
+      </Typography>
+
+      <div className="flex flex-col gap-2">
+        {Object.entries(account.accountType).map(([key, value]) => (
+          <div key={key} className="flex gap-2">
+            <Typography as="span" decoration="smooth">{key}</Typography>
+            <Typography as="p">{value}</Typography>
           </div>
         ))}
       </div>
     </div>
-  )
+  );
+}
+
+/**
+ * Renders the owners of the account
+ * 
+ * @param account - The account to render the owners of
+ * @returns The owners of the account
+ */
+const Owners = ({ account }: { account: Account }) => {
+  if ("records" in account.owners) {
+    return (
+      <Typography as="span" decoration="smooth">
+        {account.owners.records.map((owner) => formatEmail(owner.email)).join(", ")}
+      </Typography>
+    );
+  }
+
+  return null;
 }

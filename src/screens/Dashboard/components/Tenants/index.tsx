@@ -136,7 +136,7 @@ export default function Tenants() {
         </PageBody.Breadcrumb.Item>
       </PageBody.Breadcrumb>
 
-      <PageBody.Content padding="md" container flex wrap gap={3}>
+      <PageBody.Content padding="md" container>
         <SearchBar
           onSubmit={onSubmit}
           setSkip={setSkip}
@@ -167,7 +167,9 @@ export default function Tenants() {
             </div>
 
             {isLoadingTenants ? (
-              <Typography>Loading...</Typography>
+              <div className="flex gap-4 justify-center mx-auto w-full xl:max-w-4xl items-start">
+                <Typography>Loading...</Typography>
+              </div>
             ) : (
               <div className="flex flex-col gap-4 w-full mb-24">
                 {tenants?.records?.map((tenant) => (

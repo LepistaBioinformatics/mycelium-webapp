@@ -78,6 +78,7 @@ export default function SearchBar({
               <>
                 <TextInput
                   id="term"
+                  autoFocus
                   type="search"
                   sizing="lg"
                   placeholder={placeholder || "Type to search..."}

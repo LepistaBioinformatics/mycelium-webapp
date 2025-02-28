@@ -1,6 +1,6 @@
 import { cva, VariantProps } from "class-variance-authority";
 
-const styles = cva("", {
+const styles = cva("text-start", {
   variants: {
     as: {
       p: "py-1 text-slate-700 dark:text-slate-200",

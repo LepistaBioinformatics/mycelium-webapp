@@ -1,11 +1,9 @@
-import { SlOrganization } from "react-icons/sl";
-import { GiWizardStaff } from "react-icons/gi";
 import Sidebar from "@/components/ui/Sidebar";
-import { RiDashboardFill } from "react-icons/ri";
 import useToggleSidebar from "@/hooks/use-toggle-sidebar";
 import { Outlet } from "react-router";
 import { useSelector } from "react-redux";
 import { RootState } from "@/states/store";
+import { ROUTES } from "@/constants/routes";
 
 export default function Dashboard() {
   const { isOpen, toggle } = useToggleSidebar(true);
@@ -17,26 +15,23 @@ export default function Dashboard() {
         toggle={toggle}
         mainHeader={<MainHeader isOpen={isOpen} />}
       >
-        <Sidebar.Item
-          icon={<RiDashboardFill />}
-          href="/dashboard/profile"
-          text="Profile"
-          isOpen={isOpen}
-        />
-
-        <Sidebar.Item
-          icon={<GiWizardStaff />}
-          href="/dashboard/staff"
-          text="Staff"
-          isOpen={isOpen}
-        />
-
-        <Sidebar.Item
-          icon={<SlOrganization />}
-          href="/dashboard/tenants"
-          text="Tenants"
-          isOpen={isOpen}
-        />
+        {[
+          ROUTES.PROFILE,
+          ROUTES.STAFF,
+          ROUTES.TENANTS,
+          ROUTES.ACCOUNTS,
+          ROUTES.GUEST_ROLES,
+          ROUTES.ERROR_CODES,
+          ROUTES.WEBHOOKS,
+        ].map(route => (
+          <Sidebar.Item
+            key={route.path}
+            icon={route.icon}
+            href={route.path}
+            text={route.name}
+            isOpen={isOpen}
+          />
+        ))}
       </Sidebar>
 
       <div className="flex-1 max-h-screen overflow-y-auto">
