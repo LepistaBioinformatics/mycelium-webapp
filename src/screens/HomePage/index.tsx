@@ -50,7 +50,7 @@ export default function HomePage() {
   );
 
   return (
-    <PageBody>
+    <PageBody padding="md">
       <AppHeader discrete />
 
       <PageBody.Content flex="center" gap={3}>

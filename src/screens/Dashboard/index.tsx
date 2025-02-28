@@ -9,7 +9,7 @@ export default function Dashboard() {
   const { isOpen, toggle } = useToggleSidebar(true);
 
   return (
-    <div className="flex max-h-screen">
+    <div className="flex h-screen overflow-y-auto">
       <Sidebar
         isOpen={isOpen}
         toggle={toggle}
@@ -34,7 +34,7 @@ export default function Dashboard() {
         ))}
       </Sidebar>
 
-      <div className="flex-1 max-h-screen overflow-y-auto">
+      <div className="flex-1 overflow-y-auto">
         <Outlet />
       </div>
     </div>

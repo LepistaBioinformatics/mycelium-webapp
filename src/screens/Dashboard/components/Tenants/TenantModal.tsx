@@ -6,7 +6,6 @@ import Typography from "@/components/ui/Typography";
 import useProfile from "@/hooks/use-profile";
 import { buildPath } from "@/services/openapi/mycelium-api";
 import { components } from "@/services/openapi/mycelium-schema";
-import { useAuth0 } from "@auth0/auth0-react";
 import { Textarea, TextInput } from "flowbite-react";
 import { useMemo, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -27,8 +26,7 @@ export interface TenantModalProps {
 }
 
 export default function TenantModal({ isOpen, onClose, onSuccess, tenant }: TenantModalProps) {
-  const { getAccessTokenSilently } = useAuth0();
-  const { profile } = useProfile();
+  const { profile, getAccessTokenSilently } = useProfile();
   const [isLoading, setIsLoading] = useState(false);
 
   const principalOwner = useMemo(() => {

@@ -7,7 +7,7 @@ import { PiSidebarSimple } from "react-icons/pi";
 import { Tooltip } from "flowbite-react";
 import ThemeSwitcher from "./ThemeSwitcher";
 
-const containerStyles = cva("bg-indigo-600 dark:bg-slate-700 h-screen min-w-md px-2 pt-2 pb-5 flex flex-col gap-8 justify-between align-middle border-r-2 dark:border-indigo-900 shadow", {
+const containerStyles = cva("bg-indigo-600 dark:bg-slate-700 min-w-md px-2 pt-2 pb-5 flex flex-col gap-8 justify-between align-middle border-r-2 dark:border-indigo-900 shadow", {
   variants: {
     open: {
       true: "min-w-64",

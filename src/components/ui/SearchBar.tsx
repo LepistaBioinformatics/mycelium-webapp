@@ -30,7 +30,7 @@ interface IFormInputs {
   term: string;
 }
 
-interface Props extends BaseProps, VariantProps<typeof containerStyles> {
+export interface SearchProps extends BaseProps, VariantProps<typeof containerStyles> {
   onSubmit: (term?: string, tag?: string) => void;
   setSkip?: (skip: number) => void;
   setPageSize?: (pageSize: number) => void;
@@ -44,7 +44,7 @@ export default function SearchBar({
   setPageSize,
   placeholder,
   ...props
-}: Props) {
+}: SearchProps) {
 
   const {
     formState: { errors },

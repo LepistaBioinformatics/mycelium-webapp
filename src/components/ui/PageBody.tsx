@@ -2,14 +2,13 @@ import { cva, VariantProps } from "class-variance-authority";
 import React from "react";
 import { Link } from "react-router";
 
-const containerStyles = cva("", {
+const containerStyles = cva("min-h-screen", {
   variants: {
     flex: {
       true: "flex",
       column: "flex flex-col",
       center: "flex justify-center items-center",
       around: "flex justify-around items-around",
-      between: "flex justify-between items-between",
       start: "flex justify-start items-start",
       end: "flex justify-end items-end"
     },
@@ -24,7 +23,7 @@ const containerStyles = cva("", {
       end: "justify-end",
     },
     height: {
-      center: "h-screen",
+      screen: "h-screen",
       fit: "h-fit",
       full: "h-full",
       min: "h-min",
@@ -152,7 +151,7 @@ function BreadcrumbItem({ children, icon, href, ...props }: BreadcrumbItemProps)
 
 const Breadcrumb = Object.assign(BreadcrumbContainer, { Item: BreadcrumbItem });
 
-const contentStyles = cva("h-screen", {
+const contentStyles = cva("", {
   variants: {
     container: {
       true: "mx-auto w-full xl:max-w-5xl",

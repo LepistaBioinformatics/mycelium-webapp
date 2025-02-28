@@ -12,7 +12,7 @@ export default function App() {
 
   return (
     <ReduxProvider store={store}>
-      <div className="h-screen w-full m-0 p-0 bg-slate-50 dark:bg-slate-900">
+      <div className="w-full m-0 p-0 bg-slate-50 dark:bg-slate-900">
         <BrowserRouter>
           <Routes>
             <Route

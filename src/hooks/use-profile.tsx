@@ -16,6 +16,14 @@ interface ProfileWithTtl extends Profile {
   ttl: number;
 }
 
+/**
+ * Hook to fetch the profile from the API.
+ * 
+ * @param args - Optional arguments.
+ * @param args.withUrl - Whether to include the URL in the profile. Otherwise,
+ * the profile will return licensed resources and tenant ownership as JSON
+ * objects.
+ */
 interface Props {
   withUrl?: boolean;
 }
@@ -26,6 +34,8 @@ export default function useProfile(args?: Props) {
     isAuthenticated,
     isLoading: isLoadingUser,
     getAccessTokenSilently,
+    getAccessTokenWithPopup,
+    getIdTokenClaims,
   } = useAuth0();
 
   const [profile, setProfile] = useState<Profile | null>(null);
@@ -137,5 +147,8 @@ export default function useProfile(args?: Props) {
     user,
     profile,
     adminAccess: profile?.isStaff || profile?.isManager,
+    getAccessTokenSilently,
+    getAccessTokenWithPopup,
+    getIdTokenClaims,
   };
 }

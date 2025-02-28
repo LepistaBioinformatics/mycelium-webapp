@@ -1,31 +1,43 @@
-"use client";
-
 import { FaEdit } from "react-icons/fa";
 import Button from "@/components/ui/Button";
 import CopyToClipboard from "@/components/ui/CopyToClipboard";
 import PageBody from "@/components/ui/PageBody";
-import SearchBar from "@/components/ui/SearchBar";
 import Typography from "@/components/ui/Typography";
 import useProfile from "@/hooks/use-profile";
 import { buildPath } from "@/services/openapi/mycelium-api";
 import { components } from "@/services/openapi/mycelium-schema";
 import PaginatedRecords from "@/types/PaginatedRecords";
-import { useAuth0 } from "@auth0/auth0-react";
-import { useCallback, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import useSWR from "swr";
 import EditTenantModal from "./EditTenantModal";
 import TenantModal from "./TenantModal";
 import TenantDetails from "./TenantDetails";
+import DashBoardBody from "../DashBoardBody";
+import useSearchBarParams from "@/hooks/use-search-bar-params";
+import Pager from "@/components/ui/Pager";
 
 type Tenant = components["schemas"]["Tenant"];
 
 export default function Tenants() {
-  const { profile, isLoadingUser } = useProfile();
-  const { isAuthenticated, getAccessTokenSilently } = useAuth0();
+  const {
+    profile,
+    isLoadingUser,
+    isAuthenticated,
+    getAccessTokenSilently,
+  } = useProfile();
 
-  const [skip, setSkip] = useState(0);
-  const [pageSize, setPageSize] = useState(10);
-  const [searchTerm, setSearchTerm] = useState<string | null>(null);
+  const {
+    skip,
+    pageSize,
+    setSkip,
+    setPageSize,
+    searchTerm,
+    setSearchTerm,
+  } = useSearchBarParams({
+    initialSkip: 0,
+    initialPageSize: 10,
+  });
+
   const [isNewModalOpen, setIsNewModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
@@ -113,119 +125,106 @@ export default function Tenants() {
       .then(() => setIsEditModalOpen(true));
   }
 
-  const UnauthorizedUsers = useCallback(({ children }: BaseProps) => {
-    if (!isLoadingUser && (profile?.isStaff || profile?.isManager)) {
-      return children;
-    }
-
-    return (
-      <div className="flex flex-col gap-4">
-        <Typography>You are not authorized to access this page</Typography>
-      </div>
-    )
-  }, [profile?.isStaff, isLoadingUser]);
-
   return (
-    <PageBody padding="md">
-      <PageBody.Breadcrumb>
-        <PageBody.Breadcrumb.Item>
-          Control panel
-        </PageBody.Breadcrumb.Item>
+    <DashBoardBody
+      breadcrumb={
         <PageBody.Breadcrumb.Item>
           Tenants
         </PageBody.Breadcrumb.Item>
-      </PageBody.Breadcrumb>
+      }
+      onSubmit={onSubmit}
+      setSkip={setSkip}
+      setPageSize={setPageSize}
+      authorized={!isLoadingUser && (profile?.isStaff || profile?.isManager)}
+    >
+      <div id="TenantsContent" className="flex flex-col justify-center gap-4 w-full mx-auto">
+        <div className="flex justify-start mx-auto w-full xl:max-w-4xl">
+          <Button
+            onClick={() => setIsNewModalOpen(true)}
+            size="sm"
+            rounded="full"
+            intent="info"
+          >
+            <span className="mx-2">Create tenant</span>
+          </Button>
+        </div>
 
-      <PageBody.Content padding="md" container>
-        <SearchBar
-          onSubmit={onSubmit}
-          setSkip={setSkip}
-          setPageSize={setPageSize}
-        />
-
-        <UnauthorizedUsers>
-          <div id="TenantsContent" className="flex flex-col justify-center gap-4 w-full mx-auto">
-            <div className="flex justify-start mx-auto w-full xl:max-w-4xl">
-              <Button
-                onClick={() => setIsNewModalOpen(true)}
-                size="sm"
-                rounded="full"
-                intent="info"
-              >
-                <span className="mx-2">Create tenant</span>
-              </Button>
-            </div>
-
-            <div className="flex gap-4 justify-center mx-auto w-full xl:max-w-4xl items-start">
-              <div className="text-left gap-4 w-full">
-                {tenants?.records.length === 0 ? (
-                  <Typography as="small">No tenants found</Typography>
-                ) : (
-                  <Typography as="small">{tenants?.count ?? 0} tenants found</Typography>
-                )}
-              </div>
-            </div>
-
-            {isLoadingTenants ? (
-              <div className="flex gap-4 justify-center mx-auto w-full xl:max-w-4xl items-start">
-                <Typography>Loading...</Typography>
-              </div>
-            ) : (
-              <div className="flex flex-col gap-4 w-full mb-24">
-                {tenants?.records?.map((tenant) => (
-                  <div
-                    key={tenant?.id}
-                    className="flex flex-col text-left gap-2 border border-gray-300 dark:border-gray-700 px-4 py-2 rounded-md mx-auto w-full xl:max-w-4xl bg-slate-100 dark:bg-slate-800"
-                  >
-                    <div className="flex justify-between gap-3">
-                      <Typography as="h3">
-                        <button
-                          className="hover:underline text-blue-500 dark:text-lime-400"
-                          onClick={() => handleViewTenantClick(tenant)}
-                        >
-                          {tenant?.name}
-                        </button>
-                      </Typography>
-                      <div className="flex gap-5">
-                        <CopyToClipboard text={tenant?.id ?? ""} />
-                        <FaEdit
-                          className="cursor-pointer hover:text-blue-500 dark:hover:text-lime-400"
-                          onClick={() => handleEditTenantClick(tenant)}
-                        />
-                      </div>
-                    </div>
-                    <Typography as="span">{tenant?.description}</Typography>
-                  </div>
-                ))}
-              </div>
-            )}
+        {isLoadingTenants ? (
+          <div className="flex gap-4 justify-center mx-auto w-full xl:max-w-4xl items-start">
+            <Typography>Loading...</Typography>
           </div>
+        ) : (
+          <div className="flex flex-col gap-4 w-full mb-24">
+            <div className="flex flex-col gap-5">
+              <Pager
+                records={tenants}
+                mutation={mutateTenants}
+                skip={skip}
+                setSkip={setSkip}
+                pageSize={pageSize}
+              />
 
-          {isViewModalOpen && currentTenant && (
-            <TenantDetails
-              isOpen={isViewModalOpen}
-              onClose={handleCloseModal}
-              tenant={currentTenant}
-            />
-          )}
+              {tenants?.records?.map((tenant) => (
+                <div
+                  key={tenant?.id}
+                  className="flex flex-col text-left gap-2 border border-gray-300 dark:border-gray-700 px-4 py-2 rounded-md mx-auto w-full xl:max-w-4xl bg-slate-100 dark:bg-slate-800"
+                >
+                  <div className="flex justify-between gap-3">
+                    <Typography as="h3">
+                      <button
+                        className="hover:underline text-blue-500 dark:text-lime-400"
+                        onClick={() => handleViewTenantClick(tenant)}
+                      >
+                        {tenant?.name}
+                      </button>
+                    </Typography>
+                    <div className="flex gap-5">
+                      <CopyToClipboard text={tenant?.id ?? ""} />
+                      <FaEdit
+                        className="cursor-pointer hover:text-blue-500 dark:hover:text-lime-400"
+                        onClick={() => handleEditTenantClick(tenant)}
+                      />
+                    </div>
+                  </div>
+                  <Typography as="span">{tenant?.description}</Typography>
+                </div>
+              ))}
 
-          <TenantModal
-            isOpen={isNewModalOpen}
-            tenant={currentTenant}
-            onClose={handleCloseModal}
-            onSuccess={handleSuccess}
-          />
+              <Pager
+                records={tenants}
+                mutation={mutateTenants}
+                skip={skip}
+                setSkip={setSkip}
+                pageSize={pageSize}
+              />
+            </div>
+          </div>
+        )}
+      </div>
 
-          {isEditModalOpen && currentTenant && (
-            <EditTenantModal
-              isOpen={isEditModalOpen}
-              tenant={currentTenant}
-              onClose={handleCloseModal}
-              onSuccess={handleSuccess}
-            />
-          )}
-        </UnauthorizedUsers>
-      </PageBody.Content>
-    </PageBody>
+      {isViewModalOpen && currentTenant && (
+        <TenantDetails
+          isOpen={isViewModalOpen}
+          onClose={handleCloseModal}
+          tenant={currentTenant}
+        />
+      )}
+
+      <TenantModal
+        isOpen={isNewModalOpen}
+        tenant={currentTenant}
+        onClose={handleCloseModal}
+        onSuccess={handleSuccess}
+      />
+
+      {isEditModalOpen && currentTenant && (
+        <EditTenantModal
+          isOpen={isEditModalOpen}
+          tenant={currentTenant}
+          onClose={handleCloseModal}
+          onSuccess={handleSuccess}
+        />
+      )}
+    </DashBoardBody>
   );
 }

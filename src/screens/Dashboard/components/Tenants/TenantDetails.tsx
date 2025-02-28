@@ -29,9 +29,7 @@ interface Props {
 }
 
 export default function TenantDetails({ isOpen, onClose, tenant }: Props) {
-  const { profile } = useProfile();
-
-  const { getAccessTokenSilently } = useAuth0();
+  const { profile, getAccessTokenSilently } = useProfile();
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
