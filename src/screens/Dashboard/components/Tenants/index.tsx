@@ -136,7 +136,7 @@ export default function Tenants() {
         </PageBody.Breadcrumb.Item>
       </PageBody.Breadcrumb>
 
-      <PageBody.Content padding="md">
+      <PageBody.Content padding="md" container flex wrap gap={3}>
         <SearchBar
           onSubmit={onSubmit}
           setSkip={setSkip}

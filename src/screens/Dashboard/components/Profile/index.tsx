@@ -40,8 +40,8 @@ export default function Profile() {
         </PageBody.Breadcrumb.Item>
       </PageBody.Breadcrumb>
 
-      <PageBody.Content flex gap={5} padding="md" wrap>
-        <Card height="max">
+      <PageBody.Content padding="md" container flex wrap gap={3}>
+        <Card minHeight="80vh">
           <Card.Header>
             <Typography>Profile</Typography>
             {isLoadingUser
@@ -50,8 +50,8 @@ export default function Profile() {
               ) : (
                 <>
                   <Typography as="h2">
-                    <div className="flex gap-4 align-middle items-center">
-                      {user?.name}
+                    <div className="flex gap-2 align-middle items-center">
+                      <span className="max-w-xs truncate">{user?.name}</span>
                       {profile?.verboseStatus?.toLocaleLowerCase() === "verified"
                         && <PiSealCheckLight className="text-green-300 inline" />}
                     </div>
@@ -76,35 +76,8 @@ export default function Profile() {
           </div>
         </Card>
 
-        <Card height="max" dashed={!licensedResources}>
-          <Card.Header>
-            <Typography>Licensed resources</Typography>
-          </Card.Header>
-
-          <Card.Body>
-            {licensedResources
-              ? (
-                licensedResources?.map((resource) => (
-                  <div key={resource.accName}>
-                    <Typography>{resource.accName}</Typography>
-                  </div>
-                ))
-              )
-              : (
-                <div className="flex flex-col gap-2">
-                  <Typography decoration="smooth">
-                    No resources to show
-                  </Typography>
-                  <Typography as="small" decoration="smooth" width="xs">
-                    Accounts shared with you will appear here
-                  </Typography>
-                </div>
-              )}
-          </Card.Body>
-        </Card>
-
         {tenantsOwnership && (
-          <Card height="80vh">
+          <Card minHeight="80vh" maxHeight="80vh">
             <Card.Header>
               <Typography>Ownership on Tenants</Typography>
             </Card.Header>
@@ -130,13 +103,42 @@ export default function Profile() {
                     size="sm"
                     onClick={() => setLoadingSize(tenantsOwnership.length)}
                   >
-                    Load all
+                    <span className="text-sm text-blue-500 dark:text-lime-400">
+                      Load all {tenantsOwnership.length}
+                    </span>
                   </Button>
                 </div>
               )}
             </Card.Body>
           </Card>
         )}
+
+        <Card minHeight="80vh" dashed={!licensedResources}>
+          <Card.Header>
+            <Typography>Licensed resources</Typography>
+          </Card.Header>
+
+          <Card.Body>
+            {licensedResources
+              ? (
+                licensedResources?.map((resource) => (
+                  <div key={resource.accName}>
+                    <Typography>{resource.accName}</Typography>
+                  </div>
+                ))
+              )
+              : (
+                <div className="flex flex-col gap-2">
+                  <Typography decoration="smooth">
+                    No resources to show
+                  </Typography>
+                  <Typography as="small" decoration="smooth" width="xs">
+                    Accounts shared with you will appear here
+                  </Typography>
+                </div>
+              )}
+          </Card.Body>
+        </Card>
       </PageBody.Content>
     </PageBody>
   );

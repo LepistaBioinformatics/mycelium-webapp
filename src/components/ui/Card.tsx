@@ -10,7 +10,9 @@ const cardContainerStyles = cva("border-2 dark:border-indigo-900 shadow rounded-
       full: "h-full",
       min: "h-min",
       max: "h-max",
-      screen: "max-h-screen",
+      screen: "h-screen",
+    },
+    maxHeight: {
       "90vh": "max-h-[90vh]",
       "80vh": "max-h-[80vh]",
       "70vh": "max-h-[70vh]",
@@ -19,6 +21,15 @@ const cardContainerStyles = cva("border-2 dark:border-indigo-900 shadow rounded-
       "40vh": "max-h-[40vh]",
       "30vh": "max-h-[30vh]",
       "20vh": "max-h-[20vh]",
+    },
+    minHeight: {
+      "90vh": "min-h-[90vh]",
+      "80vh": "min-h-[80vh]",
+      "70vh": "min-h-[70vh]",
+      "60vh": "min-h-[60vh]",
+      "50vh": "min-h-[50vh]",
+      "40vh": "min-h-[40vh]",
+      "30vh": "min-h-[30vh]",
     },
     textAlign: {
       left: "text-left",
@@ -67,10 +78,10 @@ const cardContainerStyles = cva("border-2 dark:border-indigo-900 shadow rounded-
 
 interface CardContainerProps extends BaseProps, VariantProps<typeof cardContainerStyles> { }
 
-function CardContainer({ height, width, padding, flex, textAlign, dashed, ...props }: CardContainerProps) {
+function CardContainer({ height, minHeight, maxHeight, width, padding, flex, textAlign, dashed, ...props }: CardContainerProps) {
   return (
     <div
-      className={cardContainerStyles({ height, width, padding, flex, textAlign, dashed })}
+      className={cardContainerStyles({ height, minHeight, maxHeight, width, padding, flex, textAlign, dashed })}
       {...props}
     />
   );

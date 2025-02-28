@@ -155,7 +155,7 @@ const Breadcrumb = Object.assign(BreadcrumbContainer, { Item: BreadcrumbItem });
 const contentStyles = cva("h-screen", {
   variants: {
     container: {
-      true: "container",
+      true: "mx-auto w-full xl:max-w-5xl",
       false: "w-full"
     },
     flex: {
