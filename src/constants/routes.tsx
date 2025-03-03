@@ -15,34 +15,54 @@ import { MdManageAccounts } from 'react-icons/md';
 import { FaUserCheck } from "react-icons/fa";
 import { MdNearbyError } from "react-icons/md";
 import { MdWebhook } from "react-icons/md";
+import { components } from '@/services/openapi/mycelium-schema';
+
+type Profile = components["schemas"]["Profile"];
 
 export interface AppRoute {
+    position: number;
     name: string;
     path: string;
     element: React.ReactNode;
     errorElement: React.ReactNode;
     icon?: React.ReactNode;
+    disabled?: boolean;
+    shouldBeManager?: boolean;
+    shouldBeStaff?: boolean;
 }
 
-export const ROUTES = {
-    HOME: {
-        name: "Home",
-        path: "/",
-        element: <HomePage />,
-        errorElement: <ErrorBoundary />,
-    } as AppRoute,
-    DASHBOARD: {
-        name: "Dashboard",
-        path: "/dashboard",
-        element: <Dashboard />,
-        errorElement: <ErrorBoundary />,
-    } as AppRoute,
+export const HOME_ROUTE = {
+    name: "Home",
+    path: "/",
+    element: <HomePage />,
+    errorElement: <ErrorBoundary />,
+    position: 0,
+} as AppRoute;
+
+export const DASHBOARD_ROUTE = {
+    name: "Dashboard",
+    path: "/dashboard",
+    element: <Dashboard />,
+    errorElement: <ErrorBoundary />,
+    position: 1,
+} as AppRoute;
+
+export const PROFILE_ROUTE = {
+    name: "Profile",
+    path: "/dashboard/profile",
+    element: <Profile />,
+    errorElement: <ErrorBoundary />,
+    position: 2,
+} as AppRoute;
+
+const ROUTES = {
     PROFILE: {
         name: "Profile",
         path: "/dashboard/profile",
         element: <Profile />,
         errorElement: <ErrorBoundary />,
         icon: <RiDashboardFill />,
+        position: 2,
     } as AppRoute,
     TENANTS: {
         name: "Tenants",
@@ -50,6 +70,9 @@ export const ROUTES = {
         element: <Tenants />,
         errorElement: <ErrorBoundary />,
         icon: <SlOrganization />,
+        shouldBeManager: true,
+        shouldBeStaff: true,
+        position: 4,
     } as AppRoute,
     STAFF: {
         name: "Staff",
@@ -57,6 +80,9 @@ export const ROUTES = {
         element: <Staff />,
         errorElement: <ErrorBoundary />,
         icon: <GiWizardStaff />,
+        shouldBeManager: false,
+        shouldBeStaff: true,
+        position: 3,
     } as AppRoute,
     ACCOUNTS: {
         name: "Accounts",
@@ -64,6 +90,7 @@ export const ROUTES = {
         element: <Accounts />,
         errorElement: <ErrorBoundary />,
         icon: <MdManageAccounts />,
+        position: 5,
     } as AppRoute,
     GUEST_ROLES: {
         name: "Guest roles",
@@ -71,6 +98,7 @@ export const ROUTES = {
         element: <GuestRoles />,
         errorElement: <ErrorBoundary />,
         icon: <FaUserCheck />,
+        position: 6,
     } as AppRoute,
     WEBHOOKS: {
         name: "Webhooks",
@@ -78,6 +106,7 @@ export const ROUTES = {
         element: <Webhooks />,
         errorElement: <ErrorBoundary />,
         icon: <MdWebhook />,
+        position: 7,
     } as AppRoute,
     ERROR_CODES: {
         name: "Error codes",
@@ -85,5 +114,21 @@ export const ROUTES = {
         element: <ErrorCodes />,
         errorElement: <ErrorBoundary />,
         icon: <MdNearbyError />,
+        position: 8,
     } as AppRoute,
 } as const;
+
+/**
+ * Build the routes based on the profile
+ * 
+ * @param profile - The profile of the user
+ * @returns The routes that the user should see
+ */
+export default function buildRoutes(profile: Profile) {
+    return Object.values(ROUTES).map((route) => {
+        if (route.shouldBeStaff && !profile.isStaff) return { ...route, disabled: true };
+        if (route.shouldBeManager && !profile.isManager) return { ...route, disabled: true };
+
+        return route;
+    });
+}

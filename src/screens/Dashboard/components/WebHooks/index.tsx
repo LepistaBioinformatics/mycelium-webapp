@@ -14,16 +14,21 @@ import PaginatedContent from "../PaginatedContent";
 import CopyToClipboard from "@/components/ui/CopyToClipboard";
 import { formatDDMMYY } from "@/functions/format-dd-mm-yy";
 import ListItem from "@/components/ui/ListItem";
+import { MycRole } from "@/types/MyceliumRole";
+import { MycPermission } from "@/types/MyceliumPermission";
 
 type WebHook = components["schemas"]["WebHook"];
 
 export default function Webhooks() {
   const {
-    profile,
     isLoadingUser,
     isAuthenticated,
     getAccessTokenSilently,
-  } = useProfile();
+    hasEnoughPermissions,
+  } = useProfile({
+    roles: [MycRole.SystemManager],
+    permissions: [MycPermission.Read, MycPermission.Write],
+  });
 
   const {
     skip,
@@ -39,6 +44,7 @@ export default function Webhooks() {
 
   const memoizedUrl = useMemo(() => {
     if (!isAuthenticated) return null;
+    if (!hasEnoughPermissions) return null;
 
     let searchParams: Record<string, string> = {};
 
@@ -49,7 +55,7 @@ export default function Webhooks() {
     return buildPath("/adm/rs/system-manager/webhooks", {
       query: searchParams
     });
-  }, [searchTerm, skip, pageSize, isAuthenticated]);
+  }, [searchTerm, skip, pageSize, isAuthenticated, hasEnoughPermissions]);
 
   const {
     data: webhooks,
@@ -105,7 +111,7 @@ export default function Webhooks() {
       setSkip={setSkip}
       setPageSize={setPageSize}
       isLoading={isLoadingUser}
-      authorized={(profile?.isStaff || profile?.isManager)}
+      authorized={hasEnoughPermissions}
     >
       <div id="TenantsContent" className="flex flex-col justify-center gap-4 w-full mx-auto">
         <div className="flex justify-start mx-auto w-full xl:max-w-4xl">
@@ -157,6 +163,10 @@ export default function Webhooks() {
               )}
               <Typography as="small" decoration="smooth">
                 Active: <span className="font-bold">{webhook?.isActive ? "Yes" : "No"}</span>
+              </Typography>
+
+              <Typography as="span" decoration="smooth">
+                URL: <span className="font-bold">{webhook?.url}</span>
               </Typography>
 
               {webhook?.secret && (

@@ -16,16 +16,21 @@ import DashBoardBody from "../DashBoardBody";
 import PaginatedContent from "../PaginatedContent";
 import { camelToHumanText } from "@/functions/camel-to-human-text";
 import ListItem from "@/components/ui/ListItem";
+import { MycRole } from "@/types/MyceliumRole";
+import { MycPermission } from "@/types/MyceliumPermission";
 
 type GuestRole = components["schemas"]["GuestRole"];
 
 export default function GuestRoles() {
   const {
-    profile,
     isLoadingUser,
     isAuthenticated,
     getAccessTokenSilently,
-  } = useProfile();
+    hasEnoughPermissions,
+  } = useProfile({
+    roles: [MycRole.GuestsManager],
+    permissions: [MycPermission.Read, MycPermission.Write],
+  });
 
   const {
     skip,
@@ -41,6 +46,7 @@ export default function GuestRoles() {
 
   const memoizedUrl = useMemo(() => {
     if (!isAuthenticated) return null;
+    if (!hasEnoughPermissions) return null;
 
     let searchParams: Record<string, string> = {};
 
@@ -51,7 +57,7 @@ export default function GuestRoles() {
     return buildPath("/adm/rs/guests-manager/guest-roles", {
       query: searchParams
     });
-  }, [searchTerm, skip, pageSize, isAuthenticated]);
+  }, [searchTerm, skip, pageSize, isAuthenticated, hasEnoughPermissions]);
 
   const {
     data: guestRoles,
@@ -107,7 +113,7 @@ export default function GuestRoles() {
       setSkip={setSkip}
       setPageSize={setPageSize}
       isLoading={isLoadingUser}
-      authorized={(profile?.isStaff || profile?.isManager)}
+      authorized={hasEnoughPermissions}
     >
       <div id="GuestRolesContent" className="flex flex-col justify-center gap-4 w-full mx-auto">
         <div className="flex justify-start mx-auto w-full xl:max-w-4xl">

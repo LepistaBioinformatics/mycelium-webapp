@@ -6,6 +6,7 @@ import Typography from "./Typography";
 import { PiSidebarSimple, PiSignOutBold } from "react-icons/pi";
 import { Tooltip } from "flowbite-react";
 import ThemeSwitcher from "./ThemeSwitcher";
+import Divider from "./Divider";
 
 const containerStyles = cva("bg-slate-200 dark:bg-slate-700 min-w-md px-2 pt-2 pb-5 flex flex-col gap-8 justify-between align-middle border-r-2 dark:border-indigo-900 shadow", {
   variants: {
@@ -36,17 +37,27 @@ function Container({ children, isOpen: isOpen, toggle, mainHeader, logout, ...pr
         </div>
       </div>
 
-      <div className="flex flex-col gap-2 w-full">
+      <div className="flex flex-col gap-1 w-full">
+        <Divider style="partial" marginY="none" />
+
         <div className="flex justify-center items-center w-full text-center hover:bg-slate-300 dark:hover:bg-slate-600 rounded-full p-2">
-          <ThemeSwitcher />
+          <Tooltip content="Toggle theme" placement="right" className="px-2 border-2 border-white dark:border-lime-500 bg-blue-200 dark:bg-slate-600 text-blue-800 dark:text-lime-500">
+            <ThemeSwitcher />
+          </Tooltip>
         </div>
 
         <button onClick={toggle} className="flex justify-center items-center w-full text-center hover:bg-slate-300 dark:hover:bg-slate-600 rounded-full p-2">
-          <PiSidebarSimple className="text-slate-800 dark:text-slate-300" />
+          <Tooltip content="Toggle sidebar" placement="right" className="px-2 border-2 border-white dark:border-lime-500 bg-blue-200 dark:bg-slate-600 text-blue-800 dark:text-lime-500">
+            <PiSidebarSimple className="text-slate-800 dark:text-slate-300" />
+          </Tooltip>
         </button>
 
+        <Divider style="partial" marginY="none" />
+
         <button onClick={logout} className="flex justify-center items-center w-full text-center hover:bg-slate-300 dark:hover:bg-slate-600 rounded-full p-2">
-          <PiSignOutBold className="text-slate-800 dark:text-slate-300" />
+          <Tooltip content="Logout" placement="right" className="px-2 border-2 border-white dark:border-lime-500 bg-blue-200 dark:bg-slate-600 text-blue-800 dark:text-lime-500">
+            <PiSignOutBold className="text-slate-800 dark:text-slate-300" />
+          </Tooltip>
         </button>
       </div>
     </aside>

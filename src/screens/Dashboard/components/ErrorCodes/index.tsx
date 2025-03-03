@@ -12,16 +12,21 @@ import Button from "@/components/ui/Button";
 import PaginatedContent from "../PaginatedContent";
 import CopyToClipboard from "@/components/ui/CopyToClipboard";
 import ListItem from "@/components/ui/ListItem";
+import { MycRole } from "@/types/MyceliumRole";
+import { MycPermission } from "@/types/MyceliumPermission";
 
 type ErrorCode = components["schemas"]["ErrorCode"];
 
 export default function ErrorCodes() {
   const {
-    profile,
     isLoadingUser,
     isAuthenticated,
     getAccessTokenSilently,
-  } = useProfile();
+    hasEnoughPermissions,
+  } = useProfile({
+    roles: [MycRole.SystemManager],
+    permissions: [MycPermission.Read, MycPermission.Write],
+  });
 
   const {
     skip,
@@ -37,6 +42,7 @@ export default function ErrorCodes() {
 
   const memoizedUrl = useMemo(() => {
     if (!isAuthenticated) return null;
+    if (!hasEnoughPermissions) return null;
 
     let searchParams: Record<string, string> = {};
 
@@ -86,7 +92,7 @@ export default function ErrorCodes() {
     return buildPath("/adm/rs/system-manager/error-codes", {
       query: searchParams
     });
-  }, [searchTerm, skip, pageSize, isAuthenticated]);
+  }, [searchTerm, skip, pageSize, isAuthenticated, hasEnoughPermissions]);
 
   const {
     data: errorCodes,
@@ -154,7 +160,7 @@ export default function ErrorCodes() {
       setSkip={setSkip}
       setPageSize={setPageSize}
       isLoading={isLoadingUser}
-      authorized={(profile?.isStaff || profile?.isManager)}
+      authorized={hasEnoughPermissions}
     >
       <div id="ErrorCodesContent" className="flex flex-col justify-center gap-4 w-full mx-auto">
         <div className="flex justify-start mx-auto w-full xl:max-w-4xl">

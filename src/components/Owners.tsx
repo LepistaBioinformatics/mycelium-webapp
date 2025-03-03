@@ -37,7 +37,7 @@ export default function Owners({ account }: { account: Account }) {
           const email = formatEmail(owner.email);
 
           return (
-            <span key={owner.id} className="flex items-center gap-2 rounded-md w-min hover:text-slate-600 dark:hover:text-slate-300 group">
+            <span key={owner.id} className="flex items-center gap-2 rounded-md w-min hover:text-slate-600 dark:hover:text-slate-300 group whitespace-nowrap">
               {email}
               {isSecure(owner.mfa) && <GrSecure />}
               {email && <CopyToClipboard text={email} groupHidden />}

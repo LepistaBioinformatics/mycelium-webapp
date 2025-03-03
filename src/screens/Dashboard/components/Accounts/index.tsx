@@ -20,16 +20,21 @@ import { Tooltip } from "flowbite-react";
 import { formatDDMMYY } from "@/functions/format-dd-mm-yy";
 import ListItem from "@/components/ui/ListItem";
 import Banner from "@/components/ui/Banner";
+import { MycRole } from "@/types/MyceliumRole";
+import { MycPermission } from "@/types/MyceliumPermission";
 
 type Account = components["schemas"]["Account"];
 
 export default function Accounts() {
   const {
-    profile,
     isLoadingUser,
     isAuthenticated,
     getAccessTokenSilently,
-  } = useProfile();
+    hasEnoughPermissions,
+  } = useProfile({
+    roles: [MycRole.SubscriptionsManager],
+    permissions: [MycPermission.Read, MycPermission.Write],
+  });
 
   const {
     skip,
@@ -48,6 +53,7 @@ export default function Accounts() {
   const memoizedUrl = useMemo(() => {
     if (!isAuthenticated) return null;
     if (!tenantInfo) return null;
+    if (!hasEnoughPermissions) return null;
 
     let searchParams: Record<string, string> = {};
 
@@ -58,7 +64,13 @@ export default function Accounts() {
     return buildPath("/adm/rs/subscriptions-manager/accounts", {
       query: searchParams
     });
-  }, [searchTerm, skip, pageSize, isAuthenticated]);
+  }, [
+    searchTerm,
+    skip,
+    pageSize, isAuthenticated,
+    hasEnoughPermissions,
+    tenantInfo
+  ]);
 
   const {
     data: accounts,
@@ -115,7 +127,7 @@ export default function Accounts() {
       setSkip={setSkip}
       setPageSize={setPageSize}
       isLoading={isLoadingUser}
-      authorized={(profile?.isStaff || profile?.isManager)}
+      authorized={hasEnoughPermissions}
     >
       <div id="AccountsContent" className="flex flex-col justify-center gap-4 w-full mx-auto">
         <div className="flex justify-start mx-auto w-full xl:max-w-4xl">

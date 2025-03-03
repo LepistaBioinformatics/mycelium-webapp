@@ -5,6 +5,8 @@
 
 import { buildPath } from "@/services/openapi/mycelium-api";
 import { components } from "@/services/openapi/mycelium-schema";
+import { MycPermission } from "@/types/MyceliumPermission";
+import { MycRole } from "@/types/MyceliumRole";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
@@ -16,6 +18,30 @@ interface ProfileWithTtl extends Profile {
   ttl: number;
 }
 
+interface Props {
+  /**
+   * Whether to include the URL in the profile. Otherwise,
+   * the profile will return licensed resources and tenant ownership as JSON
+   */
+  withUrl?: boolean;
+  /**
+   * The roles to filter the licensed resources
+   */
+  roles?: MycRole[];
+  /**
+   * The permissions to filter the licensed resources
+   */
+  permissions?: MycPermission[];
+  /**
+   * Whether to deny manager access. Default is false.
+   */
+  denyManager?: boolean;
+  /**
+   * Whether to deny staff access. Default is false.
+   */
+  denyStaff?: boolean;
+}
+
 /**
  * Hook to fetch the profile from the API.
  * 
@@ -24,10 +50,6 @@ interface ProfileWithTtl extends Profile {
  * the profile will return licensed resources and tenant ownership as JSON
  * objects.
  */
-interface Props {
-  withUrl?: boolean;
-}
-
 export default function useProfile(args?: Props) {
   const {
     user,
@@ -40,6 +62,45 @@ export default function useProfile(args?: Props) {
 
   const [profile, setProfile] = useState<Profile | null>(null);
   const [isLoadingProfile, setIsLoadingProfile] = useState(false);
+
+  /**
+   * Filter the licensed resources based on specific roles or permissions
+   */
+  const hasEnoughPermissions = useMemo(
+    () => {
+      if (profile?.isStaff && !args?.denyStaff) {
+        return true;
+      }
+
+      if (profile?.isManager && !args?.denyManager) {
+        return true;
+      }
+
+      if (!profile?.licensedResources) {
+        return false;
+      }
+
+      if ("records" in profile?.licensedResources) {
+        const filteredResources = profile?.licensedResources?.records?.filter((resource) => {
+          return (
+            args?.roles?.some((role) => resource.role.includes(role)) ||
+            args?.permissions?.some((permission) => resource.perm.includes(permission))
+          );
+        });
+
+        return filteredResources.length > 0;
+      }
+
+      return false;
+    },
+    [
+      profile?.licensedResources,
+      args?.roles,
+      args?.permissions,
+      args?.denyManager,
+      args?.denyStaff
+    ]
+  );
 
   /**
    * Try to fetch profile from the session storage. Case it not exists, fetch
@@ -134,10 +195,8 @@ export default function useProfile(args?: Props) {
    */
   useEffect(() => {
     fetchProfile()
-      .then((profile) => setProfile(profile))
-      .catch((err) => {
-        console.error(err);
-      });
+      .then(setProfile)
+      .catch(console.error);
   }, [fetchProfile]);
 
   return {
@@ -150,5 +209,6 @@ export default function useProfile(args?: Props) {
     getAccessTokenSilently,
     getAccessTokenWithPopup,
     getIdTokenClaims,
+    hasEnoughPermissions,
   };
 }

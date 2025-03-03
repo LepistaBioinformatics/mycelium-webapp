@@ -5,10 +5,17 @@ import NotFound from './components/NotFound';
 import useProfile from './hooks/use-profile';
 import store from './states/store';
 import { Provider as ReduxProvider } from 'react-redux';
-import { ROUTES } from './constants/routes';
+import buildRoutes, { HOME_ROUTE, DASHBOARD_ROUTE } from './constants/routes';
+import { useMemo } from 'react';
 
 export default function App() {
-  const { profile, isAuthenticated, adminAccess } = useProfile();
+  const { profile } = useProfile();
+
+  const ROUTES = useMemo(() => {
+    if (!profile) return [];
+
+    return buildRoutes(profile);
+  }, [profile]);
 
   return (
     <ReduxProvider store={store}>
@@ -16,71 +23,26 @@ export default function App() {
         <BrowserRouter>
           <Routes>
             <Route
-              path={ROUTES.HOME.path}
-              element={ROUTES.HOME.element}
-              errorElement={ROUTES.HOME.errorElement}
+              path={HOME_ROUTE.path}
+              element={HOME_ROUTE.element}
+              errorElement={HOME_ROUTE.errorElement}
             />
 
             <Route
-              path={ROUTES.DASHBOARD.path}
-              element={ROUTES.DASHBOARD.element}
-              errorElement={ROUTES.DASHBOARD.errorElement}
+              path={DASHBOARD_ROUTE.path}
+              element={DASHBOARD_ROUTE.element}
+              errorElement={DASHBOARD_ROUTE.errorElement}
             >
-              {isAuthenticated && profile && (
-                <>
+              {ROUTES
+                .sort((a, b) => a.position - b.position)
+                .map((route) => (
                   <Route
-                    index
-                    element={ROUTES.PROFILE.element}
-                    errorElement={ROUTES.PROFILE.errorElement}
+                    key={route.path}
+                    path={route.path}
+                    element={route.element}
+                    errorElement={route.errorElement}
                   />
-
-                  <Route
-                    path={ROUTES.PROFILE.path}
-                    element={ROUTES.PROFILE.element}
-                    errorElement={ROUTES.PROFILE.errorElement}
-                  />
-
-                  {adminAccess && (
-                    <Route
-                      path={ROUTES.TENANTS.path}
-                      element={ROUTES.TENANTS.element}
-                      errorElement={ROUTES.TENANTS.errorElement}
-                    />
-                  )}
-
-                  {profile.isStaff && (
-                    <Route
-                      path={ROUTES.STAFF.path}
-                      element={ROUTES.STAFF.element}
-                      errorElement={ROUTES.STAFF.errorElement}
-                    />
-                  )}
-
-                  <Route
-                    path={ROUTES.ACCOUNTS.path}
-                    element={ROUTES.ACCOUNTS.element}
-                    errorElement={ROUTES.ACCOUNTS.errorElement}
-                  />
-
-                  <Route
-                    path={ROUTES.GUEST_ROLES.path}
-                    element={ROUTES.GUEST_ROLES.element}
-                    errorElement={ROUTES.GUEST_ROLES.errorElement}
-                  />
-
-                  <Route
-                    path={ROUTES.WEBHOOKS.path}
-                    element={ROUTES.WEBHOOKS.element}
-                    errorElement={ROUTES.WEBHOOKS.errorElement}
-                  />
-
-                  <Route
-                    path={ROUTES.ERROR_CODES.path}
-                    element={ROUTES.ERROR_CODES.element}
-                    errorElement={ROUTES.ERROR_CODES.errorElement}
-                  />
-                </>
-              )}
+                ))}
             </Route>
 
             <Route

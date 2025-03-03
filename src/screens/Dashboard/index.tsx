@@ -1,23 +1,40 @@
 import Sidebar from "@/components/ui/Sidebar";
 import useToggleSidebar from "@/hooks/use-toggle-sidebar";
-import { Outlet } from "react-router";
+import { Outlet, useNavigate } from "react-router";
 import { useSelector } from "react-redux";
 import { RootState } from "@/states/store";
-import { ROUTES } from "@/constants/routes";
 import { useAuth0 } from "@auth0/auth0-react";
 import Typography from "@/components/ui/Typography";
 import Button from "@/components/ui/Button";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Modal from "@/components/ui/Modal";
+import buildRoutes, { PROFILE_ROUTE } from "@/constants/routes";
+import useProfile from "@/hooks/use-profile";
 
 export default function Dashboard() {
   const { isOpen, toggle } = useToggleSidebar(true);
 
+  const navigate = useNavigate();
+
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+
+  const { profile } = useProfile();
+
+  const ROUTES = useMemo(() => {
+    if (!profile) return [];
+
+    return buildRoutes(profile);
+  }, [profile]);
 
   const logout = () => {
     setShowLogoutModal(true);
   }
+
+  useEffect(() => {
+    if (profile) {
+      navigate(PROFILE_ROUTE.path);
+    }
+  }, [profile]);
 
   return (
     <div className="flex h-screen overflow-y-auto">
@@ -27,21 +44,14 @@ export default function Dashboard() {
         mainHeader={<MainHeader isOpen={isOpen} />}
         logout={logout}
       >
-        {[
-          ROUTES.PROFILE,
-          ROUTES.STAFF,
-          ROUTES.TENANTS,
-          ROUTES.ACCOUNTS,
-          ROUTES.GUEST_ROLES,
-          ROUTES.ERROR_CODES,
-          ROUTES.WEBHOOKS,
-        ].map(route => (
+        {ROUTES.sort((a, b) => a.position - b.position).map(route => (
           <Sidebar.Item
             key={route.path}
             icon={route.icon}
             href={route.path}
             text={route.name}
             isOpen={isOpen}
+            active={route.disabled}
           />
         ))}
       </Sidebar>
