@@ -14,6 +14,8 @@ import CopyToClipboard from "@/components/ui/CopyToClipboard";
 import useSearchBarParams from "@/hooks/use-search-bar-params";
 import DashBoardBody from "../DashBoardBody";
 import PaginatedContent from "../PaginatedContent";
+import { camelToHumanText } from "@/functions/camel-to-human-text";
+import ListItem from "@/components/ui/ListItem";
 
 type GuestRole = components["schemas"]["GuestRole"];
 
@@ -104,7 +106,8 @@ export default function GuestRoles() {
       onSubmit={onSubmit}
       setSkip={setSkip}
       setPageSize={setPageSize}
-      authorized={!isLoadingUser && (profile?.isStaff || profile?.isManager)}
+      isLoading={isLoadingUser}
+      authorized={(profile?.isStaff || profile?.isManager)}
     >
       <div id="GuestRolesContent" className="flex flex-col justify-center gap-4 w-full mx-auto">
         <div className="flex justify-start mx-auto w-full xl:max-w-4xl">
@@ -127,10 +130,7 @@ export default function GuestRoles() {
           pageSize={pageSize}
         >
           {guestRoles?.records?.map((guestRole) => (
-            <div
-              key={guestRole?.id}
-              className="flex flex-col text-left gap-2 border border-gray-300 dark:border-gray-700 px-4 py-2 rounded-md mx-auto w-full xl:max-w-4xl bg-slate-100 dark:bg-slate-800"
-            >
+            <ListItem key={guestRole?.id} >
               <div className="flex justify-between gap-3">
                 <Typography as="h3">
                   <button
@@ -146,28 +146,17 @@ export default function GuestRoles() {
                 </div>
               </div>
               <Typography as="span">{guestRole?.description}</Typography>
-            </div>
+            </ListItem>
           ))}
         </PaginatedContent>
 
         <div className="flex flex-col gap-8 mb-24">
           <GuestRolesInitializer onSuccess={mutateGuestRoles} />
 
-          <div className="flex gap-3 justify-center text-sm mx-auto w-full xl:max-w-4xl items-start">
-            <div className="flex items-center gap-2 after:content-[''] after:w-[0.5px] after:h-5 after:bg-gray-300 after:dark:bg-gray-700 after:rounded-full after:inline-block">
-              <span>Read</span>
-              <Permission permission="read" />
-            </div>
-
-            <div className="flex items-center gap-2 after:content-[''] after:w-[0.5px] after:h-5 after:bg-gray-300 after:dark:bg-gray-700 after:rounded-full after:inline-block">
-              <span>Write</span>
-              <Permission permission="write" />
-            </div>
-
-            <div className="flex items-center gap-2">
-              <span>Read Write</span>
-              <Permission permission="readWrite" />
-            </div>
+          <div className="flex gap-2 justify-center text-sm mx-auto w-full xl:max-w-4xl items-start">
+            <PermissionText permission="read" />
+            <PermissionText permission="write" />
+            <PermissionText permission="readWrite" />
           </div>
         </div>
       </div>
@@ -175,13 +164,32 @@ export default function GuestRoles() {
   );
 }
 
-function Permission({ permission }: { permission: components["schemas"]["Permission"] }) {
+function Permission({
+  permission,
+  size = "md"
+}: {
+  permission: components["schemas"]["Permission"],
+  size?: "sm" | "md" | "lg"
+}) {
   switch (permission) {
     case "read":
-      return <VscEye className="text-green-500" />;
+      return <VscEye className={`text-green-500 ${size === "sm" ? "text-xl" : size === "md" ? "text-2xl" : "text-3xl"}`} />;
     case "write":
-      return <CiEdit className="text-blue-500" />;
+      return <CiEdit className={`text-blue-500 ${size === "sm" ? "text-xl" : size === "md" ? "text-2xl" : "text-3xl"}`} />;
     case "readWrite":
-      return <CiEdit className="text-yellow-500" />;
+      return <CiEdit className="text-yellow-500 text-3xl" />;
   }
+}
+
+function PermissionText({ permission }: { permission: components["schemas"]["Permission"] }) {
+  const text = camelToHumanText(permission);
+
+  return (
+    <div className="flex items-center gap-0 pl-2 border-l-2">
+      <Typography>
+        {text}
+      </Typography>
+      <Permission permission={permission} />
+    </div>
+  )
 }

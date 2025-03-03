@@ -1,7 +1,7 @@
 import { cva, VariantProps } from "class-variance-authority";
 import { AriaRole } from "react";
 
-const styles = cva("text-gray-500 dark:text-gray-50", {
+const styles = cva("text-gray-700 dark:text-gray-50", {
   variants: {
     fullWidth: {
       true: "w-full",
@@ -15,10 +15,10 @@ const styles = cva("text-gray-500 dark:text-gray-50", {
     intent: {
       primary: "bg-indigo-500 hover:bg-blue-600 text-white",
       secondary: "bg-gray-500 hover:bg-gray-600",
-      warning: "bg-yellow-500 hover:bg-yellow-600",
-      danger: "bg-red-500 hover:bg-red-600",
+      warning: "bg-yellow-500 text-white hover:bg-yellow-600",
+      danger: "bg-red-500 text-white hover:bg-red-600",
       link: "bg-transparent hover:bg-transparent border border-transparent hover:border-blue-500",
-      info: "bg-blue-500 hover:bg-blue-600 bg-opacity-50",
+      info: "bg-blue-500 text-white hover:bg-blue-600 bg-opacity-50",
     },
     size: {
       sm: "py-1 px-2 text-sm",

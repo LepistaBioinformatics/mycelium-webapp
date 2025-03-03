@@ -211,20 +211,20 @@ function AssociatedAccounts({ tenantId }: { tenantId: string }) {
           return (
             <div
               key={account.id}
-              className="flex flex-col gap-1 bg-slate-100 dark:bg-slate-800 px-4 py-2 rounded-md"
+              className="flex flex-col gap-2 bg-slate-100 dark:bg-slate-800 px-4 py-2 rounded-md"
             >
-              <div className="flex justify-between gap-2 w-full">
+              <div className="flex justify-between gap-2 w-full -mb-3">
                 <Typography width="max" as="h3">{account.name}</Typography>
                 <AccountType account={account} />
               </div>
 
               <Owners account={account} />
 
-              <div>
+              <Typography as="small" decoration="smooth">
                 <Tooltip content="Created on" className="px-4">
                   {formatDDMMYY(new Date(account.created), true)}
                 </Tooltip>
-              </div>
+              </Typography>
             </div>
           )
         })}

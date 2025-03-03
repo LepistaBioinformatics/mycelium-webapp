@@ -2,7 +2,7 @@ import { cva, VariantProps } from "class-variance-authority";
 import { FaLongArrowAltLeft } from "react-icons/fa";
 import Typography from "./Typography";
 
-const containerStyles = cva("fixed z-50 right-0 top-0 bottom-0 w-full xl:w-1/2 bg-opacity-70 bg-black", {
+const containerStyles = cva("fixed z-50 right-0 top-0 bottom-0 w-full xl:w-1/2 bg-opacity-70 bg-black rounded-lg shadow-lg", {
   variants: {
     open: {
       true: "block",

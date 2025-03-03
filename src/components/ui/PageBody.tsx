@@ -1,9 +1,16 @@
 import { cva, VariantProps } from "class-variance-authority";
 import React from "react";
 import { Link } from "react-router";
+import { projectVariants, projectDefaultVariants } from "@/constants/shared-component-styles";
+
+const { width, height, margin, padding } = projectVariants;
 
 const containerStyles = cva("min-h-screen", {
   variants: {
+    padding,
+    margin,
+    height,
+    width,
     flex: {
       true: "flex",
       column: "flex flex-col",
@@ -22,18 +29,6 @@ const containerStyles = cva("min-h-screen", {
       start: "justify-start",
       end: "justify-end",
     },
-    height: {
-      screen: "h-screen",
-      fit: "h-fit",
-      full: "h-full",
-      min: "h-min",
-      max: "h-max",
-    },
-    width: {
-      full: "w-full",
-      min: "w-min",
-      max: "w-max",
-    },
     gap: {
       1: "gap-1",
       2: "gap-2",
@@ -41,28 +36,10 @@ const containerStyles = cva("min-h-screen", {
       4: "gap-4",
       5: "gap-5"
     },
-    padding: {
-      none: "p-0",
-      xs: "p-1",
-      sm: "p-2",
-      md: "p-4",
-      lg: "p-8",
-      xl: "p-16",
-    },
-    margin: {
-      none: "m-0",
-      sm: "m-2",
-      md: "m-4",
-      lg: "m-8",
-      xl: "m-16",
-    }
   },
   defaultVariants: {
+    ...projectDefaultVariants,
     flex: false,
-    width: "full",
-    height: "full",
-    padding: "none",
-    margin: "none",
     align: "start",
     justify: "start",
   }
@@ -153,6 +130,8 @@ const Breadcrumb = Object.assign(BreadcrumbContainer, { Item: BreadcrumbItem });
 
 const contentStyles = cva("", {
   variants: {
+    padding,
+    margin,
     container: {
       true: "mx-auto w-full xl:max-w-5xl",
       false: "w-full"
@@ -177,26 +156,19 @@ const contentStyles = cva("", {
       4: "gap-4",
       5: "gap-5"
     },
-    padding: {
-      none: "p-0",
-      xs: "p-1",
-      sm: "p-2",
-      md: "p-4",
-      lg: "p-8",
-      xl: "p-16",
-    }
   },
   defaultVariants: {
     flex: false,
-    padding: "none"
+    padding: "none",
+    margin: "none",
   }
 });
 
 interface ContentProps extends BaseProps, VariantProps<typeof contentStyles> { }
 
-function Content({ children, flex, gap, padding, container, wrap, ...props }: ContentProps) {
+function Content({ children, flex, gap, padding, container, wrap, margin, ...props }: ContentProps) {
   return (
-    <div id="PageBodyContent" className={contentStyles({ flex, gap, padding, container, wrap })} {...props}>
+    <div id="PageBodyContent" className={contentStyles({ flex, gap, padding, container, wrap, margin })} {...props}>
       {children}
     </div>
   );

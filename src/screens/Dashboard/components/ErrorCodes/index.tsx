@@ -11,6 +11,7 @@ import DashBoardBody from "../DashBoardBody";
 import Button from "@/components/ui/Button";
 import PaginatedContent from "../PaginatedContent";
 import CopyToClipboard from "@/components/ui/CopyToClipboard";
+import ListItem from "@/components/ui/ListItem";
 
 type ErrorCode = components["schemas"]["ErrorCode"];
 
@@ -149,10 +150,11 @@ export default function ErrorCodes() {
         </PageBody.Breadcrumb.Item>
       }
       onSubmit={onSubmit}
-      placeholder="Search by prefix, code, or message. Example: #MYC code=23 internal=yes"
+      placeholder="Example: #MYC code=23 internal=yes"
       setSkip={setSkip}
       setPageSize={setPageSize}
-      authorized={!isLoadingUser && (profile?.isStaff || profile?.isManager)}
+      isLoading={isLoadingUser}
+      authorized={(profile?.isStaff || profile?.isManager)}
     >
       <div id="ErrorCodesContent" className="flex flex-col justify-center gap-4 w-full mx-auto">
         <div className="flex justify-start mx-auto w-full xl:max-w-4xl">
@@ -175,17 +177,15 @@ export default function ErrorCodes() {
           pageSize={pageSize}
         >
           {errorCodes?.records?.map((errorCode) => (
-            <div
-              key={buildErrorCodeId(errorCode)}
-              className="flex flex-col text-left gap-2 border border-gray-300 dark:border-gray-700 px-4 py-2 rounded-md mx-auto w-full xl:max-w-4xl bg-slate-100 dark:bg-slate-800"
-            >
+            <ListItem key={buildErrorCodeId(errorCode)}>
               <div className="flex justify-between gap-3">
                 <Typography as="h3">
                   <button
-                    className="hover:underline text-blue-500 dark:text-lime-400"
+                    className="flex items-center gap-2 group"
                     onClick={() => console.log(errorCode)}
                   >
-                    {buildErrorCodeId(errorCode)}
+                    <ErrorCodeParts part={errorCode.prefix} subpart="prefix" />
+                    <ErrorCodeParts part={errorCode.errorNumber.toString().padStart(4, "0")} subpart="code" />
                   </button>
                 </Typography>
                 <div className="flex gap-5">
@@ -202,10 +202,23 @@ export default function ErrorCodes() {
                   Native: <span className="font-bold">{errorCode?.isNative ? "Yes" : "No"}</span>
                 </Typography>
               </div>
-            </div>
+            </ListItem>
           ))}
         </PaginatedContent>
       </div>
     </DashBoardBody>
   );
+}
+
+function ErrorCodeParts({ part, subpart }: { part: string, subpart: string }) {
+  return (
+    <div className="flex flex-col align-top gap-0 text-left">
+      <span className="group-hover:underline text-blue-500 dark:text-lime-400">
+        {part}
+      </span>
+      <span className="text-xs text-slate-400 dark:text-slate-500 -mt-1">
+        {subpart}
+      </span>
+    </div>
+  )
 }

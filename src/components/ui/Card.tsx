@@ -1,4 +1,7 @@
 import { cva, VariantProps } from "class-variance-authority";
+import { projectVariants, projectDefaultVariants } from "@/constants/shared-component-styles";
+
+const { width, height, padding, margin } = projectVariants;
 
 // ? ---------------------------------------------------------------------------
 // ? Card Container
@@ -6,12 +9,9 @@ import { cva, VariantProps } from "class-variance-authority";
 
 const cardContainerStyles = cva("border-2 dark:border-indigo-900 shadow rounded-lg text-gray-500 bg-white dark:bg-slate-800 overflow-auto scrollbar scrollbar h-min", {
   variants: {
-    height: {
-      full: "h-full",
-      min: "h-min",
-      max: "h-max",
-      screen: "h-screen",
-    },
+    height,
+    padding,
+    margin,
     maxHeight: {
       "90vh": "max-h-[90vh]",
       "80vh": "max-h-[80vh]",
@@ -37,7 +37,7 @@ const cardContainerStyles = cva("border-2 dark:border-indigo-900 shadow rounded-
       right: "text-right"
     },
     width: {
-      full: "w-full",
+      ...width,
       sm: "!w-sm w-max",
       md: "!w-md w-max",
       lg: "!w-lg w-max",
@@ -52,15 +52,6 @@ const cardContainerStyles = cva("border-2 dark:border-indigo-900 shadow rounded-
       true: "border-dashed",
       false: ""
     },
-    padding: {
-      none: "p-0",
-      xs: "p-1",
-      sm: "p-2",
-      md: "p-5",
-      lg: "p-8",
-      xl: "p-10",
-      "2xl": "p-16",
-    },
     flex: {
       col: "flex flex-col",
       row: "flex flex-row",
@@ -68,10 +59,9 @@ const cardContainerStyles = cva("border-2 dark:border-indigo-900 shadow rounded-
     }
   },
   defaultVariants: {
-    height: "full",
+    ...projectDefaultVariants,
     width: "md",
     padding: "md",
-    flex: "none",
     textAlign: "left"
   }
 });

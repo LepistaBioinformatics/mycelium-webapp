@@ -2,23 +2,11 @@ import { cva, VariantProps } from "class-variance-authority";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { TextInput } from "flowbite-react";
 
-const containerStyles = cva("mx-auto my-12 sticky top-0", {
+const containerStyles = cva("mx-auto my-12 sticky top-0 rounded-full shadow", {
   variants: {
     fullWidth: {
       true: "w-[100%]",
       false: "mx-auto w-full xl:max-w-4xl"
-    },
-  },
-  defaultVariants: {
-    fullWidth: false,
-  },
-});
-
-const inputStyles = cva("", {
-  variants: {
-    fullWidth: {
-      true: "w-[100%]",
-      false: "w-full xl:max-w-4xl",
     },
   },
   defaultVariants: {
@@ -74,14 +62,21 @@ export default function SearchBar({
                   autoFocus
                   type="search"
                   sizing="lg"
+                  color="custom"
                   placeholder={placeholder || "Type to search..."}
                   autoComplete="off"
                   list="autocompleteOff"
-                  className={inputStyles({ fullWidth })}
                   theme={{
+                    base: "flex w-full xl:max-w-4xl",
                     field: {
                       input: {
-                        base: "block w-full disabled:cursor-not-allowed disabled:opacity-50",
+                        base: "block w-full border disabled:cursor-not-allowed disabled:opacity-50",
+                        colors: {
+                          custom: "border-slate-400 bg-white text-slate-900 focus:border-cyan-500 focus:ring-slate-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white placeholder-slate-500  dark:placeholder-slate-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500",
+                        },
+                        withAddon: {
+                          off: "rounded-full"
+                        },
                       }
                     }
                   }}

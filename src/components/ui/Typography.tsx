@@ -1,16 +1,26 @@
+import { projectVariants } from "@/constants/shared-component-styles";
 import { cva, VariantProps } from "class-variance-authority";
+
+const { width, margin, padding } = projectVariants;
 
 const styles = cva("text-start", {
   variants: {
+    padding,
     as: {
       p: "py-1 text-slate-700 dark:text-slate-200",
       span: "text-sm text-slate-700 dark:text-slate-200",
       small: "text-xs text-slate-700 dark:text-slate-200",
-      title: "text-5xl font-bold",
-      h1: "text-3xl font-bold",
-      h2: "text-2xl font-bold",
-      h3: "text-xl font-bold",
-      h4: "text-lg font-bold",
+      title: "text-5xl text-slate-800 dark:text-slate-300 font-bold",
+      h1: "text-3xl text-slate-800 dark:text-slate-300 font-bold",
+      h2: "text-2xl text-slate-800 dark:text-slate-300 font-bold",
+      h3: "text-xl text-slate-800 dark:text-slate-300 font-bold",
+      h4: "text-lg text-slate-800 dark:text-slate-300 font-bold",
+    },
+    highlight: {
+      true: "!text-blue-500 !dark:text-lime-500",
+    },
+    isError: {
+      true: "!text-red-500 !dark:text-red-500",
     },
     decoration: {
       underline: "underline",
@@ -19,29 +29,14 @@ const styles = cva("text-start", {
       none: "",
     },
     margin: {
-      none: "",
-      xs: "m-1",
-      sm: "m-2",
-      md: "m-4",
-      lg: "m-8",
-      xl: "m-16",
+      ...margin,
       auto: "mx-auto",
-    },
-    padding: {
-      none: "",
-      xs: "px-1 py-1",
-      sm: "px-2 py-2",
-      md: "px-4 py-4",
-      lg: "px-8 py-8",
-      xl: "px-16 py-16",
     },
     reverseBackground: {
       true: "!text-gray-100 !dark:text-gray-200",
     },
     width: {
-      full: "w-full",
-      min: "w-min",
-      max: "w-max",
+      ...width,
       xs: "!max-w-xs",
       sm: "!max-w-sm",
       md: "!max-w-md",
@@ -59,19 +54,20 @@ const styles = cva("text-start", {
     reverseBackground: false,
     width: "full",
     uppercase: false,
+    highlight: false,
   },
 });
 
 interface Props extends BaseProps, VariantProps<typeof styles> { }
 
 export default function Typography({
-  as, margin, padding, reverseBackground, width, uppercase, decoration, ...props
+  as, margin, padding, reverseBackground, width, uppercase, decoration, highlight, isError, ...props
 }: Props) {
   const Element = (as === "title" ? "h1" : as) || "p";
 
   return (
     <Element
-      className={styles({ as, margin, padding, reverseBackground, width, uppercase, decoration })}
+      className={styles({ as, margin, padding, reverseBackground, width, uppercase, decoration, highlight, isError })}
       {...props}
     />
   );

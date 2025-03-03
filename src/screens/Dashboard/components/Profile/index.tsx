@@ -6,14 +6,11 @@ import useProfile from "@/hooks/use-profile";
 import { components } from "@/services/openapi/mycelium-schema";
 import Divider from "@/components/ui/Divider";
 import { useMemo, useState } from "react";
-import useSWR from "swr";
-import { buildPath } from "@/services/openapi/mycelium-api";
-import { useAuth0 } from "@auth0/auth0-react";
-import { formatDDMMYY } from "@/functions/format-dd-mm-yy";
 import Button from "@/components/ui/Button";
+import TenantOwnership from "./TenantOwnership";
 
 type Profile = components["schemas"]["Profile"];
-type Tenant = components["schemas"]["Tenant"];
+
 export default function Profile() {
   const { user, profile, isLoadingUser } = useProfile({ withUrl: false });
 
@@ -35,7 +32,7 @@ export default function Profile() {
         <PageBody.Breadcrumb.Item>
           Control panel
         </PageBody.Breadcrumb.Item>
-        <PageBody.Breadcrumb.Item href="/dashboard/profile">
+        <PageBody.Breadcrumb.Item>
           Profile
         </PageBody.Breadcrumb.Item>
       </PageBody.Breadcrumb>
@@ -144,54 +141,9 @@ export default function Profile() {
   );
 }
 
-function TenantOwnership({
-  tenantId,
-  since,
-}: {
-  tenantId: string;
-  since: string;
-}) {
-  const { getAccessTokenSilently } = useAuth0();
-
-  const { data, isLoading } = useSWR<Tenant, Error>(
-    buildPath(
-      "/adm/rs/beginners/tenants/{tenant_id}",
-      { path: { tenant_id: tenantId } }
-    ),
-    async (url: string) => {
-      const token = await getAccessTokenSilently();
-      return fetch(url, { headers: { Authorization: `Bearer ${token}` } })
-        .then((res) => res.json())
-        .then((data) => data as Tenant);
-    }
-  );
-
-  return (
-    <div key={tenantId}>
-      <Typography>
-        {isLoading ? "Loading..." : (
-          <div className="flex flex-col gap-2 align-middle items-center bg-slate-200 dark:bg-slate-700 bg-opacity-50 backdrop-blur-sm rounded-md p-2">
-            <Typography as="span">
-              {data?.name}
-            </Typography>
-            <Typography as="small">
-              Since {formatDDMMYY(new Date(since), true)}
-            </Typography>
-            <Typography as="small">
-              {data?.description}
-            </Typography>
-          </div>
-        )}
-      </Typography>
-    </div>
-  );
-}
-
 const getTenantsOwnership = (
   tenantsOwnership: Profile["tenantsOwnership"]
 ): components["schemas"]["TenantOwnership"][] | null => {
-  console.log(tenantsOwnership);
-
   if (tenantsOwnership && "records" in tenantsOwnership) {
     return tenantsOwnership.records;
   }
@@ -202,8 +154,6 @@ const getTenantsOwnership = (
 const getLicensedResources = (
   licensedResources: Profile["licensedResources"]
 ): components["schemas"]["LicensedResource"][] | null => {
-  console.log(licensedResources);
-
   if (licensedResources && "records" in licensedResources) {
     return licensedResources.records;
   }

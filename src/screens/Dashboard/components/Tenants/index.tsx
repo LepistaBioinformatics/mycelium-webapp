@@ -15,6 +15,7 @@ import TenantDetails from "./TenantDetails";
 import DashBoardBody from "../DashBoardBody";
 import useSearchBarParams from "@/hooks/use-search-bar-params";
 import PaginatedContent from "../PaginatedContent";
+import ListItem from "@/components/ui/ListItem";
 
 type Tenant = components["schemas"]["Tenant"];
 
@@ -135,7 +136,8 @@ export default function Tenants() {
       onSubmit={onSubmit}
       setSkip={setSkip}
       setPageSize={setPageSize}
-      authorized={!isLoadingUser && (profile?.isStaff || profile?.isManager)}
+      isLoading={isLoadingUser}
+      authorized={(profile?.isStaff || profile?.isManager)}
     >
       <div id="TenantsContent" className="flex flex-col justify-center gap-4 w-full mx-auto">
         <div className="flex justify-start mx-auto w-full xl:max-w-4xl">
@@ -158,12 +160,9 @@ export default function Tenants() {
           pageSize={pageSize}
         >
           {tenants?.records?.map((tenant) => (
-            <div
-              key={tenant?.id}
-              className="flex flex-col text-left gap-2 border border-gray-300 dark:border-gray-700 px-4 py-2 rounded-md mx-auto w-full xl:max-w-4xl bg-slate-100 dark:bg-slate-800"
-            >
+            <ListItem key={tenant?.id}>
               <div className="flex justify-between gap-3">
-                <Typography as="h3">
+                <Typography as="h3" highlight>
                   <button
                     className="hover:underline text-blue-500 dark:text-lime-400"
                     onClick={() => handleViewTenantClick(tenant)}
@@ -180,7 +179,7 @@ export default function Tenants() {
                 </div>
               </div>
               <Typography as="span">{tenant?.description}</Typography>
-            </div>
+            </ListItem>
           ))}
         </PaginatedContent>
       </div>

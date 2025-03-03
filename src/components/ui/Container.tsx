@@ -1,4 +1,7 @@
 import { cva, VariantProps } from "class-variance-authority";
+import { projectVariants } from "@/constants/shared-component-styles";
+
+const { margin, padding } = projectVariants;
 
 // ? ---------------------------------------------------------------------------
 // ? Screen Container
@@ -9,17 +12,11 @@ import { cva, VariantProps } from "class-variance-authority";
 
 const containerStyles = cva("text-gray-500 dark:text-gray-50", {
   variants: {
+    padding,
+    margin,
     type: {
       screen: "bg-slate-50 dark:bg-slate-900 min-h-screen w-full",
     },
-    padding: {
-      none: "p-0",
-      xs: "p-2",
-      sm: "p-4",
-      md: "p-8",
-      lg: "p-12",
-      xl: "p-16",
-    }
   },
   defaultVariants: {
     type: "screen",

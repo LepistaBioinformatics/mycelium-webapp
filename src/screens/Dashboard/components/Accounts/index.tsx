@@ -18,6 +18,8 @@ import AccountType from "@/components/AccountType";
 import Owners from "@/components/Owners";
 import { Tooltip } from "flowbite-react";
 import { formatDDMMYY } from "@/functions/format-dd-mm-yy";
+import ListItem from "@/components/ui/ListItem";
+import Banner from "@/components/ui/Banner";
 
 type Account = components["schemas"]["Account"];
 
@@ -45,6 +47,7 @@ export default function Accounts() {
 
   const memoizedUrl = useMemo(() => {
     if (!isAuthenticated) return null;
+    if (!tenantInfo) return null;
 
     let searchParams: Record<string, string> = {};
 
@@ -111,7 +114,8 @@ export default function Accounts() {
       onSubmit={onSubmit}
       setSkip={setSkip}
       setPageSize={setPageSize}
-      authorized={!isLoadingUser && (profile?.isStaff || profile?.isManager)}
+      isLoading={isLoadingUser}
+      authorized={(profile?.isStaff || profile?.isManager)}
     >
       <div id="AccountsContent" className="flex flex-col justify-center gap-4 w-full mx-auto">
         <div className="flex justify-start mx-auto w-full xl:max-w-4xl">
@@ -137,10 +141,7 @@ export default function Accounts() {
               pageSize={pageSize}
             >
               {accounts?.records?.map((account) => (
-                <div
-                  key={account?.id}
-                  className="flex flex-col text-left gap-2 border border-gray-300 dark:border-gray-700 px-4 py-2 rounded-md mx-auto w-full xl:max-w-4xl bg-slate-100 dark:bg-slate-800"
-                >
+                <ListItem key={account?.id}>
                   <div className="flex justify-between gap-3">
                     <Typography as="h3">
                       <button
@@ -171,7 +172,7 @@ export default function Accounts() {
                       {formatDDMMYY(new Date(account.created), true)}
                     </Tooltip>
                   </div>
-                </div>
+                </ListItem>
               ))}
             </PaginatedContent>
           ) : (
@@ -184,11 +185,12 @@ export default function Accounts() {
 
 function NoTenant() {
   return (
-    <div className="flex flex-col text-left gap-2 border border-gray-300 dark:border-gray-700 px-4 py-2 rounded-md mx-auto w-full xl:max-w-4xl bg-slate-100 dark:bg-slate-800">
-      <Typography as="h3">No tenant found</Typography>
-      <Typography as="span">
-        Before view or create an account, you need to select a tenant
-      </Typography>
-    </div>
+    <>
+      <Banner title="No tenant selected" width="full" intent="warning">
+        <Typography as="span">
+          Before view or create an account, you need to select a tenant in <a href="/dashboard/tenants" className="text-blue-500 dark:text-lime-400 hover:underline">Tenants screen</a>.
+        </Typography>
+      </Banner>
+    </>
   )
 }

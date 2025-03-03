@@ -17,7 +17,7 @@ export function formatDDMMYY(date: Date, withTime = false) {
         <span>
           {day}/{month}/{year}
         </span>
-        <span className="text-gray-400 ml-1">
+        <span className="ml-1">
           {hour}:{minutes}
         </span>
       </>
