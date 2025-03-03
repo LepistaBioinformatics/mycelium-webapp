@@ -4,9 +4,20 @@ import { Outlet } from "react-router";
 import { useSelector } from "react-redux";
 import { RootState } from "@/states/store";
 import { ROUTES } from "@/constants/routes";
+import { useAuth0 } from "@auth0/auth0-react";
+import Typography from "@/components/ui/Typography";
+import Button from "@/components/ui/Button";
+import { useState } from "react";
+import Modal from "@/components/ui/Modal";
 
 export default function Dashboard() {
   const { isOpen, toggle } = useToggleSidebar(true);
+
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+
+  const logout = () => {
+    setShowLogoutModal(true);
+  }
 
   return (
     <div className="flex h-screen overflow-y-auto">
@@ -14,6 +25,7 @@ export default function Dashboard() {
         isOpen={isOpen}
         toggle={toggle}
         mainHeader={<MainHeader isOpen={isOpen} />}
+        logout={logout}
       >
         {[
           ROUTES.PROFILE,
@@ -37,8 +49,43 @@ export default function Dashboard() {
       <div className="flex-1 overflow-y-auto">
         <Outlet />
       </div>
+
+      <LogoutModal show={showLogoutModal} setShow={setShowLogoutModal} />
     </div>
   );
+}
+
+function LogoutModal({
+  show,
+  setShow
+}: {
+  show: boolean,
+  setShow: (show: boolean) => void
+}) {
+  const { logout: auth0Logout } = useAuth0();
+
+  return (
+    <Modal open={show}>
+      <Modal.Header handleClose={() => setShow(false)}>
+        <Typography as="h2">Logout</Typography>
+      </Modal.Header>
+
+      <Modal.Body>
+        <div className="flex flex-col justify-center items-center gap-2 w-full">
+          <div>
+            <Typography center>
+              Are you sure you want to logout?
+            </Typography>
+          </div>
+
+          <div className="flex justify-end gap-2">
+            <Button onClick={() => setShow(false)}>Cancel</Button>
+            <Button intent="warning" onClick={auth0Logout}>Logout</Button>
+          </div>
+        </div>
+      </Modal.Body>
+    </Modal>
+  )
 }
 
 /**

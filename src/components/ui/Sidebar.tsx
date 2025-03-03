@@ -3,7 +3,7 @@
 import { cva, VariantProps } from "class-variance-authority";
 import { Link, useLocation } from "react-router";
 import Typography from "./Typography";
-import { PiSidebarSimple } from "react-icons/pi";
+import { PiSidebarSimple, PiSignOutBold } from "react-icons/pi";
 import { Tooltip } from "flowbite-react";
 import ThemeSwitcher from "./ThemeSwitcher";
 
@@ -22,9 +22,10 @@ interface ContainerProps extends BaseProps, VariantProps<typeof containerStyles>
   isOpen: boolean;
   toggle: () => void;
   mainHeader: React.ReactNode;
+  logout: () => void;
 }
 
-function Container({ children, isOpen: isOpen, toggle, mainHeader, ...props }: ContainerProps) {
+function Container({ children, isOpen: isOpen, toggle, mainHeader, logout, ...props }: ContainerProps) {
   return (
     <aside className={containerStyles({ open: isOpen })} {...props}>
       <div className="flex flex-col gap-5 w-full">
@@ -42,6 +43,10 @@ function Container({ children, isOpen: isOpen, toggle, mainHeader, ...props }: C
 
         <button onClick={toggle} className="flex justify-center items-center w-full text-center hover:bg-slate-300 dark:hover:bg-slate-600 rounded-full p-2">
           <PiSidebarSimple className="text-slate-800 dark:text-slate-300" />
+        </button>
+
+        <button onClick={logout} className="flex justify-center items-center w-full text-center hover:bg-slate-300 dark:hover:bg-slate-600 rounded-full p-2">
+          <PiSignOutBold className="text-slate-800 dark:text-slate-300" />
         </button>
       </div>
     </aside>

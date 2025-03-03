@@ -109,7 +109,17 @@ export default function TenantModal({ isOpen, onClose, onSuccess, tenant }: Tena
             className="my-2"
             placeholder="Name of your tenant"
             sizing="lg"
+            color="custom"
             autoFocus
+            theme={{
+              field: {
+                input: {
+                  colors: {
+                    custom: "border-slate-400 bg-blue-50 text-slate-900 focus:border-cyan-500 focus:ring-slate-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white placeholder-slate-500  dark:placeholder-slate-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500",
+                  },
+                }
+              }
+            }}
             {...register("name")}
           />
           {errors.name && <span>This field is required</span>}
@@ -118,6 +128,12 @@ export default function TenantModal({ isOpen, onClose, onSuccess, tenant }: Tena
             className="my-2 h-24 p-4"
             placeholder="Describe your tenant"
             rows={4}
+            color="custom"
+            theme={{
+              colors: {
+                custom: "border-slate-400 bg-blue-50 text-slate-900 focus:border-cyan-500 focus:ring-slate-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white placeholder-slate-500  dark:placeholder-slate-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500",
+              },
+            }}
             {...register("description")}
           />
           {errors.description && <span>This field is required</span>}

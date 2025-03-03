@@ -41,9 +41,9 @@ export default function TenantOwnership({
     },
     {
       revalidateOnFocus: false,
-      revalidateOnReconnect: true,
+      revalidateOnReconnect: false,
       revalidateOnMount: false,
-      refreshInterval: 1000 * 60 * 2,
+      refreshInterval: 1000 * 2,
     }
   );
 
@@ -70,7 +70,7 @@ export default function TenantOwnership({
 
     return (
       <>
-        <Typography as="span">
+        <Typography as="h5">
           {data.active.name}
         </Typography>
         <Since />

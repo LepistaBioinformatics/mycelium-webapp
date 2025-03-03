@@ -14,7 +14,8 @@ const styles = cva("text-start", {
       h1: "text-3xl text-slate-800 dark:text-slate-300 font-bold",
       h2: "text-2xl text-slate-800 dark:text-slate-300 font-bold",
       h3: "text-xl text-slate-800 dark:text-slate-300 font-bold",
-      h4: "text-lg text-slate-800 dark:text-slate-300 font-bold",
+      h4: "text-lg text-slate-800 dark:text-slate-300 font-semibold",
+      h5: "text-base text-slate-800 dark:text-slate-300 font-semibold",
     },
     highlight: {
       true: "!text-blue-500 !dark:text-lime-500",
@@ -45,6 +46,9 @@ const styles = cva("text-start", {
     },
     uppercase: {
       true: "uppercase",
+    },
+    center: {
+      true: "text-center",
     }
   },
   defaultVariants: {
@@ -61,13 +65,13 @@ const styles = cva("text-start", {
 interface Props extends BaseProps, VariantProps<typeof styles> { }
 
 export default function Typography({
-  as, margin, padding, reverseBackground, width, uppercase, decoration, highlight, isError, ...props
+  as, margin, padding, reverseBackground, width, uppercase, decoration, highlight, isError, center, ...props
 }: Props) {
   const Element = (as === "title" ? "h1" : as) || "p";
 
   return (
     <Element
-      className={styles({ as, margin, padding, reverseBackground, width, uppercase, decoration, highlight, isError })}
+      className={styles({ as, margin, padding, reverseBackground, width, uppercase, decoration, highlight, isError, center })}
       {...props}
     />
   );

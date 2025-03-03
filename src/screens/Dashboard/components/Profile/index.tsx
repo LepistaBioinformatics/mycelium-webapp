@@ -80,16 +80,18 @@ export default function Profile() {
             </Card.Header>
 
             <Card.Body>
-              {tenantsOwnership
-                ?.sort((a, b) => b.since.localeCompare(a.since))
-                ?.slice(0, loadingSize)
-                ?.map((tenant) => (
-                  <TenantOwnership
-                    key={tenant.tenant}
-                    tenantId={tenant.tenant}
-                    since={tenant.since}
-                  />
-                ))}
+              <div className="flex flex-col gap-2">
+                {tenantsOwnership
+                  ?.sort((a, b) => b.since.localeCompare(a.since))
+                  ?.slice(0, loadingSize)
+                  ?.map((tenant) => (
+                    <TenantOwnership
+                      key={tenant.tenant}
+                      tenantId={tenant.tenant}
+                      since={tenant.since}
+                    />
+                  ))}
+              </div>
 
               {tenantsOwnership?.length > loadingSize && (
                 <div className="flex justify-center items-center mt-5">
