@@ -18,7 +18,7 @@ const styles = cva("text-start", {
       h5: "text-base text-slate-800 dark:text-slate-300 font-semibold",
     },
     highlight: {
-      true: "!text-blue-500 !dark:text-lime-500",
+      true: "!text-blue-500 dark:!text-lime-500",
     },
     isError: {
       true: "!text-red-500 !dark:text-red-500",
@@ -49,6 +49,12 @@ const styles = cva("text-start", {
     },
     center: {
       true: "text-center",
+    },
+    truncate: {
+      true: "truncate",
+    },
+    nowrap: {
+      true: "whitespace-nowrap",
     }
   },
   defaultVariants: {
@@ -65,13 +71,13 @@ const styles = cva("text-start", {
 interface Props extends BaseProps, VariantProps<typeof styles> { }
 
 export default function Typography({
-  as, margin, padding, reverseBackground, width, uppercase, decoration, highlight, isError, center, ...props
+  as, margin, padding, reverseBackground, width, uppercase, decoration, highlight, isError, center, truncate, nowrap, ...props
 }: Props) {
   const Element = (as === "title" ? "h1" : as) || "p";
 
   return (
     <Element
-      className={styles({ as, margin, padding, reverseBackground, width, uppercase, decoration, highlight, isError, center })}
+      className={styles({ as, margin, padding, reverseBackground, width, uppercase, decoration, highlight, isError, center, truncate, nowrap })}
       {...props}
     />
   );

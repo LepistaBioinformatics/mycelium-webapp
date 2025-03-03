@@ -31,7 +31,7 @@ function Container({
   );
 }
 
-const headerStyles = cva("text-gray-500 dark:text-gray-50 flex justify-between items-center min-w-96 min-h-fit p-3", {
+const headerStyles = cva("text-gray-500 dark:text-gray-50 flex justify-between items-center gap-8 min-w-96 min-h-fit p-3", {
   variants: {},
 });
 

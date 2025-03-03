@@ -41,8 +41,9 @@
     border-radius: "50px";
   }
 
+  /* Dark mode */
   .scrollbar::-webkit-scrollbar-thumb {
-    background: #0f172a;
+    background: #223563b6;
     border-radius: 100vh;
   }
 

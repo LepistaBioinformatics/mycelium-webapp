@@ -7,7 +7,7 @@ const { width, height, padding, margin } = projectVariants;
 // ? Card Container
 // ? ---------------------------------------------------------------------------
 
-const cardContainerStyles = cva("border-2 dark:border-indigo-900 shadow rounded-lg text-gray-500 bg-white dark:bg-slate-800 overflow-auto scrollbar scrollbar h-min", {
+const cardContainerStyles = cva("border-2 dark:border-indigo-900 shadow rounded-lg text-gray-500 bg-white dark:bg-slate-800 overflow-auto scrollbar h-min", {
   variants: {
     height,
     padding,
