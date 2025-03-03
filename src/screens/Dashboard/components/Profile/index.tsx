@@ -12,7 +12,7 @@ import TenantOwnership from "./TenantOwnership";
 type Profile = components["schemas"]["Profile"];
 
 export default function Profile() {
-  const { user, profile, isLoadingUser } = useProfile({ withUrl: false });
+  const { user, profile, isLoadingUser } = useProfile();
 
   const [loadingSize, setLoadingSize] = useState(3);
 

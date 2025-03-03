@@ -20,11 +20,6 @@ interface ProfileWithTtl extends Profile {
 
 interface Props {
   /**
-   * Whether to include the URL in the profile. Otherwise,
-   * the profile will return licensed resources and tenant ownership as JSON
-   */
-  withUrl?: boolean;
-  /**
    * The roles to filter the licensed resources
    */
   roles?: MycRole[];
@@ -156,9 +151,7 @@ export default function useProfile(args?: Props) {
     setIsLoadingProfile(true);
 
     const url = buildPath("/adm/rs/beginners/profile", {
-      query: {
-        withUrl: args?.withUrl ? "true" : "false",
-      },
+      query: { withUrl: "false" },
     });
 
     const response = await fetch(url, {
