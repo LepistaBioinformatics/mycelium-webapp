@@ -21,6 +21,7 @@ const styles = cva("text-gray-700 dark:text-gray-50", {
       info: "bg-blue-500 text-white hover:bg-blue-600 bg-opacity-50",
     },
     size: {
+      xs: "py-1 px-2 text-xs",
       sm: "py-1 px-2 text-sm",
       md: "py-2 px-4 text-base",
       lg: "py-3 px-6 text-lg",

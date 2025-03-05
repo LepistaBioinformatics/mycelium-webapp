@@ -16,6 +16,7 @@ import { formatDDMMYY } from "@/functions/format-dd-mm-yy";
 import ListItem from "@/components/ui/ListItem";
 import { MycRole } from "@/types/MyceliumRole";
 import { MycPermission } from "@/types/MyceliumPermission";
+import DetailsBox from "@/components/ui/DetailsBox";
 
 type WebHook = components["schemas"]["WebHook"];
 
@@ -84,7 +85,7 @@ export default function Webhooks() {
         });
     },
     {
-      revalidateIfStale: false,
+      revalidateIfStale: true,
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
       revalidateOnMount: true,
@@ -170,16 +171,18 @@ export default function Webhooks() {
               </Typography>
 
               {webhook?.secret && (
-                <details className="flex flex-col justify-center gap-4 w-full xl:max-w-4xl mx-auto">
-                  <summary className="flex gap-2 items-center cursor-pointer text-left border-2 border-transparent border-dashed hover:border-slate-500 px-2 -mx-3 bg-slate-100 dark:bg-slate-800 rounded-lg">
+                <DetailsBox>
+                  <DetailsBox.Summary>
                     <VscGistSecret className="w-4 h-4 inline-block text-green-500" />
                     <Typography as="span" decoration="smooth">Secure</Typography>
-                  </summary>
+                  </DetailsBox.Summary>
 
-                  <div className="bg-slate-200 dark:bg-slate-700 rounded-lg p-2 mt-2">
-                    <Secret secret={webhook?.secret} />
-                  </div>
-                </details>
+                  <DetailsBox.Content>
+                    <div className="bg-slate-200 dark:bg-slate-700 rounded-lg p-2 mt-2">
+                      <Secret secret={webhook?.secret} />
+                    </div>
+                  </DetailsBox.Content>
+                </DetailsBox>
               )}
 
             </ListItem>

@@ -33,6 +33,12 @@ export default function ValidatedUser({ show }: Props) {
 
       return response.json() as Promise<Profile>;
     },
+    {
+      revalidateIfStale: true,
+      revalidateOnFocus: true,
+      revalidateOnReconnect: false,
+      revalidateOnMount: true,
+    }
   );
 
   useEffect(() => {

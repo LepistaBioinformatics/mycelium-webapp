@@ -91,7 +91,7 @@ export default function Tenants() {
         });
     },
     {
-      revalidateIfStale: false,
+      revalidateIfStale: true,
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
       revalidateOnMount: true,

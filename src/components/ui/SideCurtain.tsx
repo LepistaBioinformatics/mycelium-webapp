@@ -2,7 +2,7 @@ import { cva, VariantProps } from "class-variance-authority";
 import { FaLongArrowAltLeft } from "react-icons/fa";
 import Typography from "./Typography";
 
-const containerStyles = cva("fixed z-50 right-0 top-0 bottom-0 w-full xl:w-1/2 bg-opacity-70 bg-black rounded-lg shadow-lg", {
+const containerStyles = cva("fixed z-50 right-0 top-0 bottom-0 w-[80%] xl:w-1/2 bg-opacity-70 bg-black rounded-lg shadow-lg", {
   variants: {
     open: {
       true: "block",
@@ -35,7 +35,9 @@ function Container({
           <button onClick={handleClose}>
             <FaLongArrowAltLeft className="text-2xl text-blue-500 dark:text-lime-400" />
           </button>
-          <Typography as="h2">{title}</Typography>
+          <Typography as="h4" decoration="smooth">
+            {title}
+          </Typography>
         </div>
 
         <div className="flex justify-normal text-left flex-col gap-2 p-5">

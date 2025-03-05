@@ -22,6 +22,7 @@ import AccountType from "@/components/AccountType";
 import Owners from "@/components/Owners";
 import Banner from "@/components/ui/Banner";
 import CreateManagementAccount from "./CreateManagementAccount";
+import DetailsBox from "@/components/ui/DetailsBox";
 
 type Tenant = components["schemas"]["Tenant"];
 type Account = components["schemas"]["Account"];
@@ -145,14 +146,14 @@ export default function TenantDetails({ isOpen, onClose, tenant }: Props) {
         )}
       </div>
 
-      <details>
-        <summary className="cursor-pointer border-2 border-transparent border-dashed hover:border-slate-500 p-2 my-8 bg-slate-100 dark:bg-slate-800 rounded-lg">
+      <DetailsBox>
+        <DetailsBox.Summary marginTop="24">
           <Typography as="span">
             Advanced actions
           </Typography>
-        </summary>
+        </DetailsBox.Summary>
 
-        <div className="flex flex-col gap-8">
+        <DetailsBox.Content>
           <Banner intent="info">
             <div className="flex justify-between gap-2 my-5">
               <div className="flex flex-col gap-2">
@@ -178,7 +179,7 @@ export default function TenantDetails({ isOpen, onClose, tenant }: Props) {
             </div>
           </Banner>
 
-          <Banner intent="warning">
+          <Banner intent="error">
             <div className="flex justify-between gap-2 my-5">
               <div className="flex flex-col gap-2">
                 <Typography as="span">
@@ -197,8 +198,8 @@ export default function TenantDetails({ isOpen, onClose, tenant }: Props) {
               </div>
             </div>
           </Banner>
-        </div>
-      </details>
+        </DetailsBox.Content>
+      </DetailsBox>
 
       {!hasTenantManagerAccount && (
         <CreateManagementAccount
@@ -207,7 +208,6 @@ export default function TenantDetails({ isOpen, onClose, tenant }: Props) {
           onClose={() => setIsCreateManagementAccountModalOpen(false)}
         />
       )}
-
 
       <DeleteTenant
         tenant={tenant}

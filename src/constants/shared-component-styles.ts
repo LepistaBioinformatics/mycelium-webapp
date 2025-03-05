@@ -5,6 +5,7 @@ const sharedComponentStylesVariants: Config["variants"] = {
         full: "w-full",
         min: "w-min",
         max: "w-max",
+        fit: "w-fit",
     },
     height: {
         full: "h-full",

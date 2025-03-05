@@ -1,0 +1,361 @@
+"use client";
+
+import SideCurtain from "@/components/ui/SideCurtain";
+import Typography from "@/components/ui/Typography";
+import { formatDDMMYY } from "@/functions/format-dd-mm-yy";
+import useProfile from "@/hooks/use-profile";
+import { buildPath } from "@/services/openapi/mycelium-api";
+import { components } from "@/services/openapi/mycelium-schema";
+import { useMemo, useState } from "react";
+import useSWR from "swr";
+import DeleteAccount from "./DeleteAccount";
+import { RootState } from "@/states/store";
+import { TENANT_ID_HEADER } from "@/constants/http-headers";
+import { camelToHumanText } from "@/functions/camel-to-human-text";
+import { useSelector } from "react-redux";
+import Banner from "@/components/ui/Banner";
+import Button from "@/components/ui/Button";
+import GuestToAccountModal from "./GuestToAccountModal";
+import formatEmail from "@/functions/format-email";
+import PermissionIcon from "@/components/ui/PermissionIcon";
+import DetailsBox from "@/components/ui/DetailsBox";
+
+type Account = components["schemas"]["Account"];
+type GuestUser = components["schemas"]["GuestUser"];
+type GuestRole = components["schemas"]["GuestRole"];
+
+interface Props {
+  account: Account;
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+export default function AccountDetails({ isOpen, onClose, account }: Props) {
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isGuestToAccountModalOpen, setIsGuestToAccountModalOpen] = useState(false);
+
+  const { tenantInfo } = useSelector((state: RootState) => state.tenant);
+
+  const handleCloseGuestToAccountModal = () => {
+    setIsGuestToAccountModalOpen(false);
+  }
+
+  return (
+    <SideCurtain
+      open={isOpen}
+      title="Account details"
+      handleClose={onClose}
+    >
+      <div className="flex flex-col gap-8">
+        <div>
+          <Typography as="span" decoration="smooth">Name</Typography>
+          <Typography as="h2">{account.name}</Typography>
+        </div>
+
+        <div>
+          <Typography as="span" decoration="smooth">Created</Typography>
+          <Typography as="p">{formatDDMMYY(new Date(account.created), true)}</Typography>
+        </div>
+
+        <div>
+          <Typography as="span" decoration="smooth">Status</Typography>
+          <Typography as="p">{camelToHumanText(account?.verboseStatus ?? "")}</Typography>
+        </div>
+
+        {tenantInfo?.id && (
+          <div className="flex flex-col gap-1">
+            <Typography as="span" decoration="smooth">Invitations</Typography>
+            <Invitations account={account} tenantId={tenantInfo?.id} />
+          </div>
+        )}
+      </div>
+
+      <DetailsBox>
+        <DetailsBox.Summary marginTop="24">
+          <Typography as="span">
+            Advanced actions
+          </Typography>
+        </DetailsBox.Summary>
+
+        <DetailsBox.Content>
+          <Banner intent="info">
+            <div className="flex justify-between gap-2 my-5">
+              <div className="flex flex-col gap-2">
+                <Typography as="span">
+                  Invite user to account
+                </Typography>
+
+                <Typography as="small" decoration="smooth">
+                  Guest users should be invited to the account with specific role.
+                </Typography>
+              </div>
+
+              <div>
+                <Button
+                  rounded
+                  onClick={() => setIsGuestToAccountModalOpen(true)}
+                >
+                  Invite
+                </Button>
+              </div>
+            </div>
+          </Banner>
+
+          <Banner intent="error">
+            <div className="flex justify-between gap-2 my-5">
+              <div className="flex flex-col gap-2">
+                <Typography as="span">
+                  Delete account
+                </Typography>
+
+                <Typography as="small" decoration="smooth">
+                  This action cannot be undone.
+                </Typography>
+              </div>
+
+              <div>
+                <Button
+                  rounded
+                  intent="danger"
+                  onClick={() => setIsDeleteModalOpen(true)}
+                >
+                  Delete
+                </Button>
+              </div>
+            </div>
+          </Banner>
+        </DetailsBox.Content>
+      </DetailsBox>
+
+      {tenantInfo?.id && (
+        <DeleteAccount
+          account={account}
+          tenantId={tenantInfo?.id}
+          isOpen={isDeleteModalOpen}
+          onClose={onClose}
+        />
+      )}
+
+      {account && (
+        <GuestToAccountModal
+          isOpen={isGuestToAccountModalOpen}
+          onClose={handleCloseGuestToAccountModal}
+          account={account}
+        />
+      )}
+    </SideCurtain>
+  )
+}
+
+/**
+ * Invitations
+ * 
+ * @param account - The account
+ * @param tenantId - The tenant id
+ * @returns The invitations component
+ */
+function Invitations({ account, tenantId }: { account: Account, tenantId: string }) {
+  const pageSize = 2;
+  const [showMaxInvitations, setShowMaxInvitations] = useState<boolean>(false);
+
+  const { getAccessTokenSilently } = useProfile();
+
+  const memoizedUrl = useMemo(() => {
+    if (!account.id || !tenantId) return null;
+
+    const { accountType } = account;
+
+    if (typeof accountType !== "object" || !("subscription" in accountType)) return null;
+
+    return buildPath("/adm/rs/subscriptions-manager/guests/accounts/{account_id}", {
+      path: { account_id: account.id }
+    });
+  }, [account.id, tenantId]);
+
+  const { data: invitations, isLoading } = useSWR<GuestUser[]>(
+    memoizedUrl,
+    async (url: string) => {
+      if (!tenantId) return null;
+
+      const token = await getAccessTokenSilently();
+
+      return fetch(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          [TENANT_ID_HEADER]: tenantId
+        }
+      })
+        .then((res) => {
+          if (!res.ok) {
+            throw new Error("Failed to fetch invitations");
+          }
+
+          return res.json();
+        })
+        .catch((err) => {
+          console.error(err);
+
+          return null;
+        });
+    }
+  );
+
+  if (isLoading) return <div>Loading...</div>;
+
+  if (!invitations || invitations.length === 0) return (
+    <div>No invitations found</div>
+  );
+
+  return (
+    <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2">
+        {invitations
+          ?.slice(0, showMaxInvitations ? invitations.length : pageSize)
+          ?.map((invitation) => (
+            <div key={invitation.id} className="flex flex-col gap-2 border border-slate-500 w-full px-4 py-1 rounded-lg">
+              <Typography as="h4">{formatEmail(invitation.email)}</Typography>
+              <Invitation guestRole={invitation.guestRole} />
+              <Typography as="span" decoration="smooth">
+                {invitation.wasVerified ? "Verified" : "Unverified"}
+              </Typography>
+              <Typography as="span" decoration="smooth">
+                {formatDDMMYY(new Date(invitation.created), true)}
+              </Typography>
+            </div>
+          ))}
+      </div>
+
+      {invitations.length > pageSize && (
+        <div className="flex justify-center">
+          {showMaxInvitations
+            ? (
+              <Button
+                rounded
+                fullWidth
+                intent="link"
+                size="xs"
+                onClick={() => setShowMaxInvitations(false)}
+              >
+                <Typography as="small" decoration="underline">Show less</Typography>
+              </Button>
+            )
+            : (
+              <Button
+                rounded
+                fullWidth
+                intent="link"
+                size="xs"
+                onClick={() => setShowMaxInvitations(true)}
+              >
+                <Typography as="small" decoration="underline">Show all</Typography>
+              </Button>
+            )}
+        </div>
+      )}
+    </div>
+  )
+}
+
+/**
+ * Invitation
+ * 
+ * @param guestRole - The guest role of the invitation
+ * @returns The invitation component
+ */
+function Invitation({ guestRole }: { guestRole: GuestUser["guestRole"] }) {
+  const { getAccessTokenSilently } = useProfile();
+  const { tenantInfo } = useSelector((state: RootState) => state.tenant);
+
+  const localInvitationRecord: GuestRole | string | null = useMemo(() => {
+    if (typeof guestRole !== "object") return null;
+
+    if ("record" in guestRole) return guestRole.record;
+    if ("id" in guestRole) return guestRole.id;
+
+    return null;
+  }, [guestRole]);
+
+  const memoizedUrl = useMemo(() => {
+    if (!localInvitationRecord) return null;
+    if (typeof localInvitationRecord === "object") return null;
+    if (!tenantInfo?.id) return null;
+
+    if (typeof localInvitationRecord === "string") {
+      return buildPath("/adm/rs/subscriptions-manager/guest-roles/{guest_role_id}", {
+        path: { guest_role_id: localInvitationRecord }
+      });
+    }
+
+    return null;
+  }, [localInvitationRecord, tenantInfo?.id]);
+
+  const { data: remoteInvitationRecord } = useSWR<GuestRole>(
+    memoizedUrl,
+    async (url: string) => {
+      const token = await getAccessTokenSilently();
+
+      return fetch(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          [TENANT_ID_HEADER]: tenantInfo?.id ?? ""
+        }
+      })
+        .then((res) => res.json())
+        .catch((err) => {
+          console.error(err);
+
+          return null;
+        });
+    }
+  );
+
+  const invitationRecord: GuestRole | undefined = useMemo(() => {
+    //
+    // If the local invitation record is an object, return it
+    //
+    // The local invitation record is an object indicates that the invitation
+    // has been self-contained in the invitation record as a guest role field.
+    //
+    if (typeof localInvitationRecord === "object" && localInvitationRecord !== null) {
+      return localInvitationRecord;
+    };
+
+    //
+    // Otherwise, if the remote invitation record is an object, return it
+    //
+    // The remote invitation record is an object indicates that the invitation
+    // has been correctly fetched from the remote API.
+    //
+    if (typeof remoteInvitationRecord === "object") return remoteInvitationRecord;
+
+    //
+    // Otherwise, return undefined
+    //
+    // This indicates that the invitation record is not found.
+    //
+    return undefined;
+  }, [localInvitationRecord, remoteInvitationRecord]);
+
+  if (!invitationRecord) return null;
+
+  return (
+    <Typography as="h4">
+      <div className="flex flex-col gap-1">
+        <div className="flex gap-2">
+          <Typography as="span" decoration="smooth">
+            As:
+          </Typography>
+          <Typography as="span">
+            {invitationRecord.name}
+          </Typography>
+          <Typography as="span">
+            <PermissionIcon permission={invitationRecord.permission} />
+          </Typography>
+        </div>
+        <Typography as="small" decoration="smooth">
+          {invitationRecord.description}
+        </Typography>
+      </div>
+    </Typography>
+  )
+}

@@ -62,7 +62,7 @@ const styles = cva("text-start", {
     margin: "none",
     padding: "none",
     reverseBackground: false,
-    width: "full",
+    width: "fit",
     uppercase: false,
     highlight: false,
   },

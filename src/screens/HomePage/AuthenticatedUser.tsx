@@ -30,9 +30,10 @@ export default function AuthenticatedUser({ show, user, setStatus }: Props) {
       : null,
     (url) => fetch(url).then(res => res.json() as Promise<CheckEmailStatusResponse>),
     {
+      revalidateIfStale: true,
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
-      revalidateOnMount: false,
+      revalidateOnMount: true,
     }
   );
 

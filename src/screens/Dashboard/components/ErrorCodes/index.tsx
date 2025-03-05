@@ -121,7 +121,7 @@ export default function ErrorCodes() {
         });
     },
     {
-      revalidateIfStale: false,
+      revalidateIfStale: true,
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
       revalidateOnMount: true,

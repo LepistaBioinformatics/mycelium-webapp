@@ -3,7 +3,7 @@ import useProfile from "@/hooks/use-profile";
 import useSearchBarParams from "@/hooks/use-search-bar-params";
 import { buildPath } from "@/services/openapi/mycelium-api";
 import { components } from "@/services/openapi/mycelium-schema";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import useSWR from "swr";
 import DashBoardBody from "../DashBoardBody";
 import PaginatedRecords from "@/types/PaginatedRecords";
@@ -16,12 +16,13 @@ import { RootState } from "@/states/store";
 import { TENANT_ID_HEADER } from "@/constants/http-headers";
 import AccountType from "@/components/AccountType";
 import Owners from "@/components/Owners";
-import { Tooltip } from "flowbite-react";
 import { formatDDMMYY } from "@/functions/format-dd-mm-yy";
 import ListItem from "@/components/ui/ListItem";
 import Banner from "@/components/ui/Banner";
 import { MycRole } from "@/types/MyceliumRole";
 import { MycPermission } from "@/types/MyceliumPermission";
+import AccountModal from "./AccountModal";
+import AccountDetails from "./AccountDetails";
 
 type Account = components["schemas"]["Account"];
 
@@ -48,6 +49,11 @@ export default function Accounts() {
     initialPageSize: 10,
   });
 
+  const [isNewModalOpen, setIsNewModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+  const [currentAccount, setCurrentAccount] = useState<Account | null>(null);
+
   const { tenantInfo } = useSelector((state: RootState) => state.tenant);
 
   const memoizedUrl = useMemo(() => {
@@ -58,7 +64,7 @@ export default function Accounts() {
     let searchParams: Record<string, string> = {};
 
     if (skip) searchParams.skip = skip.toString();
-    if (searchTerm && searchTerm !== "") searchParams.name = searchTerm;
+    if (searchTerm && searchTerm !== "") searchParams.term = searchTerm;
     if (pageSize) searchParams.pageSize = pageSize.toString();
 
     return buildPath("/adm/rs/subscriptions-manager/accounts", {
@@ -100,13 +106,26 @@ export default function Accounts() {
         });
     },
     {
-      revalidateIfStale: false,
+      revalidateIfStale: true,
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
       revalidateOnMount: true,
       refreshInterval: 1000 * 60,
     }
   );
+
+  const handleCloseModal = () => {
+    setIsNewModalOpen(false);
+    setIsEditModalOpen(false);
+    setIsViewModalOpen(false);
+    setCurrentAccount(null);
+    mutateAccounts(accounts, { rollbackOnError: true });
+  }
+
+  const handleSuccess = () => {
+    handleCloseModal();
+    mutateAccounts(accounts, { rollbackOnError: true });
+  }
 
   const onSubmit = (term?: string, _?: string) => {
     setSkip(0);
@@ -126,13 +145,14 @@ export default function Accounts() {
       onSubmit={onSubmit}
       setSkip={setSkip}
       setPageSize={setPageSize}
+      placeholder="INCLUIR OUTROS PARAMETROS DE FILTRAGE, IGUAL AOS ERROR CODES!!!!!!"
       isLoading={isLoadingUser}
       authorized={hasEnoughPermissions}
     >
       <div id="AccountsContent" className="flex flex-col justify-center gap-4 w-full mx-auto">
         <div className="flex justify-start mx-auto w-full xl:max-w-4xl">
           <Button
-            onClick={() => console.log("clicked")}
+            onClick={() => setIsNewModalOpen(true)}
             size="sm"
             rounded="full"
             intent="info"
@@ -158,13 +178,13 @@ export default function Accounts() {
                     <Typography as="h3">
                       <button
                         className="hover:underline text-blue-500 dark:text-lime-400 flex items-center gap-2"
-                        onClick={() => console.log(account)}
+                        onClick={() => {
+                          setCurrentAccount(account);
+                          setIsViewModalOpen(true);
+                        }}
                       >
                         <div className="flex items-center gap-2">
                           {account?.name}
-                          <span className="text-xs text-gray-500 dark:text-gray-400">
-                            <AccountType account={account} />
-                          </span>
                         </div>
                         {account.isDefault && (
                           <span className="text-xs text-gray-500 dark:text-gray-400">
@@ -177,13 +197,16 @@ export default function Accounts() {
                       <CopyToClipboard text={account?.id ?? ""} />
                     </div>
                   </div>
+
+                  <div className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400">
+                    Type: <AccountType account={account} />
+                  </div>
+
                   <Owners account={account} />
 
-                  <div className="text-sm">
-                    <Tooltip content="Created on" className="px-4">
-                      {formatDDMMYY(new Date(account.created), true)}
-                    </Tooltip>
-                  </div>
+                  <Typography as="small" decoration="smooth">
+                    Created: {formatDDMMYY(new Date(account.created), true)}
+                  </Typography>
                 </ListItem>
               ))}
             </PaginatedContent>
@@ -191,6 +214,21 @@ export default function Accounts() {
             <NoTenant />
           )}
       </div>
+
+      {isViewModalOpen && currentAccount && (
+        <AccountDetails
+          isOpen={isViewModalOpen}
+          onClose={handleCloseModal}
+          account={currentAccount}
+        />
+      )}
+
+      <AccountModal
+        isOpen={isNewModalOpen}
+        account={currentAccount}
+        onClose={handleCloseModal}
+        onSuccess={handleSuccess}
+      />
     </DashBoardBody>
   );
 }

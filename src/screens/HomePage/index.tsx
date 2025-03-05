@@ -8,11 +8,9 @@
 import { useMemo, useState } from "react";
 import PageBody from "@/components/ui/PageBody";
 import AppHeader from "@/components/ui/AppHeader";
-import { User } from "@auth0/auth0-react";
+import { useAuth0, User } from "@auth0/auth0-react";
 import AnonymousUser from "./AnonymousUser";
 import AuthenticatedUser from "./AuthenticatedUser";
-import useSWR from "swr";
-import { buildPath } from "@/services/openapi/mycelium-api";
 import { components } from "@/services/openapi/mycelium-schema";
 import ValidatedUser from "./ProfiledUser";
 import RegisteredUser from "./RegisteredUser";
@@ -29,6 +27,7 @@ enum Step {
 export default function HomePage() {
   const [user, setUser] = useState<User | null>(null);
   const [status, setStatus] = useState<CheckEmailStatusResponse | null>(null);
+  const { logout } = useAuth0();
 
   const currentStep = useMemo(() => {
     if (!user) return Step.CheckUserAuthentication;
@@ -42,16 +41,9 @@ export default function HomePage() {
     return Step.CheckUserAuthentication;
   }, [user, status]);
 
-  const { } = useSWR(
-    user?.email
-      ? buildPath("/adm/rs/beginners/users/status", { query: { email: user.email } })
-      : null,
-    (url) => fetch(url).then(res => res.json() as Promise<CheckEmailStatusResponse>),
-  );
-
   return (
     <PageBody padding="md">
-      <AppHeader discrete />
+      <AppHeader discrete logout={logout} />
 
       <PageBody.Content flex="center" gap={3}>
         <AnonymousUser

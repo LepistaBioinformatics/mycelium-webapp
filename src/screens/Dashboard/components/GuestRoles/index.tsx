@@ -1,5 +1,3 @@
-import { VscEye } from "react-icons/vsc";
-import { CiEdit } from "react-icons/ci";
 import PageBody from "@/components/ui/PageBody";
 import Typography from "@/components/ui/Typography";
 import useProfile from "@/hooks/use-profile";
@@ -18,6 +16,7 @@ import { camelToHumanText } from "@/functions/camel-to-human-text";
 import ListItem from "@/components/ui/ListItem";
 import { MycRole } from "@/types/MyceliumRole";
 import { MycPermission } from "@/types/MyceliumPermission";
+import PermissionIcon from "@/components/ui/PermissionIcon";
 
 type GuestRole = components["schemas"]["GuestRole"];
 
@@ -86,7 +85,7 @@ export default function GuestRoles() {
         });
     },
     {
-      revalidateIfStale: false,
+      revalidateIfStale: true,
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
       revalidateOnMount: true,
@@ -144,7 +143,7 @@ export default function GuestRoles() {
                     onClick={() => console.log(guestRole)}
                   >
                     {guestRole?.name}
-                    <Permission permission={guestRole?.permission} />
+                    <PermissionIcon permission={guestRole?.permission} />
                   </button>
                 </Typography>
                 <div className="flex gap-5">
@@ -170,23 +169,6 @@ export default function GuestRoles() {
   );
 }
 
-function Permission({
-  permission,
-  size = "md"
-}: {
-  permission: components["schemas"]["Permission"],
-  size?: "sm" | "md" | "lg"
-}) {
-  switch (permission) {
-    case "read":
-      return <VscEye className={`text-green-500 ${size === "sm" ? "text-xl" : size === "md" ? "text-2xl" : "text-3xl"}`} />;
-    case "write":
-      return <CiEdit className={`text-blue-500 ${size === "sm" ? "text-xl" : size === "md" ? "text-2xl" : "text-3xl"}`} />;
-    case "readWrite":
-      return <CiEdit className="text-yellow-500 text-3xl" />;
-  }
-}
-
 function PermissionText({ permission }: { permission: components["schemas"]["Permission"] }) {
   const text = camelToHumanText(permission);
 
@@ -195,7 +177,7 @@ function PermissionText({ permission }: { permission: components["schemas"]["Per
       <Typography>
         {text}
       </Typography>
-      <Permission permission={permission} />
+      <PermissionIcon permission={permission} />
     </div>
   )
 }
