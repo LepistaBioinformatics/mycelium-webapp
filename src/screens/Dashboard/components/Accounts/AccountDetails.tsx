@@ -19,26 +19,99 @@ import GuestToAccountModal from "./GuestToAccountModal";
 import formatEmail from "@/functions/format-email";
 import PermissionIcon from "@/components/ui/PermissionIcon";
 import DetailsBox from "@/components/ui/DetailsBox";
+import EditAccountModal from "./EditAccountModal";
 
 type Account = components["schemas"]["Account"];
 type GuestUser = components["schemas"]["GuestUser"];
 type GuestRole = components["schemas"]["GuestRole"];
 
 interface Props {
-  account: Account;
+  accountId: string;
   isOpen: boolean;
   onClose: () => void;
 }
 
-export default function AccountDetails({ isOpen, onClose, account }: Props) {
+enum OpenedSection {
+  Details,
+  Invitations,
+  AdvancedActions,
+}
+
+export default function AccountDetails({ isOpen, onClose, accountId }: Props) {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isGuestToAccountModalOpen, setIsGuestToAccountModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const { profile, getAccessTokenSilently } = useProfile();
+
+  const [openedSection, setOpenedSection] = useState<OpenedSection>(OpenedSection.Details);
 
   const { tenantInfo } = useSelector((state: RootState) => state.tenant);
+
+  const handleToggleSection = (section: OpenedSection, state: "open" | "closed") => {
+    if (state === "open") setOpenedSection(section);
+  }
 
   const handleCloseGuestToAccountModal = () => {
     setIsGuestToAccountModalOpen(false);
   }
+
+  const handleCloseEditModal = () => {
+    setIsEditModalOpen(false);
+    mutateAccount(account, { rollbackOnError: true });
+  }
+
+  const handleSuccess = () => {
+    handleCloseEditModal();
+  }
+
+  const { data: account, mutate: mutateAccount } = useSWR<Account>(
+    buildPath("/adm/rs/subscriptions-manager/accounts/{account_id}", {
+      path: { account_id: accountId }
+    }),
+    async (url: string) => {
+      const token = await getAccessTokenSilently();
+
+      return fetch(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          [TENANT_ID_HEADER]: tenantInfo?.id ?? ""
+        }
+      })
+        .then((res) => res.json())
+        .catch((err) => {
+          console.error(err);
+
+          return null;
+        });
+    },
+    {
+      refreshInterval: 1000 * 60,
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      revalidateIfStale: false,
+    }
+  );
+
+  const owners = useMemo(() => {
+    if (!account) return null;
+
+    if ("ids" in account.owners) {
+      const accountOwners = account.owners.ids;
+
+      if (accountOwners.includes(
+        profile?.owners.find((owner) => owner.isPrincipal)?.id ?? ""
+      )) {
+
+        if (accountOwners.length === 1) {
+          return "You";
+        } else {
+          return <>You and {accountOwners.length - 1} other</>
+        }
+      };
+
+      return null;
+    }
+  }, [account, profile?.owners]);
 
   return (
     <SideCurtain
@@ -46,38 +119,76 @@ export default function AccountDetails({ isOpen, onClose, account }: Props) {
       title="Account details"
       handleClose={onClose}
     >
-      <div className="flex flex-col gap-8">
-        <div>
-          <Typography as="span" decoration="smooth">Name</Typography>
-          <Typography as="h2">{account.name}</Typography>
-        </div>
-
-        <div>
-          <Typography as="span" decoration="smooth">Created</Typography>
-          <Typography as="p">{formatDDMMYY(new Date(account.created), true)}</Typography>
-        </div>
-
-        <div>
-          <Typography as="span" decoration="smooth">Status</Typography>
-          <Typography as="p">{camelToHumanText(account?.verboseStatus ?? "")}</Typography>
-        </div>
-
-        {tenantInfo?.id && (
-          <div className="flex flex-col gap-1">
-            <Typography as="span" decoration="smooth">Invitations</Typography>
-            <Invitations account={account} tenantId={tenantInfo?.id} />
-          </div>
-        )}
+      <div>
+        <Typography as="span" decoration="smooth">Name</Typography>
+        <Typography as="h2">{account?.name}</Typography>
       </div>
 
-      <DetailsBox>
-        <DetailsBox.Summary marginTop="24">
+      <DetailsBox
+        open={openedSection === OpenedSection.Details}
+        onToggle={(state) => handleToggleSection(OpenedSection.Details, state)}
+      >
+        <DetailsBox.Summary>
+          <Typography as="span">
+            Details
+          </Typography>
+        </DetailsBox.Summary>
+
+        <DetailsBox.Content minHeight="30">
+          <div className="flex flex-col gap-8">
+            <div>
+              <Typography as="span" decoration="smooth">Created</Typography>
+              <Typography as="p">{formatDDMMYY(new Date(account?.created ?? ""), true)}</Typography>
+            </div>
+
+            <div>
+              <Typography as="span" decoration="smooth">Status</Typography>
+              <Typography as="p">{camelToHumanText(account?.verboseStatus ?? "")}</Typography>
+            </div>
+
+            {owners && (
+              <div>
+                <Typography as="span" decoration="smooth">Owners</Typography>
+                <Typography as="p">{owners}</Typography>
+              </div>
+            )}
+          </div>
+        </DetailsBox.Content>
+      </DetailsBox>
+
+      <DetailsBox
+        open={openedSection === OpenedSection.Invitations}
+        onToggle={(state) => handleToggleSection(OpenedSection.Invitations, state)}
+      >
+        <DetailsBox.Summary>
+          <Typography as="span">
+            Invitations
+          </Typography>
+        </DetailsBox.Summary>
+
+        {openedSection === OpenedSection.Invitations && (
+          <DetailsBox.Content minHeight="50">
+            {tenantInfo?.id && account && (
+              <div className="flex flex-col gap-1">
+                <Typography as="span" decoration="smooth">Invitations</Typography>
+                <Invitations account={account} tenantId={tenantInfo?.id} />
+              </div>
+            )}
+          </DetailsBox.Content>
+        )}
+      </DetailsBox>
+
+      <DetailsBox
+        open={openedSection === OpenedSection.AdvancedActions}
+        onToggle={(state) => handleToggleSection(OpenedSection.AdvancedActions, state)}
+      >
+        <DetailsBox.Summary>
           <Typography as="span">
             Advanced actions
           </Typography>
         </DetailsBox.Summary>
 
-        <DetailsBox.Content>
+        <DetailsBox.Content minHeight="50">
           <Banner intent="info">
             <div className="flex justify-between gap-2 my-5">
               <div className="flex flex-col gap-2">
@@ -96,6 +207,29 @@ export default function AccountDetails({ isOpen, onClose, account }: Props) {
                   onClick={() => setIsGuestToAccountModalOpen(true)}
                 >
                   Invite
+                </Button>
+              </div>
+            </div>
+          </Banner>
+
+          <Banner intent="info">
+            <div className="flex justify-between gap-2 my-5">
+              <div className="flex flex-col gap-2">
+                <Typography as="span">
+                  Edit account name
+                </Typography>
+
+                <Typography as="small" decoration="smooth">
+                  Edit the account name.
+                </Typography>
+              </div>
+
+              <div>
+                <Button
+                  rounded
+                  onClick={() => setIsEditModalOpen(true)}
+                >
+                  Edit
                 </Button>
               </div>
             </div>
@@ -127,7 +261,7 @@ export default function AccountDetails({ isOpen, onClose, account }: Props) {
         </DetailsBox.Content>
       </DetailsBox>
 
-      {tenantInfo?.id && (
+      {tenantInfo?.id && account && (
         <DeleteAccount
           account={account}
           tenantId={tenantInfo?.id}
@@ -141,6 +275,15 @@ export default function AccountDetails({ isOpen, onClose, account }: Props) {
           isOpen={isGuestToAccountModalOpen}
           onClose={handleCloseGuestToAccountModal}
           account={account}
+        />
+      )}
+
+      {isEditModalOpen && account && (
+        <EditAccountModal
+          isOpen={isEditModalOpen}
+          onClose={handleCloseEditModal}
+          account={account}
+          onSuccess={handleSuccess}
         />
       )}
     </SideCurtain>

@@ -1,21 +1,37 @@
 import { cva, VariantProps } from "class-variance-authority";
 
 const containerStyles = cva("w-full xl:max-w-4xl mx-auto", {
-  variants: {},
-  defaultVariants: {},
+  variants: {
+    open: {
+      true: "open",
+      false: "closed",
+    },
+  },
+  defaultVariants: {
+    open: false,
+  },
 });
 
-interface ContainerProps extends BaseProps, VariantProps<typeof containerStyles> { }
+type State = "open" | "closed";
 
-function Container({ children, ...props }: ContainerProps) {
+interface ContainerProps extends BaseProps, VariantProps<typeof containerStyles> {
+  onToggle?: (state: State) => void;
+}
+
+function Container({ children, open, onToggle, ...props }: ContainerProps) {
   return (
-    <details className={containerStyles()} {...props}>
+    <details
+      open={open ?? false}
+      onToggle={(e) => onToggle?.(e.nativeEvent.newState as State)}
+      className={containerStyles({ open })}
+      {...props}
+    >
       {children}
     </details>
   )
 }
 
-const summaryStyles = cva("cursor-pointer border-2 border-transparent border-dashed hover:border-slate-500 p-2 bg-slate-100 dark:bg-slate-800 rounded-lg", {
+const summaryStyles = cva("cursor-pointer border-2 border-transparent border-dashed hover:border-slate-500 p-2 bg-slate-100 dark:bg-slate-800 rounded-lg text-slate-500 dark:text-slate-200", {
   variants: {
     marginTop: {
       false: "mt-0",
@@ -54,22 +70,41 @@ interface SummaryProps extends BaseProps, VariantProps<typeof summaryStyles> { }
 
 function Summary({ children, marginTop, marginBottom, ...props }: SummaryProps) {
   return (
-    <summary className={summaryStyles({ marginTop, marginBottom })} {...props}>
+    <summary
+      className={summaryStyles({ marginTop, marginBottom })}
+      {...props}
+    >
       {children}
     </summary>
   )
 }
 
-const contentStyles = cva("flex flex-col gap-8 bg-slate-100 dark:bg-slate-800 rounded-lg py-5 px-2", {
-  variants: {},
-  defaultVariants: {},
+const contentStyles = cva("flex flex-col gap-8 py-5 px-2", {
+  variants: {
+    minHeight: {
+      false: "min-h-fit",
+      "screen": "min-h-screen",
+      "full": "min-h-full",
+      "30": "!min-h-[30vh]",
+      "40": "!min-h-[40vh]",
+      "50": "!min-h-[50vh]",
+      "60": "!min-h-[60vh]",
+      "70": "!min-h-[70vh]",
+      "80": "!min-h-[80vh]",
+      "90": "!min-h-[90vh]",
+      "100": "!min-h-[100vh]",
+    },
+  },
+  defaultVariants: {
+    minHeight: false,
+  },
 });
 
 interface ContentProps extends BaseProps, VariantProps<typeof contentStyles> { }
 
-function Content({ children, ...props }: ContentProps) {
+function Content({ children, minHeight, ...props }: ContentProps) {
   return (
-    <div className={contentStyles()} {...props}>
+    <div className={contentStyles({ minHeight })} {...props}>
       {children}
     </div>
   )

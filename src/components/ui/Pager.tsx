@@ -27,11 +27,15 @@ export default function Pager({
     return true;
   }, [records]);
 
-  const showPageButtons = useMemo(() => {
+  const showPreviousPageButton = useMemo(() => {
+    if (skip === 0) return true;
+    return false;
+  }, [skip]);
+
+  const showNextPageButton = useMemo(() => {
     if (!records) return false;
-    if (records?.count === 0) return false;
-    if (records?.count < pageSize) return false;
-    if (records?.records?.length === 0) return false;
+    if (records.skip + records.size >= records.count) return false;
+
     return true;
   }, [records]);
 
@@ -52,24 +56,22 @@ export default function Pager({
   if (records?.count === 0 || !records?.records) return null;
 
   return (
-    <div className="flex justify-between mx-auto w-full xl:max-w-4xl">
-      {showPageButtons && (
-        <Button fullWidth onClick={previousPage} size="sm" rounded="full" intent="link" disabled={skip === 0}>
-          Previous
-        </Button>
-      )}
+    <div className="flex justify-between mx-auto w-full xl:max-w-4xl z-1">
+      <Button fullWidth onClick={previousPage} size="sm" rounded="full" intent="link" disabled={showPreviousPageButton}>
+        Previous
+      </Button>
 
       <div className="flex gap-4 justify-center mx-auto w-full xl:max-w-4xl">
-        <div className="w-full">
-          <Typography as="span">{records?.count ?? 0} records found</Typography>
+        <div>
+          <Typography center as="span">
+            {records?.count ?? 0} records found
+          </Typography>
         </div>
       </div>
 
-      {showPageButtons && (
-        <Button fullWidth onClick={nextPage} size="sm" rounded="full" intent="link" disabled={!hasMore}>
-          Next
-        </Button>
-      )}
+      <Button fullWidth onClick={nextPage} size="sm" rounded="full" intent="link" disabled={!showNextPageButton}>
+        Next
+      </Button>
     </div>
   );
 }

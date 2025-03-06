@@ -56,8 +56,12 @@ export default function AccountModal({ isOpen, onClose, onSuccess, account }: Ac
 
     const token = await getAccessTokenSilently();
 
-    const response = await fetch(buildPath("/adm/rs/subscriptions-manager/accounts"), {
-      method: "POST",
+    const baseUrl = account ? buildPath("/adm/rs/subscriptions-manager/accounts/{account_id}", {
+      path: { account_id: account.id ?? "" }
+    }) : buildPath("/adm/rs/subscriptions-manager/accounts");
+
+    const response = await fetch(baseUrl, {
+      method: account ? "PATCH" : "POST",
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",

@@ -1,12 +1,12 @@
 import { cva, VariantProps } from "class-variance-authority";
 
-const styles = cva("w-full my-1", {
+const styles = cva("w-full", {
   variants: {
     style: {
       or: "flex items-center justify-between py-2 text-gray-700 dark:text-gray-300",
       invisible: "border-0",
       smooth: "opacity-30",
-      partial: "w-48 h-1 mx-auto my-4 bg-gray-100 border-0 rounded-sm bg-slate-300 dark:bg-slate-600",
+      partial: "w-48 h-1 mx-auto bg-gray-100 border-0 rounded-sm bg-slate-300 dark:bg-slate-600",
     },
     marginY: {
       none: "my-0",

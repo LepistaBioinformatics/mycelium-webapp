@@ -1,6 +1,3 @@
-"use client";
-
-import { PiGearFineFill } from "react-icons/pi";
 import Button from "@/components/ui/Button";
 import SideCurtain from "@/components/ui/SideCurtain";
 import Typography from "@/components/ui/Typography";
@@ -8,21 +5,16 @@ import { formatDDMMYY } from "@/functions/format-dd-mm-yy";
 import useProfile from "@/hooks/use-profile";
 import { buildPath } from "@/services/openapi/mycelium-api";
 import { components } from "@/services/openapi/mycelium-schema";
-import PaginatedRecords from "@/types/PaginatedRecords";
-import { useAuth0 } from "@auth0/auth0-react";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import useSWR from "swr";
+import { useCallback, useMemo, useState } from "react";
 import DeleteTenant from "./DeleteTenant";
 import { useDispatch, useSelector } from "react-redux";
 import { FaRegStar, FaStar } from "react-icons/fa";
 import { RootState } from "@/states/store";
 import { setTenantInfo } from "@/states/tenant.state";
-import { TENANT_ID_HEADER } from "@/constants/http-headers";
-import AccountType from "@/components/AccountType";
-import Owners from "@/components/Owners";
 import Banner from "@/components/ui/Banner";
 import CreateManagementAccount from "./CreateManagementAccount";
 import DetailsBox from "@/components/ui/DetailsBox";
+import PaginatedAccounts from "../Accounts/PaginatedAccounts";
 
 type Tenant = components["schemas"]["Tenant"];
 type Account = components["schemas"]["Account"];
@@ -33,10 +25,19 @@ interface Props {
   onClose: () => void;
 }
 
+enum OpenedSection {
+  Details,
+  AssociatedAccounts,
+  AdvancedActions,
+}
+
 export default function TenantDetails({ isOpen, onClose, tenant }: Props) {
   const { profile, getAccessTokenSilently } = useProfile();
 
+  const [openedSection, setOpenedSection] = useState<OpenedSection>(OpenedSection.Details);
+
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
   const [isCreateManagementAccountModalOpen, setIsCreateManagementAccountModalOpen] = useState(false);
 
   const [accounts, setAccounts] = useState<Account[] | null>(null);
@@ -44,6 +45,10 @@ export default function TenantDetails({ isOpen, onClose, tenant }: Props) {
   const { tenantInfo } = useSelector((state: RootState) => state.tenant);
 
   const dispatch = useDispatch();
+
+  const handleToggleSection = (section: OpenedSection, state: "open" | "closed") => {
+    if (state === "open") setOpenedSection(section);
+  }
 
   const setTokenPublicInformation = useCallback(async (tenantId: string | null | undefined) => {
     if (!tenantId) return;
@@ -99,61 +104,88 @@ export default function TenantDetails({ isOpen, onClose, tenant }: Props) {
       title="Tenant details"
       handleClose={onClose}
     >
-      <div className="flex flex-col gap-8">
-        <div>
-          <Typography as="span" decoration="smooth">Name</Typography>
-          <Typography as="h2">
-            <div className="flex items-center gap-2">
-              {tenant.name}
-              <span className="cursor-pointer">
-                {tenantInfo?.id === tenant.id ? (
-                  <FaStar
-                    className="text-yellow-500"
-                    onClick={() => setTokenPublicInformation(tenant.id)}
-                  />
-                ) : (
-                  <FaRegStar
-                    className="text-gray-500"
-                    onClick={() => setTokenPublicInformation(tenant.id)}
-                  />
-                )}
-              </span>
-            </div>
-          </Typography>
-        </div>
-
-        <div>
-          <Typography as="span" decoration="smooth">Description</Typography>
-          <Typography as="p">{tenant.description}</Typography>
-        </div>
-
-        <div>
-          <Typography as="span" decoration="smooth">Created</Typography>
-          <Typography as="p">{formatDDMMYY(new Date(tenant.created), true)}</Typography>
-        </div>
-
-        {owners && (
-          <div>
-            <Typography as="span" decoration="smooth">Owners</Typography>
-            <Typography as="p">{owners}</Typography>
-          </div>
-        )}
-      </div>
-
       <div>
-        {tenant.id && (
-          <AssociatedAccounts tenantId={tenant.id} setAccounts={setAccounts} />
-        )}
+        <Typography as="span" decoration="smooth">Name</Typography>
+        <Typography as="h2">
+          <div className="flex items-center gap-2">
+            {tenant.name}
+            <span className="cursor-pointer">
+              {tenantInfo?.id === tenant.id ? (
+                <FaStar
+                  className="text-yellow-500"
+                  onClick={() => setTokenPublicInformation(tenant.id)}
+                />
+              ) : (
+                <FaRegStar
+                  className="text-gray-500"
+                  onClick={() => setTokenPublicInformation(tenant.id)}
+                />
+              )}
+            </span>
+          </div>
+        </Typography>
       </div>
 
-      <DetailsBox>
-        <DetailsBox.Summary marginTop="24">
+      <DetailsBox
+        open={openedSection === OpenedSection.Details}
+        onToggle={(state) => handleToggleSection(OpenedSection.Details, state)}
+      >
+        <DetailsBox.Summary>
+          <Typography as="span">
+            Details
+          </Typography>
+        </DetailsBox.Summary>
+
+        <DetailsBox.Content minHeight="50">
+          <div className="flex flex-col gap-8">
+            <div>
+              <Typography as="span" decoration="smooth">Description</Typography>
+              <Typography as="p">{tenant.description}</Typography>
+            </div>
+
+            <div>
+              <Typography as="span" decoration="smooth">Created</Typography>
+              <Typography as="p">{formatDDMMYY(new Date(tenant.created), true)}</Typography>
+            </div>
+
+            {owners && (
+              <div>
+                <Typography as="span" decoration="smooth">Owners</Typography>
+                <Typography as="p">{owners}</Typography>
+              </div>
+            )}
+          </div>
+        </DetailsBox.Content>
+      </DetailsBox>
+
+      <DetailsBox
+        open={openedSection === OpenedSection.AssociatedAccounts}
+        onToggle={(state) => handleToggleSection(OpenedSection.AssociatedAccounts, state)}
+      >
+        <DetailsBox.Summary>
+          <Typography as="span">
+            Associated accounts
+          </Typography>
+        </DetailsBox.Summary>
+
+        {openedSection === OpenedSection.AssociatedAccounts && (
+          <DetailsBox.Content minHeight="50">
+            {tenant.id && <AssociatedAccounts tenantId={tenant.id} />}
+          </DetailsBox.Content>
+        )}
+      </DetailsBox>
+
+      <DetailsBox
+        open={openedSection === OpenedSection.AdvancedActions}
+        onToggle={(state) => handleToggleSection(OpenedSection.AdvancedActions, state)}
+      >
+        <DetailsBox.Summary>
           <Typography as="span">
             Advanced actions
           </Typography>
         </DetailsBox.Summary>
 
-        <DetailsBox.Content>
+        <DetailsBox.Content minHeight="50">
           <Banner intent="info">
             <div className="flex justify-between gap-2 my-5">
               <div className="flex flex-col gap-2">
@@ -224,86 +256,14 @@ export default function TenantDetails({ isOpen, onClose, tenant }: Props) {
  * @param tenantId - The tenant id
  * @returns The associated accounts of the tenant
  */
-function AssociatedAccounts({
-  tenantId,
-  setAccounts
-}: {
-  tenantId: string,
-  setAccounts: (accounts: Account[]) => void
-}) {
-  const { getAccessTokenSilently } = useAuth0();
-
-  const { data: accounts } = useSWR<PaginatedRecords<Account>>(
-    buildPath("/adm/rs/subscriptions-manager/accounts"),
-    async (url: string) => {
-      const token = await getAccessTokenSilently();
-
-      return await fetch(url, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-          [TENANT_ID_HEADER]: tenantId,
-        },
-      })
-        .then((res) => res.json())
-        .catch(console.error);
-    },
-    {
-      revalidateOnFocus: false,
-      revalidateOnMount: true,
-      refreshInterval: 1000 * 60 * 2,
-    }
-  );
-
-  useEffect(() => {
-    if (accounts) setAccounts(accounts.records);
-  }, [accounts]);
-
+function AssociatedAccounts({ tenantId }: { tenantId: string }) {
   return (
-    <div className="flex flex-col gap-2 overflow-y-auto">
-      <Typography as="span" decoration="smooth">Associated accounts</Typography>
-      <div className="flex flex-col gap-2">
-        {accounts?.records.map((account) => {
-          const isTenantManager = isTenantManagerAccount(account);
-
-          return (
-            <div
-              key={account.id}
-              className="flex flex-col gap-2 bg-slate-100 dark:bg-slate-800 px-4 py-2 rounded-md"
-            >
-              <div className="flex justify-between gap-5 w-full -mb-3">
-                <div>
-                  {isTenantManager
-                    ? (
-                      <Typography as="h3" highlight>
-                        <div className="flex items-center gap-2">
-                          <PiGearFineFill className="inline-block" />
-                          <span>Management account</span>
-                        </div>
-                      </Typography>
-                    ) : (
-                      <Typography as="h3">
-                        {account.name}
-                      </Typography>
-                    )}
-                </div>
-                <AccountType account={account} />
-              </div>
-
-              {typeof account.accountType !== "string" && (
-                <AccountType account={account} part="values" />
-              )}
-
-              <Owners account={account} />
-
-              <Typography as="small" decoration="smooth">
-                Created: {formatDDMMYY(new Date(account.created), true)}
-              </Typography>
-            </div>
-          )
-        })}
-      </div>
-    </div >
+    <PaginatedAccounts
+      tiny
+      tenantId={tenantId}
+      padding="xs"
+      initialPageSize={3}
+    />
   )
 }
 

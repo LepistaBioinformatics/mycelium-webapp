@@ -1,21 +1,31 @@
 import AuthorizedOr, { AuthorizedOrProps } from "@/components/ui/AuthorizedOr";
 import PageBody from "@/components/ui/PageBody";
 import SearchBar, { SearchProps } from "@/components/ui/SearchBar";
+import { projectVariants } from "@/constants/shared-component-styles";
+
+const { padding } = projectVariants;
 
 interface Props extends BaseProps, SearchProps, AuthorizedOrProps {
-  breadcrumb: React.ReactNode;
+  padding?: keyof typeof padding;
   [key: string]: any;
 }
 
-export default function DashBoardBody({ children, breadcrumb, ...props }: Props) {
+export default function DashBoardBody({
+  children,
+  breadcrumb,
+  padding = "md",
+  ...props
+}: Props) {
   return (
-    <PageBody padding="md">
-      <PageBody.Breadcrumb>
-        <PageBody.Breadcrumb.Item>
-          Control panel
-        </PageBody.Breadcrumb.Item>
-        {breadcrumb}
-      </PageBody.Breadcrumb>
+    <PageBody padding={padding}>
+      {breadcrumb && (
+        <PageBody.Breadcrumb>
+          <PageBody.Breadcrumb.Item>
+            Control panel
+          </PageBody.Breadcrumb.Item>
+          {breadcrumb}
+        </PageBody.Breadcrumb>
+      )}
 
       <PageBody.Content>
         <SearchBar {...props} />
