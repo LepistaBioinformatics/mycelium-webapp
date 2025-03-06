@@ -26,7 +26,7 @@ const styles = cva("text-start", {
     decoration: {
       underline: "underline",
       lineThrough: "line-through",
-      smooth: "!text-gray-400 dark:!text-gray-500",
+      smooth: "!text-gray-500 dark:!text-gray-500",
       none: "",
     },
     margin: {

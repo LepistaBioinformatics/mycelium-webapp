@@ -1,3 +1,4 @@
+import Banner from "@/components/ui/Banner";
 import Button from "@/components/ui/Button";
 import Modal from "@/components/ui/Modal";
 import PermissionIcon from "@/components/ui/PermissionIcon";
@@ -19,6 +20,7 @@ import useSWR from "swr";
 
 type Account = components["schemas"]["Account"];
 type GuestRole = components["schemas"]["GuestRole"];
+type HttpJsonResponse = components["schemas"]["HttpJsonResponse"];
 
 type Inputs = {
   email: string;
@@ -49,6 +51,7 @@ export default function GuestToAccountModal({
     reset,
     watch,
     formState: { errors },
+    setError,
   } = useForm<Inputs>({
     defaultValues: {
       email: ""
@@ -93,6 +96,14 @@ export default function GuestToAccountModal({
 
     if (!response.ok) {
       setIsSubmitting(false);
+
+      if (response.status === 400) {
+        const errorMessage = await response.json() as HttpJsonResponse;
+        setError("email", { message: errorMessage.msg ?? "Failed to invite user" });
+        return;
+      }
+
+      setError("email", { message: "Failed to invite user" });
       return;
     }
 
@@ -149,6 +160,12 @@ export default function GuestToAccountModal({
               Invite
             </Button>
           )}
+
+          <div className="flex flex-col gap-2 w-full max-w-md">
+            <Banner title="User error" intent="error">
+              <Typography as="p">{errors.email?.message}</Typography>
+            </Banner>
+          </div>
         </div>
       </Modal.Body>
     </Modal>

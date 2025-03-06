@@ -17,7 +17,6 @@ import DetailsBox from "@/components/ui/DetailsBox";
 import PaginatedAccounts from "../Accounts/PaginatedAccounts";
 
 type Tenant = components["schemas"]["Tenant"];
-type Account = components["schemas"]["Account"];
 
 interface Props {
   tenant: Tenant;
@@ -39,8 +38,6 @@ export default function TenantDetails({ isOpen, onClose, tenant }: Props) {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const [isCreateManagementAccountModalOpen, setIsCreateManagementAccountModalOpen] = useState(false);
-
-  const [accounts, setAccounts] = useState<Account[] | null>(null);
 
   const { tenantInfo } = useSelector((state: RootState) => state.tenant);
 
@@ -92,11 +89,6 @@ export default function TenantDetails({ isOpen, onClose, tenant }: Props) {
       return null;
     }
   }, [tenant, profile?.owners]);
-
-  const hasTenantManager = useMemo(
-    () => hasTenantManagerAccount(accounts),
-    [accounts]
-  );
 
   return (
     <SideCurtain
@@ -203,9 +195,8 @@ export default function TenantDetails({ isOpen, onClose, tenant }: Props) {
                   rounded
                   intent="info"
                   onClick={() => setIsCreateManagementAccountModalOpen(true)}
-                  disabled={hasTenantManager}
                 >
-                  {hasTenantManager ? "Management account already exists" : "Create"}
+                  Create
                 </Button>
               </div>
             </div>
@@ -233,13 +224,11 @@ export default function TenantDetails({ isOpen, onClose, tenant }: Props) {
         </DetailsBox.Content>
       </DetailsBox>
 
-      {!hasTenantManagerAccount && (
-        <CreateManagementAccount
-          isOpen={isCreateManagementAccountModalOpen}
-          tenantId={tenant.id}
-          onClose={() => setIsCreateManagementAccountModalOpen(false)}
-        />
-      )}
+      <CreateManagementAccount
+        isOpen={isCreateManagementAccountModalOpen}
+        tenantId={tenant.id}
+        onClose={() => setIsCreateManagementAccountModalOpen(false)}
+      />
 
       <DeleteTenant
         tenant={tenant}
@@ -265,26 +254,4 @@ function AssociatedAccounts({ tenantId }: { tenantId: string }) {
       initialPageSize={3}
     />
   )
-}
-
-function hasTenantManagerAccount(accounts: Account[] | null) {
-  if (!accounts) return false;
-
-  return accounts.some(isTenantManagerAccount);
-}
-
-function isTenantManagerAccount(account: Account) {
-  if (typeof account.accountType === "string") {
-    return false;
-  }
-
-  if (typeof account.accountType === "object") {
-    const keys = Object.keys(account.accountType);
-
-    return keys.some((key) => {
-      if (key === "tenantManager") return true;
-    });
-  }
-
-  return false;
 }

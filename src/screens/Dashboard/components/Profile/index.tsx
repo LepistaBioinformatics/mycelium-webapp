@@ -8,6 +8,7 @@ import Divider from "@/components/ui/Divider";
 import { useMemo, useState } from "react";
 import Button from "@/components/ui/Button";
 import TenantOwnership from "./TenantOwnership";
+import PermissionIcon from "@/components/ui/PermissionIcon";
 
 type Profile = components["schemas"]["Profile"];
 
@@ -121,8 +122,23 @@ export default function Profile() {
             {licensedResources
               ? (
                 licensedResources?.map((resource) => (
-                  <div key={resource.accName}>
-                    <Typography>{resource.accName}</Typography>
+                  <div key={resource.accName} className="flex flex-col gap-2">
+                    <Typography as="h4">{resource.accName}</Typography>
+                    <div className="flex flex-col gap-2">
+                      <Typography as="span" decoration="smooth">
+                        Role: {resource.role}
+                      </Typography>
+                      <Typography as="span" decoration="smooth">
+                        <div className="flex gap-2 align-middle items-center">
+                          Perm: <PermissionIcon permission={resource.perm} />
+                        </div>
+                      </Typography>
+                      <Typography as="span" decoration="smooth">
+                        <div className="flex gap-2 align-middle items-center">
+                          System: {resource.sysAcc ? "Yes" : "No"}
+                        </div>
+                      </Typography>
+                    </div>
                   </div>
                 ))
               )

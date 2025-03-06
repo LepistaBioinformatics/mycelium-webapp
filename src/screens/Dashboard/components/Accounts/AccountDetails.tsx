@@ -308,12 +308,16 @@ function Invitations({ account, tenantId }: { account: Account, tenantId: string
 
     const { accountType } = account;
 
-    if (typeof accountType !== "object" || !("subscription" in accountType)) return null;
+    if (typeof accountType !== "object") return null;
 
-    return buildPath("/adm/rs/subscriptions-manager/guests/accounts/{account_id}", {
-      path: { account_id: account.id }
-    });
-  }, [account.id, tenantId]);
+    if (("subscription" in accountType) || ("tenantManager" in accountType)) {
+      return buildPath("/adm/rs/subscriptions-manager/guests/accounts/{account_id}", {
+        path: { account_id: account.id }
+      });
+    };
+
+    return null;
+  }, [account.id, account.accountType, tenantId]);
 
   const { data: invitations, isLoading } = useSWR<GuestUser[]>(
     memoizedUrl,

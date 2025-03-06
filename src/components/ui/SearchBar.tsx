@@ -4,7 +4,7 @@ import { TextInput } from "flowbite-react";
 import { useEffect, useState } from "react";
 import Typography from "./Typography";
 
-const containerStyles = cva("mx-auto sticky top-0 bg-white dark:bg-gray-700 shadow z-50", {
+const containerStyles = cva("mx-auto sticky top-2 bg-white dark:bg-gray-700 shadow-lg z-50", {
   variants: {
     commandPalette: {
       true: "rounded-lg p-2 border border-slate-200 dark:border-slate-600",
@@ -122,10 +122,10 @@ function Container({
       {commandPalette && (
         <details className="flex items-center justify-start">
           <summary
-            className="text-xs text-left px-2 pt-2 text-blue-500 dark:text-lime-400"
+            className="text-xs text-left px-2 pt-2 text-blue-500 dark:text-lime-400 hover:cursor-pointer"
             onClick={() => setShowCommandPalette(!showCommandPalette)}
           >
-            Advanced search
+            Command Palette
           </summary>
 
           {commandPalette}
@@ -135,7 +135,7 @@ function Container({
   );
 }
 
-const commandPaletteContentStyles = cva("flex flex-col gap-3 max-h-[150px] overflow-y-auto bg-white dark:bg-gray-800 rounded-lg p-2 mt-1 scrollbar", {
+const commandPaletteContentStyles = cva("flex flex-col gap-8 max-h-[250px] overflow-y-auto bg-blue-50 dark:bg-gray-800 rounded-lg p-2 mt-4 border border-slate-300 dark:border-slate-700 scrollbar", {
   variants: {},
   defaultVariants: {},
 });
@@ -150,13 +150,33 @@ function CommandPaletteContent({
   return <div className={commandPaletteContentStyles()}>{children}</div>;
 }
 
-const commandPaletteItemStyles = cva("flex items-center gap-3 hover:bg-blue-50 dark:hover:bg-gray-700", {
-  variants: {},
-  defaultVariants: {},
+const commandPaletteItemStyles = cva("flex flex-col gap-0 mb-1 hover:bg-blue-100 dark:hover:bg-gray-700", {
+  variants: {
+    disabled: {
+      true: "opacity-80 cursor-not-allowed",
+      false: "hover:text-blue-500 dark:hover:text-lime-400"
+    }
+  },
+  defaultVariants: {
+    disabled: false
+  },
+});
+
+const commandPaletteItemButtonStyles = cva("flex text-gray-700 dark:text-gray-300 items-center gap-3", {
+  variants: {
+    disabled: {
+      true: "opacity-50 cursor-not-allowed",
+      false: "hover:text-blue-500 dark:hover:text-lime-400"
+    }
+  },
+  defaultVariants: {
+    disabled: false
+  },
 });
 
 interface CommandPaletteItemProps extends VariantProps<typeof commandPaletteItemStyles> {
   brief: string;
+  description?: string;
   command: string;
   onClick: (command: string) => void;
 }
@@ -164,19 +184,32 @@ interface CommandPaletteItemProps extends VariantProps<typeof commandPaletteItem
 function CommandPaletteItem({
   brief,
   command,
+  description,
   onClick,
+  disabled,
 }: CommandPaletteItemProps) {
   return (
-    <div className={commandPaletteItemStyles()}>
-      <button
-        onClick={() => onClick(command)}
-        className="text-sm text-left text-gray-700 dark:text-gray-50 hover:text-blue-500 dark:hover:text-lime-400"
-      >
-        {command}
-      </button>
-      <Typography as="span" decoration="smooth">
-        {brief}
-      </Typography>
+    <div className={commandPaletteItemStyles({ disabled })}>
+      <div className="flex gap-2 items-center ml-3">
+        <button
+          onClick={() => onClick(command)}
+          className={commandPaletteItemButtonStyles({ disabled })}
+          disabled={disabled || false}
+        >
+          {command}
+        </button>
+        <Typography as="h5">
+          {brief}
+        </Typography>
+      </div>
+
+      <div className="ml-8 text-left">
+        {description && (
+          <Typography as="small" decoration="smooth" margin="none">
+            {description}
+          </Typography>
+        )}
+      </div>
     </div>
   );
 }

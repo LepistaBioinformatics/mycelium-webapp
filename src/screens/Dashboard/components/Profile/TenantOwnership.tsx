@@ -43,7 +43,7 @@ export default function TenantOwnership({
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
       revalidateOnMount: false,
-      refreshInterval: 1000 * 2,
+      refreshInterval: 1000 * 60 * 5, // 5 minutes
     }
   );
 
