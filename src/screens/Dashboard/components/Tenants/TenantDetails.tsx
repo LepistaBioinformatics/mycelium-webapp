@@ -252,6 +252,7 @@ function AssociatedAccounts({ tenantId }: { tenantId: string }) {
       tenantId={tenantId}
       padding="xs"
       initialPageSize={3}
+      restrictAccountTypeTo={["subscription", "tenantManager"]}
     />
   )
 }

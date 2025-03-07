@@ -33,13 +33,14 @@ interface Props {
   padding?: keyof typeof padding;
   tiny?: boolean;
   forceMutate?: Date | null;
+  restrictAccountTypeTo?: ("subscription" | "roleAssociated" | "actorAssociated" | "tenantManager")[];
 }
 
 const COMMANDS = {
   accountType: {
-    staff: {
-      brief: "Select Staff accounts",
-      command: "/staff",
+    user: {
+      brief: "Select User accounts",
+      command: "/user",
       description: "Action restricted to manager or staff users",
       adminOnly: true,
       tenantNeeded: false,
@@ -51,9 +52,9 @@ const COMMANDS = {
       adminOnly: true,
       tenantNeeded: false,
     },
-    user: {
-      brief: "Select User accounts",
-      command: "/user",
+    staff: {
+      brief: "Select Staff accounts",
+      command: "/staff",
       description: "Action restricted to manager or staff users",
       adminOnly: true,
       tenantNeeded: false,
@@ -128,6 +129,7 @@ export default function PaginatedAccounts({
   initialPageSize,
   tiny,
   forceMutate,
+  restrictAccountTypeTo,
 }: Props) {
   const {
     isLoadingUser,
@@ -171,7 +173,7 @@ export default function PaginatedAccounts({
       const tagValuePattern = /^(#.*)$/;
       const tagValuePatternTest = tagValuePattern.test(searchTerm);
 
-      if (tagValuePatternTest) {
+      if (tagValuePatternTest && !restrictAccountTypeTo) {
         const [_, tagValue] = searchTerm.split("=");
         if (tagValue) searchParams.tagValue = tagValue;
       }
@@ -191,7 +193,7 @@ export default function PaginatedAccounts({
       //
       const statusPattern = /(\/unverified|\/verified|\/inactive|\/archived)/;
 
-      if (statusPattern.test(searchTerm)) {
+      if (statusPattern.test(searchTerm) && !restrictAccountTypeTo) {
         const statusValue = statusPattern.exec(searchTerm)?.[1];
         if (statusValue) searchParams.status = statusValue?.replace("/", "");
       }
@@ -234,6 +236,20 @@ export default function PaginatedAccounts({
       });
 
       if (simpleText) searchParams.term = simpleText.trim();
+    }
+
+    if (restrictAccountTypeTo) {
+      //
+      // If none of the allowed account types is in the search params, add the first allowed
+      // account type to the search params.
+      //
+      const { accountType: accountTypeParam } = searchParams;
+
+      if (!accountTypeParam) {
+        searchParams.accountType = restrictAccountTypeTo.at(0) as any;
+      } else if (!restrictAccountTypeTo.includes(accountTypeParam as any)) {
+        searchParams.accountType = restrictAccountTypeTo.at(0) as any;
+      }
     }
 
     return buildPath("/adm/rs/subscriptions-manager/accounts", {
@@ -348,37 +364,41 @@ export default function PaginatedAccounts({
       isLoading={isLoadingUser}
       authorized={hasEnoughPermissions}
       padding={padding}
-      commandPalette={
+      commandPalette={(
         <SearchBar.Content>
           <div className="flex flex-col gap-1">
             <Typography as="h4" decoration="smooth">Account Type Filters</Typography>
-            {Object.entries(COMMANDS.accountType).map(([key, value]) => (
-              <SearchBar.Item
-                key={key}
-                brief={value.brief}
-                command={value.command}
-                description={value?.description}
-                onClick={() => setSearchTerm(value.command)}
-                disabled={(value.adminOnly && !hasEnoughPermissions) || value.tenantNeeded && !tenantId}
-              />
-            ))}
+            {Object.entries(COMMANDS.accountType)
+              ?.filter(([_, value]) => !restrictAccountTypeTo || restrictAccountTypeTo.includes(value.command.replace("/", "") as any))
+              ?.map(([key, value]) => (
+                <SearchBar.Item
+                  key={key}
+                  brief={value.brief}
+                  command={value.command}
+                  description={value?.description}
+                  onClick={() => setSearchTerm(value.command)}
+                  disabled={(value.adminOnly && !hasEnoughPermissions) || value.tenantNeeded && !tenantId}
+                />
+              ))}
           </div>
 
-          <div className="flex flex-col gap-1">
-            <Typography as="h4" decoration="smooth">Account Status Filters</Typography>
-            {Object.entries(COMMANDS.status).map(([key, value]) => (
-              <SearchBar.Item
-                key={key}
-                brief={value.brief}
-                command={value.command}
-                description={value?.description}
-                onClick={() => setSearchTerm(value.command)}
-                disabled={(value.adminOnly && !hasEnoughPermissions) || value.tenantNeeded && !tenantId}
-              />
-            ))}
-          </div>
+          {!restrictAccountTypeTo && (
+            <div className="flex flex-col gap-1">
+              <Typography as="h4" decoration="smooth">Account Status Filters</Typography>
+              {Object.entries(COMMANDS.status).map(([key, value]) => (
+                <SearchBar.Item
+                  key={key}
+                  brief={value.brief}
+                  command={value.command}
+                  description={value?.description}
+                  onClick={() => setSearchTerm(value.command)}
+                  disabled={(value.adminOnly && !hasEnoughPermissions) || value.tenantNeeded && !tenantId}
+                />
+              ))}
+            </div>
+          )}
         </ SearchBar.Content>
-      }
+      )}
     >
       <div id="AccountsContent" className="flex flex-col justify-center gap-4 w-full mx-auto">
         {toolbar}
