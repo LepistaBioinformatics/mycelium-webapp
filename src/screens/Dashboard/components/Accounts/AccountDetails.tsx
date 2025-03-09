@@ -359,7 +359,7 @@ function Invitations({ account, tenantId }: { account: Account, tenantId: string
         {invitations
           ?.slice(0, showMaxInvitations ? invitations.length : pageSize)
           ?.map((invitation) => (
-            <div key={invitation.id} className="flex flex-col gap-2 bg-white dark:bg-slate-800 border border-slate-500 w-full px-4 py-1 rounded-lg">
+            <div key={invitation.id} className="flex flex-col gap-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 shadow w-full px-4 py-1 rounded-lg">
               <Typography as="h4">
                 <div className="flex justify-between gap-2 items-center">
                   {formatEmail(invitation.email)}

@@ -14,7 +14,14 @@ export default function DashBoardBody({
   children,
   breadcrumb,
   padding = "md",
-  ...props
+  term,
+  onSubmit,
+  setSkip,
+  setPageSize,
+  placeholder,
+  commandPalette,
+  authorized,
+  isLoading,
 }: Props) {
   return (
     <PageBody padding={padding}>
@@ -28,9 +35,19 @@ export default function DashBoardBody({
       )}
 
       <PageBody.Content>
-        <SearchBar {...props} />
+        <SearchBar
+          term={term}
+          onSubmit={onSubmit}
+          setSkip={setSkip}
+          setPageSize={setPageSize}
+          placeholder={placeholder}
+          commandPalette={commandPalette}
+        />
 
-        <AuthorizedOr {...props}>
+        <AuthorizedOr
+          authorized={authorized}
+          isLoading={isLoading}
+        >
           {children}
         </AuthorizedOr>
       </PageBody.Content>

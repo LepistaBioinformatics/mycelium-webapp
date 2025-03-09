@@ -8,7 +8,7 @@ import { Tooltip } from "flowbite-react";
 import ThemeSwitcher from "./ThemeSwitcher";
 import Divider from "./Divider";
 
-const containerStyles = cva("bg-slate-200 dark:bg-slate-700 min-w-md px-2 pt-2 pb-5 flex flex-col gap-8 justify-between align-middle border-r-2 dark:border-indigo-900 shadow", {
+const containerStyles = cva("bg-slate-200 dark:bg-slate-700 min-w-md max-h-screen overflow-y-auto scrollbar px-2 pt-2 pb-5 flex flex-col gap-8 justify-between align-middle border-r-2 dark:border-indigo-900 shadow", {
   variants: {
     open: {
       true: "min-w-64",

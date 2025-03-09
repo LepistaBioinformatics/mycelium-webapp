@@ -37,7 +37,7 @@ export default function Dashboard() {
   }, [profile]);
 
   return (
-    <div className="flex h-screen overflow-y-auto">
+    <div className="flex min-h-screen max-h-screen overflow-y-auto">
       <Sidebar
         isOpen={isOpen}
         toggle={toggle}

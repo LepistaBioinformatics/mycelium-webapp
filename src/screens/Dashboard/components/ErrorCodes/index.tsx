@@ -5,7 +5,7 @@ import useSearchBarParams from "@/hooks/use-search-bar-params";
 import { buildPath } from "@/services/openapi/mycelium-api";
 import { components } from "@/services/openapi/mycelium-schema";
 import PaginatedRecords from "@/types/PaginatedRecords";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import useSWR from "swr";
 import DashBoardBody from "../DashBoardBody";
 import Button from "@/components/ui/Button";
@@ -14,10 +14,14 @@ import CopyToClipboard from "@/components/ui/CopyToClipboard";
 import ListItem from "@/components/ui/ListItem";
 import { MycRole } from "@/types/MyceliumRole";
 import { MycPermission } from "@/types/MyceliumPermission";
+import Banner from "@/components/ui/Banner";
 
 type ErrorCode = components["schemas"]["ErrorCode"];
+type HttpResponse = components["schemas"]["HttpJsonResponse"];
 
 export default function ErrorCodes() {
+  const [error, setError] = useState<HttpResponse | null>(null);
+
   const {
     isLoadingUser,
     isAuthenticated,
@@ -109,7 +113,11 @@ export default function ErrorCodes() {
           "Content-Type": "application/json",
         },
       })
-        .then((res) => {
+        .then(async (res) => {
+          if (res.status === 403) {
+            setError(await res.json());
+          }
+
           if (!res.ok) {
             throw new Error("Failed to fetch tenants");
           }
@@ -163,6 +171,14 @@ export default function ErrorCodes() {
       authorized={hasEnoughPermissions}
     >
       <div id="ErrorCodesContent" className="flex flex-col justify-center gap-4 w-full mx-auto">
+        {error && (
+          <div className="flex justify-start mx-auto w-full xl:max-w-4xl">
+            <Banner intent="error" title={error.code} >
+              {error.msg}
+            </Banner>
+          </div>
+        )}
+
         <div className="flex justify-start mx-auto w-full xl:max-w-4xl">
           <Button
             onClick={() => console.log("clicked")}
