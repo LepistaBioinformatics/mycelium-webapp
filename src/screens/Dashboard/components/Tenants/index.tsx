@@ -18,8 +18,10 @@ import PaginatedContent from "../PaginatedContent";
 import ListItem from "@/components/ui/ListItem";
 import { MycRole } from "@/types/MyceliumRole";
 import { MycPermission } from "@/types/MyceliumPermission";
+import Banner from "@/components/ui/Banner";
 
 type Tenant = components["schemas"]["Tenant"];
+type HttpResponse = components["schemas"]["HttpJsonResponse"];
 
 export default function Tenants() {
   const {
@@ -48,6 +50,7 @@ export default function Tenants() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [currentTenant, setCurrentTenant] = useState<Tenant | null>(null);
+  const [error, setError] = useState<HttpResponse | null>(null);
 
   const memoizedUrl = useMemo(() => {
     if (!isAuthenticated) return null;
@@ -79,7 +82,11 @@ export default function Tenants() {
           "Content-Type": "application/json"
         },
       })
-        .then((res) => {
+        .then(async (res) => {
+          if (res.status === 403) {
+            setError(await res.json());
+          }
+
           if (!res.ok) {
             throw new Error("Failed to fetch tenants");
           }
@@ -146,12 +153,21 @@ export default function Tenants() {
       authorized={hasEnoughPermissions}
     >
       <div id="TenantsContent" className="flex flex-col justify-center gap-4 w-full mx-auto">
+        {error && (
+          <div className="flex justify-start mx-auto w-full xl:max-w-4xl">
+            <Banner intent="error" title={error.code} >
+              {error.msg}
+            </Banner>
+          </div>
+        )}
+
         <div className="flex justify-start mx-auto w-full xl:max-w-4xl">
           <Button
             onClick={() => setIsNewModalOpen(true)}
             size="sm"
             rounded="full"
             intent="info"
+            disabled={!hasEnoughPermissions}
           >
             <span className="mx-2">Create tenant</span>
           </Button>

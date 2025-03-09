@@ -28,6 +28,10 @@ interface Props {
    */
   permissions?: MycPermission[];
   /**
+   * Should be a system account. Default is false.
+   */
+  restrictSystemAccount?: boolean;
+  /**
    * Whether to deny manager access. Default is false.
    */
   denyManager?: boolean;
@@ -76,12 +80,36 @@ export default function useProfile(args?: Props) {
       }
 
       if ("records" in profile?.licensedResources) {
-        const filteredResources = profile?.licensedResources?.records?.filter((resource) => {
-          return (
-            args?.roles?.some((role) => resource.role.includes(role)) ||
-            args?.permissions?.some((permission) => resource.perm.includes(permission))
-          );
-        });
+        const roles = args?.roles ?? [];
+        const permissions = args?.permissions ?? [];
+        const restrictSystemAccount = args?.restrictSystemAccount ?? false;
+
+        const filteredResources = profile?.licensedResources?.records
+          ?.filter((resource) => {
+            if (roles.length > 0 && permissions.length > 0) {
+              return (
+                roles.some((role) => resource.role.includes(role)) &&
+                permissions.some((permission) => resource.perm.includes(permission))
+              );
+            }
+
+            if (roles.length > 0) {
+              return roles.some((role) => resource.role.includes(role));
+            }
+
+            if (permissions.length > 0) {
+              return permissions.some((permission) => resource.perm.includes(permission));
+            }
+
+            return false;
+          })
+          ?.filter((resource) => {
+            if (restrictSystemAccount && !resource.sysAcc) {
+              return false;
+            }
+
+            return true;
+          });
 
         return filteredResources.length > 0;
       }

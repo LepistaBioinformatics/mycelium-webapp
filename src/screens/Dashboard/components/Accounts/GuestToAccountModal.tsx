@@ -162,9 +162,11 @@ export default function GuestToAccountModal({
           )}
 
           <div className="flex flex-col gap-2 w-full max-w-md">
-            <Banner title="User error" intent="error">
-              <Typography as="p">{errors.email?.message}</Typography>
-            </Banner>
+            {errors.email && (
+              <Banner title="User error" intent="error">
+                <Typography as="p">{errors.email?.message}</Typography>
+              </Banner>
+            )}
           </div>
         </div>
       </Modal.Body>

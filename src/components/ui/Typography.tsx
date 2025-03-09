@@ -16,6 +16,7 @@ const styles = cva("text-start", {
       h3: "text-xl text-slate-800 dark:text-slate-300 font-bold",
       h4: "text-lg text-slate-800 dark:text-slate-300 font-semibold",
       h5: "text-base text-slate-800 dark:text-slate-300 font-semibold",
+      h6: "text-sm text-slate-800 dark:text-slate-300 font-semibold",
     },
     highlight: {
       true: "!text-blue-500 dark:!text-lime-500",

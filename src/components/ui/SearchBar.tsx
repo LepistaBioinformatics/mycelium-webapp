@@ -4,7 +4,7 @@ import { TextInput } from "flowbite-react";
 import { useEffect, useState } from "react";
 import Typography from "./Typography";
 
-const containerStyles = cva("mx-auto sticky top-2 bg-white dark:bg-gray-700 shadow-lg z-50", {
+const containerStyles = cva("mx-auto sticky top-2 bg-white dark:bg-gray-700 shadow z-50", {
   variants: {
     commandPalette: {
       true: "rounded-lg p-2 border border-slate-200 dark:border-slate-600",

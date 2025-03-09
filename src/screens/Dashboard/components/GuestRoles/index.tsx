@@ -4,7 +4,7 @@ import useProfile from "@/hooks/use-profile";
 import { buildPath } from "@/services/openapi/mycelium-api";
 import { components } from "@/services/openapi/mycelium-schema";
 import PaginatedRecords from "@/types/PaginatedRecords";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import useSWR from "swr";
 import GuestRolesInitializer from "./GuestRolesInitializer";
 import Button from "@/components/ui/Button";
@@ -17,10 +17,14 @@ import ListItem from "@/components/ui/ListItem";
 import { MycRole } from "@/types/MyceliumRole";
 import { MycPermission } from "@/types/MyceliumPermission";
 import PermissionIcon from "@/components/ui/PermissionIcon";
+import Banner from "@/components/ui/Banner";
 
 type GuestRole = components["schemas"]["GuestRole"];
+type HttpResponse = components["schemas"]["HttpJsonResponse"];
 
 export default function GuestRoles() {
+  const [error, setError] = useState<HttpResponse | null>(null);
+
   const {
     isLoadingUser,
     isAuthenticated,
@@ -29,6 +33,7 @@ export default function GuestRoles() {
   } = useProfile({
     roles: [MycRole.GuestsManager],
     permissions: [MycPermission.Read, MycPermission.Write],
+    restrictSystemAccount: true,
   });
 
   const {
@@ -73,7 +78,11 @@ export default function GuestRoles() {
           "Content-Type": "application/json"
         },
       })
-        .then((res) => {
+        .then(async (res) => {
+          if (res.status === 403) {
+            setError(await res.json());
+          }
+
           if (!res.ok) {
             throw new Error("Failed to fetch tenants");
           }
@@ -115,12 +124,21 @@ export default function GuestRoles() {
       authorized={hasEnoughPermissions}
     >
       <div id="GuestRolesContent" className="flex flex-col justify-center gap-4 w-full mx-auto">
+        {error && (
+          <div className="flex justify-start mx-auto w-full xl:max-w-4xl">
+            <Banner intent="error" title={error.code} >
+              {error.msg}
+            </Banner>
+          </div>
+        )}
+
         <div className="flex justify-start mx-auto w-full xl:max-w-4xl">
           <Button
             onClick={() => console.log("clicked")}
             size="sm"
             rounded="full"
             intent="info"
+            disabled={!hasEnoughPermissions}
           >
             <span className="mx-2">Create guest role</span>
           </Button>
@@ -143,7 +161,7 @@ export default function GuestRoles() {
                     onClick={() => console.log(guestRole)}
                   >
                     {guestRole?.name}
-                    <PermissionIcon permission={guestRole?.permission} />
+                    <PermissionIcon permission={guestRole?.permission} ignoreTooltip />
                   </button>
                 </Typography>
                 <div className="flex gap-5">
@@ -156,13 +174,13 @@ export default function GuestRoles() {
         </PaginatedContent>
 
         <div className="flex flex-col gap-8 mb-24">
-          <GuestRolesInitializer onSuccess={mutateGuestRoles} />
-
           <div className="flex gap-2 justify-center text-sm mx-auto w-full xl:max-w-4xl items-start">
             <PermissionText permission="read" />
             <PermissionText permission="write" />
             <PermissionText permission="readWrite" />
           </div>
+
+          <GuestRolesInitializer onSuccess={mutateGuestRoles} />
         </div>
       </div>
     </DashBoardBody>
@@ -173,11 +191,11 @@ function PermissionText({ permission }: { permission: components["schemas"]["Per
   const text = camelToHumanText(permission);
 
   return (
-    <div className="flex items-center gap-0 pl-2 border-l-2">
+    <div className="flex items-center gap-1 pl-2 border-l-2">
       <Typography>
         {text}
       </Typography>
-      <PermissionIcon permission={permission} />
+      <PermissionIcon permission={permission} ignoreTooltip />
     </div>
   )
 }

@@ -42,7 +42,7 @@ export default function TenantOwnership({
     {
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
-      revalidateOnMount: false,
+      revalidateOnMount: true,
       refreshInterval: 1000 * 60 * 5, // 5 minutes
     }
   );
@@ -70,7 +70,7 @@ export default function TenantOwnership({
 
     return (
       <>
-        <Typography as="h5">
+        <Typography as="h4">
           {data.active.name}
         </Typography>
         <Since />
@@ -79,15 +79,13 @@ export default function TenantOwnership({
         </Typography>
       </>
     );
-
-
   }, [data]);
 
   return (
     <div key={tenantId}>
       <div>
         {isLoading ? "Loading..." : (
-          <div className="flex flex-col gap-2 align-middle items-center bg-slate-200 dark:bg-slate-700 bg-opacity-50 backdrop-blur-sm rounded-md p-2">
+          <div className="flex flex-col gap-2 max-w-xs bg-gray-50 dark:bg-slate-900 bg-opacity-40 rounded-md p-2 border-2 border-gray-200 dark:border-gray-700">
             <TenantData />
 
             {error && (

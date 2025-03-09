@@ -58,7 +58,7 @@ export default function Button({
 }: Props) {
   return (
     <button
-      onClick={onClick}
+      onClick={disabled ? undefined : onClick}
       className={styles({ fullWidth, intent, size, rounded, disabled })}
       type={type}
       disabled={disabled}

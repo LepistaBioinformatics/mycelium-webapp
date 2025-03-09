@@ -4,7 +4,6 @@ import PageBody from "@/components/ui/PageBody";
 import Typography from "@/components/ui/Typography";
 import useProfile from "@/hooks/use-profile";
 import { components } from "@/services/openapi/mycelium-schema";
-import Divider from "@/components/ui/Divider";
 import { useMemo, useState } from "react";
 import Button from "@/components/ui/Button";
 import TenantOwnership from "./TenantOwnership";
@@ -39,9 +38,12 @@ export default function Profile() {
       </PageBody.Breadcrumb>
 
       <PageBody.Content padding="md" container flex wrap gap={3}>
-        <Card minHeight="80vh">
+        <Card minHeight="50vh" maxHeight="90vh" padding="sm">
           <Card.Header>
-            <Typography>Profile</Typography>
+            <Typography as="h6" decoration="smooth">Profile</Typography>
+          </Card.Header>
+
+          <Card.Body>
             {isLoadingUser
               ? (
                 <Typography>Loading...</Typography>
@@ -57,27 +59,27 @@ export default function Profile() {
                   <Typography as="span">{user?.email}</Typography>
                 </>
               )}
-          </Card.Header>
+          </Card.Body>
 
-          <Divider style="partial" />
+          <Card.Body>
+            <div className="flex flex-col gap-4 mb-12">
+              <div>
+                <Typography as="small">
+                  Has privileged roles?
+                </Typography>
 
-          <div className="flex flex-col gap-4 mb-12">
-            <div>
-              <Typography as="small">
-                Has privileged roles?
-              </Typography>
-
-              <Typography as="h2">
-                {profile?.isManager || profile?.isStaff ? "Yes" : "No"}
-              </Typography>
+                <Typography as="h2">
+                  {profile?.isManager || profile?.isStaff ? "Yes" : "No"}
+                </Typography>
+              </div>
             </div>
-          </div>
+          </Card.Body>
         </Card>
 
         {tenantsOwnership && (
-          <Card minHeight="80vh" maxHeight="80vh">
+          <Card minHeight="50vh" maxHeight="90vh" padding="sm">
             <Card.Header>
-              <Typography>Ownership on Tenants</Typography>
+              <Typography as="h6" decoration="smooth">Ownership on Tenants</Typography>
             </Card.Header>
 
             <Card.Body>
@@ -113,34 +115,36 @@ export default function Profile() {
           </Card>
         )}
 
-        <Card minHeight="80vh" dashed={!licensedResources}>
+        <Card minHeight="50vh" maxHeight="90vh" dashed={!licensedResources} padding="sm">
           <Card.Header>
-            <Typography>Licensed resources</Typography>
+            <Typography as="h6" decoration="smooth">Licensed resources</Typography>
           </Card.Header>
 
           <Card.Body>
             {licensedResources
               ? (
-                licensedResources?.map((resource) => (
-                  <div key={resource.accName} className="flex flex-col gap-2">
-                    <Typography as="h4">{resource.accName}</Typography>
-                    <div className="flex flex-col gap-2">
-                      <Typography as="span" decoration="smooth">
-                        Role: {resource.role}
-                      </Typography>
-                      <Typography as="span" decoration="smooth">
-                        <div className="flex gap-2 align-middle items-center">
-                          Perm: <PermissionIcon permission={resource.perm} />
-                        </div>
-                      </Typography>
-                      <Typography as="span" decoration="smooth">
-                        <div className="flex gap-2 align-middle items-center">
-                          System: {resource.sysAcc ? "Yes" : "No"}
-                        </div>
-                      </Typography>
+                <div className="flex flex-col gap-2">
+                  {licensedResources?.map((resource) => (
+                    <div key={resource.accName} className="flex flex-col gap-2 max-w-xs bg-gray-50 dark:bg-slate-900 bg-opacity-40 rounded-md p-2 border-2 border-gray-200 dark:border-gray-700">
+                      <Typography as="h4" truncate>{resource.accName}</Typography>
+                      <div className="flex flex-col gap-2">
+                        <Typography as="span" decoration="smooth">
+                          Role: {resource.role}
+                        </Typography>
+                        <Typography as="span" decoration="smooth">
+                          <div className="flex gap-2 align-middle items-center">
+                            Perm: <PermissionIcon permission={resource.perm} />
+                          </div>
+                        </Typography>
+                        <Typography as="span" decoration="smooth">
+                          <div className="flex gap-2 align-middle items-center">
+                            System: {resource.sysAcc ? "Yes" : "No"}
+                          </div>
+                        </Typography>
+                      </div>
                     </div>
-                  </div>
-                ))
+                  ))}
+                </div>
               )
               : (
                 <div className="flex flex-col gap-2">

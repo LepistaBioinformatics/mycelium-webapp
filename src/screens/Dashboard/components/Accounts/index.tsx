@@ -36,7 +36,7 @@ export default function Accounts() {
   }
 
   return (
-    <>
+    <div className="p-5">
       <PaginatedAccounts
         tenantId={tenantInfo?.id ?? ""}
         handleClickOnAccount={handleClickOnAccount}
@@ -75,6 +75,6 @@ export default function Accounts() {
         onClose={handleCloseModal}
         onSuccess={handleSuccess}
       />
-    </>
+    </div>
   );
 }

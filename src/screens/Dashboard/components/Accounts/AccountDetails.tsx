@@ -359,12 +359,16 @@ function Invitations({ account, tenantId }: { account: Account, tenantId: string
         {invitations
           ?.slice(0, showMaxInvitations ? invitations.length : pageSize)
           ?.map((invitation) => (
-            <div key={invitation.id} className="flex flex-col gap-2 border border-slate-500 w-full px-4 py-1 rounded-lg">
-              <Typography as="h4">{formatEmail(invitation.email)}</Typography>
-              <Invitation guestRole={invitation.guestRole} />
-              <Typography as="span" decoration="smooth">
-                {invitation.wasVerified ? "Verified" : "Unverified"}
+            <div key={invitation.id} className="flex flex-col gap-2 bg-white dark:bg-slate-800 border border-slate-500 w-full px-4 py-1 rounded-lg">
+              <Typography as="h4">
+                <div className="flex justify-between gap-2 items-center">
+                  {formatEmail(invitation.email)}
+                  <Typography as="small" decoration="smooth">
+                    {invitation.wasVerified ? "Verified" : "Unverified"}
+                  </Typography>
+                </div>
               </Typography>
+              <Invitation guestRole={invitation.guestRole} />
               <Typography as="span" decoration="smooth">
                 {formatDDMMYY(new Date(invitation.created), true)}
               </Typography>
@@ -414,6 +418,7 @@ function Invitation({ guestRole }: { guestRole: GuestUser["guestRole"] }) {
   const { tenantInfo } = useSelector((state: RootState) => state.tenant);
 
   const localInvitationRecord: GuestRole | string | null = useMemo(() => {
+    if (!guestRole) return null;
     if (typeof guestRole !== "object") return null;
 
     if ("record" in guestRole) return guestRole.record;
