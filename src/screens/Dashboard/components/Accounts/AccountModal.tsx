@@ -8,6 +8,8 @@ import useProfile from "@/hooks/use-profile";
 import { buildPath } from "@/services/openapi/mycelium-api";
 import { components } from "@/services/openapi/mycelium-schema";
 import { RootState } from "@/states/store";
+import { MycPermission } from "@/types/MyceliumPermission";
+import { MycRole } from "@/types/MyceliumRole";
 import { TextInput } from "flowbite-react";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -27,7 +29,12 @@ export interface AccountModalProps {
 }
 
 export default function AccountModal({ isOpen, onClose, onSuccess, account }: AccountModalProps) {
-  const { getAccessTokenSilently } = useProfile();
+  const { getAccessTokenSilently } = useProfile({
+    roles: [MycRole.SubscriptionsManager],
+    permissions: [MycPermission.Write],
+    restrictSystemAccount: true,
+  });
+
   const [isLoading, setIsLoading] = useState(false);
 
   const { tenantInfo } = useSelector((state: RootState) => state.tenant);

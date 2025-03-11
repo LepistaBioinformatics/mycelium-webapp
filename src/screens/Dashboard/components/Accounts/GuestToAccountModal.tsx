@@ -40,6 +40,7 @@ export default function GuestToAccountModal({
   const { getAccessTokenSilently } = useProfile({
     roles: [MycRole.SubscriptionsManager],
     permissions: [MycPermission.Write],
+    restrictSystemAccount: true,
   });
 
   const { tenantInfo } = useSelector((state: RootState) => state.tenant);
@@ -80,19 +81,21 @@ export default function GuestToAccountModal({
 
     const token = await getAccessTokenSilently();
 
-    const response = await fetch(buildPath("/adm/rs/subscriptions-manager/guests/accounts/{account_id}/roles/{role_id}", {
-      path: { account_id: account.id, role_id: selectedRole?.id },
-    }), {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-        [TENANT_ID_HEADER]: tenantInfo?.id ?? "",
-      },
-      body: JSON.stringify({
-        email: data.email
-      })
-    })
+    const response = await fetch(
+      buildPath("/adm/rs/subscriptions-manager/guests/accounts/{account_id}/roles/{role_id}", {
+        path: { account_id: account.id, role_id: selectedRole?.id },
+      }),
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+          [TENANT_ID_HEADER]: tenantInfo?.id ?? "",
+        },
+        body: JSON.stringify({
+          email: data.email
+        })
+      });
 
     if (!response.ok) {
       setIsSubmitting(false);
@@ -106,6 +109,8 @@ export default function GuestToAccountModal({
       setError("email", { message: "Failed to invite user" });
       return;
     }
+
+    setIsSubmitting(false);
 
     onClose();
 

@@ -24,6 +24,7 @@ export default function DeleteAccount({ account, isOpen, onClose, tenantId }: Pr
   const { getAccessTokenSilently } = useProfile({
     roles: [MycRole.TenantManager],
     permissions: [MycPermission.Write],
+    restrictSystemAccount: true,
   });
 
   const [isLoading, setIsLoading] = useState(false);

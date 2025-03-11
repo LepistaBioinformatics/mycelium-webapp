@@ -6,7 +6,7 @@ import { formatDDMMYY } from "@/functions/format-dd-mm-yy";
 import useProfile from "@/hooks/use-profile";
 import { buildPath } from "@/services/openapi/mycelium-api";
 import { components } from "@/services/openapi/mycelium-schema";
-import { useMemo, useState } from "react";
+import { Fragment, useMemo, useState } from "react";
 import useSWR from "swr";
 import DeleteAccount from "./DeleteAccount";
 import { RootState } from "@/states/store";
@@ -20,6 +20,7 @@ import formatEmail from "@/functions/format-email";
 import PermissionIcon from "@/components/ui/PermissionIcon";
 import DetailsBox from "@/components/ui/DetailsBox";
 import EditAccountModal from "./EditAccountModal";
+import UnInviteGuestModal from "./UnInviteGuestModal";
 
 type Account = components["schemas"]["Account"];
 type GuestUser = components["schemas"]["GuestUser"];
@@ -300,6 +301,7 @@ export default function AccountDetails({ isOpen, onClose, accountId }: Props) {
 function Invitations({ account, tenantId }: { account: Account, tenantId: string }) {
   const pageSize = 2;
   const [showMaxInvitations, setShowMaxInvitations] = useState<boolean>(false);
+  const [isUnInviteModalOpen, setIsUnInviteModalOpen] = useState<boolean>(false);
 
   const { getAccessTokenSilently } = useProfile();
 
@@ -319,7 +321,11 @@ function Invitations({ account, tenantId }: { account: Account, tenantId: string
     return null;
   }, [account.id, account.accountType, tenantId]);
 
-  const { data: invitations, isLoading } = useSWR<GuestUser[]>(
+  const {
+    data: invitations,
+    mutate: mutateInvitations,
+    isLoading
+  } = useSWR<GuestUser[]>(
     memoizedUrl,
     async (url: string) => {
       if (!tenantId) return null;
@@ -344,8 +350,19 @@ function Invitations({ account, tenantId }: { account: Account, tenantId: string
 
           return null;
         });
+    },
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      revalidateOnMount: true,
+      refreshInterval: 1000 * 60,
     }
   );
+
+  const handleCloseUnInviteModal = () => {
+    setIsUnInviteModalOpen(false);
+    mutateInvitations(invitations, { rollbackOnError: true });
+  }
 
   if (isLoading) return <div>Loading...</div>;
 
@@ -359,20 +376,65 @@ function Invitations({ account, tenantId }: { account: Account, tenantId: string
         {invitations
           ?.slice(0, showMaxInvitations ? invitations.length : pageSize)
           ?.map((invitation) => (
-            <div key={invitation.id} className="flex flex-col gap-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 shadow w-full px-4 py-1 rounded-lg">
-              <Typography as="h4">
-                <div className="flex justify-between gap-2 items-center">
-                  {formatEmail(invitation.email)}
-                  <Typography as="small" decoration="smooth">
-                    {invitation.wasVerified ? "Verified" : "Unverified"}
-                  </Typography>
-                </div>
-              </Typography>
-              <Invitation guestRole={invitation.guestRole} />
-              <Typography as="span" decoration="smooth">
-                {formatDDMMYY(new Date(invitation.created), true)}
-              </Typography>
-            </div>
+            <Fragment key={invitation.id} >
+              <div className="flex flex-col gap-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 shadow w-full px-4 py-1 rounded-lg">
+                <Typography as="h4">
+                  <div className="flex justify-between gap-2 items-center">
+                    {formatEmail(invitation.email)}
+                    <Typography as="small" decoration="smooth">
+                      {invitation.wasVerified ? "Verified" : "Unverified"}
+                    </Typography>
+                  </div>
+                </Typography>
+                <Invitation guestRole={invitation.guestRole} />
+                <Typography as="span" decoration="smooth">
+                  {formatDDMMYY(new Date(invitation.created), true)}
+                </Typography>
+
+                <DetailsBox>
+                  <DetailsBox.Summary>
+                    <Typography as="span">
+                      Actions
+                    </Typography>
+                  </DetailsBox.Summary>
+
+                  <DetailsBox.Content>
+                    <Banner intent="warning">
+                      <div className="flex justify-between gap-2 my-5">
+                        <div className="flex flex-col gap-2">
+                          <Typography as="span">
+                            Uninvite user
+                          </Typography>
+
+                          <Typography as="small" decoration="smooth">
+                            Uninvite a user from the account.
+                          </Typography>
+                        </div>
+
+                        <div>
+                          <Button
+                            rounded
+                            intent="warning"
+                            onClick={() => setIsUnInviteModalOpen(true)}
+                          >
+                            Uninvite
+                          </Button>
+                        </div>
+                      </div>
+                    </Banner>
+                  </DetailsBox.Content>
+                </DetailsBox>
+              </div>
+
+              {account.id && (
+                <UnInviteGuestModal
+                  guestUser={invitation}
+                  accountId={account.id}
+                  isOpen={isUnInviteModalOpen}
+                  onClose={handleCloseUnInviteModal}
+                />
+              )}
+            </Fragment>
           ))}
       </div>
 

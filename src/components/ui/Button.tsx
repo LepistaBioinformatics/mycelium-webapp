@@ -15,7 +15,7 @@ const styles = cva("text-gray-700 dark:text-gray-50", {
     intent: {
       primary: "bg-indigo-500 hover:bg-blue-600 text-white",
       secondary: "bg-gray-500 hover:bg-gray-600",
-      warning: "bg-yellow-500 text-white hover:bg-yellow-600",
+      warning: "bg-yellow-500 dark:bg-yellow-600 text-white hover:bg-yellow-600 hover:dark:bg-yellow-700 font-semibold",
       danger: "bg-red-500 text-white hover:bg-red-600",
       link: "bg-transparent hover:bg-transparent border border-transparent hover:border-blue-500",
       info: "bg-blue-500 text-white hover:bg-blue-600 bg-opacity-50",

@@ -143,6 +143,7 @@ export default function PaginatedAccounts({
   } = useProfile({
     roles: [MycRole.SubscriptionsManager],
     permissions: [MycPermission.Read, MycPermission.Write],
+    restrictSystemAccount: true,
   });
 
   const {
@@ -286,6 +287,7 @@ export default function PaginatedAccounts({
         .then(async (res) => {
           if (res.status === 403) {
             setError(await res.json());
+            return null;
           }
 
           if (!res.ok) {
