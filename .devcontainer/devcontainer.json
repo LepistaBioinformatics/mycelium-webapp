@@ -1,24 +1,22 @@
 {
-    "name": "Mycelium WebApp with React Vite Dev Container",
-    "build": {
-        "dockerfile": "Dockerfile"
-    },
-    "workspaceFolder": "/workspace",
-    "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached",
-    "forwardPorts": [
-        5173
-    ],
-    "postCreateCommand": "yarn install",
-    "postStartCommand": "yarn dev",
-    "customizations": {
-        "vscode": {
-            "extensions": [
-                "dbaeumer.vscode-eslint",
-                "esbenp.prettier-vscode"
-            ],
-            "settings": {
-                "terminal.integrated.defaultProfile.linux": "bash"
-            }
-        }
+  "name": "Mycelium WebApp | Dev Container",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {}
+  },
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "workspaceFolder": "/workspace",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached",
+  "forwardPorts": [5173],
+  "postCreateCommand": "yarn install",
+  "postStartCommand": "yarn dev",
+  "customizations": {
+    "vscode": {
+      "extensions": ["dbaeumer.vscode-eslint", "esbenp.prettier-vscode"],
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash"
+      }
     }
+  }
 }

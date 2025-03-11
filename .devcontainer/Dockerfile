@@ -1,4 +1,4 @@
-FROM node:20-bullseye
+FROM mcr.microsoft.com/devcontainers/base:jammy
 
 WORKDIR /workspace
 
