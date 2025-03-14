@@ -1,9 +1,11 @@
 import Banner from "@/components/ui/Banner";
 import Button from "@/components/ui/Button";
+import FormField from "@/components/ui/FomField";
 import Modal from "@/components/ui/Modal";
 import PermissionIcon from "@/components/ui/PermissionIcon";
 import Typography from "@/components/ui/Typography";
 import { TENANT_ID_HEADER } from "@/constants/http-headers";
+import validateEmail from "@/functions/validate-email";
 import useProfile from "@/hooks/use-profile";
 import useSearchBarParams from "@/hooks/use-search-bar-params";
 import { buildPath } from "@/services/openapi/mycelium-api";
@@ -74,11 +76,6 @@ export default function GuestToAccountModal({
       return;
     }
 
-    if (!tenantInfo?.id) {
-      setIsSubmitting(false);
-      return;
-    }
-
     const token = await getAccessTokenSilently();
 
     const response = await fetch(
@@ -90,7 +87,7 @@ export default function GuestToAccountModal({
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
-          [TENANT_ID_HEADER]: tenantInfo?.id ?? "",
+          ...(tenantInfo?.id ? { [TENANT_ID_HEADER]: tenantInfo?.id } : {}),
         },
         body: JSON.stringify({
           email: data.email
@@ -100,9 +97,17 @@ export default function GuestToAccountModal({
     if (!response.ok) {
       setIsSubmitting(false);
 
-      if (response.status === 400) {
+      if (response.status >= 400 && response.status < 500) {
         const errorMessage = await response.json() as HttpJsonResponse;
-        setError("email", { message: errorMessage.msg ?? "Failed to invite user" });
+
+        if (typeof errorMessage === "object" && "message" in errorMessage) {
+          setError("email", { message: errorMessage.message as string ?? "Failed to invite user" });
+        } else if (typeof errorMessage === "object" && "msg" in errorMessage) {
+          setError("email", { message: errorMessage.msg ?? "Failed to invite user" });
+        } else {
+          setError("email", { message: "Failed to invite user" });
+        }
+
         return;
       }
 
@@ -117,6 +122,10 @@ export default function GuestToAccountModal({
     reset();
   }
 
+  const emailIsValid = useMemo(() => {
+    return validateEmail(watch("email"));
+  }, [watch("email")]);
+
   return (
     <Modal open={isOpen}>
       <Modal.Header handleClose={onClose}>
@@ -125,16 +134,13 @@ export default function GuestToAccountModal({
 
       <Modal.Body>
         <div className="flex flex-col gap-8 p-3 xl:min-w-[500px] w-full">
-          <div className="flex flex-col gap-0">
-            <Typography as="span">1. Guest to account</Typography>
-            <Typography as="h3">{account.name}</Typography>
-          </div>
-
-          <div className="flex flex-col gap-0">
-            <Typography as="span">2. The email address</Typography>
-
+          <FormField
+            id="email"
+            label="1. With the email address"
+            title="The email address of the guest user. User will be notified via email about invitation"
+          >
             <TextInput
-              {...register("email")}
+              id="email"
               type="email"
               placeholder="username@example.com"
               color="custom"
@@ -142,20 +148,39 @@ export default function GuestToAccountModal({
               autoFocus
               theme={{
                 field: {
-                  input: { colors: { custom: "border-slate-400 bg-blue-50 text-slate-900 focus:border-cyan-500 focus:ring-slate-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white placeholder-slate-500  dark:placeholder-slate-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500", } }
+                  input: {
+                    colors: {
+                      custom: "border-slate-400 bg-blue-50 text-slate-900 focus:border-cyan-500 focus:ring-slate-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white placeholder-slate-500  dark:placeholder-slate-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500",
+                    }
+                  }
                 }
               }}
+              {...register("email", { required: true })}
             />
 
+            {watch("email") && !emailIsValid && (
+              <Typography as="small" decoration="smooth">
+                Waiting for a valid email address...
+              </Typography>
+            )}
+
             {errors.email && <span>This field is required</span>}
-          </div>
+          </FormField>
+
+          <FormField
+            label="2. To work on account"
+            title="The account to invite the guest to"
+          >
+            <Typography as="h3">{account.name}</Typography>
+          </FormField>
 
           <GuestRoleSelect
             selectedRole={selectedRole}
             setSelectedRole={(role) => setSelectedRole(role)}
+            shouldBeSystemRole={account.isDefault}
           />
 
-          {selectedRole && watch("email") && account?.id && (
+          {selectedRole && emailIsValid && account?.id && (
             <Button
               rounded
               fullWidth
@@ -191,10 +216,12 @@ type GuestRoleSelectInputs = {
  */
 function GuestRoleSelect({
   selectedRole,
-  setSelectedRole
+  setSelectedRole,
+  shouldBeSystemRole,
 }: {
   selectedRole?: GuestRole | null,
-  setSelectedRole: (role: GuestRole) => void
+  setSelectedRole: (role: GuestRole) => void,
+  shouldBeSystemRole: boolean
 }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isEditing, setIsEditing] = useState(selectedRole ? false : true);
@@ -210,7 +237,7 @@ function GuestRoleSelect({
 
   const { searchTerm, setSearchTerm, pageSize } = useSearchBarParams({
     initialSkip: 0,
-    initialPageSize: 3,
+    initialPageSize: 5,
   });
 
   const {
@@ -230,6 +257,12 @@ function GuestRoleSelect({
     let searchParams: Record<string, string> = { pageSize: pageSize.toString() };
 
     if (searchTerm && searchTerm !== "") searchParams.name = searchTerm;
+
+    if (shouldBeSystemRole) {
+      searchParams.system = "true"
+    } else {
+      searchParams.system = "false"
+    }
 
     return buildPath("/adm/rs/subscriptions-manager/guest-roles", {
       query: searchParams
@@ -284,9 +317,10 @@ function GuestRoleSelect({
   }
 
   return (
-    <div className="flex flex-col">
-      <Typography as="span">3. With role</Typography>
-
+    <FormField
+      label="3. Given the role privileges"
+      title="The role of the guest user"
+    >
       <div>
         {selectedRole && !isEditing && (
           <div className="flex flex-col gap-2">
@@ -314,6 +348,7 @@ function GuestRoleSelect({
                 sizing="sm"
                 color="custom"
                 autoComplete="off"
+                aria-autocomplete="list"
                 theme={{
                   field: {
                     input: {
@@ -330,9 +365,11 @@ function GuestRoleSelect({
               <input type="submit" className="hidden" />
             </form>
 
-            {(isLoading || isValidating || isSubmitting) && <span>Loading...</span>}
+            {(isLoading || isValidating || isSubmitting)
+              ? <span>Loading...</span>
+              : <Typography as="small" decoration="smooth">Click to select</Typography>
+            }
 
-            <Typography as="small" decoration="smooth">Click to select</Typography>
             <div className="flex flex-col mt-2 shadow-lg relative">
               {guestRoles?.records.map((role) => (
                 <div
@@ -354,6 +391,6 @@ function GuestRoleSelect({
           </div>
         )}
       </div>
-    </div>
+    </FormField>
   )
 }

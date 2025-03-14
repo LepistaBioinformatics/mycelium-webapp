@@ -3,6 +3,7 @@
 import Banner from "@/components/ui/Banner";
 import Button from "@/components/ui/Button";
 import Divider from "@/components/ui/Divider";
+import FormField from "@/components/ui/FomField";
 import Modal from "@/components/ui/Modal";
 import Typography from "@/components/ui/Typography";
 import { TENANT_ID_HEADER } from "@/constants/http-headers";
@@ -132,27 +133,28 @@ export default function AccountModal({ isOpen, onClose, onSuccess, account }: Ac
 
       <Modal.Body>
         <form
-          className="flex flex-col gap-2 w-full mb-24"
+          className="flex flex-col gap-5 w-full mb-24"
           onSubmit={handleSubmit(onSubmit)}
         >
-          <TextInput
-            className="my-8"
-            placeholder="My best account"
-            sizing="lg"
-            color="custom"
-            autoFocus
-            theme={{
-              field: {
-                input: {
-                  colors: {
-                    custom: "border-slate-400 bg-blue-50 text-slate-900 focus:border-cyan-500 focus:ring-slate-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white placeholder-slate-500  dark:placeholder-slate-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500",
-                  },
+          <FormField label="Name" title="Name of your account">
+            <TextInput
+              placeholder="My best account"
+              sizing="lg"
+              color="custom"
+              autoFocus
+              theme={{
+                field: {
+                  input: {
+                    colors: {
+                      custom: "border-slate-400 bg-blue-50 text-slate-900 focus:border-cyan-500 focus:ring-slate-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white placeholder-slate-500  dark:placeholder-slate-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500",
+                    },
+                  }
                 }
-              }
-            }}
-            {...register("name")}
-          />
-          {errors.name && <span>This field is required</span>}
+              }}
+              {...register("name")}
+            />
+            {errors.name && <span>This field is required</span>}
+          </FormField>
 
           <Button
             rounded

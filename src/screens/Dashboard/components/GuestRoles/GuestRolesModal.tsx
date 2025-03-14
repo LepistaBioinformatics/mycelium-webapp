@@ -7,38 +7,44 @@ import Typography from "@/components/ui/Typography";
 import useProfile from "@/hooks/use-profile";
 import { buildPath } from "@/services/openapi/mycelium-api";
 import { components } from "@/services/openapi/mycelium-schema";
-import { Textarea, TextInput } from "flowbite-react";
+import { MycPermission } from "@/types/MyceliumPermission";
+import { MycRole } from "@/types/MyceliumRole";
+import { Select, Textarea, TextInput } from "flowbite-react";
 import { useMemo, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
-type Tenant = components["schemas"]["Tenant"];
+type GuestRole = components["schemas"]["GuestRole"];
 
 type Inputs = {
   name: string;
   description: string;
-  ownerId?: string;
+  permission?: MycPermission | undefined;
+  system: boolean;
 }
 
-export interface TenantModalProps {
+export interface GuestRolesModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSuccess: () => void;
-  tenant: Tenant | null;
+  guestRole: GuestRole | null;
 }
 
-export default function TenantModal({ isOpen, onClose, onSuccess, tenant }: TenantModalProps) {
-  const { profile, getAccessTokenSilently } = useProfile();
+export default function GuestRolesModal({
+  isOpen,
+  onClose,
+  onSuccess,
+  guestRole
+}: GuestRolesModalProps) {
   const [isLoading, setIsLoading] = useState(false);
 
-  const principalOwner = useMemo(() => {
-    if (!tenant) return null;
-
-    if ("records" in tenant.owners) {
-      return tenant.owners.records.find((owner) => owner.isPrincipal);
-    }
-
-    return null;
-  }, [tenant]);
+  const {
+    isAuthenticated,
+    hasEnoughPermissions,
+    getAccessTokenSilently
+  } = useProfile({
+    roles: [MycRole.GuestsManager],
+    permissions: [MycPermission.Write],
+  });
 
   const {
     register,
@@ -48,9 +54,10 @@ export default function TenantModal({ isOpen, onClose, onSuccess, tenant }: Tena
     formState: { errors },
   } = useForm<Inputs>({
     defaultValues: {
-      name: tenant?.name ?? "",
-      description: tenant?.description ?? "",
-      ownerId: principalOwner?.id ?? ""
+      name: guestRole?.name ?? "",
+      description: guestRole?.description ?? "",
+      permission: guestRole?.permission as MycPermission | undefined || MycPermission.Read,
+      system: false
     }
   })
 
@@ -62,25 +69,26 @@ export default function TenantModal({ isOpen, onClose, onSuccess, tenant }: Tena
     reset();
   }
 
+  const memoizedUrl = useMemo(() => {
+    if (!isAuthenticated) return null;
+    if (!hasEnoughPermissions) return null;
+
+    return buildPath("/adm/rs/guests-manager/guest-roles");
+  }, [isAuthenticated, hasEnoughPermissions]);
+
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     setIsLoading(true);
 
-    const ownershipId = profile?.owners.find((owner) => owner.isPrincipal)?.id;
-
-    if (!ownershipId) {
-      setIsLoading(false);
-      return;
-    } else {
-      data = {
-        ...data,
-        ownerId: ownershipId
-      }
-    }
-
     const token = await getAccessTokenSilently();
 
-    const response = await fetch(buildPath("/adm/su/managers/tenants"), {
-      method: "POST",
+    if (!memoizedUrl) {
+      console.error("Unable to submit form, missing permissions or authentication");
+      setIsLoading(false);
+      return;
+    }
+
+    const response = await fetch(memoizedUrl, {
+      method: guestRole ? "PATCH" : "POST",
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json"
@@ -98,7 +106,7 @@ export default function TenantModal({ isOpen, onClose, onSuccess, tenant }: Tena
   return (
     <Modal open={isOpen}>
       <Modal.Header handleClose={onClose}>
-        <Typography>Create tenant</Typography>
+        <Typography>Create guest role</Typography>
       </Modal.Header>
 
       <Modal.Body>
@@ -106,10 +114,10 @@ export default function TenantModal({ isOpen, onClose, onSuccess, tenant }: Tena
           className="flex flex-col gap-2 w-full"
           onSubmit={handleSubmit(onSubmit)}
         >
-          <FormField label="Name" title="Name of your tenant">
+          <FormField label="Name" title="Name of your guest role">
             <TextInput
-              className="my-2"
-              placeholder="Name of your tenant"
+              id="name"
+              placeholder="Name of your guest role"
               sizing="lg"
               color="custom"
               autoFocus
@@ -127,10 +135,11 @@ export default function TenantModal({ isOpen, onClose, onSuccess, tenant }: Tena
             {errors.name && <span>This field is required</span>}
           </FormField>
 
-          <FormField label="Description" title="Describe your tenant">
+          <FormField label="Description" title="Describe your guest role">
             <Textarea
-              className="my-2 h-24 p-4"
-              placeholder="Describe your tenant"
+              id="description"
+              className="h-24 p-4"
+              placeholder="Describe your guest role"
               rows={4}
               color="custom"
               theme={{
@@ -143,12 +152,25 @@ export default function TenantModal({ isOpen, onClose, onSuccess, tenant }: Tena
             {errors.description && <span>This field is required</span>}
           </FormField>
 
+          <FormField label="Permission" title="Permission of your guest role">
+            <Select
+              id="permission"
+              sizing="lg"
+              defaultValue={guestRole?.permission as MycPermission | undefined || MycPermission.Read}
+              {...register("permission")}
+            >
+              <option value={MycPermission.Read}>Read</option>
+              <option value={MycPermission.Write}>Write</option>
+              <option value={MycPermission.ReadWrite}>Read/Write</option>
+            </Select>
+          </FormField>
+
           <Button
             rounded
             type="submit"
             disabled={!nameWatch || !descriptionWatch || isLoading}
           >
-            {tenant
+            {guestRole
               ? isLoading ? "Updating..." : "Update"
               : isLoading ? "Creating..." : "Create"}
           </Button>

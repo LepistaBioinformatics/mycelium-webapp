@@ -1,4 +1,5 @@
 import PageBody from "@/components/ui/PageBody";
+import { RiRobot2Line } from "react-icons/ri";
 import Typography from "@/components/ui/Typography";
 import useProfile from "@/hooks/use-profile";
 import { buildPath } from "@/services/openapi/mycelium-api";
@@ -18,12 +19,15 @@ import { MycRole } from "@/types/MyceliumRole";
 import { MycPermission } from "@/types/MyceliumPermission";
 import PermissionIcon from "@/components/ui/PermissionIcon";
 import Banner from "@/components/ui/Banner";
+import GuestRolesModal from "./GuestRolesModal";
 
 type GuestRole = components["schemas"]["GuestRole"];
 type HttpResponse = components["schemas"]["HttpJsonResponse"];
 
 export default function GuestRoles() {
   const [error, setError] = useState<HttpResponse | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentGuestRole, setCurrentGuestRole] = useState<GuestRole | null>(null);
 
   const {
     isLoadingUser,
@@ -47,6 +51,17 @@ export default function GuestRoles() {
     initialSkip: 0,
     initialPageSize: 10,
   });
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setCurrentGuestRole(null);
+    mutateGuestRoles(guestRoles, { rollbackOnError: true });
+  }
+
+  const handleSuccess = () => {
+    handleCloseModal();
+    mutateGuestRoles(guestRoles, { rollbackOnError: true });
+  }
 
   const memoizedUrl = useMemo(() => {
     if (!isAuthenticated) return null;
@@ -134,7 +149,7 @@ export default function GuestRoles() {
 
         <div className="flex justify-start mx-auto w-full xl:max-w-4xl">
           <Button
-            onClick={() => console.log("clicked")}
+            onClick={() => setIsModalOpen(true)}
             size="sm"
             rounded="full"
             intent="info"
@@ -155,18 +170,31 @@ export default function GuestRoles() {
           {guestRoles?.records?.map((guestRole) => (
             <ListItem key={guestRole?.id} >
               <div className="flex justify-between gap-3">
-                <Typography as="h3">
-                  <button
-                    className="hover:underline text-blue-500 dark:text-lime-400 flex items-center gap-2"
-                    onClick={() => console.log(guestRole)}
-                  >
+                <Typography as="h3" title={`${guestRole.system ? "System" : "Guest"} Role name (${guestRole?.name}) with permission (${guestRole?.permission})`}>
+                  <div className="flex items-center gap-2">
+                    {guestRole.system && <RiRobot2Line className="text-blue-500 dark:text-lime-500" />}
                     {guestRole?.name}
                     <PermissionIcon permission={guestRole?.permission} ignoreTooltip />
-                  </button>
+                  </div>
                 </Typography>
                 <div className="flex gap-5">
                   <CopyToClipboard text={guestRole?.id ?? ""} />
                 </div>
+              </div>
+
+              <div className="flex gap-1">
+                <Typography
+                  as="small"
+                  decoration="smooth"
+                  title="Use this key to setup guest roles in downstream systems and services"
+                >
+                  Slug:
+                </Typography>
+                <Typography as="small">
+                  <span className="flex items-center justify-center gap-1 group">
+                    {guestRole.slug} <CopyToClipboard text={guestRole.slug} inline groupHidden size="sm" />
+                  </span>
+                </Typography>
               </div>
               <Typography as="span">{guestRole?.description}</Typography>
             </ListItem>
@@ -183,6 +211,13 @@ export default function GuestRoles() {
           <GuestRolesInitializer onSuccess={mutateGuestRoles} />
         </div>
       </div>
+
+      <GuestRolesModal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        onSuccess={handleSuccess}
+        guestRole={currentGuestRole}
+      />
     </DashBoardBody>
   );
 }

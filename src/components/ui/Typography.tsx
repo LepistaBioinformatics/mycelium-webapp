@@ -10,13 +10,13 @@ const styles = cva("text-start", {
       p: "py-1 text-slate-700 dark:text-slate-200",
       span: "text-sm text-slate-700 dark:text-slate-200",
       small: "text-xs text-slate-700 dark:text-slate-200",
-      title: "text-5xl text-slate-800 dark:text-slate-300 font-bold",
-      h1: "text-3xl text-slate-800 dark:text-slate-300 font-bold",
-      h2: "text-2xl text-slate-800 dark:text-slate-300 font-bold",
-      h3: "text-xl text-slate-800 dark:text-slate-300 font-bold",
-      h4: "text-lg text-slate-800 dark:text-slate-300 font-semibold",
-      h5: "text-base text-slate-800 dark:text-slate-300 font-semibold",
-      h6: "text-sm text-slate-800 dark:text-slate-300 font-semibold",
+      title: "text-5xl text-slate-600 dark:text-slate-300 font-bold",
+      h1: "text-3xl text-slate-600 dark:text-slate-300 font-bold",
+      h2: "text-2xl text-slate-600 dark:text-slate-300 font-bold",
+      h3: "text-xl text-slate-600 dark:text-slate-300 font-bold",
+      h4: "text-lg text-slate-600 dark:text-slate-300 font-semibold",
+      h5: "text-base text-slate-600 dark:text-slate-300 font-semibold",
+      h6: "text-sm text-slate-600 dark:text-slate-300 font-semibold",
     },
     highlight: {
       true: "!text-blue-500 dark:!text-lime-500",
@@ -56,6 +56,9 @@ const styles = cva("text-start", {
     },
     nowrap: {
       true: "whitespace-nowrap",
+    },
+    title: {
+      true: "hover:cursor-help",
     }
   },
   defaultVariants: {
@@ -69,16 +72,46 @@ const styles = cva("text-start", {
   },
 });
 
-interface Props extends BaseProps, VariantProps<typeof styles> { }
+interface Props extends BaseProps, VariantProps<typeof styles> {
+  title?: string | any;
+}
 
 export default function Typography({
-  as, margin, padding, reverseBackground, width, uppercase, decoration, highlight, isError, center, truncate, nowrap, ...props
+  as,
+  margin,
+  padding,
+  reverseBackground,
+  width,
+  uppercase,
+  decoration,
+  highlight,
+  isError,
+  center,
+  truncate,
+  nowrap,
+  title,
+  ...props
 }: Props) {
   const Element = (as === "title" ? "h1" : as) || "p";
 
   return (
     <Element
-      className={styles({ as, margin, padding, reverseBackground, width, uppercase, decoration, highlight, isError, center, truncate, nowrap })}
+      title={title}
+      className={styles({
+        as,
+        margin,
+        padding,
+        reverseBackground,
+        width,
+        uppercase,
+        decoration,
+        highlight,
+        isError,
+        center,
+        truncate,
+        nowrap,
+        title: title ? true : false
+      })}
       {...props}
     />
   );
