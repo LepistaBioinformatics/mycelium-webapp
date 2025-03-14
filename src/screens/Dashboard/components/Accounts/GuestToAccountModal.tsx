@@ -332,20 +332,21 @@ function GuestRoleSelect({
 
             {(isLoading || isValidating || isSubmitting) && <span>Loading...</span>}
 
-            <div className="flex flex-col gap-2">
+            <Typography as="small" decoration="smooth">Click to select</Typography>
+            <div className="flex flex-col mt-2 shadow-lg relative">
               {guestRoles?.records.map((role) => (
                 <div
                   key={role.id}
-                  className="flex flex-col gap-0 bg-slate-100 dark:bg-slate-800 rounded-md p-2 border-b-2 hover:bg-slate-200 dark:hover:bg-slate-700 cursor-pointer"
+                  className="flex gap-0 bg-blue-50 dark:bg-slate-800 p-2 border-t-2 border-t-blue-200 dark:border-t-slate-700 hover:bg-blue-100 dark:hover:bg-slate-700 cursor-pointer"
                   onClick={() => handleSelectRole(role)}
                 >
-                  <div className="flex justify-center items-center gap-2">
+                  <div className="flex flex-col w-full gap-2">
                     <Typography>{role.name}</Typography>
-                    <PermissionIcon permission={role.permission} />
+                    <Typography as="small" decoration="smooth">{role.description}</Typography>
                   </div>
 
-                  <div className="-mt-2">
-                    <Typography as="small" decoration="smooth">{role.description}</Typography>
+                  <div className="flex items-center gap-2">
+                    <PermissionIcon permission={role.permission} size="lg" />
                   </div>
                 </div>
               ))}

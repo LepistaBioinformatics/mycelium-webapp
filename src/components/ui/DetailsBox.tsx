@@ -31,7 +31,7 @@ function Container({ children, open, onToggle, ...props }: ContainerProps) {
   )
 }
 
-const summaryStyles = cva("cursor-pointer border-2 border border-slate-300 dark:border-slate-700 hover:border-dashed p-2 bg-slate-200 dark:bg-slate-800 rounded-lg text-slate-500 dark:text-slate-200", {
+const summaryStyles = cva("cursor-pointer border-2 border border-blue-200 dark:border-slate-700 hover:border-dashed p-2 bg-blue-50 dark:bg-slate-800 rounded-lg text-slate-500 dark:text-slate-200", {
   variants: {
     marginTop: {
       false: "mt-0",

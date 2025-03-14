@@ -313,7 +313,12 @@ function Invitations({ account, tenantId }: { account: Account, tenantId: string
 
     if (typeof accountType !== "object") return null;
 
-    if (("subscription" in accountType) || ("tenantManager" in accountType)) {
+    if (
+      ("subscription" in accountType) ||
+      ("tenantManager" in accountType) ||
+      ("roleAssociated" in accountType) ||
+      ("actorAssociated" in accountType)
+    ) {
       return buildPath("/adm/rs/subscriptions-manager/guests/accounts/{account_id}", {
         path: { account_id: account.id }
       });
