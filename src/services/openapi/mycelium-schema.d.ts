@@ -646,7 +646,7 @@ export interface paths {
         options?: never;
         head?: never;
         /**
-         * Create Subscription Account
+         * Update Subscription Account Name and Flags
          * @description Subscription accounts represents shared entities, like institutions,
          *     groups, but not real persons.
          */
@@ -690,7 +690,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/adm/rs/subscriptions-manager/guest-roles/{guest_role_id}": {
+    "/adm/rs/subscriptions-manager/guest-roles/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -1223,7 +1223,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Create all system roles */
+        /** Create system account */
         post: operations["create_system_account_url"];
         delete?: never;
         options?: never;
@@ -1692,6 +1692,12 @@ export interface components {
                 slug: string;
                 description?: string | null;
                 permission: components["schemas"]["Permission"];
+                /** @description If it is a system role
+                 *
+                 *     System roles represents standard core actors of the Mycelium API
+                 *     Gateway, defined in `SystemActor`
+                 *      */
+                system: boolean;
                 children?: null | components["schemas"]["Children_GuestRole_String"];
             }[];
         } | {
@@ -1833,6 +1839,7 @@ export interface components {
             name: string;
             description: string;
             permission?: null | components["schemas"]["Permission"];
+            system: boolean;
         };
         CreateSubscriptionAccountBody: {
             name: string;
@@ -1943,6 +1950,12 @@ export interface components {
             slug: string;
             description?: string | null;
             permission: components["schemas"]["Permission"];
+            /** @description If it is a system role
+             *
+             *     System roles represents standard core actors of the Mycelium API
+             *     Gateway, defined in `SystemActor`
+             *      */
+            system: boolean;
             children?: null | components["schemas"]["Children_GuestRole_String"];
         };
         GuestTenantOwnerBody: {
@@ -2110,7 +2123,10 @@ export interface components {
             isInternal?: boolean | null;
         };
         ListGuestRolesParams: {
+            /** @description The name of the guest role. */
             name?: string | null;
+            /** @description If it is a system role. */
+            system?: boolean | null;
         };
         ListLicensedAccountsOfEmailParams: {
             /** @description The email which the guest user is connected to */
@@ -2285,6 +2301,12 @@ export interface components {
                 slug: string;
                 description?: string | null;
                 permission: components["schemas"]["Permission"];
+                /** @description If it is a system role
+                 *
+                 *     System roles represents standard core actors of the Mycelium API
+                 *     Gateway, defined in `SystemActor`
+                 *      */
+                system: boolean;
                 children?: null | components["schemas"]["Children_GuestRole_String"];
             };
         } | {
@@ -4212,7 +4234,10 @@ export interface operations {
     list_guest_roles_url: {
         parameters: {
             query?: {
+                /** @description The name of the guest role. */
                 name?: string | null;
+                /** @description If it is a system role. */
+                system?: boolean | null;
             };
             header?: never;
             path?: never;
@@ -5066,7 +5091,10 @@ export interface operations {
     list_guest_roles_url: {
         parameters: {
             query?: {
+                /** @description The name of the guest role. */
                 name?: string | null;
+                /** @description If it is a system role. */
+                system?: boolean | null;
             };
             header?: never;
             path?: never;
@@ -5124,8 +5152,8 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                name: string | null;
-                guest_role_id: string;
+                /** @description The guest role primary key. */
+                id: string;
             };
             cookie?: never;
         };
@@ -5137,7 +5165,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["GuestRole"][];
+                    "application/json": components["schemas"]["GuestRole"];
                 };
             };
             /** @description Not found. */
