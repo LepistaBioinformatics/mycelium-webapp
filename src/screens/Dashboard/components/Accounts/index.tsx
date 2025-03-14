@@ -1,12 +1,15 @@
 import PageBody from "@/components/ui/PageBody";
 import { components } from "@/services/openapi/mycelium-schema";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import Button from "@/components/ui/Button";
 import { useSelector } from "react-redux";
 import { RootState } from "@/states/store";
 import AccountModal from "./AccountModal";
 import AccountDetails from "./AccountDetails";
 import PaginatedAccounts from "./PaginatedAccounts";
+import useProfile from "@/hooks/use-profile";
+import { MycRole } from "@/types/MyceliumRole";
+import { MycPermission } from "@/types/MyceliumPermission";
 
 type Account = components["schemas"]["Account"];
 
@@ -15,6 +18,12 @@ export default function Accounts() {
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [currentAccount, setCurrentAccount] = useState<Account | null>(null);
   const [forceMutate, setForceMutate] = useState<Date | null>(null);
+
+  const { hasAdminPrivileges } = useProfile({
+    roles: [MycRole.SubscriptionsManager],
+    permissions: [MycPermission.Write],
+    restrictSystemAccount: true,
+  });
 
   const { tenantInfo } = useSelector((state: RootState) => state.tenant);
 
@@ -35,6 +44,14 @@ export default function Accounts() {
     setIsViewModalOpen(true);
   }
 
+  const shouldCreateAccount = useMemo(() => {
+    if (hasAdminPrivileges) return true;
+
+    if (tenantInfo?.id) return true;
+
+    return false;
+  }, [hasAdminPrivileges, tenantInfo]);
+
   return (
     <div className="p-5">
       <PaginatedAccounts
@@ -53,7 +70,7 @@ export default function Accounts() {
               size="sm"
               rounded="full"
               intent="info"
-              disabled={!tenantInfo?.id}
+              disabled={!shouldCreateAccount}
             >
               <span className="mx-2">Create account</span>
             </Button>

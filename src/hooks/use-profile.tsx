@@ -226,7 +226,7 @@ export default function useProfile(args?: Props) {
     isLoadingProfile,
     user,
     profile,
-    adminAccess: profile?.isStaff || profile?.isManager,
+    hasAdminPrivileges: profile?.isStaff || profile?.isManager,
     getAccessTokenSilently,
     getAccessTokenWithPopup,
     getIdTokenClaims,

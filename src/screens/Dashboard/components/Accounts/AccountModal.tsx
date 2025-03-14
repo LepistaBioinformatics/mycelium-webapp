@@ -1,6 +1,8 @@
 "use client";
 
+import Banner from "@/components/ui/Banner";
 import Button from "@/components/ui/Button";
+import Divider from "@/components/ui/Divider";
 import Modal from "@/components/ui/Modal";
 import Typography from "@/components/ui/Typography";
 import { TENANT_ID_HEADER } from "@/constants/http-headers";
@@ -11,14 +13,21 @@ import { RootState } from "@/states/store";
 import { MycPermission } from "@/types/MyceliumPermission";
 import { MycRole } from "@/types/MyceliumRole";
 import { TextInput } from "flowbite-react";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 
 type Account = components["schemas"]["Account"];
 
+enum SystemAccountTypes {
+  GATEWAY_MANAGER = "gatewayManager",
+  GUEST_MANAGER = "guestsManager",
+  SYSTEM_MANAGER = "systemManager",
+}
+
 type Inputs = {
   name: string;
+  accountType?: SystemAccountTypes;
 }
 
 export interface AccountModalProps {
@@ -29,13 +38,14 @@ export interface AccountModalProps {
 }
 
 export default function AccountModal({ isOpen, onClose, onSuccess, account }: AccountModalProps) {
-  const { getAccessTokenSilently } = useProfile({
+  const { hasAdminPrivileges, getAccessTokenSilently } = useProfile({
     roles: [MycRole.SubscriptionsManager],
     permissions: [MycPermission.Write],
     restrictSystemAccount: true,
   });
 
   const [isLoading, setIsLoading] = useState(false);
+  const [systemAccountType, setSystemAccountType] = useState<SystemAccountTypes | null>(null);
 
   const { tenantInfo } = useSelector((state: RootState) => state.tenant);
 
@@ -58,23 +68,49 @@ export default function AccountModal({ isOpen, onClose, onSuccess, account }: Ac
     reset();
   }
 
-  const onSubmit: SubmitHandler<Inputs> = async (data) => {
+  const buildBaseUrl = useCallback(() => {
+    if (systemAccountType) {
+      return {
+        baseUrl: buildPath("/adm/su/managers/accounts"),
+        method: "POST"
+      };
+    }
+
+    if (account) {
+      return {
+        baseUrl: buildPath("/adm/rs/subscriptions-manager/accounts/{account_id}", {
+          path: { account_id: account.id ?? "" }
+        }),
+        method: "PATCH"
+      };
+    }
+
+    return {
+      baseUrl: buildPath("/adm/rs/subscriptions-manager/accounts"),
+      method: "POST"
+    };
+  }, [systemAccountType, account]);
+
+  const onSubmit: SubmitHandler<Inputs> = async ({ name }) => {
     setIsLoading(true);
 
     const token = await getAccessTokenSilently();
 
-    const baseUrl = account ? buildPath("/adm/rs/subscriptions-manager/accounts/{account_id}", {
-      path: { account_id: account.id ?? "" }
-    }) : buildPath("/adm/rs/subscriptions-manager/accounts");
+    if (!token) {
+      setIsLoading(false);
+      return;
+    }
+
+    const { baseUrl, method } = buildBaseUrl();
 
     const response = await fetch(baseUrl, {
-      method: account ? "PATCH" : "POST",
+      method,
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
         [TENANT_ID_HEADER]: tenantInfo?.id ?? ""
       },
-      body: JSON.stringify(data)
+      body: JSON.stringify({ name, actor: systemAccountType })
     });
 
     if (response.ok) {
@@ -82,6 +118,10 @@ export default function AccountModal({ isOpen, onClose, onSuccess, account }: Ac
     }
 
     setIsLoading(false);
+  }
+
+  const handleCreateSystemAccount = (accountType: SystemAccountTypes) => {
+    setSystemAccountType(accountType);
   }
 
   return (
@@ -92,11 +132,11 @@ export default function AccountModal({ isOpen, onClose, onSuccess, account }: Ac
 
       <Modal.Body>
         <form
-          className="flex flex-col gap-2 w-full"
+          className="flex flex-col gap-2 w-full mb-24"
           onSubmit={handleSubmit(onSubmit)}
         >
           <TextInput
-            className="my-2"
+            className="my-8"
             placeholder="My best account"
             sizing="lg"
             color="custom"
@@ -117,12 +157,104 @@ export default function AccountModal({ isOpen, onClose, onSuccess, account }: Ac
           <Button
             rounded
             type="submit"
-            disabled={!nameWatch || isLoading}
+            disabled={!nameWatch || isLoading || !tenantInfo?.id}
           >
             {account
-              ? isLoading ? "Updating..." : "Update"
-              : isLoading ? "Creating..." : "Create"}
+              ? isLoading ? "Updating..." : "Update Subscription Account"
+              : isLoading ? "Creating..." : "Create Subscription Account"}
           </Button>
+
+          {hasAdminPrivileges && !account && (
+            <>
+              <Divider style="or" />
+
+              <div className="flex flex-col gap-5">
+                <Typography width="md">
+                  Create System account. System accounts are not connected to a
+                  specific Tenant and have global scope.
+                </Typography>
+
+                <Banner intent="success">
+                  <div className="flex justify-between gap-2 my-5">
+                    <div className="flex flex-col gap-2">
+                      <Typography as="h5" uppercase>
+                        Guests Manager
+                      </Typography>
+
+                      <Typography as="span" decoration="smooth" width="xs">
+                        Guests Manager account is a system account designed to
+                        manage guests roles and guest related tokens.
+                      </Typography>
+                    </div>
+
+                    <div>
+                      <Button
+                        rounded
+                        type="submit"
+                        disabled={!nameWatch || isLoading}
+                        onClick={() => handleCreateSystemAccount(SystemAccountTypes.GUEST_MANAGER)}
+                      >
+                        Create
+                      </Button>
+                    </div>
+                  </div>
+                </Banner>
+
+                <Banner intent="success">
+                  <div className="flex justify-between gap-2 my-5">
+                    <div className="flex flex-col gap-2">
+                      <Typography as="h5" uppercase>
+                        Gateway Manager
+                      </Typography>
+
+                      <Typography as="span" decoration="smooth" width="xs">
+                        Gateway Manager account is a system account designed to
+                        manage gateway downstream routes and applications.
+                      </Typography>
+                    </div>
+
+                    <div>
+                      <Button
+                        rounded
+                        type="submit"
+                        disabled={!nameWatch || isLoading}
+                        onClick={() => handleCreateSystemAccount(SystemAccountTypes.GATEWAY_MANAGER)}
+                      >
+                        Create
+                      </Button>
+                    </div>
+                  </div>
+                </Banner>
+
+                <Banner intent="success">
+                  <div className="flex justify-between gap-2 my-5">
+                    <div className="flex flex-col gap-2">
+                      <Typography as="h5" uppercase>
+                        System Manager
+                      </Typography>
+
+                      <Typography as="span" decoration="smooth" width="xs">
+                        System Manager account is a standard account type
+                        designed to manage webhooks and standard error codes.
+                      </Typography>
+                    </div>
+
+                    <div>
+                      <Button
+                        rounded
+                        type="submit"
+                        disabled={!nameWatch || isLoading}
+                        onClick={() => handleCreateSystemAccount(SystemAccountTypes.SYSTEM_MANAGER)}
+                      >
+                        Create
+                      </Button>
+                    </div>
+                  </div>
+                </Banner>
+              </div>
+            </>
+          )}
+
         </form>
       </Modal.Body>
     </Modal>

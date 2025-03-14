@@ -8,12 +8,17 @@
   },
   "workspaceFolder": "/workspace",
   "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached",
-  "forwardPorts": [5173],
+  "forwardPorts": [
+    5173
+  ],
   "postCreateCommand": "yarn install",
   "postStartCommand": "yarn dev",
   "customizations": {
     "vscode": {
-      "extensions": ["dbaeumer.vscode-eslint", "esbenp.prettier-vscode"],
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode"
+      ],
       "settings": {
         "terminal.integrated.defaultProfile.linux": "bash"
       }

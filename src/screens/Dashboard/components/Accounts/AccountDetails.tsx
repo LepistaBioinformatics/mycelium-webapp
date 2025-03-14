@@ -95,6 +95,7 @@ export default function AccountDetails({ isOpen, onClose, accountId }: Props) {
 
   const owners = useMemo(() => {
     if (!account) return null;
+    if (typeof account.owners !== "object") return null;
 
     if ("ids" in account.owners) {
       const accountOwners = account.owners.ids;

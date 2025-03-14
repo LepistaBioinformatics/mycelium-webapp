@@ -71,8 +71,7 @@ function Container({
   }: IFormInputs) => onSubmit(term);
 
   return (
-    <div id
-      ="SearchBar"
+    <div id="SearchBar"
       className={containerStyles({ fullWidth, tiny, commandPalette: !!commandPalette })}
       {...props}
     >

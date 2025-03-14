@@ -80,7 +80,7 @@ const COMMANDS = {
       command: "/actorAssociated",
       description: "Action restricted to subscriptions-manager users. Disabled if tenant is not selected",
       adminOnly: false,
-      tenantNeeded: true,
+      tenantNeeded: false,
     },
     tenantManager: {
       brief: "Select Tenant Manager accounts",
@@ -133,7 +133,7 @@ export default function PaginatedAccounts({
   forceMutate,
   restrictAccountTypeTo,
 }: Props) {
-  const [error, setError] = useState<HttpResponse | null>(null);
+  const [error, setError] = useState<HttpResponse | string | null>(null);
 
   const {
     isLoadingUser,
@@ -223,7 +223,27 @@ export default function PaginatedAccounts({
 
       if (typePattern.test(searchTerm)) {
         const typeValue = typePattern.exec(searchTerm)?.[1];
-        if (typeValue) searchParams.accountType = typeValue?.replace("/", "");
+        if (typeValue) {
+          const parsedValue = typeValue?.replace("/", "");
+
+          //
+          // Try to match patterns like:
+          // - "/actorAssociated guests-manager"
+          // - "/actorAssociated gateway-manager"
+          // - "/actorAssociated any-other-actor-with-no-spaces"
+          //
+          if (parsedValue === "actorAssociated") {
+            const actorNamePattern = /\/actorAssociated\s(\w+)/;
+            const actorNameMatch = searchTerm.match(actorNamePattern);
+
+            if (actorNameMatch) {
+              const actorName = actorNameMatch[1];
+              if (actorName) searchParams.actor = actorName?.trim();
+            }
+          }
+
+          searchParams.accountType = parsedValue;
+        };
       }
 
       //
@@ -236,11 +256,11 @@ export default function PaginatedAccounts({
 
       [COMMANDS.accountType, COMMANDS.status].forEach((item) => {
         Object.values(item).forEach((command) => {
-          simpleText = simpleText.replace(command.command, "");
+          simpleText = simpleText.replace(command.command, "")?.trim();
         });
       });
 
-      if (simpleText) searchParams.term = simpleText.trim();
+      if (simpleText && !searchParams?.actor) searchParams.term = simpleText;
     }
 
     if (restrictAccountTypeTo) {
@@ -263,7 +283,9 @@ export default function PaginatedAccounts({
   }, [
     searchTerm,
     skip,
-    pageSize, isAuthenticated,
+    pageSize,
+    isAuthenticated,
+    restrictAccountTypeTo,
     hasEnoughPermissions,
     tenantId,
   ]);
@@ -285,13 +307,37 @@ export default function PaginatedAccounts({
         },
       })
         .then(async (res) => {
-          if (res.status === 403) {
-            setError(await res.json());
+          setError(null);
+
+          if (res.status >= 400 && res.status < 500) {
+            //
+            // Try to parse error response as JSON. If it fails, set the error 
+            // to the response text.
+            //
+            const rawError = await res.text();
+
+            try {
+              const json = JSON.parse(rawError);
+
+              if (json.msg) {
+                setError(json);
+              } else {
+                setError(rawError);
+              }
+            } catch (err) {
+              setError(rawError);
+            }
+
             return null;
           }
 
           if (!res.ok) {
-            throw new Error("Failed to fetch tenants");
+            const rawError = await res.text();
+
+            setError({
+              code: "TENANTS_FETCH_ERROR",
+              msg: rawError,
+            });
           }
 
           if (res.status === 204) {
@@ -313,10 +359,16 @@ export default function PaginatedAccounts({
     }
   );
 
+  /**
+   * Mutate accounts when tenantId changes.
+   */
   useEffect(() => {
     if (tenantId) mutateAccounts(accounts, { rollbackOnError: true });
   }, [tenantId]);
 
+  /**
+   * Mutate accounts when forceMutate changes.
+   */
   useEffect(() => {
     if (forceMutate) mutateAccounts(accounts, { rollbackOnError: true });
   }, [forceMutate, mutateAccounts, accounts]);
@@ -413,8 +465,8 @@ export default function PaginatedAccounts({
       <div id="AccountsContent" className="flex flex-col justify-center gap-4 w-full mx-auto">
         {error && (
           <div className="flex justify-start mx-auto w-full xl:max-w-4xl">
-            <Banner intent="error" title={error.code} >
-              {error.msg}
+            <Banner intent="error" title={typeof error === "object" ? error.code : "Error"} >
+              {typeof error === "object" ? error.msg : error}
             </Banner>
           </div>
         )}
