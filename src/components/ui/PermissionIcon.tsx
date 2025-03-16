@@ -16,11 +16,15 @@ const styles = cva("", {
       read: "text-green-500",
       write: "text-blue-500",
       readWrite: "text-yellow-500"
+    },
+    inline: {
+      true: "inline"
     }
   },
   defaultVariants: {
     size: "md",
-    color: "read"
+    color: "read",
+    inline: false
   },
 });
 
@@ -28,7 +32,7 @@ interface Props extends BaseProps, VariantProps<typeof styles> {
   permission: Permission,
 }
 
-export default function PermissionIcon({ permission, size }: Props) {
+export default function PermissionIcon({ permission, size, inline }: Props) {
   const HandleTooltip = ({ children, content }: BaseProps & { content: string }) => {
     return (
       <span
@@ -44,19 +48,19 @@ export default function PermissionIcon({ permission, size }: Props) {
     case "read":
       return (
         <HandleTooltip content="Read">
-          <VscEye className={styles({ size, color: permission })} />
+          <VscEye className={styles({ size, color: permission, inline })} />
         </HandleTooltip>
       );
     case "write":
       return (
         <HandleTooltip content="Write">
-          <CiEdit className={styles({ size, color: permission })} />
+          <CiEdit className={styles({ size, color: permission, inline })} />
         </HandleTooltip>
       );
     case "readWrite":
       return (
         <HandleTooltip content="Read/Write">
-          <CiEdit className={styles({ size, color: permission })} />
+          <CiEdit className={styles({ size, color: permission, inline })} />
         </HandleTooltip>
       );
   }

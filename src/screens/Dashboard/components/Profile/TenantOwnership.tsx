@@ -48,9 +48,12 @@ export default function TenantOwnership({
   );
 
   const Since = () => (
-    <Typography as="small">
-      Since {formatDDMMYY(new Date(since), true)}
-    </Typography>
+    <div className="flex items-center gap-2">
+      <Typography decoration="smooth">since</Typography>
+      <Typography as="h4" title="The role assigned to you">
+        {formatDDMMYY(new Date(since), true)}
+      </Typography>
+    </div>
   );
 
   const TenantData = useCallback(() => {
@@ -74,7 +77,7 @@ export default function TenantOwnership({
           {data.active.name}
         </Typography>
         <Since />
-        <Typography as="small">
+        <Typography as="small" decoration="smooth">
           {data.active.description}
         </Typography>
       </>
@@ -82,10 +85,13 @@ export default function TenantOwnership({
   }, [data]);
 
   return (
-    <div key={tenantId}>
+    <div
+      key={tenantId}
+      className="flex flex-col gap-0 w-full bg-blue-50 dark:bg-slate-900 bg-opacity-50 dark:bg-opacity-50 border border-gray-200 dark:border-gray-700 rounded-lg p-2"
+    >
       <div>
         {isLoading ? "Loading..." : (
-          <div className="flex flex-col gap-2 max-w-xs bg-gray-50 dark:bg-slate-900 bg-opacity-40 rounded-md p-2 border-2 border-gray-200 dark:border-gray-700">
+          <div>
             <TenantData />
 
             {error && (

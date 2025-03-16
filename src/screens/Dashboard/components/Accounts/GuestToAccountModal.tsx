@@ -8,6 +8,7 @@ import { TENANT_ID_HEADER } from "@/constants/http-headers";
 import validateEmail from "@/functions/validate-email";
 import useProfile from "@/hooks/use-profile";
 import useSearchBarParams from "@/hooks/use-search-bar-params";
+import useSuspenseError from "@/hooks/use-suspense-error";
 import { buildPath } from "@/services/openapi/mycelium-api";
 import { components } from "@/services/openapi/mycelium-schema";
 import { RootState } from "@/states/store";
@@ -22,7 +23,6 @@ import useSWR from "swr";
 
 type Account = components["schemas"]["Account"];
 type GuestRole = components["schemas"]["GuestRole"];
-type HttpJsonResponse = components["schemas"]["HttpJsonResponse"];
 
 type Inputs = {
   email: string;
@@ -39,6 +39,11 @@ export default function GuestToAccountModal({
   isOpen,
   onClose
 }: Props) {
+  const [selectedRole, setSelectedRole] = useState<GuestRole | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const { parseError } = useSuspenseError();
+
   const { getAccessTokenSilently } = useProfile({
     roles: [MycRole.SubscriptionsManager],
     permissions: [MycPermission.Write],
@@ -46,15 +51,12 @@ export default function GuestToAccountModal({
   });
 
   const { tenantInfo } = useSelector((state: RootState) => state.tenant);
-  const [selectedRole, setSelectedRole] = useState<GuestRole | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const {
     register,
     reset,
     watch,
     formState: { errors },
-    setError,
   } = useForm<Inputs>({
     defaultValues: {
       email: ""
@@ -95,30 +97,13 @@ export default function GuestToAccountModal({
       });
 
     if (!response.ok) {
+      parseError(response);
       setIsSubmitting(false);
-
-      if (response.status >= 400 && response.status < 500) {
-        const errorMessage = await response.json() as HttpJsonResponse;
-
-        if (typeof errorMessage === "object" && "message" in errorMessage) {
-          setError("email", { message: errorMessage.message as string ?? "Failed to invite user" });
-        } else if (typeof errorMessage === "object" && "msg" in errorMessage) {
-          setError("email", { message: errorMessage.msg ?? "Failed to invite user" });
-        } else {
-          setError("email", { message: "Failed to invite user" });
-        }
-
-        return;
-      }
-
-      setError("email", { message: "Failed to invite user" });
       return;
     }
 
     setIsSubmitting(false);
-
     onClose();
-
     reset();
   }
 

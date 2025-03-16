@@ -5,7 +5,7 @@ import { components } from "@/services/openapi/mycelium-schema";
 import Banner from "./Banner";
 import Countdown from "react-countdown";
 
-const styles = cva("absolute top-1 right-5 w-full xl:max-w-[500px] flex flex-col gap-1 z-50 transition-all duration-300", {
+const styles = cva("absolute top-1 right-5 w-[calc(100%-2rem)] lg:w-[50%] xl:max-w-[500px] flex flex-col gap-1 z-50 transition-all duration-300", {
   variants: {
     show: {
       true: "opacity-100",
@@ -38,7 +38,9 @@ export default function SuspenseNotification({
   setShow,
   timeout = 10000,
 }: Props) {
-  const message = typeof response === "object" ? response?.msg : response;
+  const message = (typeof response === "object" ? response?.msg : response)
+    ?.replace(/\[[^\]]*\]\s*/g, '');
+
   const title = response && typeof response === "object" ? response.code : "Error";
 
   const handleClose = () => {
