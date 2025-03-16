@@ -501,8 +501,8 @@ function Invitation({ guestRole }: { guestRole: GuestUser["guestRole"] }) {
     if (!tenantInfo?.id) return null;
 
     if (typeof localInvitationRecord === "string") {
-      return buildPath("/adm/rs/subscriptions-manager/guest-roles/{guest_role_id}", {
-        path: { guest_role_id: localInvitationRecord }
+      return buildPath("/adm/rs/subscriptions-manager/guest-roles/{id}", {
+        path: { id: localInvitationRecord }
       });
     }
 

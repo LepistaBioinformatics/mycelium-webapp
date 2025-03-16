@@ -2,7 +2,7 @@ import useProfile from "@/hooks/use-profile";
 import useSearchBarParams from "@/hooks/use-search-bar-params";
 import { buildPath } from "@/services/openapi/mycelium-api";
 import { components } from "@/services/openapi/mycelium-schema";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import useSWR from "swr";
 import DashBoardBody from "../DashBoardBody";
 import PaginatedRecords from "@/types/PaginatedRecords";
@@ -18,12 +18,11 @@ import { MycRole } from "@/types/MyceliumRole";
 import { MycPermission } from "@/types/MyceliumPermission";
 import { projectVariants } from "@/constants/shared-component-styles";
 import SearchBar from "@/components/ui/SearchBar";
-import Banner from "@/components/ui/Banner";
+import useSuspenseError from "@/hooks/use-suspense-error";
 
 const { padding } = projectVariants;
 
 type Account = components["schemas"]["Account"];
-type HttpResponse = components["schemas"]["HttpJsonResponse"];
 
 interface Props {
   tenantId?: string;
@@ -133,7 +132,7 @@ export default function PaginatedAccounts({
   forceMutate,
   restrictAccountTypeTo,
 }: Props) {
-  const [error, setError] = useState<HttpResponse | string | null>(null);
+  const { parseError } = useSuspenseError();
 
   const {
     isLoadingUser,
@@ -306,46 +305,7 @@ export default function PaginatedAccounts({
           ...(tenantId ? { [TENANT_ID_HEADER]: tenantId } : {}),
         },
       })
-        .then(async (res) => {
-          setError(null);
-
-          if (res.status >= 400 && res.status < 500) {
-            //
-            // Try to parse error response as JSON. If it fails, set the error 
-            // to the response text.
-            //
-            const rawError = await res.text();
-
-            try {
-              const json = JSON.parse(rawError);
-
-              if (json.msg) {
-                setError(json);
-              } else {
-                setError(rawError);
-              }
-            } catch (err) {
-              setError(rawError);
-            }
-
-            return null;
-          }
-
-          if (!res.ok) {
-            const rawError = await res.text();
-
-            setError({
-              code: "TENANTS_FETCH_ERROR",
-              msg: rawError,
-            });
-          }
-
-          if (res.status === 204) {
-            return null;
-          }
-
-          return res.json();
-        })
+        .then(parseError)
         .catch((err) => {
           console.error(err);
         });
@@ -463,13 +423,13 @@ export default function PaginatedAccounts({
       )}
     >
       <div id="AccountsContent" className="flex flex-col justify-center gap-4 w-full mx-auto">
-        {error && (
+        {/* {error && (
           <div className="flex justify-start mx-auto w-full xl:max-w-4xl">
             <Banner intent="error" title={typeof error === "object" ? error.code : "Error"} >
               {typeof error === "object" ? error.msg : error}
             </Banner>
           </div>
-        )}
+        )} */}
 
         {toolbar}
 

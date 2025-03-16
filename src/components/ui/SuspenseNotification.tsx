@@ -1,0 +1,104 @@
+"use client";
+
+import { cva, VariantProps } from "class-variance-authority";
+import { components } from "@/services/openapi/mycelium-schema";
+import Banner from "./Banner";
+import Countdown from "react-countdown";
+
+const styles = cva("absolute top-1 right-5 w-full xl:max-w-[500px] flex flex-col gap-1 z-50 transition-all duration-300", {
+  variants: {
+    show: {
+      true: "opacity-100",
+      false: "opacity-0",
+    },
+    intent: {
+      error: "border-dashed border-red-500 dark:border-red-500",
+      info: "border-dashed border-blue-500 dark:border-blue-500",
+      success: "border-dashed border-green-500 dark:border-green-500",
+      warning: "border-dashed border-yellow-500 dark:border-yellow-500",
+    },
+  },
+});
+
+type HttpResponse = components["schemas"]["HttpJsonResponse"];
+
+interface Props extends
+  BaseProps,
+  VariantProps<typeof styles> {
+  response: HttpResponse | string | null;
+  timeout?: number;
+  show: boolean;
+  setShow: () => void;
+}
+
+export default function SuspenseNotification({
+  response,
+  intent,
+  show,
+  setShow,
+  timeout = 10000,
+}: Props) {
+  const message = typeof response === "object" ? response?.msg : response;
+  const title = response && typeof response === "object" ? response.code : "Error";
+
+  const handleClose = () => {
+    setTimeout(() => {
+      setShow();
+    }, 1000);
+  };
+
+  return show && (
+    <Countdown
+      date={Date.now() + timeout}
+      renderer={({ seconds }) => (
+        <div className={styles({ intent, show })}>
+          <ProgressBar
+            percent={((seconds * 100) / timeout) * 1000}
+            intent={intent}
+          />
+
+          <div className="flex items-center justify-between">
+            <Banner
+              intent={intent}
+              title={title}
+              closeable={true}
+              onClose={setShow}
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex-1">{message}</div>
+              </div>
+            </Banner>
+          </div>
+        </div>
+      )}
+      onComplete={handleClose}
+    />
+  );
+}
+
+const progressBarStyles = cva("h-full flex justify-center items-center rounded-full !bg-opacity-50 transition-all duration-[2000ms]", {
+  variants: {
+    intent: {
+      error: "bg-red-500 dark:bg-red-500",
+      info: "bg-blue-500 dark:bg-blue-500",
+      success: "bg-green-500 dark:bg-green-500",
+      warning: "bg-yellow-500 dark:bg-yellow-500",
+      neutral: "bg-gray-400 dark:bg-gray-600",
+    },
+  },
+  defaultVariants: {
+    intent: "neutral",
+  },
+});
+
+interface ProgressBarProps extends BaseProps, VariantProps<typeof progressBarStyles> {
+  percent: number;
+}
+
+function ProgressBar({ percent, intent }: ProgressBarProps) {
+  return (
+    <div className={`w-[calc(100%-1rem)] mx-auto h-[2px] bg-gray-200 dark:bg-gray-800 rounded-full`}>
+      <div className={progressBarStyles({ intent })} style={{ width: `${percent}%` }}></div>
+    </div>
+  );
+}

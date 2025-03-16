@@ -18,16 +18,18 @@ import ListItem from "@/components/ui/ListItem";
 import { MycRole } from "@/types/MyceliumRole";
 import { MycPermission } from "@/types/MyceliumPermission";
 import PermissionIcon from "@/components/ui/PermissionIcon";
-import Banner from "@/components/ui/Banner";
 import GuestRolesModal from "./GuestRolesModal";
+import GuestRoleDetails from "./GuestRoleDetails";
+import useSuspenseError from "@/hooks/use-suspense-error";
 
 type GuestRole = components["schemas"]["GuestRole"];
-type HttpResponse = components["schemas"]["HttpJsonResponse"];
 
 export default function GuestRoles() {
-  const [error, setError] = useState<HttpResponse | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [currentGuestRole, setCurrentGuestRole] = useState<GuestRole | null>(null);
+
+  const { parseError } = useSuspenseError();
 
   const {
     isLoadingUser,
@@ -63,6 +65,12 @@ export default function GuestRoles() {
     mutateGuestRoles(guestRoles, { rollbackOnError: true });
   }
 
+  const handleViewGuestRoleClick = (guestRole: GuestRole) => {
+    Promise.resolve()
+      .then(() => setCurrentGuestRole(guestRole))
+      .then(() => setIsViewModalOpen(true));
+  }
+
   const memoizedUrl = useMemo(() => {
     if (!isAuthenticated) return null;
     if (!hasEnoughPermissions) return null;
@@ -93,20 +101,8 @@ export default function GuestRoles() {
           "Content-Type": "application/json"
         },
       })
-        .then(async (res) => {
-          if (res.status === 403) {
-            setError(await res.json());
-          }
-
-          if (!res.ok) {
-            throw new Error("Failed to fetch tenants");
-          }
-
-          return res.json();
-        })
-        .catch((err) => {
-          console.error(err);
-        });
+        .then(parseError)
+        .catch(console.error);
     },
     {
       revalidateIfStale: true,
@@ -139,14 +135,6 @@ export default function GuestRoles() {
       authorized={hasEnoughPermissions}
     >
       <div id="GuestRolesContent" className="flex flex-col justify-center gap-4 w-full mx-auto">
-        {error && (
-          <div className="flex justify-start mx-auto w-full xl:max-w-4xl">
-            <Banner intent="error" title={error.code} >
-              {error.msg}
-            </Banner>
-          </div>
-        )}
-
         <div className="flex justify-start mx-auto w-full xl:max-w-4xl">
           <Button
             onClick={() => setIsModalOpen(true)}
@@ -173,8 +161,15 @@ export default function GuestRoles() {
                 <Typography as="h3" title={`${guestRole.system ? "System" : "Guest"} Role name (${guestRole?.name}) with permission (${guestRole?.permission})`}>
                   <div className="flex items-center gap-2">
                     {guestRole.system && <RiRobot2Line className="text-blue-500 dark:text-lime-500" />}
-                    {guestRole?.name}
-                    <PermissionIcon permission={guestRole?.permission} ignoreTooltip />
+                    <Typography as="h3" highlight>
+                      <button
+                        className="hover:underline text-blue-500 dark:text-lime-400"
+                        onClick={() => handleViewGuestRoleClick(guestRole)}
+                      >
+                        {guestRole?.name}
+                      </button>
+                    </Typography>
+                    <PermissionIcon permission={guestRole?.permission} />
                   </div>
                 </Typography>
                 <div className="flex gap-5">
@@ -218,6 +213,14 @@ export default function GuestRoles() {
         onSuccess={handleSuccess}
         guestRole={currentGuestRole}
       />
+
+      {currentGuestRole && (
+        <GuestRoleDetails
+          isOpen={isViewModalOpen}
+          onClose={handleCloseModal}
+          guestRole={currentGuestRole}
+        />
+      )}
     </DashBoardBody>
   );
 }
@@ -230,7 +233,7 @@ function PermissionText({ permission }: { permission: components["schemas"]["Per
       <Typography>
         {text}
       </Typography>
-      <PermissionIcon permission={permission} ignoreTooltip />
+      <PermissionIcon permission={permission} />
     </div>
   )
 }

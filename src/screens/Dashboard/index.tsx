@@ -10,6 +10,7 @@ import { useEffect, useMemo, useState } from "react";
 import Modal from "@/components/ui/Modal";
 import buildRoutes, { PROFILE_ROUTE } from "@/constants/routes";
 import useProfile from "@/hooks/use-profile";
+import AppNotifications from "@/components/AppNotifications";
 
 export default function Dashboard() {
   const { isOpen, toggle } = useToggleSidebar(true);
@@ -61,6 +62,7 @@ export default function Dashboard() {
       </div>
 
       <LogoutModal show={showLogoutModal} setShow={setShowLogoutModal} />
+      <AppNotifications />
     </div>
   );
 }
