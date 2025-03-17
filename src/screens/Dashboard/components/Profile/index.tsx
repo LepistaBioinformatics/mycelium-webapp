@@ -1,5 +1,7 @@
-import { VscAccount } from "react-icons/vsc";
-import { GrUserAdmin } from "react-icons/gr";
+import { MdAltRoute } from "react-icons/md";
+import { LuListChecks } from "react-icons/lu";
+import { VscAccount, VscOrganization } from "react-icons/vsc";
+import { GrOrganization, GrUserAdmin } from "react-icons/gr";
 import { PiSealCheckLight } from "react-icons/pi";
 import Card from "@/components/ui/Card";
 import PageBody from "@/components/ui/PageBody";
@@ -17,6 +19,8 @@ import AboutCard from "./AboutCard";
 import { MycRole } from "@/types/MyceliumRole";
 import { FaUserCheck } from "react-icons/fa6";
 import { MdNearbyError, MdWebhook } from "react-icons/md";
+import { SlOrganization } from "react-icons/sl";
+import { TextInput } from "flowbite-react";
 
 type Profile = components["schemas"]["Profile"];
 
@@ -35,50 +39,71 @@ export default function Profile() {
     [profile?.licensedResources]
   );
 
-  const hasSystemRole = useCallback((role: MycRole) => {
-    if (!profile?.licensedResources) {
+  const hasRole = useCallback((role: MycRole | undefined, systemRole: boolean) => {
+    if (!licensedResources) {
       return null;
     }
 
-    if (!("records" in profile?.licensedResources)) {
-      return null;
+    if (!role) {
+      const resources = licensedResources
+        ?.filter((resource) => (
+          resource.sysAcc === systemRole
+        ));
+
+      if (resources?.length === 0) {
+        return null;
+      }
+
+      return resources;
     }
 
-    const resources = profile
-      ?.licensedResources
-      ?.records
-      ?.filter((resource) => (resource.role === role && resource.sysAcc === true));
+    const resources = licensedResources
+      ?.filter((resource) => (
+        resource.role === role &&
+        resource.sysAcc === systemRole
+      ));
 
     if (resources?.length === 0) {
       return null;
     }
 
     return resources;
-  }, [profile?.licensedResources]);
+  }, [licensedResources]);
 
-  const hasSystemAccountManager = useMemo(() => {
-    return hasSystemRole(MycRole.AccountManager);
-  }, [hasSystemRole]);
+  const hasSystemAccountManager = useMemo(
+    () => hasRole(MycRole.AccountManager, true),
+    [hasRole]
+  );
 
-  const hasSystemGatewayManager = useMemo(() => {
-    return hasSystemRole(MycRole.GatewayManager);
-  }, [hasSystemRole]);
+  const hasSystemGatewayManager = useMemo(
+    () => hasRole(MycRole.GatewayManager, true),
+    [hasRole]
+  );
 
-  const hasSystemGuestsManager = useMemo(() => {
-    return hasSystemRole(MycRole.GuestsManager);
-  }, [hasSystemRole]);
+  const hasSystemGuestsManager = useMemo(
+    () => hasRole(MycRole.GuestsManager, true),
+    [hasRole]
+  );
 
-  const hasSystemSubscriptionsManager = useMemo(() => {
-    return hasSystemRole(MycRole.SubscriptionsManager);
-  }, [hasSystemRole]);
+  const hasSystemSubscriptionsManager = useMemo(
+    () => hasRole(MycRole.SubscriptionsManager, true),
+    [hasRole]
+  );
 
-  const hasSystemSystemManager = useMemo(() => {
-    return hasSystemRole(MycRole.SystemManager);
-  }, [hasSystemRole]);
+  const hasSystemSystemManager = useMemo(
+    () => hasRole(MycRole.SystemManager, true),
+    [hasRole]
+  );
 
-  const hasSystemTenantManager = useMemo(() => {
-    return hasSystemRole(MycRole.TenantManager);
-  }, [hasSystemRole]);
+  const hasSystemTenantManager = useMemo(
+    () => hasRole(MycRole.TenantManager, true),
+    [hasRole]
+  );
+
+  const hasNonSystemRole = useMemo(
+    () => hasRole(undefined, false),
+    [hasRole]
+  );
 
   return (
     <PageBody padding="md" height="fit">
@@ -264,7 +289,7 @@ export default function Profile() {
                   title="STAFF"
                   subtitle="High level permissions"
                   icon={GiWizardStaff}
-                  iconTitle="STAFF"
+                  headerTitle="Super user group"
                   links={[
                     { label: "/staff", to: "/dashboard/staff" },
                   ]}
@@ -289,7 +314,7 @@ export default function Profile() {
                   title="MANAGER"
                   subtitle="High level permissions"
                   icon={GrUserAdmin}
-                  iconTitle="MANAGER"
+                  headerTitle="Super user group"
                   links={[
                     { label: "/tenants", to: "/dashboard/tenants" },
                     { label: "/guest-roles", to: "/dashboard/guest-roles" },
@@ -317,7 +342,7 @@ export default function Profile() {
                   title="ACCOUNT MANAGER"
                   subtitle="Account-wide scope"
                   icon={VscAccount}
-                  iconTitle="ACCOUNT MANAGER"
+                  headerTitle="Account system role"
                   links={[
                     { label: "/accounts", to: "/dashboard/accounts" },
                   ]}
@@ -336,8 +361,8 @@ export default function Profile() {
                 <AboutCard
                   title="GATEWAY MANAGER"
                   subtitle="Gateway-wide scope"
-                  icon={FaUserCheck}
-                  iconTitle="GATEWAY MANAGER"
+                  icon={MdAltRoute}
+                  headerTitle="Gateway system role"
                   links={[
                     { label: "/gateways", to: "/dashboard/gateways" },
                   ]}
@@ -356,7 +381,7 @@ export default function Profile() {
                   title="GUEST MANAGER"
                   subtitle="System-wide scope"
                   icon={FaUserCheck}
-                  iconTitle="GUEST MANAGER"
+                  headerTitle="Guest system role"
                   links={[
                     { label: "/guest-roles", to: "/dashboard/guest-roles" },
                   ]}
@@ -381,8 +406,8 @@ export default function Profile() {
                 <AboutCard
                   title="SUBSCRIPTIONS MANAGER"
                   subtitle="Tenant-wide scope"
-                  icon={FaUserCheck}
-                  iconTitle="SUBSCRIPTIONS MANAGER"
+                  icon={GrOrganization}
+                  headerTitle="Subscriptions system role"
                   links={[
                     { label: "/subscriptions", to: "/dashboard/subscriptions" },
                   ]}
@@ -416,7 +441,7 @@ export default function Profile() {
                       </div>
                     );
                   }}
-                  iconTitle="SYSTEM MANAGER"
+                  headerTitle="System system role"
                   links={[
                     { label: "/error-codes", to: "/dashboard/error-codes" },
                     { label: "/webhooks", to: "/dashboard/webhooks" },
@@ -437,12 +462,37 @@ export default function Profile() {
                 />
               )}
 
+              {tenantsOwnership && (
+                <AboutCard
+                  title="TENANT OWNER"
+                  subtitle="Tenant-wide scope"
+                  icon={VscOrganization}
+                  headerTitle="Tenant ownership"
+                  links={[
+                    { label: "/tenants", to: "/dashboard/tenants" },
+                  ]}
+                  aboutContent={(
+                    <Typography as="p" width="xxs" decoration="faded">
+                      You are a tenant owner. This means you have full access to
+                      one or more tenants and can manage them as well as their
+                      associated accounts and guests.
+
+                      <br /><br />
+
+                      Tenant owners has full access to the tenant's resources,
+                      including management of accounts, metadata, tags, and
+                      settings.
+                    </Typography>
+                  )}
+                />
+              )}
+
               {hasSystemTenantManager && (
                 <AboutCard
                   title="TENANT MANAGER"
                   subtitle="Tenant-wide scope"
-                  icon={FaUserCheck}
-                  iconTitle="TENANT MANAGER"
+                  icon={SlOrganization}
+                  headerTitle="Tenant system role"
                   links={[
                     { label: "/tenants", to: "/dashboard/tenants" },
                   ]}
@@ -460,6 +510,32 @@ export default function Profile() {
                   )}
                 />
               )}
+
+              {hasNonSystemRole && (
+                <AboutCard
+                  title="CUSTOM ROLES"
+                  subtitle="Non system roles"
+                  icon={LuListChecks}
+                  headerTitle="Custom roles"
+                  links={[]}
+                  aboutContent={(
+                    <Typography as="div" width="xxs" decoration="faded">
+                      You have access to one or more custom roles. This
+                      roles has a granular but non-system scope.
+
+                      <br /><br />
+
+                      <div className="flex flex-col gap-2">
+                        <Typography as="h5" decoration="smooth">
+                          Roles/accounts with access to:
+                        </Typography>
+
+                        <SearchableNonSystemRolesList roles={hasNonSystemRole} />
+                      </div>
+                    </Typography>
+                  )}
+                />
+              )}
             </CardsSection.Body>
           </CardsSection>
         )}
@@ -472,7 +548,13 @@ const getTenantsOwnership = (
   tenantsOwnership: Profile["tenantsOwnership"]
 ): components["schemas"]["TenantOwnership"][] | null => {
   if (tenantsOwnership && "records" in tenantsOwnership) {
-    return tenantsOwnership.records;
+    const records = tenantsOwnership.records;
+
+    if (records.length === 0) {
+      return null;
+    }
+
+    return records;
   }
 
   return null;
@@ -482,8 +564,73 @@ const getLicensedResources = (
   licensedResources: Profile["licensedResources"]
 ): components["schemas"]["LicensedResource"][] | null => {
   if (licensedResources && "records" in licensedResources) {
-    return licensedResources.records;
+    const records = licensedResources.records;
+
+    if (records.length === 0) {
+      return null;
+    }
+
+    return records;
   }
 
   return null;
+}
+
+function SearchableNonSystemRolesList({
+  roles,
+}: {
+  roles: components["schemas"]["LicensedResource"][];
+}) {
+  const [search, setSearch] = useState("");
+
+  const filteredRoles = useMemo(() => {
+    return roles.filter((role) => role.role.toLowerCase().includes(search.toLowerCase()));
+  }, [roles, search]);
+
+  return (
+    <div className="mb-24">
+      <TextInput
+        type="text"
+        sizing="sm"
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        placeholder="Filter roles"
+      />
+
+      <div className="flex flex-col gap-2">
+        {filteredRoles
+          ?.sort((a, b) => (
+            a.accName.localeCompare(b.accName) ||
+            a.role.localeCompare(b.role) ||
+            a.perm.localeCompare(b.perm)
+          ))
+          ?.map((resource, index) => (
+            <div key={index} className="flex flex-col gap-0 border-b border-gray-200 dark:border-gray-700 pt-2">
+              <div className="flex items-center gap-1">
+                <Typography as="span" decoration="smooth">
+                  Role
+                </Typography>
+                <Typography as="h5">
+                  {resource.role}
+                </Typography>
+              </div>
+              <div className="flex items-center gap-1">
+                <Typography as="span" decoration="smooth">
+                  on
+                </Typography>
+                <Typography as="span">
+                  {resource.accName}
+                </Typography>
+              </div>
+              <div className="flex items-center gap-1 -mt-1">
+                <Typography as="span" decoration="smooth">
+                  being able to
+                </Typography>
+                <PermissionIcon permission={resource.perm} inline />
+              </div>
+            </div>
+          ))}
+      </div>
+    </div>
+  );
 }

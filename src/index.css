@@ -43,7 +43,7 @@
 
   /* Dark mode */
   .scrollbar::-webkit-scrollbar-thumb {
-    background: #425a9279;
+    background: #425a925d;
     border-radius: 100vh;
   }
 

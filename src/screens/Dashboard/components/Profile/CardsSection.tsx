@@ -8,9 +8,9 @@ interface ContainerProps extends BaseProps, VariantProps<typeof containerStyles>
 
 function Container({ children, ...props }: ContainerProps) {
   return (
-    <div className={containerStyles()} {...props}>
+    <section id="ProfileCardsSection" className={containerStyles()} {...props}>
       {children}
-    </div>
+    </section>
   );
 }
 

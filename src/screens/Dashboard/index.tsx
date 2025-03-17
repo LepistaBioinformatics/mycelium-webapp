@@ -56,7 +56,7 @@ export default function Dashboard() {
         ))}
       </Sidebar>
 
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto scrollbar">
         <Outlet />
       </div>
 
