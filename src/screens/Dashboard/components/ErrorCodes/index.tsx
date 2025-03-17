@@ -163,7 +163,7 @@ export default function ErrorCodes() {
             onClick={() => console.log("clicked")}
             size="sm"
             rounded="full"
-            intent="info"
+            intent="link"
           >
             <span className="mx-2">Create error code</span>
           </Button>

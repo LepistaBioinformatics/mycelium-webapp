@@ -146,7 +146,7 @@ export default function Tenants() {
             onClick={() => setIsNewModalOpen(true)}
             size="sm"
             rounded="full"
-            intent="info"
+            intent="link"
             disabled={!hasEnoughPermissions}
           >
             <span className="mx-2">Create tenant</span>

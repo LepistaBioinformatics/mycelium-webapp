@@ -31,11 +31,10 @@ export default function Dashboard() {
     setShowLogoutModal(true);
   }
 
-  useEffect(() => {
-    if (profile) {
-      navigate(PROFILE_ROUTE.path);
-    }
-  }, [profile]);
+  useEffect(
+    () => { if (profile) navigate(PROFILE_ROUTE.path); },
+    [profile]
+  );
 
   return (
     <div className="flex min-h-screen max-h-screen overflow-y-auto">
@@ -91,7 +90,7 @@ function LogoutModal({
           </div>
 
           <div className="flex justify-end gap-2">
-            <Button onClick={() => setShow(false)}>Cancel</Button>
+            <Button intent="secondary" onClick={() => setShow(false)}>Cancel</Button>
             <Button intent="warning" onClick={auth0Logout}>Logout</Button>
           </div>
         </div>
@@ -123,7 +122,7 @@ function MainHeader({ isOpen }: { isOpen: boolean }) {
   };
 
   return (
-    <div className="flex justify-center items-center gap-2 text-slate-800 dark:text-slate-300 bg-slate-100 dark:bg-slate-900 bg-opacity-50 dark:bg-opacity-50 backdrop-blur-sm border border-blue-500 dark:border-lime-500 rounded-full p-2">
+    <div className="flex justify-center items-center gap-2 text-slate-800 dark:text-slate-300 bg-blue-300 dark:bg-slate-900 bg-opacity-50 dark:bg-opacity-50 backdrop-blur-sm border border-blue-500 dark:border-lime-500 rounded-full p-2">
       {isOpen ? tenantInfo.name : tenantShortName()}
     </div>
   )

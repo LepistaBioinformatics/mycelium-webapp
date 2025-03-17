@@ -69,7 +69,7 @@ export default function Accounts() {
               onClick={() => setIsNewModalOpen(true)}
               size="sm"
               rounded="full"
-              intent="info"
+              intent="link"
               disabled={!shouldCreateAccount}
             >
               <span className="mx-2">Create account</span>

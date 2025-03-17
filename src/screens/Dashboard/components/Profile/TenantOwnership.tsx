@@ -50,7 +50,7 @@ export default function TenantOwnership({
   const Since = () => (
     <div className="flex items-center gap-2">
       <Typography decoration="smooth">since</Typography>
-      <Typography as="h4" title="The role assigned to you">
+      <Typography as="h4" title="The date and time you were added as a tenant owner">
         {formatDDMMYY(new Date(since), true)}
       </Typography>
     </div>
@@ -73,7 +73,7 @@ export default function TenantOwnership({
 
     return (
       <>
-        <Typography as="h4">
+        <Typography as="h4" title="The tenant name">
           {data.active.name}
         </Typography>
         <Since />

@@ -29,6 +29,7 @@ const styles = cva("text-start", {
       underline: "underline",
       lineThrough: "line-through",
       smooth: "!text-gray-500 dark:!text-gray-500",
+      faded: "!text-gray-600 dark:!text-gray-400",
       none: "",
     },
     margin: {

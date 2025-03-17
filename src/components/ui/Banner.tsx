@@ -5,7 +5,7 @@ import { IoClose } from "react-icons/io5";
 
 const { width } = projectVariants;
 
-const styles = cva("p-2 text-left text-sm border-2 shadow rounded-lg dark:text-gray-100 text-gray-800 bg-white dark:bg-slate-800 mx-auto w-full xl:max-w-4xl", {
+const styles = cva("p-2 text-left text-sm border-2 shadow rounded-lg dark:text-gray-100 text-gray-800 bg-slate-50 dark:bg-slate-800 mx-auto w-full xl:max-w-4xl", {
   variants: {
     width,
     intent: {
@@ -31,7 +31,7 @@ export default function Banner({ title, children, intent, closeable, onClose, ..
   return (
     <div className={styles({ intent })} {...props}>
       <div className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-3 flex items-center justify-between">
-        <h3>{title ?? "Note"}</h3>
+        {title && <h3>{title}</h3>}
         {closeable && (
           <button onClick={onClose}>
             <IoClose className="w-4 h-4 -mt-2" />

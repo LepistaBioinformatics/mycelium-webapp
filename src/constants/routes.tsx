@@ -100,20 +100,20 @@ const ROUTES = {
         icon: <FaUserCheck />,
         position: 6,
     } as AppRoute,
-    WEBHOOKS: {
-        name: "Webhooks",
-        path: "/dashboard/webhooks",
-        element: <Webhooks />,
-        errorElement: <ErrorBoundary />,
-        icon: <MdWebhook />,
-        position: 7,
-    } as AppRoute,
     ERROR_CODES: {
         name: "Error codes",
         path: "/dashboard/error-codes",
         element: <ErrorCodes />,
         errorElement: <ErrorBoundary />,
         icon: <MdNearbyError />,
+        position: 7,
+    } as AppRoute,
+    WEBHOOKS: {
+        name: "Webhooks",
+        path: "/dashboard/webhooks",
+        element: <Webhooks />,
+        errorElement: <ErrorBoundary />,
+        icon: <MdWebhook />,
         position: 8,
     } as AppRoute,
 } as const;

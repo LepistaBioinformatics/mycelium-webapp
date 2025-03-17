@@ -70,7 +70,7 @@ export default function AnonymousUser({ show, setUser }: Props) {
             alt="Searching for your email address..."
             width={250}
             height={250}
-            className="mt-4 mx-auto"
+            className="mt-4 mx-auto background-blue-100"
           />
         </Card.Body>
       </Card>

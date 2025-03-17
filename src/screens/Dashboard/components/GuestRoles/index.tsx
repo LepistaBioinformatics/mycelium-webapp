@@ -140,7 +140,7 @@ export default function GuestRoles() {
             onClick={() => setIsModalOpen(true)}
             size="sm"
             rounded="full"
-            intent="info"
+            intent="link"
             disabled={!hasEnoughPermissions}
           >
             <span className="mx-2">Create guest role</span>

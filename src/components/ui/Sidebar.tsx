@@ -8,7 +8,7 @@ import { Tooltip } from "flowbite-react";
 import ThemeSwitcher from "./ThemeSwitcher";
 import Divider from "./Divider";
 
-const containerStyles = cva("bg-blue-50 dark:bg-slate-700 min-w-md max-h-screen overflow-y-auto scrollbar px-2 pt-2 pb-5 flex flex-col gap-8 justify-between align-middle border-r-2 dark:border-indigo-900 shadow", {
+const containerStyles = cva("bg-blue-50 dark:bg-slate-700 min-w-md max-h-screen overflow-y-auto scrollbar px-2 pt-2 pb-5 flex flex-col gap-8 justify-between align-middle border-r-2 border-blue-300 dark:border-lime-700 shadow", {
   variants: {
     open: {
       true: "min-w-64",
@@ -38,7 +38,7 @@ function Container({ children, isOpen: isOpen, toggle, mainHeader, logout, ...pr
       </div>
 
       <div className="flex flex-col gap-1 w-full">
-        <Divider style="partial" marginY="none" />
+        <Divider style="partial" marginY="none" thickness="sm" />
 
         <div className="flex justify-center items-center w-full text-center hover:bg-slate-300 dark:hover:bg-slate-600 rounded-full p-2">
           <Tooltip content="Toggle theme" placement="right" className="px-2 border-2 border-white dark:border-lime-500 bg-blue-200 dark:bg-slate-600 text-blue-800 dark:text-lime-500">
@@ -52,7 +52,7 @@ function Container({ children, isOpen: isOpen, toggle, mainHeader, logout, ...pr
           </Tooltip>
         </button>
 
-        <Divider style="partial" marginY="none" />
+        <Divider style="partial" marginY="none" thickness="sm" />
 
         <button onClick={logout} className="flex justify-center items-center w-full text-center hover:bg-slate-300 dark:hover:bg-slate-600 rounded-full p-2">
           <Tooltip content="Logout" placement="right" className="px-2 border-2 border-white dark:border-lime-500 bg-blue-200 dark:bg-slate-600 text-blue-800 dark:text-lime-500">
@@ -64,7 +64,7 @@ function Container({ children, isOpen: isOpen, toggle, mainHeader, logout, ...pr
   )
 }
 
-const sidebarItemStyles = cva("flex items-center align-middle gap-2 border border-blue-300 dark:border-lime-500 rounded-full p-2 text-slate-800 dark:text-lime-500 transition-all duration-300 ease-in-out hover:bg-slate-300 dark:hover:bg-slate-600 w-full", {
+const sidebarItemStyles = cva("flex items-center align-middle gap-2 border border-blue-300 dark:border-lime-500 rounded-full p-2 text-slate-800 dark:text-lime-500 transition-all duration-300 ease-in-out hover:bg-blue-300 dark:hover:bg-slate-600 w-full", {
   variants: {
     active: {
       true: "bg-blue-200 dark:bg-slate-600",

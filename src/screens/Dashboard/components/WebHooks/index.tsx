@@ -115,7 +115,7 @@ export default function Webhooks() {
             onClick={() => console.log("clicked")}
             size="sm"
             rounded="full"
-            intent="info"
+            intent="link"
           >
             <span className="mx-2">Create webhook</span>
           </Button>

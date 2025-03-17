@@ -6,7 +6,7 @@ import { Link } from "react-router";
 interface Props extends BaseProps {
   title: string;
   subtitle: string;
-  icon: IconType;
+  icon: IconType | any;
   iconTitle: string;
   links: {
     label: string;
@@ -19,9 +19,9 @@ export default function AboutCard({ title, subtitle, icon, iconTitle, links, abo
   const Icon = icon;
 
   return (
-    <Card minHeight="50vh" maxHeight="90vh" padding="sm" width="full">
+    <Card minHeight="40vh" maxHeight="40vh" padding="sm" width="6xl">
       <Card.Header>
-        <Typography as="h5">
+        <Typography as="h5" uppercase>
           <div className="flex items-center gap-2">
             <Icon
               title={iconTitle}
@@ -47,8 +47,9 @@ export default function AboutCard({ title, subtitle, icon, iconTitle, links, abo
             </Typography>
             <Typography as="p">
               <div className="flex flex-col gap-1">
-                {links.map((link) => (
+                {links.map((link, index) => (
                   <Link
+                    key={index}
                     to={link.to}
                     className="text-blue-500 dark:text-lime-500 hover:cursor-pointer"
                   >
