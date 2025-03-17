@@ -42,7 +42,7 @@ export default function GuestToAccountModal({
   const [selectedRole, setSelectedRole] = useState<GuestRole | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const { parseError } = useSuspenseError();
+  const { parseHttpError } = useSuspenseError();
 
   const { getAccessTokenSilently } = useProfile({
     roles: [MycRole.SubscriptionsManager],
@@ -97,7 +97,7 @@ export default function GuestToAccountModal({
       });
 
     if (!response.ok) {
-      parseError(response);
+      parseHttpError(response);
       setIsSubmitting(false);
       return;
     }
@@ -211,6 +211,8 @@ function GuestRoleSelect({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isEditing, setIsEditing] = useState(selectedRole ? false : true);
 
+  const { parseHttpError } = useSuspenseError();
+
   const {
     isAuthenticated,
     hasEnoughPermissions,
@@ -270,13 +272,7 @@ function GuestRoleSelect({
           "Content-Type": "application/json",
         },
       })
-        .then((res) => {
-          if (!res.ok) {
-            throw new Error("Failed to fetch tenants");
-          }
-
-          return res.json();
-        })
+        .then(parseHttpError)
         .catch(console.error);
     },
     {

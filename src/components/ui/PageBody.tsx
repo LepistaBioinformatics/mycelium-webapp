@@ -154,7 +154,9 @@ const contentStyles = cva("", {
       2: "gap-2",
       3: "gap-3",
       4: "gap-4",
-      5: "gap-5"
+      5: "gap-5",
+      8: "gap-8",
+      12: "gap-12"
     },
   },
   defaultVariants: {

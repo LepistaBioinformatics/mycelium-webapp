@@ -4,6 +4,7 @@ import Typography from "@/components/ui/Typography";
 import { TENANT_ID_HEADER } from "@/constants/http-headers";
 import formatEmail from "@/functions/format-email";
 import useProfile from "@/hooks/use-profile";
+import useSuspenseError from "@/hooks/use-suspense-error";
 import { buildPath } from "@/services/openapi/mycelium-api";
 import { components } from "@/services/openapi/mycelium-schema";
 import { RootState } from "@/states/store";
@@ -27,6 +28,8 @@ export default function UnInviteGuestModal({ guestUser, accountId, isOpen, onClo
     permissions: [MycPermission.Write],
     restrictSystemAccount: true,
   });
+
+  const { parseHttpError } = useSuspenseError();
 
   const { tenantInfo } = useSelector((state: RootState) => state.tenant);
 
@@ -74,12 +77,12 @@ export default function UnInviteGuestModal({ guestUser, accountId, isOpen, onClo
       });
 
     if (!response.ok) {
+      parseHttpError(response);
       setIsSubmitting(false);
-      throw new Error("Failed to uninvite guest");
+      return;
     }
 
     setIsSubmitting(false);
-
     onClose();
   }
 

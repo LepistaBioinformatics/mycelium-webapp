@@ -3,6 +3,7 @@ import Card from "@/components/ui/Card";
 import DetailsBox from "@/components/ui/DetailsBox";
 import Typography from "@/components/ui/Typography";
 import useProfile from "@/hooks/use-profile";
+import useSuspenseError from "@/hooks/use-suspense-error";
 import { buildPath } from "@/services/openapi/mycelium-api";
 import { useState } from "react";
 
@@ -13,6 +14,8 @@ interface Props {
 export default function GuestRolesInitializer({ onSuccess }: Props) {
   const { profile, isLoadingUser, getAccessTokenSilently } = useProfile();
   const [isLoading, setIsLoading] = useState(false);
+
+  const { parseHttpError } = useSuspenseError();
 
   const handleInitialize = async () => {
     setIsLoading(true);
@@ -28,11 +31,13 @@ export default function GuestRolesInitializer({ onSuccess }: Props) {
     });
 
     if (!response.ok) {
-      throw new Error("Failed to initialize guest roles");
+      parseHttpError(response);
+      setIsLoading(false);
+      return;
     }
 
-    onSuccess();
     setIsLoading(false);
+    onSuccess();
   };
 
   if (isLoadingUser || !profile?.isManager) return null;

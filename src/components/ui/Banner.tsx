@@ -9,10 +9,10 @@ const styles = cva("p-2 text-left text-sm border-2 shadow rounded-lg dark:text-g
   variants: {
     width,
     intent: {
-      error: "border-dashed border-red-500 dark:border-red-500",
-      info: "border-dashed border-blue-500 dark:border-blue-500",
-      success: "border-dashed border-green-500 dark:border-green-500",
-      warning: "border-dashed border-yellow-500 dark:border-yellow-500",
+      error: "border-dashed border-red-500 dark:border-red-500 bg-red-50 dark:bg-red-900",
+      info: "border-dashed border-blue-500 dark:border-blue-500 bg-blue-50 dark:bg-blue-900",
+      success: "border-dashed border-green-500 dark:border-green-500 bg-green-50 dark:bg-green-900",
+      warning: "border-dashed border-yellow-500 dark:border-yellow-500 bg-yellow-50 dark:bg-yellow-900",
     }
   },
   defaultVariants: {
@@ -30,16 +30,14 @@ interface Props extends BaseProps, VariantProps<typeof styles> {
 export default function Banner({ title, children, intent, closeable, onClose, ...props }: Props) {
   return (
     <div className={styles({ intent })} {...props}>
-      {title && (
-        <div className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-3 flex items-center justify-between">
-          <h3>{title}</h3>
-          {closeable && (
-            <button onClick={onClose}>
-              <IoClose className="w-4 h-4 -mt-2" />
-            </button>
-          )}
-        </div>
-      )}
+      <div className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-3 flex items-center justify-between">
+        <h3>{title ?? "Note"}</h3>
+        {closeable && (
+          <button onClick={onClose}>
+            <IoClose className="w-4 h-4 -mt-2" />
+          </button>
+        )}
+      </div>
       {children}
     </div>
   );

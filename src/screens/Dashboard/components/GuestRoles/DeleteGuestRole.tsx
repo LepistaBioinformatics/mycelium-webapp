@@ -22,7 +22,7 @@ export default function DeleteGuestRole({ guestRole, isOpen, onClose }: Props) {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const { parseError } = useSuspenseError();
+  const { parseHttpError } = useSuspenseError();
 
   const handleDelete = async () => {
     setIsLoading(true);
@@ -42,7 +42,7 @@ export default function DeleteGuestRole({ guestRole, isOpen, onClose }: Props) {
           Authorization: `Bearer ${token}`,
         },
       })
-      .then(parseError)
+      .then(parseHttpError)
       .then(onClose)
       .catch(console.error)
       .finally(() => setIsLoading(false));

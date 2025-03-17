@@ -6,7 +6,7 @@ import SuspenseNotification from "./ui/SuspenseNotification";
 import { clearNotification } from "@/states/notification.state";
 
 export default function AppNotifications() {
-  const { notification, type } = useSelector((state: RootState) => state.notification);
+  const { notification, title, type } = useSelector((state: RootState) => state.notification);
   const dispatch = useDispatch();
 
   return (
@@ -15,6 +15,7 @@ export default function AppNotifications() {
       setShow={() => dispatch(clearNotification())}
       response={notification}
       intent={type}
+      title={title}
     />
   );
 }

@@ -9,6 +9,7 @@ import { MycPermission } from "@/types/MyceliumPermission";
 import { MycRole } from "@/types/MyceliumRole";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import useSuspenseError from "./use-suspense-error";
 
 const PROFILE_KEY = "myc-profile";
 
@@ -57,10 +58,17 @@ export default function useProfile(args?: Props) {
     getAccessTokenSilently,
     getAccessTokenWithPopup,
     getIdTokenClaims,
+    error,
   } = useAuth0();
 
   const [profile, setProfile] = useState<Profile | null>(null);
   const [isLoadingProfile, setIsLoadingProfile] = useState(false);
+
+  const { parseHttpError, parseAuth0Error } = useSuspenseError();
+
+  useEffect(() => {
+    if (error) parseAuth0Error(error);
+  }, [error]);
 
   /**
    * Filter the licensed resources based on specific roles or permissions
@@ -191,6 +199,7 @@ export default function useProfile(args?: Props) {
     setIsLoadingProfile(false);
 
     if (!response.ok) {
+      parseHttpError(response);
       return null;
     }
 

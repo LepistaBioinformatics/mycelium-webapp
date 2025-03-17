@@ -3,6 +3,7 @@
 import Button from "@/components/ui/Button";
 import Modal from "@/components/ui/Modal";
 import Typography from "@/components/ui/Typography";
+import useSuspenseError from "@/hooks/use-suspense-error";
 import { buildPath } from "@/services/openapi/mycelium-api";
 import { components } from "@/services/openapi/mycelium-schema";
 import { useAuth0 } from "@auth0/auth0-react";
@@ -18,6 +19,8 @@ interface Props {
 
 export default function DeleteTenant({ tenant, isOpen, onClose }: Props) {
   const { getAccessTokenSilently } = useAuth0();
+
+  const { parseHttpError } = useSuspenseError();
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -39,7 +42,7 @@ export default function DeleteTenant({ tenant, isOpen, onClose }: Props) {
           Authorization: `Bearer ${token}`,
         },
       })
-      .then(console.log)
+      .then(parseHttpError)
       .catch(console.error)
       .finally(() => {
         setIsLoading(false);

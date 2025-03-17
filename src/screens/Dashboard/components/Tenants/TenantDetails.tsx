@@ -233,7 +233,7 @@ export default function TenantDetails({ isOpen, onClose, tenant }: Props) {
       <DeleteTenant
         tenant={tenant}
         isOpen={isDeleteModalOpen}
-        onClose={onClose}
+        onClose={() => setIsDeleteModalOpen(false)}
       />
     </SideCurtain>
   )

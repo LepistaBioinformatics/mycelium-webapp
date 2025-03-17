@@ -40,6 +40,7 @@ const styles = cva("text-start", {
     },
     width: {
       ...width,
+      xxs: "!max-w-[15rem]",
       xs: "!max-w-xs",
       sm: "!max-w-sm",
       md: "!max-w-md",

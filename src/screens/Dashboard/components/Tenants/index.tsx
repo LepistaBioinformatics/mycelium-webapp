@@ -28,7 +28,7 @@ export default function Tenants() {
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [currentTenant, setCurrentTenant] = useState<Tenant | null>(null);
 
-  const { parseError } = useSuspenseError();
+  const { parseHttpError } = useSuspenseError();
 
   const {
     isLoadingUser,
@@ -82,7 +82,7 @@ export default function Tenants() {
           "Content-Type": "application/json"
         },
       })
-        .then(parseError)
+        .then(parseHttpError)
         .catch(console.error);
     },
     {

@@ -8,6 +8,7 @@ import Modal from "@/components/ui/Modal";
 import Typography from "@/components/ui/Typography";
 import { TENANT_ID_HEADER } from "@/constants/http-headers";
 import useProfile from "@/hooks/use-profile";
+import useSuspenseError from "@/hooks/use-suspense-error";
 import { buildPath } from "@/services/openapi/mycelium-api";
 import { components } from "@/services/openapi/mycelium-schema";
 import { RootState } from "@/states/store";
@@ -39,6 +40,8 @@ export interface AccountModalProps {
 }
 
 export default function AccountModal({ isOpen, onClose, onSuccess, account }: AccountModalProps) {
+  const { parseHttpError } = useSuspenseError();
+
   const { hasAdminPrivileges, getAccessTokenSilently } = useProfile({
     roles: [MycRole.SubscriptionsManager],
     permissions: [MycPermission.Write],
@@ -114,10 +117,13 @@ export default function AccountModal({ isOpen, onClose, onSuccess, account }: Ac
       body: JSON.stringify({ name, actor: systemAccountType })
     });
 
-    if (response.ok) {
-      handleLocalSuccess();
+    if (!response.ok) {
+      parseHttpError(response);
+      setIsLoading(false);
+      return;
     }
 
+    handleLocalSuccess();
     setIsLoading(false);
   }
 

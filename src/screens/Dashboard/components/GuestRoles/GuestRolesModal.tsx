@@ -5,6 +5,7 @@ import FormField from "@/components/ui/FomField";
 import Modal from "@/components/ui/Modal";
 import Typography from "@/components/ui/Typography";
 import useProfile from "@/hooks/use-profile";
+import useSuspenseError from "@/hooks/use-suspense-error";
 import { buildPath } from "@/services/openapi/mycelium-api";
 import { components } from "@/services/openapi/mycelium-schema";
 import { MycPermission } from "@/types/MyceliumPermission";
@@ -36,6 +37,8 @@ export default function GuestRolesModal({
   guestRole
 }: GuestRolesModalProps) {
   const [isLoading, setIsLoading] = useState(false);
+
+  const { parseHttpError } = useSuspenseError();
 
   const {
     isAuthenticated,
@@ -98,8 +101,11 @@ export default function GuestRolesModal({
 
     if (response.ok) {
       handleLocalSuccess();
+      setIsLoading(false);
+      return;
     }
 
+    parseHttpError(response);
     setIsLoading(false);
   }
 

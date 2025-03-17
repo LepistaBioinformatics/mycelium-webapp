@@ -1,9 +1,14 @@
 "use client";
 
+import { FaRegCircleCheck } from "react-icons/fa6";
+import { IoMdInformationCircleOutline } from "react-icons/io";
+import { MdErrorOutline } from "react-icons/md";
+import { IoWarningOutline } from "react-icons/io5";
 import { cva, VariantProps } from "class-variance-authority";
 import { components } from "@/services/openapi/mycelium-schema";
 import Banner from "./Banner";
 import Countdown from "react-countdown";
+import { useMemo } from "react";
 
 const styles = cva("absolute top-1 right-5 w-[calc(100%-2rem)] lg:w-[50%] xl:max-w-[500px] flex flex-col gap-1 z-50 transition-all duration-300", {
   variants: {
@@ -25,6 +30,7 @@ type HttpResponse = components["schemas"]["HttpJsonResponse"];
 interface Props extends
   BaseProps,
   VariantProps<typeof styles> {
+  title?: string | null;
   response: HttpResponse | string | null;
   timeout?: number;
   show: boolean;
@@ -33,15 +39,45 @@ interface Props extends
 
 export default function SuspenseNotification({
   response,
+  title,
   intent,
   show,
   setShow,
   timeout = 10000,
 }: Props) {
-  const message = (typeof response === "object" ? response?.msg : response)
-    ?.replace(/\[[^\]]*\]\s*/g, '');
+  const cleanMessage = (message: string) => {
+    return message?.replace(/\[[^\]]*\]\s*/g, '');
+  };
 
-  const title = response && typeof response === "object" ? response.code : "Error";
+  const message = useMemo(() => {
+    if (typeof response === "object") {
+      return cleanMessage(response?.msg ?? "");
+    }
+
+    return cleanMessage(response ?? "");
+  }, [response]);
+
+  const icon = useMemo(() => {
+    switch (intent) {
+      case "error":
+        return <MdErrorOutline />;
+      case "info":
+        return <IoMdInformationCircleOutline />;
+      case "success":
+        return <FaRegCircleCheck />;
+      case "warning":
+        return <IoWarningOutline />;
+    }
+  }, [intent]);
+
+  const bannerTitle = useMemo(() => (
+    <div className="flex items-center gap-2">
+      {icon}
+      <h3 className="text-lg font-bold">
+        {title ?? (response && typeof response === "object" ? response.code : "Error")}
+      </h3>
+    </div>
+  ), [title, icon]);
 
   const handleClose = () => {
     setTimeout(() => {
@@ -62,7 +98,7 @@ export default function SuspenseNotification({
           <div className="flex items-center justify-between">
             <Banner
               intent={intent}
-              title={title}
+              title={bannerTitle}
               closeable={true}
               onClose={setShow}
             >

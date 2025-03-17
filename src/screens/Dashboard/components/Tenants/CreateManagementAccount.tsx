@@ -5,6 +5,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { buildPath } from "@/services/openapi/mycelium-api";
 import { TENANT_ID_HEADER } from "@/constants/http-headers";
 import Button from "@/components/ui/Button";
+import useSuspenseError from "@/hooks/use-suspense-error";
 
 interface Props {
   isOpen: boolean;
@@ -21,6 +22,8 @@ interface Props {
  */
 export default function CreateManagementAccount({ isOpen, onClose, tenantId }: Props) {
   const { getAccessTokenSilently } = useAuth0();
+
+  const { parseHttpError } = useSuspenseError();
 
   const [isCreating, setIsCreating] = useState(false);
 
@@ -40,7 +43,7 @@ export default function CreateManagementAccount({ isOpen, onClose, tenantId }: P
         [TENANT_ID_HEADER]: tenantId,
       },
     })
-      .then(console.log)
+      .then(parseHttpError)
       .catch(console.error)
       .finally(() => {
         setIsCreating(false);

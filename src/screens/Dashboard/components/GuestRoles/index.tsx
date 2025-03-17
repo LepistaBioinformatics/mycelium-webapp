@@ -29,7 +29,7 @@ export default function GuestRoles() {
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [currentGuestRole, setCurrentGuestRole] = useState<GuestRole | null>(null);
 
-  const { parseError } = useSuspenseError();
+  const { parseHttpError } = useSuspenseError();
 
   const {
     isLoadingUser,
@@ -101,7 +101,7 @@ export default function GuestRoles() {
           "Content-Type": "application/json"
         },
       })
-        .then(parseError)
+        .then(parseHttpError)
         .catch(console.error);
     },
     {

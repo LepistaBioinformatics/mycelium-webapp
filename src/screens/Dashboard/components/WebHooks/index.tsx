@@ -22,7 +22,7 @@ import useSuspenseError from "@/hooks/use-suspense-error";
 type WebHook = components["schemas"]["WebHook"];
 
 export default function Webhooks() {
-  const { parseError } = useSuspenseError();
+  const { parseHttpError } = useSuspenseError();
 
   const {
     isLoadingUser,
@@ -76,7 +76,7 @@ export default function Webhooks() {
           "Content-Type": "application/json"
         },
       })
-        .then(parseError)
+        .then(parseHttpError)
         .catch(console.error);
     },
     {

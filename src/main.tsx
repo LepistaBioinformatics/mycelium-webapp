@@ -1,6 +1,8 @@
 import './index.css'
 import ReactDOM from "react-dom/client";
 import { Auth0Provider } from '@auth0/auth0-react';
+import { Provider as ReduxProvider } from 'react-redux';
+import store from './states/store';
 import React from 'react';
 import { ThemeProvider } from "./components/ThemeProvider";
 import App from "./App";
@@ -14,21 +16,23 @@ ReactDOM.createRoot(
   document.getElementById("root")!
 ).render(
   <React.StrictMode>
-    <ThemeProvider>
-      <Auth0Provider
-        domain={DOMAIN}
-        clientId={CLIENT_ID}
-        authorizationParams={{
-          redirect_uri: window.location.origin,
-          display: 'popup',
-          prompt: 'login',
-          scope: SCOPE,
-          response_type: 'code',
-          audience: AUDIENCE,
-        }}
-      >
-        <App />
-      </Auth0Provider>
-    </ThemeProvider>
+    <ReduxProvider store={store}>
+      <ThemeProvider>
+        <Auth0Provider
+          domain={DOMAIN}
+          clientId={CLIENT_ID}
+          authorizationParams={{
+            redirect_uri: window.location.origin,
+            display: 'popup',
+            prompt: 'login',
+            scope: SCOPE,
+            response_type: 'code',
+            audience: AUDIENCE,
+          }}
+        >
+          <App />
+        </Auth0Provider>
+      </ThemeProvider>
+    </ReduxProvider>
   </React.StrictMode>
 );

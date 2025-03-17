@@ -5,6 +5,7 @@ import Modal from "@/components/ui/Modal";
 import Typography from "@/components/ui/Typography";
 import { TENANT_ID_HEADER } from "@/constants/http-headers";
 import useProfile from "@/hooks/use-profile";
+import useSuspenseError from "@/hooks/use-suspense-error";
 import { buildPath } from "@/services/openapi/mycelium-api";
 import { components } from "@/services/openapi/mycelium-schema";
 import { MycPermission } from "@/types/MyceliumPermission";
@@ -27,6 +28,8 @@ export default function DeleteAccount({ account, isOpen, onClose, tenantId }: Pr
     restrictSystemAccount: true,
   });
 
+  const { parseHttpError } = useSuspenseError();
+
   const [isLoading, setIsLoading] = useState(false);
 
   const handleDelete = async () => {
@@ -48,7 +51,7 @@ export default function DeleteAccount({ account, isOpen, onClose, tenantId }: Pr
           [TENANT_ID_HEADER]: tenantId,
         },
       })
-      .then(console.log)
+      .then(parseHttpError)
       .catch(console.error)
       .finally(() => {
         setIsLoading(false);

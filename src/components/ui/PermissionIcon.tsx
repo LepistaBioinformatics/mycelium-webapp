@@ -24,7 +24,7 @@ const styles = cva("", {
   defaultVariants: {
     size: "md",
     color: "read",
-    inline: false
+    inline: true
   },
 });
 

@@ -132,7 +132,7 @@ export default function PaginatedAccounts({
   forceMutate,
   restrictAccountTypeTo,
 }: Props) {
-  const { parseError } = useSuspenseError();
+  const { parseHttpError } = useSuspenseError();
 
   const {
     isLoadingUser,
@@ -305,7 +305,7 @@ export default function PaginatedAccounts({
           ...(tenantId ? { [TENANT_ID_HEADER]: tenantId } : {}),
         },
       })
-        .then(parseError)
+        .then(parseHttpError)
         .catch((err) => {
           console.error(err);
         });
@@ -423,14 +423,6 @@ export default function PaginatedAccounts({
       )}
     >
       <div id="AccountsContent" className="flex flex-col justify-center gap-4 w-full mx-auto">
-        {/* {error && (
-          <div className="flex justify-start mx-auto w-full xl:max-w-4xl">
-            <Banner intent="error" title={typeof error === "object" ? error.code : "Error"} >
-              {typeof error === "object" ? error.msg : error}
-            </Banner>
-          </div>
-        )} */}
-
         {toolbar}
 
         <PaginatedContent

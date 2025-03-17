@@ -19,7 +19,7 @@ import useSuspenseError from "@/hooks/use-suspense-error";
 type ErrorCode = components["schemas"]["ErrorCode"];
 
 export default function ErrorCodes() {
-  const { parseError } = useSuspenseError();
+  const { parseHttpError } = useSuspenseError();
 
   const {
     isLoadingUser,
@@ -112,7 +112,7 @@ export default function ErrorCodes() {
           "Content-Type": "application/json",
         },
       })
-        .then(parseError)
+        .then(parseHttpError)
         .catch(console.error);
     },
     {
