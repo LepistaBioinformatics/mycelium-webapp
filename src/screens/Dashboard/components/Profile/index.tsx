@@ -218,7 +218,7 @@ export default function Profile() {
               </Card>
             )}
 
-            <Card minHeight="50vh" maxHeight="50vh" padding="sm" width="6xl" flex1 dashed={!licensedResources}>
+            <Card minHeight="50vh" maxHeight="50vh" padding="sm" width="xl" flex1 dashed={!licensedResources}>
               <Card.Header>
                 <Typography as="h6" decoration="smooth">
                   Accounts witch you have access
@@ -236,15 +236,21 @@ export default function Profile() {
                             key={index}
                             className="flex flex-col gap-0 bg-blue-50 dark:bg-slate-900 bg-opacity-50 dark:bg-opacity-50 border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-2 w-full"
                           >
-                            <Typography as="h3" title="The account which you have access to">
+                            <Typography as="div" width="lg">
                               <div className="flex items-center gap-2">
                                 {resource.sysAcc && <RiRobot2Line className="text-blue-500 dark:text-lime-500" title="System account" />}
-                                {resource.accName}
+                                <Typography
+                                  as="h3"
+                                  width="lg"
+                                  title={`The account which you have access to: ${resource.accName}`}
+                                >
+                                  {resource.accName}
+                                </Typography>
                               </div>
                             </Typography>
                             <div className="flex items-center gap-2">
                               <Typography decoration="smooth">as</Typography>
-                              <Typography as="h4" title="The role assigned to you" nowrap>
+                              <Typography as="h4" title={`The role assigned to you: ${resource.role}`} nowrap>
                                 {resource.role}
                               </Typography>
                             </div>

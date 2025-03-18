@@ -7,7 +7,7 @@ const styles = cva("text-start", {
   variants: {
     padding,
     as: {
-      div: "",
+      div: "py-1 text-slate-700 dark:text-slate-200",
       p: "py-1 text-slate-700 dark:text-slate-200",
       span: "text-sm text-slate-700 dark:text-slate-200",
       small: "text-xs text-slate-700 dark:text-slate-200",
