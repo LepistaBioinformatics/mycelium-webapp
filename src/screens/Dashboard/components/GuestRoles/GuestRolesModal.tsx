@@ -11,7 +11,7 @@ import { components } from "@/services/openapi/mycelium-schema";
 import { MycPermission } from "@/types/MyceliumPermission";
 import { MycRole } from "@/types/MyceliumRole";
 import { Select, Textarea, TextInput } from "flowbite-react";
-import { useMemo, useState } from "react";
+import { useCallback, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 type GuestRole = components["schemas"]["GuestRole"];
@@ -72,26 +72,46 @@ export default function GuestRolesModal({
     reset();
   }
 
-  const memoizedUrl = useMemo(() => {
-    if (!isAuthenticated) return null;
-    if (!hasEnoughPermissions) return null;
+  const buildBaseUrl = useCallback(() => {
+    if (!isAuthenticated || !hasEnoughPermissions) return {
+      baseUrl: null,
+      method: null
+    };
 
-    return buildPath("/adm/rs/guests-manager/guest-roles");
-  }, [isAuthenticated, hasEnoughPermissions]);
+    if (guestRole && guestRole?.id) {
+      return {
+        baseUrl: buildPath("/adm/rs/guests-manager/guest-roles/{guest_role_id}", {
+          path: { guest_role_id: guestRole.id }
+        }),
+        method: "PATCH"
+      };
+    }
+
+    return {
+      baseUrl: buildPath("/adm/rs/guests-manager/guest-roles"),
+      method: "POST"
+    };
+  }, [guestRole, isAuthenticated, hasEnoughPermissions]);
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     setIsLoading(true);
 
     const token = await getAccessTokenSilently();
 
-    if (!memoizedUrl) {
-      console.error("Unable to submit form, missing permissions or authentication");
+    if (!token) {
       setIsLoading(false);
       return;
     }
 
-    const response = await fetch(memoizedUrl, {
-      method: guestRole ? "PATCH" : "POST",
+    const { baseUrl, method } = buildBaseUrl();
+
+    if (!baseUrl || !method) {
+      setIsLoading(false);
+      return;
+    }
+
+    const response = await fetch(baseUrl, {
+      method,
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json"
@@ -158,10 +178,15 @@ export default function GuestRolesModal({
             {errors.description && <span>This field is required</span>}
           </FormField>
 
-          <FormField label="Permission" title="Permission of your guest role">
+          <FormField
+            label="Permission"
+            title={guestRole ? "This field is read-only" : "Permission of your guest role"}
+          >
             <Select
               id="permission"
               sizing="lg"
+              disabled={!!guestRole}
+              title={guestRole ? "This field is read-only" : "Permission of your guest role"}
               defaultValue={guestRole?.permission as MycPermission | undefined || MycPermission.Read}
               {...register("permission")}
             >

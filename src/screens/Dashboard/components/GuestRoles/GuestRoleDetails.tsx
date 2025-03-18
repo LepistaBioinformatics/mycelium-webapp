@@ -7,6 +7,7 @@ import DetailsBox from "@/components/ui/DetailsBox";
 import { useState } from "react";
 import CopyToClipboard from "@/components/ui/CopyToClipboard";
 import DeleteGuestRole from "./DeleteGuestRole";
+import EditGuestRoleModal from "./EditGuestRoleModal";
 
 type GuestRole = components["schemas"]["GuestRole"];
 
@@ -14,6 +15,7 @@ interface Props {
   guestRole: GuestRole;
   isOpen: boolean;
   onClose: () => void;
+  mutateGuestRoles: () => void;
 }
 
 enum OpenedSection {
@@ -21,13 +23,18 @@ enum OpenedSection {
   AdvancedActions,
 }
 
-export default function GuestRoleDetails({ isOpen, onClose, guestRole }: Props) {
+export default function GuestRoleDetails({ isOpen, onClose, guestRole, mutateGuestRoles }: Props) {
   const [openedSection, setOpenedSection] = useState<OpenedSection>(OpenedSection.Details);
-
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const handleToggleSection = (section: OpenedSection, state: "open" | "closed") => {
     if (state === "open") setOpenedSection(section);
+  }
+
+  const handleEditFinish = () => {
+    setIsEditModalOpen(false);
+    mutateGuestRoles();
   }
 
   return (
@@ -103,6 +110,16 @@ export default function GuestRoleDetails({ isOpen, onClose, guestRole }: Props) 
                 {guestRole.permission}
               </Typography>
             </div>
+
+            <div>
+              <Typography as="span" decoration="smooth">Guest Role ID</Typography>
+              <Typography as="p">
+                <span className="flex items-center gap-2 group">
+                  {guestRole.id}
+                  <CopyToClipboard text={guestRole.id ?? ""} groupHidden />
+                </span>
+              </Typography>
+            </div>
           </div>
         </DetailsBox.Content>
       </DetailsBox>
@@ -118,11 +135,31 @@ export default function GuestRoleDetails({ isOpen, onClose, guestRole }: Props) 
         </DetailsBox.Summary>
 
         <DetailsBox.Content minHeight="50">
+          <Banner intent="info">
+            <div className="flex justify-between gap-2 my-5">
+              <div className="flex flex-col gap-2">
+                <Typography as="span">
+                  Edit guest role
+                </Typography>
+
+                <Typography as="small" decoration="smooth">
+                  Edit the guest role details.
+                </Typography>
+              </div>
+
+              <div>
+                <Button rounded intent="info" onClick={() => setIsEditModalOpen(true)}>
+                  Edit
+                </Button>
+              </div>
+            </div>
+          </Banner>
+
           <Banner intent="error">
             <div className="flex justify-between gap-2 my-5">
               <div className="flex flex-col gap-2">
                 <Typography as="span">
-                  Delete tenant
+                  Delete guest role
                 </Typography>
 
                 <Typography as="small" decoration="smooth">
@@ -144,6 +181,13 @@ export default function GuestRoleDetails({ isOpen, onClose, guestRole }: Props) 
         guestRole={guestRole}
         isOpen={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
+      />
+
+      <EditGuestRoleModal
+        isOpen={isEditModalOpen}
+        onClose={handleEditFinish}
+        onSuccess={handleEditFinish}
+        guestRole={guestRole}
       />
     </SideCurtain>
   )

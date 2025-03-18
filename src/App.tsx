@@ -46,10 +46,23 @@ export default function App() {
                       path={child.path}
                       element={child.element}
                       errorElement={child.errorElement}
+                      hasErrorBoundary
                     />
                   ))}
+
+                  <Route
+                    path="*"
+                    element={<NotFound />}
+                    errorElement={<ErrorBoundary />}
+                  />
                 </Fragment>
               ))}
+
+            <Route
+              path="*"
+              element={<NotFound />}
+              errorElement={<ErrorBoundary />}
+            />
           </Route>
 
           <Route

@@ -219,6 +219,7 @@ export default function GuestRoles() {
           isOpen={isViewModalOpen}
           onClose={handleCloseModal}
           guestRole={currentGuestRole}
+          mutateGuestRoles={mutateGuestRoles}
         />
       )}
     </DashBoardBody>
