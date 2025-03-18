@@ -36,12 +36,14 @@ export default function GuestRoleDetails({ isOpen, onClose, guestRole }: Props) 
       title="Guest role details"
       handleClose={onClose}
     >
-      <div>
-        <Typography as="span" decoration="smooth">Name</Typography>
-        <Typography as="h2">
-          {guestRole.name}
-        </Typography>
-      </div>
+      {guestRole && (
+        <div className="flex items-baseline gap-2 -mb-1">
+          <Typography as="span" decoration="smooth">Seeing</Typography>
+          <Typography as="h2" title="Guest role name">
+            {guestRole.name}
+          </Typography>
+        </div>
+      )}
 
       <DetailsBox
         open={openedSection === OpenedSection.Details}

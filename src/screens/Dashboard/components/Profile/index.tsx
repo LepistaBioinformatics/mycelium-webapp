@@ -606,24 +606,24 @@ function SearchableNonSystemRolesList({
           ))
           ?.map((resource, index) => (
             <div key={index} className="flex flex-col gap-0 border-b border-gray-200 dark:border-gray-700 pt-2">
-              <div className="flex items-center gap-1">
-                <Typography as="span" decoration="smooth">
+              <div className="flex items-center gap-1 whitespace-nowrap">
+                <Typography as="span" decoration="smooth" nowrap>
                   Role
                 </Typography>
-                <Typography as="h5">
+                <Typography as="h5" truncate title={resource.role}>
                   {resource.role}
                 </Typography>
               </div>
-              <div className="flex items-center gap-1">
-                <Typography as="span" decoration="smooth">
+              <div className="flex items-center gap-1 whitespace-nowrap">
+                <Typography as="span" decoration="smooth" nowrap>
                   on
                 </Typography>
-                <Typography as="span">
+                <Typography as="span" truncate title={resource.accName}>
                   {resource.accName}
                 </Typography>
               </div>
-              <div className="flex items-center gap-1 -mt-1">
-                <Typography as="span" decoration="smooth">
+              <div className="flex items-center gap-1 -mt-1 whitespace-nowrap">
+                <Typography as="span" decoration="smooth" nowrap>
                   being able to
                 </Typography>
                 <PermissionIcon permission={resource.perm} inline />

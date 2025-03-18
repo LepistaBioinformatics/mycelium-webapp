@@ -10,7 +10,7 @@ import Banner from "./Banner";
 import Countdown from "react-countdown";
 import { useMemo } from "react";
 
-const styles = cva("absolute top-1 right-5 w-[calc(100%-2rem)] lg:w-[50%] xl:max-w-[500px] flex flex-col gap-1 z-50 transition-all duration-300", {
+const styles = cva("absolute top-1 right-5 w-[calc(100%-2rem)] md:w-[50%] xl:max-w-[500px] flex flex-col gap-1 z-50 transition-all duration-300", {
   variants: {
     show: {
       true: "opacity-100",
@@ -50,11 +50,21 @@ export default function SuspenseNotification({
   };
 
   const message = useMemo(() => {
+    //
+    // Check if the response is an object.
+    //
     if (typeof response === "object") {
       return cleanMessage(response?.msg ?? "");
     }
 
-    return cleanMessage(response ?? "");
+    //
+    // Check if the response is a string.
+    //
+    if (typeof response === "string") {
+      return cleanMessage(response);
+    }
+
+    return null;
   }, [response]);
 
   const icon = useMemo(() => {

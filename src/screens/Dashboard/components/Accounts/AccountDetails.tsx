@@ -22,6 +22,7 @@ import DetailsBox from "@/components/ui/DetailsBox";
 import EditAccountModal from "./EditAccountModal";
 import UnInviteGuestModal from "./UnInviteGuestModal";
 import useSuspenseError from "@/hooks/use-suspense-error";
+import CopyToClipboard from "@/components/ui/CopyToClipboard";
 
 type Account = components["schemas"]["Account"];
 type GuestUser = components["schemas"]["GuestUser"];
@@ -97,6 +98,24 @@ export default function AccountDetails({ isOpen, onClose, accountId }: Props) {
     }
   );
 
+  const showTenantInfo = useMemo(() => {
+    if (!account) return false;
+
+    const accountType = account.accountType;
+
+    if (typeof accountType === "string") return false;
+
+    if (
+      ("subscription" in accountType) ||
+      ("tenantManager" in accountType) ||
+      ("roleAssociated" in accountType)
+    ) {
+      return true;
+    }
+
+    return false;
+  }, [account]);
+
   const owners = useMemo(() => {
     if (!account) return null;
     if (typeof account.owners !== "object") return null;
@@ -132,10 +151,27 @@ export default function AccountDetails({ isOpen, onClose, accountId }: Props) {
       title="Account details"
       handleClose={onClose}
     >
-      <div>
-        <Typography as="span" decoration="smooth">Name</Typography>
-        <Typography as="h2">{account?.name}</Typography>
-      </div>
+      {account && (
+        <div className="flex items-baseline gap-2 -mb-1">
+          <Typography as="span" decoration="smooth">Seeing</Typography>
+          <Typography as="h2" title="Account name">{account?.name}</Typography>
+        </div>
+      )}
+
+      {tenantInfo?.id && showTenantInfo && (
+        <div>
+          <div className="flex items-baseline gap-2">
+            <Typography as="span" decoration="smooth">from</Typography>
+            <Typography as="h4" title="Tenant name">{tenantInfo.name}</Typography>
+          </div>
+          <div className="flex items-baseline gap-2">
+            <Typography as="span" decoration="smooth">described as</Typography>
+            <Typography as="p" title="Tenant description">
+              {tenantInfo.description}
+            </Typography>
+          </div>
+        </div>
+      )}
 
       <DetailsBox
         open={openedSection === OpenedSection.Details}
@@ -148,10 +184,20 @@ export default function AccountDetails({ isOpen, onClose, accountId }: Props) {
         </DetailsBox.Summary>
 
         <DetailsBox.Content minHeight="30">
-          <div className="flex flex-col gap-8">
+          <div className="flex flex-col gap-5">
+            <div>
+              <Typography as="span" decoration="smooth">Slug</Typography>
+              <Typography as="p">{account?.slug}</Typography>
+            </div>
+
             <div>
               <Typography as="span" decoration="smooth">Created</Typography>
               <Typography as="p">{formatDDMMYY(new Date(account?.created ?? ""), true)}</Typography>
+            </div>
+
+            <div>
+              <Typography as="span" decoration="smooth">Last updated</Typography>
+              <Typography as="p">{formatDDMMYY(new Date(account?.updated ?? ""), true)}</Typography>
             </div>
 
             <div>
@@ -165,6 +211,16 @@ export default function AccountDetails({ isOpen, onClose, accountId }: Props) {
                 <Typography as="p">{owners}</Typography>
               </div>
             )}
+
+            <div>
+              <Typography as="span" decoration="smooth">Account ID</Typography>
+              <Typography as="p">
+                <span className="flex items-center gap-2 group">
+                  {account?.id}
+                  <CopyToClipboard text={account?.id ?? ""} groupHidden />
+                </span>
+              </Typography>
+            </div>
           </div>
         </DetailsBox.Content>
       </DetailsBox>

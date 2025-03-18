@@ -8,13 +8,15 @@ import { components } from "@/services/openapi/mycelium-schema";
 import { useCallback, useMemo, useState } from "react";
 import DeleteTenant from "./DeleteTenant";
 import { useDispatch, useSelector } from "react-redux";
-import { FaRegStar, FaStar } from "react-icons/fa";
+import { FaExternalLinkAlt, FaRegStar, FaStar } from "react-icons/fa";
 import { RootState } from "@/states/store";
 import { setTenantInfo } from "@/states/tenant.state";
 import Banner from "@/components/ui/Banner";
 import CreateManagementAccount from "./CreateManagementAccount";
 import DetailsBox from "@/components/ui/DetailsBox";
 import PaginatedAccounts from "../Accounts/PaginatedAccounts";
+import CopyToClipboard from "@/components/ui/CopyToClipboard";
+import { Link } from "react-router";
 
 type Tenant = components["schemas"]["Tenant"];
 
@@ -90,21 +92,31 @@ export default function TenantDetails({ isOpen, onClose, tenant }: Props) {
     }
   }, [tenant, profile?.owners]);
 
+  const manager = useMemo(() => {
+    if (!tenant.manager) return null;
+
+    if ("record" in tenant.manager) {
+      return tenant.manager.record;
+    }
+
+    return null;
+  }, [tenant.manager]);
+
   return (
     <SideCurtain
       open={isOpen}
       title="Tenant details"
       handleClose={onClose}
     >
-      <div>
-        <Typography as="span" decoration="smooth">Name</Typography>
-        <Typography as="h2">
-          <div className="flex items-center gap-2">
-            {tenant.name}
+      <div className="flex items-baseline gap-2 -mb-1">
+        <Typography as="span" decoration="smooth">Seeing</Typography>
+        <Typography as="h2" title="Tenant name">
+          <div className="flex items-center gap-5">
+            <span>{tenant.name}</span>
             <span className="cursor-pointer">
               {tenantInfo?.id === tenant.id ? (
                 <FaStar
-                  className="text-yellow-500"
+                  className="text-yellow-300"
                   onClick={() => setTokenPublicInformation(tenant.id)}
                 />
               ) : (
@@ -114,6 +126,14 @@ export default function TenantDetails({ isOpen, onClose, tenant }: Props) {
                 />
               )}
             </span>
+
+            <Link
+              to={`/dashboard/tenants/${tenant.id}`}
+              title="View tenant advanced details"
+              className="cursor-pointer"
+            >
+              <FaExternalLinkAlt size={16} />
+            </Link>
           </div>
         </Typography>
       </div>
@@ -140,12 +160,36 @@ export default function TenantDetails({ isOpen, onClose, tenant }: Props) {
               <Typography as="p">{formatDDMMYY(new Date(tenant.created), true)}</Typography>
             </div>
 
+            {tenant.updated && (
+              <div>
+                <Typography as="span" decoration="smooth">Last updated</Typography>
+                <Typography as="p">{formatDDMMYY(new Date(tenant.updated), true)}</Typography>
+              </div>
+            )}
+
             {owners && (
               <div>
                 <Typography as="span" decoration="smooth">Owners</Typography>
                 <Typography as="p">{owners}</Typography>
               </div>
             )}
+
+            {manager && (
+              <div>
+                <Typography as="span" decoration="smooth">Management account</Typography>
+                <Typography as="p">{manager.name}</Typography>
+              </div>
+            )}
+
+            <div>
+              <Typography as="span" decoration="smooth">Tenant ID</Typography>
+              <Typography as="p">
+                <span className="flex items-center gap-2 group">
+                  {tenant.id}
+                  <CopyToClipboard text={tenant.id ?? ""} groupHidden />
+                </span>
+              </Typography>
+            </div>
           </div>
         </DetailsBox.Content>
       </DetailsBox>

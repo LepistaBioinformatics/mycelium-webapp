@@ -4,7 +4,7 @@ import ErrorBoundary from './components/ErrorBoundary';
 import NotFound from './components/NotFound';
 import useProfile from './hooks/use-profile';
 import buildRoutes, { HOME_ROUTE, DASHBOARD_ROUTE } from './constants/routes';
-import { useMemo } from 'react';
+import { Fragment, useMemo } from 'react';
 
 export default function App() {
   const { profile } = useProfile();
@@ -33,12 +33,22 @@ export default function App() {
             {ROUTES
               .sort((a, b) => a.position - b.position)
               .map((route) => (
-                <Route
-                  key={route.path}
-                  path={route.path}
-                  element={route.element}
-                  errorElement={route.errorElement}
-                />
+                <Fragment key={route.path}>
+                  <Route
+                    path={route.path}
+                    element={route.element}
+                    errorElement={route.errorElement}
+                  />
+
+                  {route?.children?.map((child) => (
+                    <Route
+                      key={child.path}
+                      path={child.path}
+                      element={child.element}
+                      errorElement={child.errorElement}
+                    />
+                  ))}
+                </Fragment>
               ))}
           </Route>
 

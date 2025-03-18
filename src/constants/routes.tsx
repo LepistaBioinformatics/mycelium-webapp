@@ -16,6 +16,7 @@ import { FaUserCheck } from "react-icons/fa";
 import { MdNearbyError } from "react-icons/md";
 import { MdWebhook } from "react-icons/md";
 import { components } from '@/services/openapi/mycelium-schema';
+import AdvancedManagement from '@/screens/Dashboard/components/Tenants/AdvancedManagement';
 
 type Profile = components["schemas"]["Profile"];
 
@@ -29,6 +30,7 @@ export interface AppRoute {
     disabled?: boolean;
     shouldBeManager?: boolean;
     shouldBeStaff?: boolean;
+    children?: AppRoute[];
 }
 
 export const HOME_ROUTE = {
@@ -73,6 +75,14 @@ const ROUTES = {
         shouldBeManager: true,
         shouldBeStaff: true,
         position: 4,
+        children: [
+            {
+                name: "Tenant",
+                path: "/dashboard/tenants/:tenantId",
+                element: <AdvancedManagement />,
+                errorElement: <ErrorBoundary />,
+            }
+        ]
     } as AppRoute,
     STAFF: {
         name: "Staff",

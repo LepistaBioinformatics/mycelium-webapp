@@ -95,9 +95,10 @@ interface SidebarItemProps extends VariantProps<typeof sidebarItemStyles> {
   text: string;
   href: string;
   isOpen: boolean;
+  children?: React.ReactNode;
 }
 
-function SidebarItem({ icon, href, text, isOpen: isOpen, ...props }: SidebarItemProps) {
+function SidebarItem({ icon, href, text, isOpen: isOpen, children, ...props }: SidebarItemProps) {
   const { pathname } = useLocation();
   const isActive = pathname === href;
 
@@ -115,6 +116,7 @@ function SidebarItem({ icon, href, text, isOpen: isOpen, ...props }: SidebarItem
       <div className={sidebarItemTextStyles({ open: isOpen })}>
         <Typography>{text}</Typography>
       </div>
+      {children}
     </Link>
   )
 }

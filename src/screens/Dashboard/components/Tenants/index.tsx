@@ -7,7 +7,7 @@ import useProfile from "@/hooks/use-profile";
 import { buildPath } from "@/services/openapi/mycelium-api";
 import { components } from "@/services/openapi/mycelium-schema";
 import PaginatedRecords from "@/types/PaginatedRecords";
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import useSWR from "swr";
 import EditTenantModal from "./EditTenantModal";
 import TenantModal from "./TenantModal";
@@ -19,6 +19,10 @@ import ListItem from "@/components/ui/ListItem";
 import { MycRole } from "@/types/MyceliumRole";
 import { MycPermission } from "@/types/MyceliumPermission";
 import useSuspenseError from "@/hooks/use-suspense-error";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/states/store";
+import { FaRegStar, FaStar } from "react-icons/fa6";
+import { setTenantInfo } from "@/states/tenant.state";
 
 type Tenant = components["schemas"]["Tenant"];
 
@@ -28,7 +32,11 @@ export default function Tenants() {
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [currentTenant, setCurrentTenant] = useState<Tenant | null>(null);
 
-  const { parseHttpError } = useSuspenseError();
+  const { parseHttpError, dispacheSuccess } = useSuspenseError();
+
+  const { tenantInfo } = useSelector((state: RootState) => state.tenant);
+
+  const dispatch = useDispatch();
 
   const {
     isLoadingUser,
@@ -93,6 +101,32 @@ export default function Tenants() {
       refreshInterval: 1000 * 60,
     }
   );
+
+  const setTokenPublicInformation = useCallback(async (tenantId: string | null | undefined) => {
+    if (!tenantId) return;
+
+    if (tenantInfo?.id === tenantId) {
+      dispatch(setTenantInfo(null));
+      return;
+    };
+
+    const token = await getAccessTokenSilently();
+
+    await fetch(
+      buildPath(
+        "/adm/rs/beginners/tenants/{tenant_id}",
+        { path: { tenant_id: tenantId } }
+      ),
+      { headers: { Authorization: `Bearer ${token}` } }
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        dispatch(setTenantInfo(data));
+        return data;
+      })
+      .then((data) => dispacheSuccess(`Tenant selected: ${data.name}`))
+      .catch((err) => console.error(err));
+  }, [tenantInfo, getAccessTokenSilently]);
 
   const onSubmit = (term?: string, _?: string) => {
     setSkip(0);
@@ -163,14 +197,29 @@ export default function Tenants() {
         >
           {tenants?.records?.map((tenant) => (
             <ListItem key={tenant?.id}>
-              <div className="flex justify-between gap-3">
+              <div className="flex justify-between gap-3 group">
                 <Typography as="h3" highlight>
-                  <button
-                    className="hover:underline text-blue-500 dark:text-lime-400"
-                    onClick={() => handleViewTenantClick(tenant)}
-                  >
-                    {tenant?.name}
-                  </button>
+                  <div className=" flex items-center gap-2">
+                    <button
+                      className="hover:underline text-blue-500 dark:text-lime-400"
+                      onClick={() => handleViewTenantClick(tenant)}
+                    >
+                      {tenant?.name}
+                    </button>
+                    <span className="cursor-pointer">
+                      {tenantInfo?.id === tenant.id ? (
+                        <FaStar
+                          className="text-yellow-300"
+                          onClick={() => setTokenPublicInformation(tenant.id)}
+                        />
+                      ) : (
+                        <FaRegStar
+                          className="text-gray-500 group-hover:text-yellow-300 hidden group-hover:block"
+                          onClick={() => setTokenPublicInformation(tenant.id)}
+                        />
+                      )}
+                    </span>
+                  </div>
                 </Typography>
                 <div className="flex gap-5">
                   <CopyToClipboard text={tenant?.id ?? ""} />

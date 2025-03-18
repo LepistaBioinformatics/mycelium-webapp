@@ -45,7 +45,13 @@ export default function useSuspenseError() {
     }));
   };
 
-  return { parseHttpError, parseAuth0Error };
+  const dispacheSuccess = (message: string) => {
+    dispatch(setNotification({
+      notification: message, title: "Success", type: "success"
+    }));
+  };
+
+  return { parseHttpError, parseAuth0Error, dispacheSuccess };
 }
 
 function setHttpErrorType(status: number) {
