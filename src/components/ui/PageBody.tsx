@@ -1,6 +1,6 @@
 import { cva, VariantProps } from "class-variance-authority";
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import { projectVariants, projectDefaultVariants } from "@/constants/shared-component-styles";
 
 const { width, height, margin, padding } = projectVariants;

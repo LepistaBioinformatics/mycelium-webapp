@@ -1,12 +1,12 @@
 import Sidebar from "@/components/ui/Sidebar";
 import useToggleSidebar from "@/hooks/use-toggle-sidebar";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet } from "react-router";
 import { useSelector } from "react-redux";
 import { RootState } from "@/states/store";
 import { useAuth0 } from "@auth0/auth0-react";
 import Typography from "@/components/ui/Typography";
 import Button from "@/components/ui/Button";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import Modal from "@/components/ui/Modal";
 import buildRoutes, { PROFILE_ROUTE } from "@/constants/routes";
 import useProfile from "@/hooks/use-profile";
@@ -14,8 +14,6 @@ import AppNotifications from "@/components/AppNotifications";
 
 export default function Dashboard() {
   const { isOpen, toggle } = useToggleSidebar(true);
-
-  const navigate = useNavigate();
 
   const [showLogoutModal, setShowLogoutModal] = useState(false);
 
@@ -31,11 +29,6 @@ export default function Dashboard() {
     setShowLogoutModal(true);
   }
 
-  useEffect(
-    () => { if (profile) navigate(PROFILE_ROUTE.path); },
-    [profile]
-  );
-
   return (
     <div className="flex min-h-screen max-h-screen overflow-y-auto">
       <Sidebar
@@ -44,6 +37,14 @@ export default function Dashboard() {
         mainHeader={<MainHeader isOpen={isOpen} />}
         logout={logout}
       >
+        <Sidebar.Item
+          key={PROFILE_ROUTE.path}
+          icon={PROFILE_ROUTE.icon}
+          href={PROFILE_ROUTE.path}
+          text={PROFILE_ROUTE.name}
+          isOpen={isOpen}
+        />
+
         {ROUTES.sort((a, b) => a.position - b.position).map(route => (
           <Sidebar.Item
             key={route.path}

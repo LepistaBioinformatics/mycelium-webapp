@@ -1,9 +1,9 @@
 import './App.css'
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router";
 import ErrorBoundary from './components/ErrorBoundary';
 import NotFound from './components/NotFound';
 import useProfile from './hooks/use-profile';
-import buildRoutes, { HOME_ROUTE, DASHBOARD_ROUTE } from './constants/routes';
+import buildRoutes, { HOME_ROUTE, DASHBOARD_ROUTE, PROFILE_ROUTE } from './constants/routes';
 import { Fragment, useMemo } from 'react';
 import Profile from './screens/Dashboard/components/Profile';
 
@@ -21,6 +21,7 @@ export default function App() {
       <BrowserRouter>
         <Routes>
           <Route
+            index
             path={HOME_ROUTE.path}
             element={HOME_ROUTE.element}
             errorElement={HOME_ROUTE.errorElement}
@@ -31,6 +32,13 @@ export default function App() {
             element={DASHBOARD_ROUTE.element}
             errorElement={DASHBOARD_ROUTE.errorElement}
           >
+            <Route
+              index
+              path={PROFILE_ROUTE.path}
+              element={<Profile />}
+              errorElement={<ErrorBoundary />}
+            />
+
             {ROUTES
               .sort((a, b) => a.position - b.position)
               .map((route) => (
@@ -51,22 +59,12 @@ export default function App() {
                     />
                   ))}
 
-                  <Route
-                    path="*"
-                    element={<Profile />}
-                    errorElement={<ErrorBoundary />}
-                  />
                 </Fragment>
               ))}
-
-            <Route
-              path="*"
-              element={<NotFound />}
-              errorElement={<ErrorBoundary />}
-            />
           </Route>
 
           <Route
+            caseSensitive
             path="*"
             element={<NotFound />}
             errorElement={<ErrorBoundary />}

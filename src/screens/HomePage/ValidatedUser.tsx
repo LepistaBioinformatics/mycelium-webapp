@@ -8,7 +8,7 @@ import { buildPath } from "@/services/openapi/mycelium-api";
 import useSWR from "swr";
 import Divider from "@/components/ui/Divider";
 import { useEffect } from "react";
-import { Link, redirect } from "react-router-dom";
+import { Link, useNavigate } from "react-router";
 import Banner from "@/components/ui/Banner";
 
 type Profile = components["schemas"]["Profile"];
@@ -17,6 +17,7 @@ interface Props extends VariantProps<typeof flowContainerStyles> { }
 
 export default function ValidatedUser({ show }: Props) {
   const { user, isAuthenticated, isLoading, getAccessTokenSilently } = useAuth0();
+  const navigate = useNavigate();
 
   const { data: profile, isLoading: isLoadingProfile } = useSWR(
     isAuthenticated ? buildPath("/adm/rs/beginners/profile") : null,
@@ -44,7 +45,7 @@ export default function ValidatedUser({ show }: Props) {
   useEffect(() => {
     if (profile?.accId) {
       setTimeout(() => {
-        redirect("/dashboard/profile");
+        navigate("/dashboard");
       }, 1000);
     }
   }, [profile?.accId]);
@@ -124,7 +125,7 @@ export default function ValidatedUser({ show }: Props) {
                   </Typography>
 
                   <Typography as="span">
-                    If you are not redirected, please click <Link to="/dashboard/profile" className="text-blue-500">here</Link>
+                    If you are not redirected, please click <Link to="/dashboard" className="text-blue-500">here</Link>
                   </Typography>
                 </div>
               </Banner>

@@ -1,7 +1,7 @@
 "use client";
 
 import { cva, VariantProps } from "class-variance-authority";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router";
 import Typography from "./Typography";
 import { PiSidebarSimple, PiSignOutBold } from "react-icons/pi";
 import { Tooltip } from "flowbite-react";

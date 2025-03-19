@@ -54,18 +54,11 @@ export const PROFILE_ROUTE = {
     path: "/dashboard/profile",
     element: <Profile />,
     errorElement: <ErrorBoundary />,
-    position: 2,
+    icon: <RiDashboardFill />,
+    position: 1,
 } as AppRoute;
 
 const ROUTES = {
-    PROFILE: {
-        name: "Profile",
-        path: "/dashboard/profile",
-        element: <Profile />,
-        errorElement: <ErrorBoundary />,
-        icon: <RiDashboardFill />,
-        position: 2,
-    } as AppRoute,
     TENANTS: {
         name: "Tenants",
         path: "/dashboard/tenants",

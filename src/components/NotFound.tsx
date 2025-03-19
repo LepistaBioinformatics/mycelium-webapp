@@ -1,5 +1,5 @@
 import { RiLogoutBoxLine } from "react-icons/ri";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import PageBody from "@/components/ui/PageBody";
 import Card from "@/components/ui/Card";
 import Typography from "@/components/ui/Typography";
@@ -14,7 +14,7 @@ export default function NotFound() {
 
   const routeUser = useCallback(() => {
     if (isAuthenticated && profile && !isLoadingProfile) {
-      navigate("/dashboard/profile");
+      navigate("/dashboard");
     } else {
       navigate("/");
     }

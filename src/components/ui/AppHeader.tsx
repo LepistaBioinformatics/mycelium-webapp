@@ -1,6 +1,6 @@
 import { cva, VariantProps } from "class-variance-authority";
 import Typography from "./Typography";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import ThemeSwitcher from "./ThemeSwitcher";
 import { PiSignOutBold } from "react-icons/pi";
 

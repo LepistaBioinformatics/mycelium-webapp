@@ -16,7 +16,7 @@ import CreateManagementAccount from "./CreateManagementAccount";
 import DetailsBox from "@/components/ui/DetailsBox";
 import PaginatedAccounts from "../Accounts/PaginatedAccounts";
 import CopyToClipboard from "@/components/ui/CopyToClipboard";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 
 type Tenant = components["schemas"]["Tenant"];
 
