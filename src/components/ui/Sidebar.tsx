@@ -1,7 +1,7 @@
 "use client";
 
 import { cva, VariantProps } from "class-variance-authority";
-import { Link, useLocation } from "react-router";
+import { Link, useLocation } from "react-router-dom";
 import Typography from "./Typography";
 import { PiSidebarSimple, PiSignOutBold } from "react-icons/pi";
 import { Tooltip } from "flowbite-react";
@@ -110,7 +110,7 @@ function SidebarItem({ icon, href, text, isOpen: isOpen, children, ...props }: S
 
   return (
     <Link to={href} className={sidebarItemStyles({ active: isActive, open: isOpen })} {...props}>
-      <Tooltip placement="right" content={text} className="px-4 border-2 border-white dark:border-lime-500 bg-blue-200 dark:bg-slate-600 text-blue-800 dark:text-lime-500">
+      <Tooltip content={text} className="px-4 border-2 border-white dark:border-lime-500 bg-blue-200 dark:bg-slate-600 text-blue-800 dark:text-lime-500">
         <Icon />
       </Tooltip>
       <div className={sidebarItemTextStyles({ open: isOpen })}>

@@ -1,4 +1,4 @@
-import { useRouteError } from "react-router";
+import { useRouteError } from "react-router-dom";
 import PageBody from "./ui/PageBody";
 import Card from "./ui/Card";
 import Typography from "./ui/Typography";

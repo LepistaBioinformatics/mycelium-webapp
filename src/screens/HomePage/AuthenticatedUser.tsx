@@ -94,9 +94,9 @@ export default function AuthenticatedUser({ show, user, setStatus }: Props) {
 
   return (
     <FlowContainer show={show}>
-      <Card height="full">
+      <Card maxHeight="70vh" minHeight="70vh" width="6xl">
         <Card.Header>
-          <Typography as="title">
+          <Typography as="h1">
             {user?.name}
           </Typography>
         </Card.Header>
@@ -119,8 +119,8 @@ export default function AuthenticatedUser({ show, user, setStatus }: Props) {
               <img
                 src="/undraw.co/undraw_file-searching_2ne8.svg"
                 alt="Searching for your email address..."
-                width={250}
-                height={250}
+                width={150}
+                height={150}
                 className="mt-4 mx-auto"
               />
             </div>
@@ -155,8 +155,8 @@ export default function AuthenticatedUser({ show, user, setStatus }: Props) {
                       <img
                         src="/undraw.co/undraw_page-not-found_6wni.svg"
                         alt={userSituation}
-                        width={250}
-                        height={250}
+                        width={150}
+                        height={150}
                         className="mt-4 mx-auto"
                       />
                     </div>
@@ -179,8 +179,8 @@ export default function AuthenticatedUser({ show, user, setStatus }: Props) {
                       <img
                         src="/undraw.co/undraw_landing-page_tsx8.svg"
                         alt={userSituation}
-                        width={250}
-                        height={250}
+                        width={150}
+                        height={150}
                         className="mt-4 mx-auto"
                       />
                     </div>

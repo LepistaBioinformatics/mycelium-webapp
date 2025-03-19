@@ -35,9 +35,9 @@ export default function AnonymousUser({ show, setUser }: Props) {
 
   return (
     <FlowContainer show={show}>
-      <Card height="full">
+      <Card maxHeight="70vh" minHeight="70vh" width="6xl">
         <Card.Header>
-          <Typography as="title">
+          <Typography as="h1">
             Welcome
           </Typography>
         </Card.Header>
@@ -68,9 +68,9 @@ export default function AnonymousUser({ show, setUser }: Props) {
           <img
             src="/undraw.co/undraw_searching_re_3ra9.svg"
             alt="Searching for your email address..."
-            width={250}
-            height={250}
-            className="mt-4 mx-auto background-blue-100"
+            width={150}
+            height={150}
+            className="mt-4 mx-auto"
           />
         </Card.Body>
       </Card>

@@ -1,10 +1,11 @@
 import './App.css'
-import { BrowserRouter, Routes, Route } from "react-router";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ErrorBoundary from './components/ErrorBoundary';
 import NotFound from './components/NotFound';
 import useProfile from './hooks/use-profile';
 import buildRoutes, { HOME_ROUTE, DASHBOARD_ROUTE } from './constants/routes';
 import { Fragment, useMemo } from 'react';
+import Profile from './screens/Dashboard/components/Profile';
 
 export default function App() {
   const { profile } = useProfile();
@@ -52,7 +53,7 @@ export default function App() {
 
                   <Route
                     path="*"
-                    element={<NotFound />}
+                    element={<Profile />}
                     errorElement={<ErrorBoundary />}
                   />
                 </Fragment>

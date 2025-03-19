@@ -12,8 +12,8 @@ import { useAuth0, User } from "@auth0/auth0-react";
 import AnonymousUser from "./AnonymousUser";
 import AuthenticatedUser from "./AuthenticatedUser";
 import { components } from "@/services/openapi/mycelium-schema";
-import ValidatedUser from "./ProfiledUser";
-import RegisteredUser from "./RegisteredUser";
+import ValidatedUser from "./ValidatedUser";
+import UnRegisteredUser from "./UnRegisteredUser";
 
 type CheckEmailStatusResponse = components["schemas"]["CheckEmailStatusResponse"];
 
@@ -57,8 +57,10 @@ export default function HomePage() {
           user={user}
         />
 
-        <RegisteredUser
+        <UnRegisteredUser
           show={currentStep === Step.CheckAccountAvailability}
+          status={status}
+          setStatus={setStatus}
         />
 
         <ValidatedUser

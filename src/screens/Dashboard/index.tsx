@@ -1,6 +1,6 @@
 import Sidebar from "@/components/ui/Sidebar";
 import useToggleSidebar from "@/hooks/use-toggle-sidebar";
-import { Outlet, useNavigate } from "react-router";
+import { Outlet, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "@/states/store";
 import { useAuth0 } from "@auth0/auth0-react";

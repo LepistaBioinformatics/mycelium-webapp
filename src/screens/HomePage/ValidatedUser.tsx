@@ -8,7 +8,7 @@ import { buildPath } from "@/services/openapi/mycelium-api";
 import useSWR from "swr";
 import Divider from "@/components/ui/Divider";
 import { useEffect } from "react";
-import { useNavigate } from "react-router";
+import { Link, redirect } from "react-router-dom";
 import Banner from "@/components/ui/Banner";
 
 type Profile = components["schemas"]["Profile"];
@@ -16,7 +16,6 @@ type Profile = components["schemas"]["Profile"];
 interface Props extends VariantProps<typeof flowContainerStyles> { }
 
 export default function ValidatedUser({ show }: Props) {
-  const navigate = useNavigate();
   const { user, isAuthenticated, isLoading, getAccessTokenSilently } = useAuth0();
 
   const { data: profile, isLoading: isLoadingProfile } = useSWR(
@@ -38,33 +37,34 @@ export default function ValidatedUser({ show }: Props) {
       revalidateOnFocus: true,
       revalidateOnReconnect: false,
       revalidateOnMount: true,
+      refreshInterval: 1000,
     }
   );
 
   useEffect(() => {
     if (profile?.accId) {
       setTimeout(() => {
-        navigate("/dashboard");
-      }, 500);
+        redirect("/dashboard/profile");
+      }, 1000);
     }
-  }, [profile]);
+  }, [profile?.accId]);
 
   return (
     <FlowContainer show={show}>
-      <Card height="full">
+      <Card maxHeight="70vh" minHeight="70vh" width="6xl">
         {isLoading || isLoadingProfile || !profile?.accId
           ? (
             <Card.Body>
               <Typography>
-                We are checking if you have an account
+                We are checking if you have an profile
                 <span className="animate-ping inline-block ml-2 h-2 w-2 rounded-full bg-blue-500" />
               </Typography>
 
               <img
                 src="/undraw.co/undraw_file-searching_2ne8.svg"
                 alt="Searching for your email address..."
-                width={250}
-                height={250}
+                width={150}
+                height={150}
                 className="mt-4 mx-auto"
               />
             </Card.Body>
@@ -123,8 +123,8 @@ export default function ValidatedUser({ show }: Props) {
                     We are redirecting you to the dashboard
                   </Typography>
 
-                  <Typography as="small">
-                    If you are not redirected, please click <a href="/dashboard" className="text-blue-500">here</a>
+                  <Typography as="span">
+                    If you are not redirected, please click <Link to="/dashboard/profile" className="text-blue-500">here</Link>
                   </Typography>
                 </div>
               </Banner>

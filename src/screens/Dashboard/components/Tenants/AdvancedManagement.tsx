@@ -1,7 +1,14 @@
-import { useParams } from "react-router";
+import { useEffect } from "react";
+import { useParams } from "react-router-dom";
 
 export default function AdvancedManagement() {
   const params = useParams();
+
+  useEffect(() => {
+    if (!params.tenantId) return;
+
+    console.log(params.tenantId);
+  }, [params.tenantId]);
 
   return (
     <div>

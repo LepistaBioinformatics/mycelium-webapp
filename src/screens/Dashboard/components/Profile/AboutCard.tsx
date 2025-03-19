@@ -1,7 +1,7 @@
 import Card from "@/components/ui/Card";
 import Typography from "@/components/ui/Typography";
 import { IconType } from "react-icons";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 
 interface Props extends BaseProps {
   title: string;

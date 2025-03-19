@@ -74,35 +74,3 @@ export default function AccountType({ account, part = "type" }: Props) {
     </div>
   );
 }
-
-function SubscriptionAccount({ account }: { account: Account }) {
-  return (
-    <div className="flex items-center gap-2">
-      <span>Subscription account</span>
-    </div>
-  );
-}
-
-function RoleAssociatedAccount({ account }: { account: Account }) {
-  return (
-    <div className="flex items-center gap-2">
-      <span>Role associated account</span>
-    </div>
-  );
-}
-
-function ActorAssociatedAccount({ account }: { account: Account }) {
-  return (
-    <div className="flex items-center gap-2">
-      <span>Actor associated account</span>
-    </div>
-  );
-}
-
-function TenantManagerAccount({ account }: { account: Account }) {
-  return (
-    <div className="flex items-center gap-2">
-      <span>Tenant manager account</span>
-    </div>
-  );
-}

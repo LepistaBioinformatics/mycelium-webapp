@@ -7,14 +7,21 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import Button from "@/components/ui/Button";
 import { useState } from "react";
 import { buildPath } from "@/services/openapi/mycelium-api";
+import { TextInput } from "flowbite-react";
+import { components } from "@/services/openapi/mycelium-schema";
+
+type CheckEmailStatusResponse = components["schemas"]["CheckEmailStatusResponse"];
 
 type Inputs = {
   name: string;
 }
 
-interface Props extends VariantProps<typeof flowContainerStyles> { };
+interface Props extends VariantProps<typeof flowContainerStyles> {
+  status: CheckEmailStatusResponse | null;
+  setStatus: (status: CheckEmailStatusResponse) => void;
+};
 
-export default function RegisteredUser({ show }: Props) {
+export default function UnRegisteredUser({ show, status, setStatus }: Props) {
   const { user, isAuthenticated, isLoading, getAccessTokenSilently } = useAuth0();
 
   const [
@@ -48,6 +55,10 @@ export default function RegisteredUser({ show }: Props) {
       );
 
       if (registeringResponse.ok) {
+        setTimeout(() => {
+          status && setStatus({ ...status, hasAccount: true });
+        }, 1000);
+
         return;
       }
 
@@ -59,15 +70,17 @@ export default function RegisteredUser({ show }: Props) {
     }
   };
 
-  const onSubmit: SubmitHandler<Inputs> = ({ name }) => {
+  const onSubmit: SubmitHandler<Inputs> = ({ name }, event) => {
+    event?.preventDefault();
+
     handleRegisterAccount(name);
   };
 
   return (
     <FlowContainer show={show}>
-      <Card height="full">
+      <Card maxHeight="70vh" minHeight="70vh" width="6xl">
         <Card.Header>
-          <Typography as="title">
+          <Typography as="h1">
             Almost there!
           </Typography>
         </Card.Header>
@@ -83,12 +96,11 @@ export default function RegisteredUser({ show }: Props) {
                   <Typography>
                     Check your username
                   </Typography>
-                  <input
+                  <TextInput
                     {...register("name", { required: true })}
                     placeholder="Name"
                     defaultValue={user?.name ?? ""}
                     type="text"
-                    className="w-full p-3 my-2 rounded-lg border-2 border-gray-300 text-center"
                     autoFocus
                   />
                   {errors.name && <span>This field is required</span>}
@@ -111,8 +123,8 @@ export default function RegisteredUser({ show }: Props) {
                   <img
                     src="/undraw.co/undraw_partying_3qad.svg"
                     alt="Unable"
-                    width={250}
-                    height={250}
+                    width={150}
+                    height={150}
                     className="mt-4 mx-auto"
                   />
                 </div>
@@ -131,8 +143,8 @@ export default function RegisteredUser({ show }: Props) {
                 <img
                   src="/undraw.co/undraw_page-not-found_6wni.svg"
                   alt="Unable"
-                  width={250}
-                  height={250}
+                  width={150}
+                  height={150}
                   className="mt-4 mx-auto"
                 />
               </div>
