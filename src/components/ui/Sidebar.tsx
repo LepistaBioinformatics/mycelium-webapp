@@ -41,13 +41,13 @@ function Container({ children, isOpen: isOpen, toggle, mainHeader, logout, ...pr
         <Divider style="partial" marginY="none" thickness="sm" />
 
         <div className="flex justify-center items-center w-full text-center hover:bg-slate-300 dark:hover:bg-slate-600 rounded-full p-2">
-          <Tooltip content="Toggle theme" placement="right" className="px-2 border-2 border-white dark:border-lime-500 bg-blue-200 dark:bg-slate-600 text-blue-800 dark:text-lime-500">
+          <Tooltip content="Toggle theme" className="px-2 border-2 border-white dark:border-lime-500 bg-blue-200 dark:bg-slate-600 text-blue-800 dark:text-lime-500">
             <ThemeSwitcher />
           </Tooltip>
         </div>
 
         <button onClick={toggle} className="flex justify-center items-center w-full text-center hover:bg-slate-300 dark:hover:bg-slate-600 rounded-full p-2">
-          <Tooltip content="Toggle sidebar" placement="right" className="px-2 border-2 border-white dark:border-lime-500 bg-blue-200 dark:bg-slate-600 text-blue-800 dark:text-lime-500">
+          <Tooltip content="Toggle sidebar" className="px-2 border-2 border-white dark:border-lime-500 bg-blue-200 dark:bg-slate-600 text-blue-800 dark:text-lime-500">
             <PiSidebarSimple className="text-slate-800 dark:text-slate-300" />
           </Tooltip>
         </button>
@@ -55,7 +55,7 @@ function Container({ children, isOpen: isOpen, toggle, mainHeader, logout, ...pr
         <Divider style="partial" marginY="none" thickness="sm" />
 
         <button onClick={logout} className="flex justify-center items-center w-full text-center hover:bg-slate-300 dark:hover:bg-slate-600 rounded-full p-2">
-          <Tooltip content="Logout" placement="right" className="px-2 border-2 border-white dark:border-lime-500 bg-blue-200 dark:bg-slate-600 text-blue-800 dark:text-lime-500">
+          <Tooltip content="Logout" className="px-2 border-2 border-white dark:border-lime-500 bg-blue-200 dark:bg-slate-600 text-blue-800 dark:text-lime-500">
             <PiSignOutBold className="text-slate-800 dark:text-slate-300" />
           </Tooltip>
         </button>
@@ -110,7 +110,7 @@ function SidebarItem({ icon, href, text, isOpen: isOpen, children, ...props }: S
 
   return (
     <Link to={href} className={sidebarItemStyles({ active: isActive, open: isOpen })} {...props}>
-      <Tooltip content={text} className="px-4 border-2 border-white dark:border-lime-500 bg-blue-200 dark:bg-slate-600 text-blue-800 dark:text-lime-500">
+      <Tooltip placement="right" content={text} className="px-4 border-2 border-white dark:border-lime-500 bg-blue-200 dark:bg-slate-600 text-blue-800 dark:text-lime-500">
         <Icon />
       </Tooltip>
       <div className={sidebarItemTextStyles({ open: isOpen })}>

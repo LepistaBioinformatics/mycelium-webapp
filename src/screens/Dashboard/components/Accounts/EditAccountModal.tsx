@@ -7,13 +7,15 @@ type Account = components["schemas"]["Account"];
 
 interface Props extends AccountModalProps {
   account: Account;
+  accountId: string;
 }
 
 export default function EditAccountModal({
   isOpen,
   onClose,
   onSuccess,
-  account
+  account,
+  accountId
 }: Props) {
   return (
     <AccountModal
@@ -21,6 +23,7 @@ export default function EditAccountModal({
       onClose={onClose}
       onSuccess={onSuccess}
       account={account}
+      accountId={accountId}
     />
   )
 }

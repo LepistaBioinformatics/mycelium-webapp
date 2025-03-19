@@ -6,11 +6,12 @@ import { RootState } from "@/states/store";
 import { useAuth0 } from "@auth0/auth0-react";
 import Typography from "@/components/ui/Typography";
 import Button from "@/components/ui/Button";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Modal from "@/components/ui/Modal";
 import buildRoutes from "@/constants/routes";
 import useProfile from "@/hooks/use-profile";
 import AppNotifications from "@/components/AppNotifications";
+import useSuspenseError from "@/hooks/use-suspense-error";
 
 export default function Dashboard() {
   const { isOpen, toggle } = useToggleSidebar(true);
@@ -99,6 +100,14 @@ function LogoutModal({
  */
 function MainHeader({ isOpen }: { isOpen: boolean }) {
   const { tenantInfo } = useSelector((state: RootState) => state.tenant);
+
+  const { dispacheSuccess } = useSuspenseError();
+
+  useEffect(() => {
+    if (tenantInfo) {
+      dispacheSuccess(`Tenant selected: ${tenantInfo.name}`);
+    }
+  }, [tenantInfo]);
 
   if (!tenantInfo) {
     return null;

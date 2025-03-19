@@ -218,7 +218,14 @@ export default function Profile() {
               </Card>
             )}
 
-            <Card minHeight="50vh" maxHeight="50vh" padding="sm" width="xl" flex1 dashed={!licensedResources}>
+            <Card
+              minHeight="50vh"
+              maxHeight="50vh"
+              padding="sm"
+              width="6xl"
+              flex1
+              dashed={!licensedResources}
+            >
               <Card.Header>
                 <Typography as="h6" decoration="smooth">
                   Accounts witch you have access
@@ -297,10 +304,10 @@ export default function Profile() {
                   icon={GiWizardStaff}
                   headerTitle="Super user group"
                   links={[
-                    { label: "/staff", to: "/dashboard/staff" },
+                    { label: "/accounts", to: "/dashboard/accounts" },
                   ]}
                   aboutContent={(
-                    <Typography as="p" width="xxs" decoration="faded">
+                    <Typography as="div" width="xxs" decoration="faded">
                       Staff users can execute high-level system actions, such
                       as promoting eligible users to staff or manager roles.
                       Due to the significant level of access and control, this
@@ -326,7 +333,7 @@ export default function Profile() {
                     { label: "/guest-roles", to: "/dashboard/guest-roles" },
                   ]}
                   aboutContent={
-                    <Typography as="p" width="xxs" decoration="faded">
+                    <Typography as="div" width="xxs" decoration="faded">
                       Wow, you're a Manager! This is a crucial role with
                       extensive authority over the system.
 
@@ -353,7 +360,7 @@ export default function Profile() {
                     { label: "/accounts", to: "/dashboard/accounts" },
                   ]}
                   aboutContent={(
-                    <Typography as="p" width="xxs" decoration="faded">
+                    <Typography as="div" width="xxs" decoration="faded">
                       Account Manager is a account-wide role that allows you to
                       manage accounts and guests to a specific account. This
                       role is crucial for maintaining a secure and user-friendly
@@ -373,7 +380,7 @@ export default function Profile() {
                     { label: "/gateways", to: "/dashboard/gateways" },
                   ]}
                   aboutContent={(
-                    <Typography as="p" width="xxs" decoration="faded">
+                    <Typography as="div" width="xxs" decoration="faded">
                       Gateway Manager is a gateway-wide role that allows you to
                       view and manage routes and services. This role has a
                       system-wide scope, but with read-only privileges.
@@ -392,7 +399,7 @@ export default function Profile() {
                     { label: "/guest-roles", to: "/dashboard/guest-roles" },
                   ]}
                   aboutContent={(
-                    <Typography as="p" width="xxs" decoration="faded">
+                    <Typography as="div" width="xxs" decoration="faded">
                       Guests Manager is a system-wide role that allows you to
                       manage guest roles across all tenants. Roles created with
                       this permission will be applied to all tenants, ensuring a
@@ -418,7 +425,7 @@ export default function Profile() {
                     { label: "/subscriptions", to: "/dashboard/subscriptions" },
                   ]}
                   aboutContent={(
-                    <Typography as="p" width="xxs" decoration="faded">
+                    <Typography as="div" width="xxs" decoration="faded">
                       Subscriptions Manager is a tenant-wide role that allows
                       you to manage subscriptions within one or more tenants.
                       Actions performed by this role include creating and
@@ -453,7 +460,7 @@ export default function Profile() {
                     { label: "/webhooks", to: "/dashboard/webhooks" },
                   ]}
                   aboutContent={(
-                    <Typography as="p" width="xxs" decoration="faded">
+                    <Typography as="div" width="xxs" decoration="faded">
                       System Manager should deal with system-wide issues and
                       resources. Their impact is global, so they should be
                       cautious when making changes.
@@ -478,7 +485,7 @@ export default function Profile() {
                     { label: "/tenants", to: "/dashboard/tenants" },
                   ]}
                   aboutContent={(
-                    <Typography as="p" width="xxs" decoration="faded">
+                    <Typography as="div" width="xxs" decoration="faded">
                       You are a tenant owner. This means you have full access to
                       one or more tenants and can manage them as well as their
                       associated accounts and guests.
@@ -503,7 +510,7 @@ export default function Profile() {
                     { label: "/tenants", to: "/dashboard/tenants" },
                   ]}
                   aboutContent={(
-                    <Typography as="p" width="xxs" decoration="faded">
+                    <Typography as="div" width="xxs" decoration="faded">
                       Tenant Manager is a tenant-wide role that allows you to
                       manage a single tenant.
 

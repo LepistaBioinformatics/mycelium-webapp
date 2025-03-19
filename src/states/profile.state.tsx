@@ -2,6 +2,13 @@ import { createReducer, createAsyncThunk } from "@reduxjs/toolkit";
 import { buildPath } from "@/services/openapi/mycelium-api";
 import useSWR from "swr";
 
+const initialState = {
+    profile: null,
+    isLoadingUser: false,
+    isLoadingProfile: false,
+    adminAccess: false,
+}
+
 export const fetchProfile = createAsyncThunk(
     'profile/fetchProfile',
     async () => {
@@ -13,13 +20,6 @@ export const fetchProfile = createAsyncThunk(
         return data;
     }
 );
-
-const initialState = {
-    profile: null,
-    isLoadingUser: false,
-    isLoadingProfile: false,
-    adminAccess: false,
-}
 
 const profileReducer = createReducer(initialState, (builder) => {
     builder.addCase(fetchProfile.pending, (state) => {

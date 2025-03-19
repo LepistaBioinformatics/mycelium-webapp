@@ -30,6 +30,13 @@ const styles = cva("text-start", {
       lineThrough: "line-through",
       smooth: "!text-gray-500 dark:!text-gray-500",
       faded: "!text-gray-600 dark:!text-gray-400",
+      bold: "!font-bold",
+      semibold: "!font-semibold",
+      italic: "!font-italic",
+      normal: "!font-normal",
+      medium: "!font-medium",
+      light: "!font-light",
+      thin: "!font-thin",
       none: "",
     },
     margin: {
@@ -62,7 +69,7 @@ const styles = cva("text-start", {
     },
     title: {
       true: "hover:cursor-help",
-    }
+    },
   },
   defaultVariants: {
     as: "p",
@@ -77,6 +84,7 @@ const styles = cva("text-start", {
 
 interface Props extends BaseProps, VariantProps<typeof styles> {
   title?: string | any;
+  alternativeColor?: string;
 }
 
 export default function Typography({
@@ -93,6 +101,7 @@ export default function Typography({
   truncate,
   nowrap,
   title,
+  alternativeColor,
   ...props
 }: Props) {
   const Element = (as === "title" ? "h1" : as) || "p";
@@ -113,9 +122,12 @@ export default function Typography({
         center,
         truncate,
         nowrap,
-        title: title ? true : false
+        title: title ? true : false,
       })}
       {...props}
+      style={{
+        color: alternativeColor,
+      }}
     />
   );
 }

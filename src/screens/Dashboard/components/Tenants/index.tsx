@@ -32,7 +32,7 @@ export default function Tenants() {
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [currentTenant, setCurrentTenant] = useState<Tenant | null>(null);
 
-  const { parseHttpError, dispacheSuccess } = useSuspenseError();
+  const { parseHttpError } = useSuspenseError();
 
   const { tenantInfo } = useSelector((state: RootState) => state.tenant);
 
@@ -120,11 +120,7 @@ export default function Tenants() {
       { headers: { Authorization: `Bearer ${token}` } }
     )
       .then((res) => res.json())
-      .then((data) => {
-        dispatch(setTenantInfo(data));
-        return data;
-      })
-      .then((data) => dispacheSuccess(`Tenant selected: ${data.name}`))
+      .then((data) => dispatch(setTenantInfo(data)))
       .catch((err) => console.error(err));
   }, [tenantInfo, getAccessTokenSilently]);
 

@@ -2,14 +2,12 @@ import HomePage from '@/screens/HomePage';
 import Dashboard from '@/screens/Dashboard';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import Profile from '@/screens/Dashboard/components/Profile';
-import Staff from '@/screens/Dashboard/components/super-users/Staff';
 import Tenants from '@/screens/Dashboard/components/Tenants';
 import Accounts from '@/screens/Dashboard/components/Accounts';
 import GuestRoles from '@/screens/Dashboard/components/GuestRoles';
 import Webhooks from '@/screens/Dashboard/components/WebHooks';
 import ErrorCodes from '@/screens/Dashboard/components/ErrorCodes';
 import { RiDashboardFill } from 'react-icons/ri';
-import { GiWizardStaff } from 'react-icons/gi';
 import { SlOrganization } from 'react-icons/sl';
 import { MdManageAccounts } from 'react-icons/md';
 import { FaUserCheck } from "react-icons/fa";
@@ -77,16 +75,6 @@ const ROUTES = {
                 errorElement: <ErrorBoundary />,
             }
         ]
-    } as AppRoute,
-    STAFF: {
-        name: "Staff",
-        path: "/dashboard/staff",
-        element: <Staff />,
-        errorElement: <ErrorBoundary />,
-        icon: <GiWizardStaff />,
-        shouldBeManager: false,
-        shouldBeStaff: true,
-        position: 3,
     } as AppRoute,
     ACCOUNTS: {
         name: "Accounts",

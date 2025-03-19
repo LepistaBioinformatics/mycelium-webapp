@@ -37,9 +37,16 @@ export interface AccountModalProps {
   onClose: () => void;
   onSuccess: () => void;
   account: Account | null;
+  accountId: string | null;
 }
 
-export default function AccountModal({ isOpen, onClose, onSuccess, account }: AccountModalProps) {
+export default function AccountModal({
+  isOpen,
+  onClose,
+  onSuccess,
+  account,
+  accountId,
+}: AccountModalProps) {
   const { parseHttpError } = useSuspenseError();
 
   const { hasAdminPrivileges, getAccessTokenSilently } = useProfile({
@@ -83,7 +90,7 @@ export default function AccountModal({ isOpen, onClose, onSuccess, account }: Ac
     if (account) {
       return {
         baseUrl: buildPath("/adm/rs/subscriptions-manager/accounts/{account_id}", {
-          path: { account_id: account.id ?? "" }
+          path: { account_id: accountId ?? "" }
         }),
         method: "PATCH"
       };

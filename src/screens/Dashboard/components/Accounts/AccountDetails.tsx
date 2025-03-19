@@ -23,6 +23,7 @@ import EditAccountModal from "./EditAccountModal";
 import UnInviteGuestModal from "./UnInviteGuestModal";
 import useSuspenseError from "@/hooks/use-suspense-error";
 import CopyToClipboard from "@/components/ui/CopyToClipboard";
+import UpgradeOrDowngradeAccountModal from "./UpgradeOrDowngradeAccountModal";
 
 type Account = components["schemas"]["Account"];
 type GuestUser = components["schemas"]["GuestUser"];
@@ -44,6 +45,7 @@ export default function AccountDetails({ isOpen, onClose, accountId }: Props) {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isGuestToAccountModalOpen, setIsGuestToAccountModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isUpgradeOrDowngradeModalOpen, setIsUpgradeOrDowngradeModalOpen] = useState(false);
 
   const { profile, getAccessTokenSilently } = useProfile();
 
@@ -68,6 +70,10 @@ export default function AccountDetails({ isOpen, onClose, accountId }: Props) {
 
   const handleSuccess = () => {
     handleCloseEditModal();
+  }
+
+  const handleCloseUpgradeOrDowngradeModal = () => {
+    setIsUpgradeOrDowngradeModalOpen(false);
   }
 
   const { data: account, mutate: mutateAccount } = useSWR<Account>(
@@ -214,7 +220,7 @@ export default function AccountDetails({ isOpen, onClose, accountId }: Props) {
 
             <div>
               <Typography as="span" decoration="smooth">Account ID</Typography>
-              <Typography as="p">
+              <Typography as="div">
                 <span className="flex items-center gap-2 group">
                   {account?.id}
                   <CopyToClipboard text={account?.id ?? ""} groupHidden />
@@ -308,6 +314,40 @@ export default function AccountDetails({ isOpen, onClose, accountId }: Props) {
             </div>
           </Banner>
 
+          {typeof account?.accountType === "string" && (
+            <Banner intent="info">
+              <div className="flex justify-between gap-2 my-5">
+                <div className="flex flex-col gap-2">
+                  <Typography as="span">
+                    Update account status
+                  </Typography>
+
+                  <Typography as="small" decoration="smooth" width="sm">
+                    Upgrade or downgrade the account to a different status.
+                    Choices should be one of the following:
+
+                    <ul className="list-disc list-inside mt-2">
+                      {["user", "staff", "manager"]
+                        .filter((status) => status !== account?.accountType)
+                        .map((status) => (
+                          <li key={status}>{camelToHumanText(status)}</li>
+                        ))}
+                    </ul>
+                  </Typography>
+                </div>
+
+                <div>
+                  <Button
+                    rounded
+                    onClick={() => setIsUpgradeOrDowngradeModalOpen(true)}
+                  >
+                    Open dialog
+                  </Button>
+                </div>
+              </div>
+            </Banner>
+          )}
+
           <Banner intent="error">
             <div className="flex justify-between gap-2 my-5">
               <div className="flex flex-col gap-2">
@@ -351,11 +391,22 @@ export default function AccountDetails({ isOpen, onClose, accountId }: Props) {
         />
       )}
 
-      {isEditModalOpen && account && (
+      {isEditModalOpen && account?.id && (
         <EditAccountModal
           isOpen={isEditModalOpen}
           onClose={handleCloseEditModal}
           account={account}
+          accountId={account.id}
+          onSuccess={handleSuccess}
+        />
+      )}
+
+      {isUpgradeOrDowngradeModalOpen && account?.id && (
+        <UpgradeOrDowngradeAccountModal
+          isOpen={isUpgradeOrDowngradeModalOpen}
+          onClose={handleCloseUpgradeOrDowngradeModal}
+          account={account}
+          accountId={account.id}
           onSuccess={handleSuccess}
         />
       )}

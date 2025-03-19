@@ -19,6 +19,8 @@ import { MycPermission } from "@/types/MyceliumPermission";
 import { projectVariants } from "@/constants/shared-component-styles";
 import SearchBar from "@/components/ui/SearchBar";
 import useSuspenseError from "@/hooks/use-suspense-error";
+import { useSelector } from "react-redux";
+import { RootState } from "@/states/store";
 
 const { padding } = projectVariants;
 
@@ -132,6 +134,8 @@ export default function PaginatedAccounts({
   forceMutate,
   restrictAccountTypeTo,
 }: Props) {
+  const { tenantInfo } = useSelector((state: RootState) => state.tenant);
+
   const { parseHttpError } = useSuspenseError();
 
   const {
@@ -414,7 +418,10 @@ export default function PaginatedAccounts({
                   command={value.command}
                   description={value?.description}
                   onClick={() => setSearchTerm(value.command)}
-                  disabled={(value.adminOnly && !hasEnoughPermissions) || value.tenantNeeded && !tenantId}
+                  disabled={
+                    (value.adminOnly && !hasEnoughPermissions) ||
+                    (value.tenantNeeded && !tenantId)
+                  }
                 />
               ))}
             </div>
@@ -424,6 +431,15 @@ export default function PaginatedAccounts({
     >
       <div id="AccountsContent" className="flex flex-col justify-center gap-4 w-full mx-auto">
         {toolbar}
+
+        <div className="flex justify-center mx-auto w-full xl:max-w-4xl">
+          {tenantInfo?.id && (
+            <div className="flex items-center gap-2">
+              <Typography as="span" decoration="smooth">Results based on tenant:</Typography>
+              <Typography as="span" decoration="semibold">{tenantInfo.name}</Typography>
+            </div>
+          )}
+        </div>
 
         <PaginatedContent
           isLoading={isLoadingAccounts}

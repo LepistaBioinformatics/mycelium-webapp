@@ -1,6 +1,6 @@
 import PageBody from "@/components/ui/PageBody";
 import { components } from "@/services/openapi/mycelium-schema";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Button from "@/components/ui/Button";
 import { useSelector } from "react-redux";
 import { RootState } from "@/states/store";
@@ -10,14 +10,18 @@ import PaginatedAccounts from "./PaginatedAccounts";
 import useProfile from "@/hooks/use-profile";
 import { MycRole } from "@/types/MyceliumRole";
 import { MycPermission } from "@/types/MyceliumPermission";
+import { useSearchParams } from "react-router";
 
 type Account = components["schemas"]["Account"];
 
 export default function Accounts() {
   const [isNewModalOpen, setIsNewModalOpen] = useState(false);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+  const [currentAccountId, setCurrentAccountId] = useState<string | null>(null);
   const [currentAccount, setCurrentAccount] = useState<Account | null>(null);
   const [forceMutate, setForceMutate] = useState<Date | null>(null);
+
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const { hasAdminPrivileges } = useProfile({
     roles: [MycRole.SubscriptionsManager],
@@ -27,11 +31,29 @@ export default function Accounts() {
 
   const { tenantInfo } = useSelector((state: RootState) => state.tenant);
 
+  useEffect(() => {
+    const accountId = searchParams.get("accountId");
+    if (accountId) handleAccountIdChange(accountId);
+  }, []);
+
+  const handleAccountIdChange = (accountId: string | null) => {
+    if (accountId) {
+      setCurrentAccountId(accountId);
+      setIsViewModalOpen(true);
+    }
+  }
+
   const handleCloseModal = () => {
     setIsNewModalOpen(false);
     setIsViewModalOpen(false);
     setCurrentAccount(null);
     setForceMutate(new Date());
+
+    // Remove accountId from search params
+    setSearchParams({
+      ...Object.fromEntries(searchParams.entries()),
+      accountId: "",
+    });
   }
 
   const handleSuccess = () => {
@@ -40,8 +62,10 @@ export default function Accounts() {
   }
 
   const handleClickOnAccount = (account: Account) => {
-    setCurrentAccount(account);
-    setIsViewModalOpen(true);
+    if (account.id) {
+      setSearchParams({ accountId: account.id })
+      handleAccountIdChange(account.id)
+    };
   }
 
   const shouldCreateAccount = useMemo(() => {
@@ -78,17 +102,18 @@ export default function Accounts() {
         }
       />
 
-      {isViewModalOpen && currentAccount?.id && (
+      {isViewModalOpen && currentAccountId && (
         <AccountDetails
           isOpen={isViewModalOpen}
           onClose={handleCloseModal}
-          accountId={currentAccount.id}
+          accountId={currentAccountId}
         />
       )}
 
       <AccountModal
         isOpen={isNewModalOpen}
         account={currentAccount}
+        accountId={currentAccountId}
         onClose={handleCloseModal}
         onSuccess={handleSuccess}
       />

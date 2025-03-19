@@ -1,7 +1,7 @@
 import { cva, VariantProps } from "class-variance-authority";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { TextInput } from "flowbite-react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Typography from "./Typography";
 
 const containerStyles = cva("mx-auto sticky top-2 bg-white dark:bg-gray-700 shadow z-50", {
@@ -49,8 +49,6 @@ function Container({
   commandPalette,
   ...props
 }: SearchProps) {
-  const [showCommandPalette, setShowCommandPalette] = useState(false);
-
   const {
     formState: { errors },
     handleSubmit,
@@ -120,10 +118,7 @@ function Container({
 
       {commandPalette && (
         <details className="flex flex-col justify-start">
-          <summary
-            className="text-xs text-left px-2 pt-2 text-blue-500 dark:text-lime-400 hover:cursor-pointer"
-            onClick={() => setShowCommandPalette(!showCommandPalette)}
-          >
+          <summary className="text-xs text-left px-2 pt-2 text-blue-500 dark:text-lime-400 hover:cursor-pointer">
             Command Palette
           </summary>
 
@@ -134,7 +129,7 @@ function Container({
   );
 }
 
-const commandPaletteContentStyles = cva("flex flex-col gap-8 max-h-[250px] overflow-y-auto bg-blue-50 dark:bg-gray-800 rounded-lg p-2 mt-4 border border-slate-300 dark:border-slate-700 scrollbar w-full", {
+const commandPaletteContentStyles = cva("flex flex-col absolute left-0 gap-8 max-h-[250px] overflow-y-auto bg-blue-50 dark:bg-gray-800 rounded-lg p-2 mt-4 border-2 border-slate-300 dark:border-slate-500 scrollbar w-full shadow-lg dark:shadow-slate-900", {
   variants: {},
   defaultVariants: {},
 });
@@ -153,7 +148,7 @@ const commandPaletteItemStyles = cva("flex flex-col gap-0 mb-1 hover:bg-blue-100
   variants: {
     disabled: {
       true: "opacity-80 cursor-not-allowed",
-      false: "hover:text-blue-500 dark:hover:text-lime-400"
+      false: "hover:text-blue-500 dark:hover:text-lime-400 group"
     }
   },
   defaultVariants: {
@@ -165,7 +160,7 @@ const commandPaletteItemButtonStyles = cva("flex text-gray-700 dark:text-gray-30
   variants: {
     disabled: {
       true: "opacity-50 cursor-not-allowed",
-      false: "hover:text-blue-500 dark:hover:text-lime-400"
+      false: "hover:text-blue-500 dark:hover:text-lime-400 group-hover:text-blue-500 dark:group-hover:text-lime-400"
     }
   },
   defaultVariants: {
