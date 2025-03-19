@@ -7,7 +7,7 @@ import Typography from "./Typography";
 const containerStyles = cva("mx-auto sticky top-2 bg-white dark:bg-gray-700 shadow z-50", {
   variants: {
     commandPalette: {
-      true: "rounded-lg p-2 border border-slate-200 dark:border-slate-600",
+      true: "rounded-lg p-2 border border-slate-200 dark:border-slate-600 w-full",
       false: "rounded-full"
     },
     fullWidth: {
@@ -119,7 +119,7 @@ function Container({
       </div>
 
       {commandPalette && (
-        <details className="flex items-center justify-start">
+        <details className="flex flex-col justify-start">
           <summary
             className="text-xs text-left px-2 pt-2 text-blue-500 dark:text-lime-400 hover:cursor-pointer"
             onClick={() => setShowCommandPalette(!showCommandPalette)}
@@ -134,7 +134,7 @@ function Container({
   );
 }
 
-const commandPaletteContentStyles = cva("flex flex-col gap-8 max-h-[250px] overflow-y-auto bg-blue-50 dark:bg-gray-800 rounded-lg p-2 mt-4 border border-slate-300 dark:border-slate-700 scrollbar", {
+const commandPaletteContentStyles = cva("flex flex-col gap-8 max-h-[250px] overflow-y-auto bg-blue-50 dark:bg-gray-800 rounded-lg p-2 mt-4 border border-slate-300 dark:border-slate-700 scrollbar w-full", {
   variants: {},
   defaultVariants: {},
 });
@@ -149,7 +149,7 @@ function CommandPaletteContent({
   return <div className={commandPaletteContentStyles()}>{children}</div>;
 }
 
-const commandPaletteItemStyles = cva("flex flex-col gap-0 mb-1 hover:bg-blue-100 dark:hover:bg-gray-700", {
+const commandPaletteItemStyles = cva("flex flex-col gap-0 mb-1 hover:bg-blue-100 dark:hover:bg-gray-700 w-full", {
   variants: {
     disabled: {
       true: "opacity-80 cursor-not-allowed",

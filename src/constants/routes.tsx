@@ -59,6 +59,7 @@ export const PROFILE_ROUTE = {
 } as AppRoute;
 
 const ROUTES = {
+    PROFILE: PROFILE_ROUTE,
     TENANTS: {
         name: "Tenants",
         path: "/dashboard/tenants",
