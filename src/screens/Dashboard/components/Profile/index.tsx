@@ -120,7 +120,7 @@ export default function Profile() {
                       ?.slice(0, loadingSize)
                       ?.map((tenant) => (
                         <TenantResolver key={tenant.tenant} tenantId={tenant.tenant}>
-                          <TenantOwnershipInfo since={tenant.since} />
+                          <TenantOwnershipInfo since={tenant.since} tenantId={tenant.tenant} />
                         </TenantResolver>
                       ))}
                   </div>

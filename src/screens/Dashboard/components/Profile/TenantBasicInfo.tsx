@@ -1,16 +1,22 @@
 import Typography from "@/components/ui/Typography";
 import { TenantResolverChildProps } from "./TenantResolver";
 import CopyToClipboard from "@/components/ui/CopyToClipboard";
+import { SYSTEM_TENANT_ID } from "@/constants/zero-tenant";
 
 interface Props extends TenantResolverChildProps {
   tenantId: string;
 }
 
-export default function TenantBasicInfo({ tenantStatus, isLoading, error, tenantId }: Props) {
+export default function TenantBasicInfo({
+  tenantStatus,
+  isLoading,
+  error,
+  tenantId
+}: Props) {
   //
   // System accounts with system roles receives a zero-uuid as tenantId
   //
-  if (tenantId === "00000000-0000-0000-0000-000000000000") {
+  if (tenantId === SYSTEM_TENANT_ID) {
     return null;
   }
 

@@ -9,13 +9,16 @@ interface Props extends TenantResolverChildProps {
 
 export default function TenantOwnershipInfo({
   since,
+  tenantId,
   tenantStatus,
   isLoading,
   error,
 }: Props) {
   const Since = () => (
     <div className="flex items-center gap-2">
-      <Typography as="span" decoration="smooth">since</Typography>
+      <Typography as="span" decoration="smooth" title={`Since on tenant: ${tenantId}`}>
+        since
+      </Typography>
       <Typography as="h5" title="The date and time you were added as a tenant owner">
         {formatDDMMYY(new Date(since), true)}
       </Typography>
@@ -54,17 +57,15 @@ export default function TenantOwnershipInfo({
   return (
     <div className="flex flex-col gap-0 w-full bg-blue-50 dark:bg-slate-900 bg-opacity-50 dark:bg-opacity-50 border border-gray-200 dark:border-gray-700 rounded-lg p-2">
       <div>
-        {isLoading ? "Loading..." : (
-          <div>
-            <TenantData />
+        <div>
+          <TenantData />
 
-            {error && (
-              <Typography as="small" isError>
-                {error.message}
-              </Typography>
-            )}
-          </div>
-        )}
+          {error && (
+            <Typography as="small" isError>
+              {error.message}
+            </Typography>
+          )}
+        </div>
       </div>
     </div>
   );
