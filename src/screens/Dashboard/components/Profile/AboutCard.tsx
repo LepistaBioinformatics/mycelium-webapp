@@ -53,7 +53,7 @@ export default function AboutCard({
               >
                 Visit exclusive pages
               </Typography>
-              <Typography as="p">
+              <Typography as="div">
                 <div className="flex flex-col gap-1">
                   {links.map((link, index) => (
                     <Link
