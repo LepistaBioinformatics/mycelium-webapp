@@ -23,6 +23,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/states/store";
 import { FaRegStar, FaStar } from "react-icons/fa6";
 import { setTenantInfo } from "@/states/tenant.state";
+import { SlOrganization } from "react-icons/sl";
 
 type Tenant = components["schemas"]["Tenant"];
 
@@ -160,7 +161,7 @@ export default function Tenants() {
   return (
     <DashBoardBody
       breadcrumb={
-        <PageBody.Breadcrumb.Item>
+        <PageBody.Breadcrumb.Item icon={SlOrganization}>
           Tenants
         </PageBody.Breadcrumb.Item>
       }

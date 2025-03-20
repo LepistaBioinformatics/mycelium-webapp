@@ -2,6 +2,7 @@ import AuthorizedOr, { AuthorizedOrProps } from "@/components/ui/AuthorizedOr";
 import PageBody from "@/components/ui/PageBody";
 import SearchBar, { SearchProps } from "@/components/ui/SearchBar";
 import { projectVariants } from "@/constants/shared-component-styles";
+import ControlPanelBreadcrumbItem from "./ControlPanelBreadcrumbItem";
 
 const { padding } = projectVariants;
 
@@ -27,9 +28,7 @@ export default function DashBoardBody({
     <PageBody padding={padding}>
       {breadcrumb && (
         <PageBody.Breadcrumb>
-          <PageBody.Breadcrumb.Item>
-            Control panel
-          </PageBody.Breadcrumb.Item>
+          <ControlPanelBreadcrumbItem />
           {breadcrumb}
         </PageBody.Breadcrumb>
       )}

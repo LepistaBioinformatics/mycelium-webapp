@@ -21,6 +21,7 @@ import PermissionIcon from "@/components/ui/PermissionIcon";
 import GuestRolesModal from "./GuestRolesModal";
 import GuestRoleDetails from "./GuestRoleDetails";
 import useSuspenseError from "@/hooks/use-suspense-error";
+import { FaUserCheck } from "react-icons/fa6";
 
 type GuestRole = components["schemas"]["GuestRole"];
 
@@ -124,7 +125,7 @@ export default function GuestRoles() {
   return (
     <DashBoardBody
       breadcrumb={
-        <PageBody.Breadcrumb.Item>
+        <PageBody.Breadcrumb.Item icon={FaUserCheck}>
           Guest roles
         </PageBody.Breadcrumb.Item>
       }

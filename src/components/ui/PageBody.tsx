@@ -56,7 +56,7 @@ function Container({ children, flex, gap, padding, margin, align, justify, heigh
   );
 }
 
-const breadcrumbStyles = cva("mt-1 mb-2 flex", {
+const breadcrumbStyles = cva("mt-1 mb-2 flex gap-2", {
   variants: {},
   defaultVariants: {}
 });
@@ -66,7 +66,7 @@ interface BreadcrumbProps extends
 
 function BreadcrumbContainer({ children, ...props }: BreadcrumbProps) {
   children = React.Children.map(children, (child, index) => (
-    <span key={index} className="flex">
+    <span key={index} className="flex gap-2">
       <span className="mr-1 text-slate-500">/</span>
       <span className="mr-1">
         {child}

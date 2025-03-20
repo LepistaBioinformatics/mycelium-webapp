@@ -8,13 +8,14 @@ import { useMemo, useState } from "react";
 import Button from "@/components/ui/Button";
 import TenantOwnershipInfo from "./TenantOwnershipInfo";
 import PermissionIcon from "@/components/ui/PermissionIcon";
-import { RiRobot2Line } from "react-icons/ri";
+import { RiDashboardFill, RiRobot2Line } from "react-icons/ri";
 import CardsSection from "./CardsSection";
 import TenantResolver from "./TenantResolver";
 import TenantBasicInfo from "./TenantBasicInfo";
 import getTenantsOwnershipOrNull from "@/functions/get-tenant-ownership-or-null";
 import getLicensedResourcesOrNull from "@/functions/get-licensed-resources-or-null";
 import PermissionsDetails from "./PermissionsDetails";
+import ControlPanelBreadcrumbItem from "../ControlPanelBreadcrumbItem";
 
 type Profile = components["schemas"]["Profile"];
 
@@ -36,10 +37,8 @@ export default function Profile() {
   return (
     <PageBody padding="md" height="fit">
       <PageBody.Breadcrumb>
-        <PageBody.Breadcrumb.Item>
-          Control panel
-        </PageBody.Breadcrumb.Item>
-        <PageBody.Breadcrumb.Item>
+        <ControlPanelBreadcrumbItem />
+        <PageBody.Breadcrumb.Item icon={RiDashboardFill}>
           Profile
         </PageBody.Breadcrumb.Item>
       </PageBody.Breadcrumb>

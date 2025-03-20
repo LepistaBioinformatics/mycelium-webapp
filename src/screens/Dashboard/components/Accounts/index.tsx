@@ -11,6 +11,7 @@ import useProfile from "@/hooks/use-profile";
 import { MycRole } from "@/types/MyceliumRole";
 import { MycPermission } from "@/types/MyceliumPermission";
 import { useSearchParams } from "react-router";
+import { MdManageAccounts } from "react-icons/md";
 
 type Account = components["schemas"]["Account"];
 
@@ -83,7 +84,7 @@ export default function Accounts() {
         handleClickOnAccount={handleClickOnAccount}
         forceMutate={forceMutate}
         breadcrumb={
-          <PageBody.Breadcrumb.Item>
+          <PageBody.Breadcrumb.Item icon={MdManageAccounts}>
             Accounts
           </PageBody.Breadcrumb.Item>
         }

@@ -18,6 +18,7 @@ import { MycRole } from "@/types/MyceliumRole";
 import { MycPermission } from "@/types/MyceliumPermission";
 import DetailsBox from "@/components/ui/DetailsBox";
 import useSuspenseError from "@/hooks/use-suspense-error";
+import { MdWebhook } from "react-icons/md";
 
 type WebHook = components["schemas"]["WebHook"];
 
@@ -99,7 +100,7 @@ export default function Webhooks() {
   return (
     <DashBoardBody
       breadcrumb={
-        <PageBody.Breadcrumb.Item>
+        <PageBody.Breadcrumb.Item icon={MdWebhook}>
           Webhooks
         </PageBody.Breadcrumb.Item>
       }

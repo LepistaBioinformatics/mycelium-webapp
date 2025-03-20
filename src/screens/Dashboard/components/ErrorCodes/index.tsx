@@ -15,6 +15,7 @@ import ListItem from "@/components/ui/ListItem";
 import { MycRole } from "@/types/MyceliumRole";
 import { MycPermission } from "@/types/MyceliumPermission";
 import useSuspenseError from "@/hooks/use-suspense-error";
+import { MdNearbyError } from "react-icons/md";
 
 type ErrorCode = components["schemas"]["ErrorCode"];
 
@@ -146,7 +147,7 @@ export default function ErrorCodes() {
   return (
     <DashBoardBody
       breadcrumb={
-        <PageBody.Breadcrumb.Item>
+        <PageBody.Breadcrumb.Item icon={MdNearbyError}>
           Error codes
         </PageBody.Breadcrumb.Item>
       }
