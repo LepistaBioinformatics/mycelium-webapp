@@ -9,7 +9,7 @@
 
 import { cva, VariantProps } from "class-variance-authority";
 
-export const flowContainerStyles = cva("!max-w-1/2 !min-w-max !max-h-[50vh]", {
+export const flowContainerStyles = cva("!max-w-1/2 !min-w-max", {
   variants: {
     show: {
       true: "block animate-fadeIn",

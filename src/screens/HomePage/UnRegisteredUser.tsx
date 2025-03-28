@@ -78,7 +78,7 @@ export default function UnRegisteredUser({ show, status, setStatus }: Props) {
 
   return (
     <FlowContainer show={show}>
-      <Card maxHeight="70vh" minHeight="70vh" width="6xl">
+      <Card maxHeight="50vh" minHeight="50vh" width="6xl">
         <Card.Header>
           <Typography as="h1">
             Almost there!

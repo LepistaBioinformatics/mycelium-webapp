@@ -52,7 +52,7 @@ export default function ValidatedUser({ show }: Props) {
 
   return (
     <FlowContainer show={show}>
-      <Card maxHeight="70vh" minHeight="70vh" width="6xl">
+      <Card maxHeight="50vh" minHeight="50vh" width="6xl">
         {isLoading || isLoadingProfile || !profile?.accId
           ? (
             <Card.Body>

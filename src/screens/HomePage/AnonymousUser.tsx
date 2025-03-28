@@ -35,7 +35,7 @@ export default function AnonymousUser({ show, setUser }: Props) {
 
   return (
     <FlowContainer show={show}>
-      <Card maxHeight="70vh" minHeight="70vh" width="6xl">
+      <Card maxHeight="50vh" minHeight="50vh" width="6xl">
         <Card.Header>
           <Typography as="h1">
             Welcome
@@ -53,7 +53,9 @@ export default function AnonymousUser({ show, setUser }: Props) {
                 </Typography>
                 <Button onClick={getAccessTokenWithPopup} rounded>
                   <Typography width="xs" as="h4">
-                    Click to login
+                    <span className="!text-white !dark:text-white">
+                      Click to login
+                    </span>
                   </Typography>
                 </Button>
               </div>
