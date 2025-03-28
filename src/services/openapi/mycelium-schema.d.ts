@@ -99,7 +99,11 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        /**
+         * Get my account details
+         * @description Get the details of the account associated with the current user.
+         */
+        get: operations["get_my_account_details_url"];
         put?: never;
         /**
          * Create a user related account
@@ -926,7 +930,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Create a user related account */
+        /** Create a tag */
         post: operations["register_tenant_tag_url"];
         delete?: never;
         options?: never;
@@ -947,6 +951,23 @@ export interface paths {
         post?: never;
         /** Delete a tag */
         delete: operations["delete_tenant_tag_url"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/adm/rs/tenant-manager/tenants/{tenant_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Fetch a user's profile. */
+        get: operations["get_tenant_details_url"];
+        put?: never;
+        post?: never;
+        delete?: never;
         options?: never;
         head?: never;
         patch?: never;
@@ -1692,6 +1713,16 @@ export interface components {
                 slug: string;
                 description?: string | null;
                 permission: components["schemas"]["Permission"];
+                /**
+                 * Format: date-time
+                 * @description The date and time the role was created
+                 */
+                created: string;
+                /**
+                 * Format: date-time
+                 * @description The date and time the role was last updated
+                 */
+                updated?: string | null;
                 /** @description If it is a system role
                  *
                  *     System roles represents standard core actors of the Mycelium API
@@ -1950,6 +1981,16 @@ export interface components {
             slug: string;
             description?: string | null;
             permission: components["schemas"]["Permission"];
+            /**
+             * Format: date-time
+             * @description The date and time the role was created
+             */
+            created: string;
+            /**
+             * Format: date-time
+             * @description The date and time the role was last updated
+             */
+            updated?: string | null;
             /** @description If it is a system role
              *
              *     System roles represents standard core actors of the Mycelium API
@@ -2213,6 +2254,52 @@ export interface components {
             /** @description If the owner is the principal account owner */
             isPrincipal: boolean;
         };
+        /** @description A default pagination response
+         *
+         *     A paginated record include the total number of records found into a query
+         *     plus page size which records will be retrieved, the number of records to be
+         *     ignored (such value should be discovered after the first query), and the
+         *     records itself. */
+        PaginatedRecord_GuestUser: {
+            /** Format: int64 */
+            count: number;
+            /** Format: int64 */
+            skip?: number | null;
+            /** Format: int64 */
+            size?: number | null;
+            records: {
+                /**
+                 * Format: uuid
+                 * @description The guest user id
+                 */
+                id?: string | null;
+                /** @description The guest user email
+                 *
+                 *     The email is used to identify the guest user connection with the target
+                 *     account.
+                 *      */
+                email: components["schemas"]["Email"];
+                /** @description The guest user role */
+                guestRole: components["schemas"]["Parent_GuestRole_String"];
+                /**
+                 * Format: date-time
+                 * @description The guesting date
+                 */
+                created: string;
+                /**
+                 * Format: date-time
+                 * @description The last updated date
+                 */
+                updated?: string | null;
+                accounts?: null | components["schemas"]["Children_Account_String"];
+                /** @description The guest user is verified
+                 *
+                 *     WHile the user is not verified, the user will not be able to access
+                 *     the account.
+                 *      */
+                wasVerified: boolean;
+            }[];
+        };
         /** @description A parent record
          *
          *     This enumerator allow represents the parent elements using their primary
@@ -2301,6 +2388,16 @@ export interface components {
                 slug: string;
                 description?: string | null;
                 permission: components["schemas"]["Permission"];
+                /**
+                 * Format: date-time
+                 * @description The date and time the role was created
+                 */
+                created: string;
+                /**
+                 * Format: date-time
+                 * @description The date and time the role was last updated
+                 */
+                updated?: string | null;
                 /** @description If it is a system role
                  *
                  *     System roles represents standard core actors of the Mycelium API
@@ -3138,6 +3235,60 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["HttpJsonResponse"];
                 };
+            };
+            /** @description Unauthorized. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Forbidden. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Unknown internal server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+        };
+    };
+    get_my_account_details_url: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Fetching success. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Account"];
+                };
+            };
+            /** @description Not found. */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Unauthorized. */
             401: {
@@ -5294,7 +5445,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["GuestUser"];
+                    "application/json": components["schemas"]["PaginatedRecord_GuestUser"];
                 };
             };
             /** @description Not found. */
@@ -6411,6 +6562,71 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["Tag"];
                 };
+            };
+            /** @description Bad request. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Unauthorized. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Forbidden. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Unknown internal server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+        };
+    };
+    get_tenant_details_url: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                tenant_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Profile fetching done. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Tenant"];
+                };
+            };
+            /** @description Not found. */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Bad request. */
             400: {
