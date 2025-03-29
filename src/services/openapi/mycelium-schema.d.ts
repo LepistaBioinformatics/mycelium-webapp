@@ -963,7 +963,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Fetch a user's profile. */
+        /** Fetch a tenant's details */
         get: operations["get_tenant_details_url"];
         put?: never;
         post?: never;
@@ -1905,7 +1905,7 @@ export interface components {
         CreateTenantScopedTokenBody: {
             permissionedRoles: [
                 string,
-                "read" | "write" | "readWrite"
+                "read" | "write"
             ][];
             /** Format: int64 */
             expiration: number;
@@ -1915,7 +1915,7 @@ export interface components {
             tenantId: string;
             permissionedRoles: [
                 string,
-                "read" | "write" | "readWrite"
+                "read" | "write"
             ][];
             /** Format: int64 */
             expiration: number;
@@ -2177,7 +2177,7 @@ export interface components {
             /** @description The permissioned roles which the guest user was invited to */
             permissionedRoles?: [
                 string,
-                "read" | "write" | "readWrite"
+                "read" | "write"
             ][] | null;
             /** @description The guest user was verified */
             wasVerified?: boolean | null;
@@ -2439,7 +2439,7 @@ export interface components {
         };
         PasswordHash: Record<string, never>;
         /** @enum {string} */
-        Permission: "read" | "write" | "readWrite";
+        Permission: "read" | "write";
         /** @description This object should be used over the application layer operations. */
         Profile: {
             owners: components["schemas"]["Owner"][];
@@ -2589,7 +2589,7 @@ export interface components {
             protectedByPermissionedRoles: {
                 permissionedRoles: [
                     string,
-                    "read" | "write" | "readWrite"
+                    "read" | "write"
                 ][];
             };
         } | {
@@ -2607,7 +2607,7 @@ export interface components {
             protectedByServiceTokenWithPermissionedRoles: {
                 permissionedRoles: [
                     string,
-                    "read" | "write" | "readWrite"
+                    "read" | "write"
                 ][];
             };
         };
@@ -5365,7 +5365,7 @@ export interface operations {
                 /** @description The permissioned roles which the guest user was invited to */
                 permissionedRoles?: [
                     string,
-                    "read" | "write" | "readWrite"
+                    "read" | "write"
                 ][] | null;
                 /** @description The guest user was verified */
                 wasVerified?: boolean | null;
