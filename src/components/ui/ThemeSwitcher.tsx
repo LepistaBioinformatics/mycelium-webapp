@@ -2,7 +2,7 @@ import { CgDarkMode } from "react-icons/cg";
 import { cva, VariantProps } from "class-variance-authority";
 import { useTheme } from "../ThemeProvider";
 
-const themeSwitchStyles = cva("text-indigo-600 dark:text-yellow-400 text-2xl cursor-pointer", {
+const themeSwitchStyles = cva("text-blue-600 dark:text-yellow-400 text-2xl cursor-pointer", {
   variants: {
     reverseBackground: {
       true: "text-gray-50 dark:text-gray-600",

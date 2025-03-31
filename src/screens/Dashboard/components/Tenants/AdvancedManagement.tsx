@@ -1,9 +1,11 @@
 import AuthorizedOr from "@/components/ui/AuthorizedOr";
+import { FaRegTrashAlt } from "react-icons/fa";
+import { GoGear } from "react-icons/go";
 import PageBody from "@/components/ui/PageBody";
 import useProfile from "@/hooks/use-profile";
 import { MycPermission } from "@/types/MyceliumPermission";
 import { MycRole } from "@/types/MyceliumRole";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useParams } from "react-router";
 import ControlPanelBreadcrumbItem from "../ControlPanelBreadcrumbItem";
 import { SlOrganization } from "react-icons/sl";
@@ -17,11 +19,43 @@ import IntroSection from "@/components/ui/IntroSection";
 import MiniBox from "@/components/ui/MiniBox";
 import { components } from "@/services/openapi/mycelium-schema";
 import AccountInvitations from "../Accounts/AccountInvitations";
+import GuestOwner from "./GuestOwnerModal";
+import UnguestOwner from "./UnguestOwnerModal";
 
 type Parent_Account_String = components["schemas"]["Parent_Account_String"];
+type TenantOwner = components["schemas"]["Owner"];
 
 export default function AdvancedManagement() {
   const params = useParams();
+
+  const [isGuestOwnerModalOpen, setIsGuestOwnerModalOpen] = useState(false);
+  const [isUnguestOwnerModalOpen, setIsUnguestOwnerModalOpen] = useState(false);
+
+  const [selectedOwner, setSelectedOwner] = useState<TenantOwner | null>(null);
+
+  const handleGuestOwnerModalClose = () => {
+    setIsGuestOwnerModalOpen(false);
+  }
+
+  const handleGuestOwnerModalSuccess = () => {
+    setIsGuestOwnerModalOpen(false);
+    mutateTenantStatus();
+  }
+
+  const handleUnguestOwnerModalSuccess = () => {
+    setIsUnguestOwnerModalOpen(false);
+    mutateTenantStatus();
+  }
+
+  const handleUnguestOwnerModalOpen = (owner: TenantOwner) => {
+    setIsUnguestOwnerModalOpen(true);
+    setSelectedOwner(owner);
+  }
+
+  const handleUnguestOwnerModalClose = () => {
+    setIsUnguestOwnerModalOpen(false);
+    setSelectedOwner(null);
+  }
 
   const tenantId = useMemo(() => {
     if (!params.tenantId) return null;
@@ -51,7 +85,8 @@ export default function AdvancedManagement() {
   const {
     tenantStatus,
     isLoading: isLoadingTenantStatus,
-    error: tenantStatusError
+    error: tenantStatusError,
+    mutate: mutateTenantStatus,
   } = useTenantDetails({ customUrl });
 
   const activeTenant = useMemo(() => {
@@ -172,7 +207,14 @@ export default function AdvancedManagement() {
               >
                 <Card.Header>
                   <Typography as="h6" decoration="smooth">
-                    Owners
+                    <div className="flex items-center gap-2 group">
+                      <span>Owners</span>
+                      <GoGear
+                        title="Register tenant owner"
+                        className="cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-blue-500 dark:text-lime-500"
+                        onClick={() => setIsGuestOwnerModalOpen(true)}
+                      />
+                    </div>
                   </Typography>
                 </Card.Header>
 
@@ -185,18 +227,27 @@ export default function AdvancedManagement() {
 
                       return (
                         <MiniBox key={owner.id}>
-                          <IntroSection
-                            content={ownerName}
-                            title="Owner name"
-                            as="h3"
-                          >
-                            <IntroSection.Item
-                              prefix="email"
-                              title="Email"
+                          <div className="flex items-center justify-between group">
+                            <IntroSection
+                              content={ownerName}
+                              title="Owner name"
+                              as="h3"
                             >
-                              {owner.email}
-                            </IntroSection.Item>
-                          </IntroSection>
+                              <IntroSection.Item
+                                prefix="email"
+                                title="Email"
+                              >
+                                {owner.email}
+                              </IntroSection.Item>
+                            </IntroSection>
+
+                            <button
+                              className="text-red-500 cursor-pointer hidden group-hover:block transition-opacity duration-300"
+                              onClick={() => handleUnguestOwnerModalOpen(owner)}
+                            >
+                              <FaRegTrashAlt />
+                            </button>
+                          </div>
                         </MiniBox>
                       )
                     })}
@@ -246,6 +297,23 @@ export default function AdvancedManagement() {
           )}
         </AuthorizedOr>
       </PageBody.Content>
+
+      <GuestOwner
+        isOpen={isGuestOwnerModalOpen}
+        onClose={handleGuestOwnerModalClose}
+        onSuccess={handleGuestOwnerModalSuccess}
+        tenant={activeTenant}
+      />
+
+      {selectedOwner && (
+        <UnguestOwner
+          isOpen={isUnguestOwnerModalOpen}
+          owner={selectedOwner}
+          onClose={handleUnguestOwnerModalClose}
+          onSuccess={handleUnguestOwnerModalSuccess}
+          tenant={activeTenant}
+        />
+      )}
     </PageBody>
   )
 }

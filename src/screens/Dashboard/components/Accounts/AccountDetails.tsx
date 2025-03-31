@@ -21,8 +21,10 @@ import CopyToClipboard from "@/components/ui/CopyToClipboard";
 import UpgradeOrDowngradeAccountModal from "./UpgradeOrDowngradeAccountModal";
 import IntroSection from "@/components/ui/IntroSection";
 import AccountInvitations from "./AccountInvitations";
+import UnInviteGuestModal from "./UnInviteGuestModal";
 
 type Account = components["schemas"]["Account"];
+type GuestUser = components["schemas"]["GuestUser"];
 
 interface Props {
   accountId: string;
@@ -41,6 +43,8 @@ export default function AccountDetails({ isOpen, onClose, accountId }: Props) {
   const [isGuestToAccountModalOpen, setIsGuestToAccountModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isUpgradeOrDowngradeModalOpen, setIsUpgradeOrDowngradeModalOpen] = useState(false);
+  const [currentGuestUser, setCurrentGuestUser] = useState<GuestUser | null>(null);
+  const [isUnInviteModalOpen, setIsUnInviteModalOpen] = useState(false);
 
   const { profile, getAccessTokenSilently } = useProfile();
 
@@ -62,6 +66,10 @@ export default function AccountDetails({ isOpen, onClose, accountId }: Props) {
     setIsDeleteModalOpen(false);
   }
 
+  const handleCloseUnInviteModal = () => {
+    setIsUnInviteModalOpen(false);
+  }
+
   const handleCloseEditModal = () => {
     setIsEditModalOpen(false);
     mutateAccount(account, { rollbackOnError: true });
@@ -73,6 +81,11 @@ export default function AccountDetails({ isOpen, onClose, accountId }: Props) {
 
   const handleCloseUpgradeOrDowngradeModal = () => {
     setIsUpgradeOrDowngradeModalOpen(false);
+  }
+
+  const handleOpenUnInviteModal = (guestUser: GuestUser) => {
+    setIsUnInviteModalOpen(true);
+    setCurrentGuestUser(guestUser);
   }
 
   const { data: account, mutate: mutateAccount } = useSWR<Account>(
@@ -250,7 +263,11 @@ export default function AccountDetails({ isOpen, onClose, accountId }: Props) {
               {tenantInfo?.id && account && (
                 <div className="flex flex-col gap-1">
                   <Typography as="span" decoration="smooth">Invitations</Typography>
-                  <AccountInvitations account={account} tenantId={tenantInfo?.id} />
+                  <AccountInvitations
+                    account={account}
+                    tenantId={tenantInfo?.id}
+                    setCurrentGuestUser={handleOpenUnInviteModal}
+                  />
                 </div>
               )}
             </DetailsBox.Content>
@@ -411,6 +428,15 @@ export default function AccountDetails({ isOpen, onClose, accountId }: Props) {
           account={account}
           accountId={account.id}
           onSuccess={handleSuccess}
+        />
+      )}
+
+      {account?.id && currentGuestUser && (
+        <UnInviteGuestModal
+          guestUser={currentGuestUser}
+          accountId={account.id}
+          isOpen={isUnInviteModalOpen}
+          onClose={handleCloseUnInviteModal}
         />
       )}
     </SideCurtain>

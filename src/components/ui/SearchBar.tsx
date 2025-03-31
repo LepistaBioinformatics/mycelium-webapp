@@ -144,11 +144,11 @@ function CommandPaletteContent({
   return <div className={commandPaletteContentStyles()}>{children}</div>;
 }
 
-const commandPaletteItemStyles = cva("flex flex-col gap-0 mb-1 hover:bg-blue-100 dark:hover:bg-gray-700 w-full", {
+const commandPaletteItemStyles = cva("flex flex-col gap-0 mb-1 hover:bg-blue-100 dark:hover:bg-gray-700 w-full group", {
   variants: {
     disabled: {
       true: "opacity-80 cursor-not-allowed",
-      false: "hover:text-blue-500 dark:hover:text-lime-400 group"
+      false: "hover:text-blue-500 dark:hover:text-lime-400"
     }
   },
   defaultVariants: {
@@ -156,11 +156,11 @@ const commandPaletteItemStyles = cva("flex flex-col gap-0 mb-1 hover:bg-blue-100
   },
 });
 
-const commandPaletteItemButtonStyles = cva("flex text-gray-700 dark:text-gray-300 items-center gap-3", {
+const commandPaletteItemButtonStyles = cva("flex justify-start text-gray-700 dark:text-gray-300 items-center gap-3 ml-3", {
   variants: {
     disabled: {
       true: "opacity-50 cursor-not-allowed",
-      false: "hover:text-blue-500 dark:hover:text-lime-400 group-hover:text-blue-500 dark:group-hover:text-lime-400"
+      false: "hover:text-blue-500 dark:hover:text-lime-400 group-hover:text-blue-500 dark:group-hover:text-lime-400 group-hover:cursor-pointer"
     }
   },
   defaultVariants: {
@@ -184,17 +184,12 @@ function CommandPaletteItem({
 }: CommandPaletteItemProps) {
   return (
     <div className={commandPaletteItemStyles({ disabled })}>
-      <div className="flex gap-2 items-center ml-3">
-        <button
-          onClick={() => onClick(command)}
-          className={commandPaletteItemButtonStyles({ disabled })}
-          disabled={disabled || false}
-        >
-          {command}
-        </button>
-        <Typography as="h5">
-          {brief}
-        </Typography>
+      <div
+        className={commandPaletteItemButtonStyles({ disabled })}
+        onClick={() => !disabled && onClick(command)}
+      >
+        <span>{command}</span>
+        <span className="font-semibold">{brief}</span>
       </div>
 
       <div className="ml-8 text-left">

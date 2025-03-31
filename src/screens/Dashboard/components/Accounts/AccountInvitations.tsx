@@ -13,7 +13,6 @@ import Button from "@/components/ui/Button";
 import formatEmail from "@/functions/format-email";
 import PermissionIcon from "@/components/ui/PermissionIcon";
 import DetailsBox from "@/components/ui/DetailsBox";
-import UnInviteGuestModal from "./UnInviteGuestModal";
 import useSuspenseError from "@/hooks/use-suspense-error";
 import PaginatedRecords from "@/types/PaginatedRecords";
 import IntroSection from "@/components/ui/IntroSection";
@@ -26,6 +25,7 @@ type GuestRole = components["schemas"]["GuestRole"];
 interface Props {
   account: Account;
   tenantId: string;
+  setCurrentGuestUser: (guestUser: GuestUser) => void;
 }
 
 /**
@@ -35,10 +35,9 @@ interface Props {
  * @param tenantId - The tenant id
  * @returns The invitations component
  */
-export default function AccountInvitations({ account, tenantId }: Props) {
+export default function AccountInvitations({ account, tenantId, setCurrentGuestUser }: Props) {
   const pageSize = 2;
   const [showMaxInvitations, setShowMaxInvitations] = useState<boolean>(false);
-  const [isUnInviteModalOpen, setIsUnInviteModalOpen] = useState<boolean>(false);
 
   const { getAccessTokenSilently } = useProfile();
 
@@ -67,7 +66,6 @@ export default function AccountInvitations({ account, tenantId }: Props) {
 
   const {
     data: invitations,
-    mutate: mutateInvitations,
     isLoading
   } = useSWR<PaginatedRecords<GuestUser>>(
     memoizedUrl,
@@ -96,11 +94,6 @@ export default function AccountInvitations({ account, tenantId }: Props) {
       refreshInterval: 1000 * 60,
     }
   );
-
-  const handleCloseUnInviteModal = () => {
-    setIsUnInviteModalOpen(false);
-    mutateInvitations(invitations, { rollbackOnError: true });
-  }
 
   if (isLoading) return <div>Loading...</div>;
 
@@ -161,7 +154,7 @@ export default function AccountInvitations({ account, tenantId }: Props) {
                           <Button
                             rounded
                             intent="warning"
-                            onClick={() => setIsUnInviteModalOpen(true)}
+                            onClick={() => setCurrentGuestUser(invitation)}
                           >
                             Uninvite
                           </Button>
@@ -171,15 +164,6 @@ export default function AccountInvitations({ account, tenantId }: Props) {
                   </DetailsBox.Content>
                 </DetailsBox>
               </MiniBox>
-
-              {account.id && (
-                <UnInviteGuestModal
-                  guestUser={invitation}
-                  accountId={account.id}
-                  isOpen={isUnInviteModalOpen}
-                  onClose={handleCloseUnInviteModal}
-                />
-              )}
             </Fragment>
           ))}
       </div>

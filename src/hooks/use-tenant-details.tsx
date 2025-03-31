@@ -42,7 +42,7 @@ export default function useTenantDetails({ tenantId, customUrl }: Props) {
     return null;
   }, [tenantId, customUrl]);
 
-  const { data: tenantStatus, isLoading, error } = useSWR<TenantStatus>(
+  const { data: tenantStatus, isLoading, error, mutate } = useSWR<TenantStatus>(
     memoizedUrl,
     async (url: string) => {
       const token = await getAccessTokenSilently();
@@ -68,5 +68,6 @@ export default function useTenantDetails({ tenantId, customUrl }: Props) {
     tenantStatus,
     isLoading,
     error,
+    mutate,
   };
 }

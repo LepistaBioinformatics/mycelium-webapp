@@ -1,4 +1,6 @@
 import Button from "@/components/ui/Button";
+import Divider from "@/components/ui/Divider";
+import IntroSection from "@/components/ui/IntroSection";
 import Modal from "@/components/ui/Modal";
 import Typography from "@/components/ui/Typography";
 import { TENANT_ID_HEADER } from "@/constants/http-headers";
@@ -34,6 +36,15 @@ export default function UnInviteGuestModal({ guestUser, accountId, isOpen, onClo
   const { tenantInfo } = useSelector((state: RootState) => state.tenant);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const guestRole = useMemo(() => {
+    if (!guestUser.guestRole) return null;
+    if (typeof guestUser.guestRole !== "object") return null;
+
+    if ("record" in guestUser.guestRole) return guestUser.guestRole.record;
+
+    return null;
+  }, [guestUser.guestRole]);
 
   const localInvitationRecord: string | null | undefined = useMemo(() => {
     if (!guestUser.guestRole) return null;
@@ -93,24 +104,38 @@ export default function UnInviteGuestModal({ guestUser, accountId, isOpen, onClo
       </Modal.Header>
 
       <Modal.Body>
-        <div className="flex flex-col gap-8 p-3 xl:min-w-[500px] w-full">
-          <Typography as="h5">
-            Are you sure you want to uninvite this user?
-          </Typography>
+        <div className="flex flex-col gap-2 w-full pt-5 px-1">
+          <IntroSection
+            content="Are you sure you want to uninvite user?"
+            title="Uninvite user"
+            as="h3"
+          >
+            <Divider style="invisible" />
 
-          <div className="flex flex-col gap-0">
-            <Typography as="span">Email</Typography>
-            <Typography as="h6">{formatEmail(guestUser.email)}</Typography>
-          </div>
+            <IntroSection.Item
+              prefix="email"
+              title="Email"
+            >
+              {formatEmail(guestUser.email)}
+            </IntroSection.Item>
 
-          <div className="flex flex-col gap-0">
+            <IntroSection.Item
+              prefix="role"
+              title="Role"
+            >
+              {guestRole?.name}
+            </IntroSection.Item>
+          </IntroSection>
+
+          <div className="mt-12">
             <Button
+              intent="danger"
               rounded
               fullWidth
               onClick={onSubmit}
               disabled={isSubmitting}
             >
-              Uninvite
+              {isSubmitting ? "Uninviting..." : "Uninvite"}
             </Button>
           </div>
         </div>

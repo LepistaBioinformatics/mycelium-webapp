@@ -35,7 +35,7 @@ export default function CopyToClipboard({ text, hidden, groupHidden, inline, siz
     <div className={styles({ hidden, groupHidden, inline, size })}>
       <button
         title="Click to copy to clipboard"
-        className="text-slate-500 hover:text-slate-700 hover:dark:text-slate-300  group-hover:text-blue-500 dark:group-hover:text-lime-400"
+        className="text-slate-500 hover:text-slate-700 hover:dark:text-slate-300 group-hover:text-blue-500 dark:group-hover:text-lime-400"
         onClick={() => navigator.clipboard.writeText(text)}
       >
         <FaRegCopy />
