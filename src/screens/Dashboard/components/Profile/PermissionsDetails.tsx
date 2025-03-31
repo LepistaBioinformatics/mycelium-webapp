@@ -16,6 +16,8 @@ import { SlOrganization } from "react-icons/sl";
 import { TextInput } from "flowbite-react";
 import getLicensedResourcesOrNull from "@/functions/get-licensed-resources-or-null";
 import getTenantsOwnershipOrNull from "@/functions/get-tenant-ownership-or-null";
+import MiniBox from "@/components/ui/MiniBox";
+import IntroSection from "@/components/ui/IntroSection";
 
 type Profile = components["schemas"]["Profile"];
 
@@ -392,7 +394,7 @@ function SearchableNonSystemRolesList({
         placeholder="Filter roles"
       />
 
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2 pt-2">
         {filteredRoles
           ?.sort((a, b) => (
             a.accName.localeCompare(b.accName) ||
@@ -400,30 +402,27 @@ function SearchableNonSystemRolesList({
             a.perm.localeCompare(b.perm)
           ))
           ?.map((resource, index) => (
-            <div key={index} className="flex flex-col gap-0 border-b border-gray-200 dark:border-gray-700 pt-2">
-              <div className="flex items-center gap-1 whitespace-nowrap">
-                <Typography as="span" decoration="smooth" nowrap>
-                  Role
-                </Typography>
-                <Typography as="h5" truncate title={resource.role}>
-                  {resource.role}
-                </Typography>
-              </div>
-              <div className="flex items-center gap-1 whitespace-nowrap">
-                <Typography as="span" decoration="smooth" nowrap>
-                  on
-                </Typography>
-                <Typography as="span" truncate title={resource.accName}>
+            <MiniBox key={index}>
+              <IntroSection
+                title="Role"
+                content={resource.role}
+                as="h5"
+              >
+                <IntroSection.Item
+                  prefix="on"
+                  title="The account that the role is assigned to"
+                >
                   {resource.accName}
-                </Typography>
-              </div>
-              <div className="flex items-center gap-1 -mt-1 whitespace-nowrap">
-                <Typography as="span" decoration="smooth" nowrap>
-                  being able to
-                </Typography>
-                <PermissionIcon permission={resource.perm} inline />
-              </div>
-            </div>
+                </IntroSection.Item>
+
+                <IntroSection.Item
+                  prefix="being able to"
+                  title="The permission of the role"
+                >
+                  <PermissionIcon permission={resource.perm} inline />
+                </IntroSection.Item>
+              </IntroSection>
+            </MiniBox>
           ))}
       </div>
     </div>

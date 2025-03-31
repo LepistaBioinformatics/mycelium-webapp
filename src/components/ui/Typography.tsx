@@ -28,7 +28,7 @@ const styles = cva("text-start whitespace-pre-wrap", {
     decoration: {
       underline: "underline",
       lineThrough: "line-through",
-      smooth: "!text-gray-500 dark:!text-gray-500",
+      smooth: "!text-gray-400 dark:!text-gray-500",
       faded: "!text-gray-600 dark:!text-gray-400",
       bold: "!font-bold",
       semibold: "!font-semibold",

@@ -1,5 +1,5 @@
 import { cva, VariantProps } from "class-variance-authority";
-import React from "react";
+import React, { ComponentProps } from "react";
 import { Link } from "react-router";
 import { projectVariants, projectDefaultVariants } from "@/constants/shared-component-styles";
 
@@ -23,9 +23,19 @@ const containerStyles = cva("min-h-screen", {
       center: "items-center",
       start: "items-start",
       end: "items-end",
+      top: "items-top",
+      bottom: "items-bottom",
+    },
+    items: {
+      center: "items-center",
+      start: "items-start",
+      end: "items-end",
+      top: "items-top",
+      bottom: "items-bottom",
     },
     justify: {
       center: "justify-center",
+      around: "justify-around",
       start: "justify-start",
       end: "justify-end",
     },
@@ -46,7 +56,9 @@ const containerStyles = cva("min-h-screen", {
 });
 
 interface ContainerProps extends
-  BaseProps, VariantProps<typeof containerStyles> { }
+  BaseProps,
+  ComponentProps<"div">,
+  VariantProps<typeof containerStyles> { }
 
 function Container({ children, flex, gap, padding, margin, align, justify, height, width, ...props }: ContainerProps) {
   return (

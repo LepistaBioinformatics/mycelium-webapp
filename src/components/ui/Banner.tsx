@@ -5,7 +5,7 @@ import { IoClose } from "react-icons/io5";
 
 const { width } = projectVariants;
 
-const styles = cva("p-2 text-left text-sm border-2 shadow rounded-lg dark:text-gray-100 text-gray-800 bg-slate-50 dark:bg-slate-800 mx-auto w-full xl:max-w-4xl", {
+const styles = cva("p-2 text-left text-sm border-2 shadow rounded-lg dark:text-gray-100 text-gray-800 bg-slate-50 dark:bg-slate-800 mx-auto w-full xl:max-w-4xl dark:bg-opacity-50", {
   variants: {
     width,
     intent: {

@@ -44,14 +44,14 @@ interface IntroItemProps extends
   prefix: string;
 }
 
-function IntroItem({ prefix, children, title, ...props }: IntroItemProps) {
+function IntroItem({ prefix, children, title, width, ...props }: IntroItemProps) {
   return (
     <div className={introItemStyles()} {...props}>
       <Typography as="span" decoration="smooth">
         {prefix}
       </Typography>
       {children && (
-        <Typography as="span" title={title}>
+        <Typography as="span" title={title} width={width}>
           {children}
         </Typography>
       )}

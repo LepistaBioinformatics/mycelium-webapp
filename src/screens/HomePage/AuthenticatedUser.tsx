@@ -94,7 +94,7 @@ export default function AuthenticatedUser({ show, user, setStatus }: Props) {
 
   return (
     <FlowContainer show={show}>
-      <Card maxHeight="50vh" minHeight="50vh" width="6xl">
+      <Card minHeight="50vh" height="fit" width="6xl">
         <Card.Header>
           <Typography as="h1">
             {user?.name}

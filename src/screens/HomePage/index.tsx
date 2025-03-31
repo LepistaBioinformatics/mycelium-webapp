@@ -42,7 +42,7 @@ export default function HomePage() {
   }, [user, status]);
 
   return (
-    <PageBody padding="md" align="center" justify="center" flex>
+    <PageBody padding="md" justify="center" flex className="h-screen pt-[5rem]">
       <AppHeader discrete logout={logout} />
 
       <PageBody.Content flex="center" gap={3}>

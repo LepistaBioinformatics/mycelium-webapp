@@ -15,6 +15,10 @@ import CardsSection from "@/components/ui/CardsSection";
 import { formatDDMMYY } from "@/functions/format-dd-mm-yy";
 import IntroSection from "@/components/ui/IntroSection";
 import MiniBox from "@/components/ui/MiniBox";
+import { components } from "@/services/openapi/mycelium-schema";
+import AccountInvitations from "../Accounts/AccountInvitations";
+
+type Parent_Account_String = components["schemas"]["Parent_Account_String"];
 
 export default function AdvancedManagement() {
   const params = useParams();
@@ -63,9 +67,23 @@ export default function AdvancedManagement() {
   const owners = useMemo(() => {
     if (!activeTenant) return null;
 
-    if (typeof activeTenant === "object" && "owners" in activeTenant) {
+    if ("owners" in activeTenant) {
       if ("records" in activeTenant.owners) {
         return activeTenant.owners.records;
+      }
+    }
+
+    return null;
+  }, [activeTenant]);
+
+  const manager = useMemo(() => {
+    if (!activeTenant) return null;
+
+    if ("manager" in activeTenant) {
+      const manager = activeTenant.manager as Parent_Account_String;
+
+      if ("record" in manager) {
+        return manager.record;
       }
     }
 
@@ -194,22 +212,31 @@ export default function AdvancedManagement() {
                 flex1
               >
                 <Card.Header>
-                  <Typography as="h6" decoration="smooth">
-                    Tenant managers
+                  <Typography
+                    as="h6"
+                    decoration="smooth"
+                    title="Peples listed here contains would perform management actions on the tenant"
+                  >
+                    Management account invitations
                   </Typography>
                 </Card.Header>
 
                 <Card.Body>
-                  <Typography as="h6" decoration="smooth">
-                    Managers here
-                  </Typography>
+                  {activeTenant?.id && manager && (
+                    <div className="flex flex-col gap-1">
+                      <AccountInvitations
+                        account={manager}
+                        tenantId={activeTenant?.id}
+                      />
+                    </div>
+                  )}
                 </Card.Body>
               </Card>
             </CardsSection.Body>
           </CardsSection>
 
           {tenantStatus && (
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-4 text-slate-500">
               <div className="w-full text-left">
                 <pre>
                   {JSON.stringify(tenantStatus, null, 2)}

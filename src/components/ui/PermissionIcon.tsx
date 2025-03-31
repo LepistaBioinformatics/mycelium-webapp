@@ -14,7 +14,7 @@ const styles = cva("", {
     },
     color: {
       read: "text-green-500",
-      write: "text-blue-500",
+      write: "text-yellow-400 dark:text-yellow-500",
     },
     inline: {
       true: "inline"

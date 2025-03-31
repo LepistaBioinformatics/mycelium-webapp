@@ -74,7 +74,7 @@ export default function LicensedResourcesSection({ licensedResources }: Props) {
                     </TenantResolver>
 
                     <IntroSection.Item
-                      prefix="with role"
+                      prefix="as"
                       title={`The role assigned to you: ${resource.role}`}
                     >
                       <span className="whitespace-nowrap">
