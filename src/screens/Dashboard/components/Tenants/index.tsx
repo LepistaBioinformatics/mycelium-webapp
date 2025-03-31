@@ -1,4 +1,4 @@
-import { FaEdit } from "react-icons/fa";
+import { FaEdit, FaExternalLinkAlt } from "react-icons/fa";
 import Button from "@/components/ui/Button";
 import CopyToClipboard from "@/components/ui/CopyToClipboard";
 import PageBody from "@/components/ui/PageBody";
@@ -24,6 +24,7 @@ import { RootState } from "@/states/store";
 import { FaRegStar, FaStar } from "react-icons/fa6";
 import { setTenantInfo } from "@/states/tenant.state";
 import { SlOrganization } from "react-icons/sl";
+import { Link } from "react-router";
 
 type Tenant = components["schemas"]["Tenant"];
 
@@ -196,8 +197,9 @@ export default function Tenants() {
             <ListItem key={tenant?.id}>
               <div className="flex justify-between gap-3 group">
                 <Typography as="h3" highlight>
-                  <div className=" flex items-center gap-2">
+                  <div className="flex items-center gap-3">
                     <button
+                      title="View tenant basic details"
                       className="hover:underline text-blue-500 dark:text-lime-400"
                       onClick={() => handleViewTenantClick(tenant)}
                     >
@@ -216,6 +218,14 @@ export default function Tenants() {
                         />
                       )}
                     </span>
+
+                    <Link
+                      to={`/dashboard/tenants/${tenant.id}`}
+                      title="View tenant advanced details"
+                      className="cursor-pointer hidden group-hover:block"
+                    >
+                      <FaExternalLinkAlt size={16} />
+                    </Link>
                   </div>
                 </Typography>
                 <div className="flex gap-5">

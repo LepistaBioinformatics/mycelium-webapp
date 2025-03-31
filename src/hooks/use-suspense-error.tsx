@@ -6,7 +6,10 @@ import { useDispatch } from "react-redux";
 export default function useSuspenseError() {
   const dispatch = useDispatch();
 
-  const parseHttpError = async (res: Response) => {
+  const parseHttpError = async (
+    res: Response,
+    args?: { rawResponse?: boolean }
+  ) => {
     //
     // If the response is null, return null.
     //
@@ -15,7 +18,13 @@ export default function useSuspenseError() {
     //
     // If the response is ok, return the response json.
     //
-    if (res.ok) return res.json();
+    if (res.ok) {
+      if (args?.rawResponse) {
+        return res;
+      }
+
+      return res.json();
+    };
 
     //
     // Try to parse error response as JSON. If it fails, set the error 

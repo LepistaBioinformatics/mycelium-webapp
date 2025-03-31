@@ -1,13 +1,8 @@
-import { components } from "@/services/openapi/mycelium-schema";
-import useSWR from "swr";
 import { buildPath } from "@/services/openapi/mycelium-api";
 import React, { useMemo } from "react";
-import useProfile from "@/hooks/use-profile";
 import { SYSTEM_TENANT_ID } from "@/constants/zero-tenant";
-
-type Tenant = components["schemas"]["Tenant"];
-
-export type TenantStatus = "deleted" | "unknown" | { active: Tenant };
+import { TenantStatus } from "@/types/TenantStatus";
+import useTenantDetails from "@/hooks/use-tenant-details";
 
 export interface TenantResolverChildProps {
   tenantId: string;
@@ -24,12 +19,12 @@ interface Props {
 }
 
 export default function TenantResolver({ tenantId, children }: Props) {
-  const { getAccessTokenSilently } = useProfile();
-
+  /**
+   * This memoization prevents the SWR from being initialized if the tenantId
+   * is the system tenant (a full zero tenant).
+   */
   const memoizedUrl = useMemo(() => {
-    if (tenantId === SYSTEM_TENANT_ID) {
-      return children;
-    }
+    if (tenantId === SYSTEM_TENANT_ID) return null;
 
     return buildPath(
       "/adm/rs/beginners/tenants/{tenant_id}",
@@ -37,31 +32,13 @@ export default function TenantResolver({ tenantId, children }: Props) {
     );
   }, [tenantId]);
 
-  const { data: tenantStatus, isLoading, error } = useSWR<TenantStatus>(
-    memoizedUrl,
-    async (url: string) => {
-      const token = await getAccessTokenSilently();
+  const { tenantStatus, isLoading, error } = useTenantDetails({
+    customUrl: memoizedUrl,
+  });
 
-      return fetch(url, { headers: { Authorization: `Bearer ${token}` } })
-        .then(async (res) => {
-          if (res.status === 204) {
-            return "deleted";
-          }
-
-          if (res.status === 200) {
-            return { active: await res.json() };
-          }
-
-          return "unknown";
-        });
-    },
-    {
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false,
-      revalidateOnMount: true,
-      refreshInterval: 1000 * 60 * 5, // 5 minutes
-    }
-  );
+  if (memoizedUrl === null) {
+    return children;
+  }
 
   return (
     <>

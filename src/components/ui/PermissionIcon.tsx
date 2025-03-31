@@ -15,7 +15,6 @@ const styles = cva("", {
     color: {
       read: "text-green-500",
       write: "text-blue-500",
-      readWrite: "text-yellow-500"
     },
     inline: {
       true: "inline"
@@ -54,12 +53,6 @@ export default function PermissionIcon({ permission, size, inline }: Props) {
     case "write":
       return (
         <HandleTooltip content="Write">
-          <CiEdit className={styles({ size, color: permission, inline })} />
-        </HandleTooltip>
-      );
-    case "readWrite":
-      return (
-        <HandleTooltip content="Read/Write">
           <CiEdit className={styles({ size, color: permission, inline })} />
         </HandleTooltip>
       );

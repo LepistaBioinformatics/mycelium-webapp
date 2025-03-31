@@ -1,6 +1,6 @@
 import { cva, VariantProps } from "class-variance-authority";
 
-const containerStyles = cva("flex flex-col min-w-full overflow-x-auto gap-3 scrollbar pb-2", {
+const containerStyles = cva("flex flex-col min-w-full overflow-x-auto gap-3 scrollbar pb-2 px-1", {
   variants: {},
 });
 

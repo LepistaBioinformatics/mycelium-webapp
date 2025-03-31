@@ -192,7 +192,6 @@ export default function GuestRolesModal({
             >
               <option value={MycPermission.Read}>Read</option>
               <option value={MycPermission.Write}>Write</option>
-              <option value={MycPermission.ReadWrite}>Read/Write</option>
             </Select>
           </FormField>
 

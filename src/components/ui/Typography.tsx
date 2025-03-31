@@ -3,21 +3,21 @@ import { cva, VariantProps } from "class-variance-authority";
 
 const { width, margin, padding } = projectVariants;
 
-const styles = cva("text-start", {
+const styles = cva("text-start whitespace-pre-wrap", {
   variants: {
     padding,
     as: {
       div: "py-1 text-slate-700 dark:text-slate-200",
       p: "py-1 text-slate-700 dark:text-slate-200",
-      span: "text-sm text-slate-700 dark:text-slate-200",
-      small: "text-xs text-slate-700 dark:text-slate-200",
-      title: "text-5xl text-slate-600 dark:text-slate-300 font-bold",
-      h1: "text-3xl text-slate-600 dark:text-slate-300 font-bold",
-      h2: "text-2xl text-slate-600 dark:text-slate-300 font-bold",
-      h3: "text-xl text-slate-600 dark:text-slate-300 font-bold",
-      h4: "text-lg text-slate-600 dark:text-slate-300 font-semibold",
-      h5: "text-base text-slate-600 dark:text-slate-300 font-semibold",
-      h6: "text-sm text-slate-600 dark:text-slate-300 font-semibold",
+      span: "!text-sm text-slate-700 dark:text-slate-200",
+      small: "!text-xs text-slate-700 dark:text-slate-200",
+      title: "!text-5xl text-slate-600 dark:text-slate-300 font-bold",
+      h1: "!text-3xl text-slate-600 dark:text-slate-300 font-bold",
+      h2: "!text-2xl text-slate-600 dark:text-slate-300 font-bold",
+      h3: "!text-xl text-slate-600 dark:text-slate-300 font-bold",
+      h4: "!text-lg text-slate-600 dark:text-slate-300 font-semibold",
+      h5: "!text-base text-slate-600 dark:text-slate-300 font-semibold",
+      h6: "!text-sm text-slate-600 dark:text-slate-300 font-semibold",
     },
     highlight: {
       true: "!text-blue-500 dark:!text-lime-500",
@@ -48,12 +48,12 @@ const styles = cva("text-start", {
     },
     width: {
       ...width,
-      xxs: "!max-w-[15rem]",
-      xs: "!max-w-xs",
-      sm: "!max-w-sm",
-      md: "!max-w-md",
-      lg: "!max-w-lg",
-      xl: "!max-w-xl",
+      xxs: "!max-w-[15rem] xl:max-w-max",
+      xs: "!max-w-xs xl:max-w-max",
+      sm: "!max-w-sm xl:max-w-max",
+      md: "!max-w-md xl:max-w-max",
+      lg: "!max-w-lg xl:max-w-max",
+      xl: "!max-w-xl xl:max-w-max",
     },
     uppercase: {
       true: "uppercase",

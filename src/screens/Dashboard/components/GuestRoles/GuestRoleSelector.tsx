@@ -321,8 +321,6 @@ function getNumericPermission(permission: MycPermission): number {
       return 0;
     case permission === MycPermission.Write:
       return 1;
-    case permission === MycPermission.ReadWrite:
-      return 2;
     default:
       return 0;
   }

@@ -1,12 +1,5 @@
 import HomePage from '@/screens/HomePage';
-import Dashboard from '@/screens/Dashboard';
 import ErrorBoundary from '@/components/ErrorBoundary';
-import Profile from '@/screens/Dashboard/components/Profile';
-import Tenants from '@/screens/Dashboard/components/Tenants';
-import Accounts from '@/screens/Dashboard/components/Accounts';
-import GuestRoles from '@/screens/Dashboard/components/GuestRoles';
-import Webhooks from '@/screens/Dashboard/components/WebHooks';
-import ErrorCodes from '@/screens/Dashboard/components/ErrorCodes';
 import { RiDashboardFill } from 'react-icons/ri';
 import { SlOrganization } from 'react-icons/sl';
 import { MdManageAccounts } from 'react-icons/md';
@@ -15,8 +8,17 @@ import { MdNearbyError } from "react-icons/md";
 import { MdWebhook } from "react-icons/md";
 import { components } from '@/services/openapi/mycelium-schema';
 import AdvancedManagement from '@/screens/Dashboard/components/Tenants/AdvancedManagement';
+import React, { lazy } from 'react';
 
-type Profile = components["schemas"]["Profile"];
+const Dashboard = lazy(() => import('@/screens/Dashboard'));
+const Profile = lazy(() => import('@/screens/Dashboard/components/Profile'));
+const Tenants = lazy(() => import('@/screens/Dashboard/components/Tenants'));
+const Accounts = lazy(() => import('@/screens/Dashboard/components/Accounts'));
+const GuestRoles = lazy(() => import('@/screens/Dashboard/components/GuestRoles'));
+const ErrorCodes = lazy(() => import('@/screens/Dashboard/components/ErrorCodes'));
+const Webhooks = lazy(() => import('@/screens/Dashboard/components/WebHooks'));
+
+type ProfileType = components["schemas"]["Profile"];
 
 export interface AppRoute {
     position: number;
@@ -116,7 +118,7 @@ const ROUTES = {
  * @param profile - The profile of the user
  * @returns The routes that the user should see
  */
-export default function buildRoutes(profile: Profile) {
+export default function buildRoutes(profile: ProfileType) {
     return Object.values(ROUTES).map((route) => {
         if (route.shouldBeStaff && !profile.isStaff) return { ...route, disabled: true };
         if (route.shouldBeManager && !profile.isManager) return { ...route, disabled: true };

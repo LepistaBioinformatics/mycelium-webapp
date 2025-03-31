@@ -10,6 +10,7 @@ import DeleteGuestRole from "./DeleteGuestRole";
 import EditGuestRoleModal from "./EditGuestRoleModal";
 import RegisterGuestRoleChild from "./RegisterGuestRoleChild";
 import PermissionIcon from "@/components/ui/PermissionIcon";
+import IntroSection from "@/components/ui/IntroSection";
 
 type GuestRole = components["schemas"]["GuestRole"];
 
@@ -53,13 +54,16 @@ export default function GuestRoleDetails({ isOpen, onClose, guestRole, mutateGue
       handleClose={onClose}
     >
       {guestRole && (
-        <div className="flex items-center gap-2 -mb-1">
-          <Typography as="span" decoration="smooth">Seeing</Typography>
-          <Typography as="h2" title="Guest role name">
-            {guestRole.name}
-          </Typography>
-          <PermissionIcon permission={guestRole.permission} />
-        </div>
+        <IntroSection
+          prefix="Seeing"
+          content={(
+            <>
+              <span>{guestRole.name}</span>
+              <PermissionIcon permission={guestRole.permission} />
+            </>
+          )}
+          title="Guest role name"
+        />
       )}
 
       <DetailsBox

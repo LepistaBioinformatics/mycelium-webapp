@@ -3,34 +3,97 @@ import PageBody from "@/components/ui/PageBody";
 import useProfile from "@/hooks/use-profile";
 import { MycPermission } from "@/types/MyceliumPermission";
 import { MycRole } from "@/types/MyceliumRole";
-import { useEffect } from "react";
+import { useMemo } from "react";
 import { useParams } from "react-router";
 import ControlPanelBreadcrumbItem from "../ControlPanelBreadcrumbItem";
 import { SlOrganization } from "react-icons/sl";
+import useTenantDetails from "@/hooks/use-tenant-details";
+import { buildPath } from "@/services/openapi/mycelium-api";
+import Card from "@/components/ui/Card";
+import Typography from "@/components/ui/Typography";
+import CardsSection from "@/components/ui/CardsSection";
+import { formatDDMMYY } from "@/functions/format-dd-mm-yy";
+import IntroSection from "@/components/ui/IntroSection";
+import MiniBox from "@/components/ui/MiniBox";
 
 export default function AdvancedManagement() {
+  const params = useParams();
+
+  const tenantId = useMemo(() => {
+    if (!params.tenantId) return null;
+
+    return params.tenantId as string;
+  }, [params.tenantId]);
+
   const {
-    profile,
     hasEnoughPermissions,
     isLoadingUser,
     isLoadingProfile,
-    getAccessTokenSilently
   } = useProfile({
     roles: [MycRole.TenantManager, MycRole.TenantOwner],
-    permissions: [MycPermission.Read, MycPermission.Write, MycPermission.ReadWrite],
+    permissions: [MycPermission.Read, MycPermission.Write],
     restrictSystemAccount: true,
   });
 
-  const params = useParams();
+  const customUrl = useMemo(() => {
+    if (!tenantId) return null;
 
-  useEffect(() => {
-    if (!params.tenantId) return;
+    return buildPath(
+      "/adm/rs/tenant-manager/tenants/{tenant_id}",
+      { path: { tenant_id: tenantId } }
+    );
+  }, [tenantId]);
 
-    console.log(params.tenantId);
-  }, [params.tenantId]);
+  const {
+    tenantStatus,
+    isLoading: isLoadingTenantStatus,
+    error: tenantStatusError
+  } = useTenantDetails({ customUrl });
+
+  const activeTenant = useMemo(() => {
+    if (!tenantStatus) return null;
+
+    if (typeof tenantStatus === "object" && "active" in tenantStatus) {
+      return tenantStatus.active;
+    }
+
+    return null;
+  }, [tenantStatus]);
+
+  const owners = useMemo(() => {
+    if (!activeTenant) return null;
+
+    if (typeof activeTenant === "object" && "owners" in activeTenant) {
+      if ("records" in activeTenant.owners) {
+        return activeTenant.owners.records;
+      }
+    }
+
+    return null;
+  }, [activeTenant]);
+
+  if (isLoadingTenantStatus) {
+    return <>Loading...</>;
+  }
+
+  if (tenantStatusError) {
+    return <>Error: {tenantStatusError.message}</>;
+  }
+
+  if (tenantStatus === "deleted") {
+    return <>Tenant deleted</>;
+  }
+
+  if (tenantStatus === "unknown") {
+    return <>Unknown tenant</>;
+  }
+
+  if (tenantStatus === "unauthorized") {
+    return <>Unauthorized</>;
+  }
 
   return (
-    <PageBody padding="md">
+    <PageBody padding="md" height="fit">
       <PageBody.Breadcrumb>
         <ControlPanelBreadcrumbItem />
         <PageBody.Breadcrumb.Item href="/dashboard/tenants" icon={SlOrganization}>
@@ -41,14 +104,119 @@ export default function AdvancedManagement() {
         </PageBody.Breadcrumb.Item>
       </PageBody.Breadcrumb>
 
-      <PageBody.Content>
+      <PageBody.Content padding="md" container flex="col" gap={12}>
         <AuthorizedOr
           authorized={hasEnoughPermissions}
           isLoading={isLoadingUser || isLoadingProfile}
         >
-          <div>
-            <h1>Advanced Management</h1>
-          </div>
+          <CardsSection>
+            <CardsSection.Header>
+              <IntroSection
+                prefix="Seeing"
+                content={activeTenant?.name}
+                title="Tenant name"
+                as="h1"
+              >
+                <IntroSection.Item
+                  prefix="described as"
+                  title="Tenant description"
+                >
+                  {activeTenant?.description}
+                </IntroSection.Item>
+
+                {activeTenant?.created && (
+                  <IntroSection.Item
+                    prefix="created at"
+                    title="Tenant created at"
+                  >
+                    {formatDDMMYY(new Date(activeTenant?.created))}
+                  </IntroSection.Item>
+                )}
+
+                {activeTenant?.updated && (
+                  <IntroSection.Item
+                    prefix="updated at"
+                    title="Tenant updated at"
+                  >
+                    {formatDDMMYY(new Date(activeTenant?.updated))}
+                  </IntroSection.Item>
+                )}
+              </IntroSection>
+            </CardsSection.Header>
+
+            <CardsSection.Body>
+              <Card
+                minHeight="50vh"
+                maxHeight="50vh"
+                padding="sm"
+                width="6xl"
+                flex1
+              >
+                <Card.Header>
+                  <Typography as="h6" decoration="smooth">
+                    Owners
+                  </Typography>
+                </Card.Header>
+
+                <Card.Body>
+                  <div className="flex flex-col gap-2">
+                    {owners?.map((owner) => {
+                      const ownerName = owner.firstName && owner.lastName
+                        ? `${owner.firstName} ${owner.lastName}`
+                        : owner.username;
+
+                      return (
+                        <MiniBox key={owner.id}>
+                          <IntroSection
+                            content={ownerName}
+                            title="Owner name"
+                            as="h3"
+                          >
+                            <IntroSection.Item
+                              prefix="email"
+                              title="Email"
+                            >
+                              {owner.email}
+                            </IntroSection.Item>
+                          </IntroSection>
+                        </MiniBox>
+                      )
+                    })}
+                  </div>
+                </Card.Body>
+              </Card>
+
+              <Card
+                minHeight="50vh"
+                maxHeight="50vh"
+                padding="sm"
+                width="6xl"
+                flex1
+              >
+                <Card.Header>
+                  <Typography as="h6" decoration="smooth">
+                    Tenant managers
+                  </Typography>
+                </Card.Header>
+
+                <Card.Body>
+                  <Typography as="h6" decoration="smooth">
+                    Managers here
+                  </Typography>
+                </Card.Body>
+              </Card>
+            </CardsSection.Body>
+          </CardsSection>
+
+          {tenantStatus && (
+            <div className="flex flex-col gap-4">
+              <div className="w-full text-left">
+                <pre>
+                  {JSON.stringify(tenantStatus, null, 2)}
+                </pre>
+              </div>
+            </div>
+          )}
         </AuthorizedOr>
       </PageBody.Content>
     </PageBody>

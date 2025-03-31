@@ -6,7 +6,7 @@ import Typography from "@/components/ui/Typography";
 import { components } from "@/services/openapi/mycelium-schema";
 import { useCallback, useMemo, useState } from "react";
 import PermissionIcon from "@/components/ui/PermissionIcon";
-import CardsSection from "./CardsSection";
+import CardsSection from "../../../../components/ui/CardsSection";
 import { GiWizardStaff } from "react-icons/gi";
 import AboutCard from "./AboutCard";
 import { MycRole } from "@/types/MyceliumRole";

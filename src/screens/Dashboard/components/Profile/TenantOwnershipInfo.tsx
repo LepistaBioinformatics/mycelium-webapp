@@ -2,6 +2,8 @@ import Typography from "@/components/ui/Typography";
 import { formatDDMMYY } from "@/functions/format-dd-mm-yy";
 import { useCallback } from "react";
 import { TenantResolverChildProps } from "./TenantResolver";
+import MiniBox from "@/components/ui/MiniBox";
+import IntroSection from "@/components/ui/IntroSection";
 
 interface Props extends TenantResolverChildProps {
   since: string;
@@ -14,15 +16,15 @@ export default function TenantOwnershipInfo({
   isLoading,
   error,
 }: Props) {
+  const title = `The tenant which the account belongs to: ${tenantId}`;
+
   const Since = () => (
-    <div className="flex items-center gap-2">
-      <Typography as="span" decoration="smooth" title={`Since on tenant: ${tenantId}`}>
-        since
-      </Typography>
-      <Typography as="h5" title="The date and time you were added as a tenant owner">
-        {formatDDMMYY(new Date(since), true)}
-      </Typography>
-    </div>
+    <IntroSection.Item
+      prefix="since"
+      title={`Since on tenant: ${tenantId}`}
+    >
+      {formatDDMMYY(new Date(since), true)}
+    </IntroSection.Item>
   );
 
   const TenantData = useCallback(() => {
@@ -34,39 +36,44 @@ export default function TenantOwnershipInfo({
       return (
         <>
           <Since />
-          <Typography as="small" isError>
+          <IntroSection.Item prefix="status" title={title}>
             {tenantStatus === "deleted" ? "Tenant deleted" : "Unknown tenant"}
-          </Typography>
+          </IntroSection.Item>
+        </>
+      );
+    }
+
+    if (tenantStatus === "unauthorized") {
+      return (
+        <>
+          <Since />
+          <IntroSection.Item prefix="status" title={title} isError>
+            Unauthorized
+          </IntroSection.Item>
         </>
       );
     }
 
     return (
       <>
-        <Typography as="h5" title="The tenant name">
-          {tenantStatus.active.name}
-        </Typography>
-        <Since />
-        <Typography as="small" decoration="smooth">
-          {tenantStatus.active.description}
-        </Typography>
+        <IntroSection
+          content={tenantStatus.active.name}
+          title="The tenant name"
+          as="h3"
+        >
+          <Since />
+          <IntroSection.Item prefix="described as" title={title}>
+            {tenantStatus.active.description}
+          </IntroSection.Item>
+        </IntroSection>
       </>
     );
   }, [tenantStatus]);
 
   return (
-    <div className="flex flex-col gap-0 w-full bg-blue-50 dark:bg-slate-900 bg-opacity-50 dark:bg-opacity-50 border border-gray-200 dark:border-gray-700 rounded-lg p-2">
-      <div>
-        <div>
-          <TenantData />
-
-          {error && (
-            <Typography as="small" isError>
-              {error.message}
-            </Typography>
-          )}
-        </div>
-      </div>
-    </div>
+    <MiniBox>
+      <TenantData />
+      {error && (<Typography as="small" isError>{error.message}</Typography>)}
+    </MiniBox>
   );
 }

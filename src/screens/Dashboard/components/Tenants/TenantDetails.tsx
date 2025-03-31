@@ -17,6 +17,7 @@ import DetailsBox from "@/components/ui/DetailsBox";
 import PaginatedAccounts from "../Accounts/PaginatedAccounts";
 import CopyToClipboard from "@/components/ui/CopyToClipboard";
 import { Link } from "react-router";
+import IntroSection from "@/components/ui/IntroSection";
 
 type Tenant = components["schemas"]["Tenant"];
 
@@ -108,9 +109,9 @@ export default function TenantDetails({ isOpen, onClose, tenant }: Props) {
       title="Tenant details"
       handleClose={onClose}
     >
-      <div className="flex items-baseline gap-2 -mb-1">
-        <Typography as="span" decoration="smooth">Seeing</Typography>
-        <Typography as="h2" title="Tenant name">
+      <IntroSection
+        prefix="Seeing"
+        content={(
           <div className="flex items-center gap-5">
             <span>{tenant.name}</span>
             <span className="cursor-pointer">
@@ -135,8 +136,16 @@ export default function TenantDetails({ isOpen, onClose, tenant }: Props) {
               <FaExternalLinkAlt size={16} />
             </Link>
           </div>
-        </Typography>
-      </div>
+        )}
+        title="Tenant name"
+      >
+        <IntroSection.Item
+          prefix="described as"
+          title="Tenant description"
+        >
+          {tenant.description}
+        </IntroSection.Item>
+      </IntroSection>
 
       <DetailsBox
         open={openedSection === OpenedSection.Details}

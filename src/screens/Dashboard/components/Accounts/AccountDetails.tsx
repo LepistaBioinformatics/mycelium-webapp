@@ -24,6 +24,8 @@ import UnInviteGuestModal from "./UnInviteGuestModal";
 import useSuspenseError from "@/hooks/use-suspense-error";
 import CopyToClipboard from "@/components/ui/CopyToClipboard";
 import UpgradeOrDowngradeAccountModal from "./UpgradeOrDowngradeAccountModal";
+import PaginatedRecords from "@/types/PaginatedRecords";
+import IntroSection from "@/components/ui/IntroSection";
 
 type Account = components["schemas"]["Account"];
 type GuestUser = components["schemas"]["GuestUser"];
@@ -61,6 +63,10 @@ export default function AccountDetails({ isOpen, onClose, accountId }: Props) {
 
   const handleCloseGuestToAccountModal = () => {
     setIsGuestToAccountModalOpen(false);
+  }
+
+  const handleCloseDeleteModal = () => {
+    setIsDeleteModalOpen(false);
   }
 
   const handleCloseEditModal = () => {
@@ -158,25 +164,29 @@ export default function AccountDetails({ isOpen, onClose, accountId }: Props) {
       handleClose={onClose}
     >
       {account && (
-        <div className="flex items-baseline gap-2 -mb-1">
-          <Typography as="span" decoration="smooth">Seeing</Typography>
-          <Typography as="h2" title="Account name">{account?.name}</Typography>
-        </div>
-      )}
+        <IntroSection
+          prefix="Seeing"
+          content={account?.name}
+          title="Account name"
+        >
+          {tenantInfo?.id && showTenantInfo && (
+            <>
+              <IntroSection.Item
+                prefix="from"
+                title="Tenant name"
+              >
+                {tenantInfo.name}
+              </IntroSection.Item>
 
-      {tenantInfo?.id && showTenantInfo && (
-        <div>
-          <div className="flex items-baseline gap-2">
-            <Typography as="span" decoration="smooth">from</Typography>
-            <Typography as="h4" title="Tenant name">{tenantInfo.name}</Typography>
-          </div>
-          <div className="flex items-baseline gap-2">
-            <Typography as="span" decoration="smooth">described as</Typography>
-            <Typography as="p" title="Tenant description">
-              {tenantInfo.description}
-            </Typography>
-          </div>
-        </div>
+              <IntroSection.Item
+                prefix="described as"
+                title="Tenant description"
+              >
+                {tenantInfo.description}
+              </IntroSection.Item>
+            </>
+          )}
+        </IntroSection>
       )}
 
       <DetailsBox
@@ -379,7 +389,7 @@ export default function AccountDetails({ isOpen, onClose, accountId }: Props) {
           account={account}
           tenantId={tenantInfo?.id}
           isOpen={isDeleteModalOpen}
-          onClose={() => setIsDeleteModalOpen(false)}
+          onClose={handleCloseDeleteModal}
         />
       )}
 
@@ -455,7 +465,7 @@ function Invitations({ account, tenantId }: { account: Account, tenantId: string
     data: invitations,
     mutate: mutateInvitations,
     isLoading
-  } = useSWR<GuestUser[]>(
+  } = useSWR<PaginatedRecords<GuestUser>>(
     memoizedUrl,
     async (url: string) => {
       if (!tenantId) return null;
@@ -490,7 +500,7 @@ function Invitations({ account, tenantId }: { account: Account, tenantId: string
 
   if (isLoading) return <div>Loading...</div>;
 
-  if (!invitations || invitations.length === 0) return (
+  if (!invitations || invitations.count === 0) return (
     <div>No invitations found</div>
   );
 
@@ -498,7 +508,8 @@ function Invitations({ account, tenantId }: { account: Account, tenantId: string
     <div className="flex flex-col gap-2">
       <div className="flex flex-col gap-2">
         {invitations
-          ?.slice(0, showMaxInvitations ? invitations.length : pageSize)
+          ?.records
+          ?.slice(0, showMaxInvitations ? invitations.count : pageSize)
           ?.map((invitation) => (
             <Fragment key={invitation.id} >
               <div className="flex flex-col gap-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 shadow w-full px-4 py-1 rounded-lg">
@@ -562,7 +573,7 @@ function Invitations({ account, tenantId }: { account: Account, tenantId: string
           ))}
       </div>
 
-      {invitations.length > pageSize && (
+      {invitations.count > pageSize && (
         <div className="flex justify-center">
           {showMaxInvitations
             ? (

@@ -201,7 +201,6 @@ export default function GuestRoles() {
           <div className="flex gap-2 justify-center text-sm mx-auto w-full xl:max-w-4xl items-start">
             <PermissionText permission="read" />
             <PermissionText permission="write" />
-            <PermissionText permission="readWrite" />
           </div>
 
           <GuestRolesInitializer onSuccess={mutateGuestRoles} />
