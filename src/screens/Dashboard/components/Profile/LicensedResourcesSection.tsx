@@ -20,7 +20,7 @@ export default function LicensedResourcesSection({ licensedResources }: Props) {
       minHeight="50vh"
       maxHeight="50vh"
       padding="sm"
-      width="xs"
+      width="sm"
       flex1
       dashed={!licensedResources}
     >
@@ -50,24 +50,26 @@ export default function LicensedResourcesSection({ licensedResources }: Props) {
                 <MiniBox key={index}>
                   <IntroSection
                     title="Account name"
+                    prefixProps={{ nowrap: true }}
+                    contentProps={{ truncate: true }}
                     content={(
                       <div className="flex items-center gap-2">
-                        {resource.sysAcc && <RiRobot2Line
-                          className="text-blue-500 dark:text-lime-500 hover:cursor-help"
-                          title="System account"
-                        />}
+                        {resource.sysAcc && (
+                          <div>
+                            <RiRobot2Line
+                              className="text-blue-500 h-4 w-4 dark:text-lime-500 hover:cursor-help"
+                              title="System account"
+                            />
+                          </div>
+                        )}
                         <Typography
                           title={`The account which you have access to: ${resource.accName}`}
-                          width="sm"
-                          truncate
-                          nowrap
                         >
                           {resource.accName}
                         </Typography>
                       </div>
                     )}
                     as="h3"
-                    truncate
                   >
                     <TenantResolver tenantId={resource.tenantId}>
                       <TenantBasicInfo tenantId={resource.tenantId} />
@@ -75,6 +77,7 @@ export default function LicensedResourcesSection({ licensedResources }: Props) {
 
                     <IntroSection.Item
                       prefix="as"
+                      prefixProps={{ nowrap: true }}
                       title={`The role assigned to you: ${resource.role}`}
                     >
                       <span className="whitespace-nowrap">
@@ -83,6 +86,7 @@ export default function LicensedResourcesSection({ licensedResources }: Props) {
                     </IntroSection.Item>
 
                     <IntroSection.Item
+                      prefixProps={{ nowrap: true }}
                       prefix="able to"
                       title={`The permission assigned to you: ${resource.perm}`}
                     >

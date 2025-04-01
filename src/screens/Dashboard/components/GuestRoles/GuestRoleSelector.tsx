@@ -14,20 +14,23 @@ import { TextInput } from "flowbite-react";
 import { useMemo, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import useSWR from "swr";
+import { camelCaseToKebabCase } from "@/functions/camel-to-kebab-text";
 
 type GuestRole = components["schemas"]["GuestRole"];
+type SystemActor = components["schemas"]["SystemActor"];
 
 type Inputs = {
   name: string;
 }
 
-interface Props {
+export interface GuestRoleSelectorProps {
   title: string;
   selectedRole?: GuestRole | null,
   parentRole?: GuestRole | null,
   ignoreList?: string[],
   setSelectedRole: (role: GuestRole) => void,
-  shouldBeSystemRole: boolean
+  shouldBeSystemRole: boolean,
+  restrictRoleToSlug?: SystemActor
 }
 
 /**
@@ -43,7 +46,8 @@ export default function GuestRoleSelector({
   setSelectedRole,
   ignoreList,
   shouldBeSystemRole,
-}: Props) {
+  restrictRoleToSlug
+}: GuestRoleSelectorProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isEditing, setIsEditing] = useState(selectedRole ? false : true);
 
@@ -79,7 +83,13 @@ export default function GuestRoleSelector({
 
     let searchParams: Record<string, string> = { pageSize: pageSize.toString() };
 
-    if (searchTerm && searchTerm !== "") searchParams.name = searchTerm;
+    if (searchTerm && searchTerm !== "") {
+      searchParams.name = searchTerm
+    };
+
+    if (restrictRoleToSlug) {
+      searchParams.slug = camelCaseToKebabCase(restrictRoleToSlug as string)
+    };
 
     if (shouldBeSystemRole) {
       searchParams.system = "true"
@@ -90,7 +100,13 @@ export default function GuestRoleSelector({
     return buildPath("/adm/rs/subscriptions-manager/guest-roles", {
       query: searchParams
     });
-  }, [searchTerm, isAuthenticated, hasEnoughPermissions]);
+  }, [
+    searchTerm,
+    isAuthenticated,
+    hasEnoughPermissions,
+    restrictRoleToSlug,
+    shouldBeSystemRole
+  ]);
 
   const {
     data: guestRoles,

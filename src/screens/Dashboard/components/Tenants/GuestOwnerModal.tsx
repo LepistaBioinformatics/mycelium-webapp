@@ -8,7 +8,6 @@ import useSuspenseError from "@/hooks/use-suspense-error";
 import { buildPath } from "@/services/openapi/mycelium-api";
 import { components } from "@/services/openapi/mycelium-schema";
 import { MycPermission } from "@/types/MyceliumPermission";
-import { MycRole } from "@/types/MyceliumRole";
 import { TextInput } from "flowbite-react";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -28,7 +27,7 @@ type Inputs = {
 
 export default function GuestOwner({ isOpen, onClose, onSuccess, tenant }: Props) {
   const { profile, hasEnoughPermissions, getAccessTokenSilently } = useProfile({
-    roles: [MycRole.TenantOwner],
+    tenantOwnerNeeded: [tenant?.id ?? ""],
     permissions: [MycPermission.Write],
     restrictSystemAccount: true,
   });

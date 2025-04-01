@@ -76,7 +76,7 @@ export default function Profile() {
           </CardsSection.Header>
 
           <CardsSection.Body>
-            <div className="flex flex-col xl:flex-row gap-3">
+            <div className="flex flex-col md:flex-row md:flex-wrap gap-3">
               <TenantOwnershipSection tenantsOwnership={tenantsOwnership} />
               <LicensedResourcesSection licensedResources={licensedResources} />
             </div>

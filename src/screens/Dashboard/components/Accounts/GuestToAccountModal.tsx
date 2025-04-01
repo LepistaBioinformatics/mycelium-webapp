@@ -16,7 +16,7 @@ import { TextInput } from "flowbite-react";
 import { useMemo, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
-import GuestRoleSelector from "../GuestRoles/GuestRoleSelector";
+import GuestRoleSelector, { GuestRoleSelectorProps } from "../GuestRoles/GuestRoleSelector";
 
 type Account = components["schemas"]["Account"];
 type GuestRole = components["schemas"]["GuestRole"];
@@ -25,21 +25,24 @@ type Inputs = {
   email: string;
 }
 
-interface Props {
+interface Props extends Pick<GuestRoleSelectorProps, "restrictRoleToSlug"> {
   account: Account,
   isOpen: boolean,
-  onClose: () => void;
+  onClose: () => void,
+  tenantId?: string | null
 }
 
 export default function GuestToAccountModal({
   account,
   isOpen,
-  onClose
+  onClose,
+  tenantId: tenantIdProp,
+  ...guestRoleSelectorProps
 }: Props) {
   const [selectedRole, setSelectedRole] = useState<GuestRole | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const { parseHttpError } = useSuspenseError();
+  const { parseHttpError, dispatchError } = useSuspenseError();
 
   const { getAccessTokenSilently } = useProfile({
     roles: [MycRole.SubscriptionsManager],
@@ -48,6 +51,15 @@ export default function GuestToAccountModal({
   });
 
   const { tenantInfo } = useSelector((state: RootState) => state.tenant);
+
+  const tenantId = useMemo(() => {
+    if (tenantIdProp) return tenantIdProp;
+    if (tenantInfo?.id) return tenantInfo.id;
+
+    dispatchError("Tenant ID is required");
+
+    return null;
+  }, [tenantIdProp, tenantInfo?.id]);
 
   const {
     register,
@@ -86,7 +98,7 @@ export default function GuestToAccountModal({
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
-          ...(tenantInfo?.id ? { [TENANT_ID_HEADER]: tenantInfo?.id } : {}),
+          ...(tenantId ? { [TENANT_ID_HEADER]: tenantId } : {}),
         },
         body: JSON.stringify({
           email: data.email
@@ -161,6 +173,7 @@ export default function GuestToAccountModal({
             selectedRole={selectedRole}
             setSelectedRole={(role) => setSelectedRole(role)}
             shouldBeSystemRole={account.isDefault}
+            {...guestRoleSelectorProps}
           />
 
           {selectedRole && emailIsValid && account?.id && (

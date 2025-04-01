@@ -20,7 +20,7 @@ export default function TenantOwnershipSection({
   if (!tenantsOwnership) return null;
 
   return (
-    <Card minHeight="50vh" maxHeight="50vh" padding="sm" width="xs" flex1>
+    <Card minHeight="50vh" maxHeight="50vh" padding="sm" width="sm" flex1>
       <Card.Header>
         <Typography as="h6" decoration="smooth">
           Ownership on Tenants

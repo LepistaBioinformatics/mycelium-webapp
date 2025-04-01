@@ -45,6 +45,10 @@ export default function useSuspenseError() {
       dispatch(setNotification({ notification: rawError, type: "error" }));
     }
 
+    if (args?.rawResponse) {
+      return res;
+    }
+
     return null;
   };
 
@@ -60,7 +64,32 @@ export default function useSuspenseError() {
     }));
   };
 
-  return { parseHttpError, parseAuth0Error, dispacheSuccess };
+  const dispatchError = (message: string) => {
+    dispatch(setNotification({
+      notification: message, title: "Error", type: "error"
+    }));
+  };
+
+  const dispatchWarning = (message: string) => {
+    dispatch(setNotification({
+      notification: message, title: "Warning", type: "warning"
+    }));
+  };
+
+  const dispatchInfo = (message: string) => {
+    dispatch(setNotification({
+      notification: message, title: "Info", type: "info"
+    }));
+  };
+
+  return {
+    parseHttpError,
+    parseAuth0Error,
+    dispacheSuccess,
+    dispatchError,
+    dispatchWarning,
+    dispatchInfo
+  };
 }
 
 function setHttpErrorType(status: number) {

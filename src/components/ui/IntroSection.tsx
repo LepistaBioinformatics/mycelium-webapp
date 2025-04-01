@@ -7,24 +7,26 @@ interface Base extends BaseProps,
   prefix?: string;
   content: React.ReactNode;
   title?: string | any;
+  prefixProps?: ComponentProps<typeof Typography>;
+  contentProps?: ComponentProps<typeof Typography>;
 }
 
-const containerStyles = cva("flex flex-col gap-0", {
+const containerStyles = cva("flex flex-col gap-3 xl:gap-0", {
   variants: {},
 });
 
 interface ContainerProps extends Base, VariantProps<typeof containerStyles> { }
 
-function Container({ prefix, content, title, children, as = "h2", ...props }: ContainerProps) {
+function Container({ prefix, content, title, children, as = "h2", prefixProps, contentProps, ...props }: ContainerProps) {
   return (
     <div className={containerStyles()} {...props}>
-      <div className="flex items-baseline gap-2">
+      <div className="flex flex-col xl:flex-row xl:flex-wrap gap-0 xl:gap-2 items-baseline ">
         {prefix && (
-          <Typography as="span" decoration="smooth">
+          <Typography {...prefixProps} as="span" decoration="smooth">
             {prefix}
           </Typography>
         )}
-        <Typography as={as} title={title}>
+        <Typography {...contentProps} as={as} title={title}>
           {content}
         </Typography>
       </div>
@@ -34,7 +36,7 @@ function Container({ prefix, content, title, children, as = "h2", ...props }: Co
   )
 };
 
-const introItemStyles = cva("flex items-baseline gap-2", {
+const introItemStyles = cva("flex items-baseline flex-col xl:flex-row xl:flex-wrap gap-0 xl:gap-2", {
   variants: {},
 });
 
@@ -44,14 +46,14 @@ interface IntroItemProps extends
   prefix: string;
 }
 
-function IntroItem({ prefix, children, title, width, ...props }: IntroItemProps) {
+function IntroItem({ prefix, children, title, width, prefixProps, contentProps, ...props }: IntroItemProps) {
   return (
     <div className={introItemStyles()} {...props}>
-      <Typography as="span" decoration="smooth">
+      <Typography as="span" decoration="smooth" {...prefixProps}>
         {prefix}
       </Typography>
       {children && (
-        <Typography as="span" title={title} width={width}>
+        <Typography as="span" title={title} width={width} {...contentProps}>
           {children}
         </Typography>
       )}

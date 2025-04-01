@@ -25,6 +25,10 @@ interface Props {
    */
   roles?: MycRole[];
   /**
+   * Should be tenant owner
+   */
+  tenantOwnerNeeded?: string[];
+  /**
    * The permissions to filter the licensed resources
    */
   permissions?: MycPermission[];
@@ -81,6 +85,22 @@ export default function useProfile(args?: Props) {
 
       if (profile?.isManager && !args?.denyManager) {
         return true;
+      }
+
+      if (args?.tenantOwnerNeeded) {
+        const tenantsOwnership = profile?.tenantsOwnership;
+
+        if (!tenantsOwnership) {
+          return false;
+        }
+
+        if ("records" in tenantsOwnership) {
+          if (tenantsOwnership.records.some((tenant) => args?.tenantOwnerNeeded?.includes(tenant.tenant))) {
+            return true;
+          }
+        }
+
+        return false;
       }
 
       if (!profile?.licensedResources) {

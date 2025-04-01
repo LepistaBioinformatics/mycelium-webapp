@@ -3,7 +3,7 @@ import { cva, VariantProps } from "class-variance-authority";
 
 const { width, margin, padding } = projectVariants;
 
-const styles = cva("text-start whitespace-pre-wrap", {
+const styles = cva("whitespace-normal", {
   variants: {
     padding,
     as: {
@@ -48,7 +48,7 @@ const styles = cva("text-start whitespace-pre-wrap", {
     },
     width: {
       ...width,
-      xxs: "!max-w-[15rem] xl:max-w-max",
+      xxs: "!max-w-[15rem] !xl:max-w-[30rem] xl:max-w-max",
       xs: "!max-w-xs xl:max-w-max",
       sm: "!max-w-sm xl:max-w-max",
       md: "!max-w-md xl:max-w-max",
@@ -60,6 +60,7 @@ const styles = cva("text-start whitespace-pre-wrap", {
     },
     center: {
       true: "text-center",
+      false: "text-start",
     },
     truncate: {
       true: "truncate",
@@ -73,6 +74,7 @@ const styles = cva("text-start whitespace-pre-wrap", {
   },
   defaultVariants: {
     as: "p",
+    center: false,
     margin: "none",
     padding: "none",
     reverseBackground: false,
@@ -82,7 +84,9 @@ const styles = cva("text-start whitespace-pre-wrap", {
   },
 });
 
-interface Props extends BaseProps, VariantProps<typeof styles> {
+interface Props extends
+  BaseProps,
+  VariantProps<typeof styles> {
   title?: string | any;
   alternativeColor?: string;
 }
@@ -124,10 +128,10 @@ export default function Typography({
         nowrap,
         title: title ? true : false,
       })}
-      {...props}
       style={{
         color: alternativeColor,
       }}
+      {...props}
     />
   );
 }
