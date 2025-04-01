@@ -401,16 +401,6 @@ export default function AdvancedManagement() {
           </Card>
         </CardsSection.Body>
       </CardsSection>
-
-      {tenantStatus && (
-        <div className="flex flex-col gap-4 text-slate-500">
-          <div className="w-full text-left">
-            <pre>
-              {JSON.stringify(tenantStatus, null, 2)}
-            </pre>
-          </div>
-        </div>
-      )}
     </BasePage>
   )
 }
