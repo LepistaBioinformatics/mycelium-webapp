@@ -237,7 +237,7 @@ export default function AccountDetails({ isOpen, onClose, accountId }: Props) {
             <div>
               <Typography as="span" decoration="smooth">Account ID</Typography>
               <Typography as="div">
-                <span className="flex items-center gap-2 group">
+                <span className="flex items-center gap-2 group group/clip">
                   {account?.id}
                   <CopyToClipboard text={account?.id ?? ""} groupHidden />
                 </span>

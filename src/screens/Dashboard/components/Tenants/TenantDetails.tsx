@@ -193,7 +193,7 @@ export default function TenantDetails({ isOpen, onClose, tenant }: Props) {
             <div>
               <Typography as="span" decoration="smooth">Tenant ID</Typography>
               <Typography as="p">
-                <span className="flex items-center gap-2 group">
+                <span className="flex items-center gap-2 group group/clip">
                   {tenant.id}
                   <CopyToClipboard text={tenant.id ?? ""} groupHidden />
                 </span>

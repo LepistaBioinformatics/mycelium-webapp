@@ -87,7 +87,7 @@ export default function GuestRoleDetails({ isOpen, onClose, guestRole, mutateGue
                 Guest Role Slug
               </Typography>
               <Typography as="div">
-                <div className="flex items-center gap-2 group">
+                <div className="flex items-center gap-2 group group/clip">
                   {guestRole.slug}
                   <CopyToClipboard text={guestRole.slug} inline groupHidden />
                 </div>
@@ -128,7 +128,7 @@ export default function GuestRoleDetails({ isOpen, onClose, guestRole, mutateGue
             <div>
               <Typography as="span" decoration="smooth">Guest Role ID</Typography>
               <Typography as="p">
-                <span className="flex items-center gap-2 group">
+                <span className="flex items-center gap-2 group group/clip">
                   {guestRole.id}
                   <CopyToClipboard text={guestRole.id ?? ""} groupHidden />
                 </span>

@@ -25,6 +25,11 @@ import UnInviteGuestModal from "../Accounts/UnInviteGuestModal";
 import GuestToAccountModal from "../Accounts/GuestToAccountModal";
 import { useDispatch } from "react-redux";
 import { setTenantInfo } from "@/states/tenant.state";
+import CopyToClipboard from "@/components/ui/CopyToClipboard";
+import Banner from "@/components/ui/Banner";
+import Button from "@/components/ui/Button";
+import CreateManagementAccount from "./CreateManagementAccount";
+import SeeMoreText from "@/components/ui/SeeMoreText";
 
 type Parent_Account_String = components["schemas"]["Parent_Account_String"];
 type TenantOwner = components["schemas"]["Owner"];
@@ -39,6 +44,7 @@ export default function AdvancedManagement() {
   const [isGuestToAccountModalOpen, setIsGuestToAccountModalOpen] = useState(false);
   const [currentGuestUser, setCurrentGuestUser] = useState<GuestUser | null>(null);
   const [selectedOwner, setSelectedOwner] = useState<TenantOwner | null>(null);
+  const [isCreateManagementAccountModalOpen, setIsCreateManagementAccountModalOpen] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -78,6 +84,11 @@ export default function AdvancedManagement() {
   const handleCloseUnInviteModal = () => {
     setIsUnInviteModalOpen(false);
     setCurrentGuestUser(null);
+  }
+
+  const handleCreateManagementAccountModalClose = () => {
+    setIsCreateManagementAccountModalOpen(false);
+    mutateTenantStatus(tenantStatus, { rollbackOnError: true });
   }
 
   const tenantId = useMemo(() => {
@@ -306,12 +317,31 @@ export default function AdvancedManagement() {
         </CardsSection.Header>
 
         <CardsSection.Body>
+          <SeeMoreText
+            text="You can manage the people and settings for your tenant here. 
+            Start by adding owners and management accounts to configure the 
+            tenant, then invite additional users as needed. Any other 
+            configuration options are available in the Tenant Settings section."
+            maxLength={100}
+          />
+        </CardsSection.Body>
+      </CardsSection>
+
+      <CardsSection>
+        <CardsSection.Header>
+          <Typography as="h6" decoration="smooth">
+            Peoples on Tenant
+          </Typography>
+        </CardsSection.Header>
+
+        <CardsSection.Body>
           <Card
             minHeight="50vh"
             maxHeight="50vh"
             padding="sm"
             width="6xl"
             flex1
+            group
           >
             <Card.Header>
               <Typography as="h6" decoration="smooth">
@@ -335,7 +365,7 @@ export default function AdvancedManagement() {
 
                   return (
                     <MiniBox key={owner.id}>
-                      <div className="flex items-center justify-between group">
+                      <div className="flex items-center justify-between group/item group/clip">
                         <IntroSection
                           content={ownerName}
                           title="Owner name"
@@ -345,12 +375,20 @@ export default function AdvancedManagement() {
                             prefix="email"
                             title="Email"
                           >
-                            {owner.email}
+                            <div className="flex items-center gap-2">
+                              <span>{owner.email}</span>
+                              <CopyToClipboard
+                                text={owner.email}
+                                size="sm"
+                                inline
+                                groupHidden
+                              />
+                            </div>
                           </IntroSection.Item>
                         </IntroSection>
 
                         <button
-                          className="text-red-500 cursor-pointer hidden group-hover:block transition-opacity duration-300"
+                          className="text-red-500 cursor-pointer hidden group-hover/item:block transition-opacity duration-300"
                           onClick={() => handleUnguestOwnerModalOpen(owner)}
                         >
                           <FaRegTrashAlt />
@@ -369,6 +407,7 @@ export default function AdvancedManagement() {
             padding="sm"
             width="6xl"
             flex1
+            group
           >
             <Card.Header>
               <Typography
@@ -376,7 +415,7 @@ export default function AdvancedManagement() {
                 decoration="smooth"
                 title="Peples listed here contains would perform management actions on the tenant"
               >
-                <div className="flex items-center gap-2 group">
+                <div className="flex items-center gap-2">
                   <span>Management account invitations</span>
                   <GoGear
                     title="Guest to management account"
@@ -388,19 +427,89 @@ export default function AdvancedManagement() {
             </Card.Header>
 
             <Card.Body>
-              {activeTenant?.id && manager && (
-                <div className="flex flex-col gap-1">
-                  <AccountInvitations
-                    account={manager}
-                    tenantId={activeTenant?.id}
-                    setCurrentGuestUser={handleOpenUnInviteModal}
-                  />
-                </div>
-              )}
+              {activeTenant?.id && manager
+                ? (
+                  <div className="flex flex-col gap-1">
+                    <AccountInvitations
+                      account={manager}
+                      tenantId={activeTenant?.id}
+                      setCurrentGuestUser={handleOpenUnInviteModal}
+                    />
+                  </div>
+                )
+                : (
+                  <Banner intent="info">
+                    <div className="flex justify-between gap-2 my-5">
+                      <div className="flex flex-col gap-2">
+                        <Typography as="span">
+                          Create management account
+                        </Typography>
+
+                        <Typography as="small" decoration="smooth">
+                          Management accounts are used to manage the tenant.
+                        </Typography>
+                      </div>
+
+                      <div>
+                        <Button
+                          rounded
+                          intent="info"
+                          onClick={() => setIsCreateManagementAccountModalOpen(true)}
+                        >
+                          Create
+                        </Button>
+                      </div>
+                    </div>
+                  </Banner>
+                )}
             </Card.Body>
           </Card>
         </CardsSection.Body>
       </CardsSection>
+
+      <CardsSection>
+        <CardsSection.Header>
+          <Typography as="h6" decoration="smooth">
+            <span>Tenant settings</span>
+          </Typography>
+        </CardsSection.Header>
+
+        <CardsSection.Body>
+          <Card
+            minHeight="50vh"
+            maxHeight="50vh"
+            padding="sm"
+            width="6xl"
+            flex1
+            group
+          >
+            <Card.Header>
+              <Typography as="h6" decoration="smooth">
+                <div className="flex items-center gap-2">
+                  <span>Tags</span>
+                  <GoGear
+                    title="Register tenant owner"
+                    className="cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-blue-500 dark:text-lime-500"
+                    onClick={() => alert("Not implemented yet")}
+                  />
+                </div>
+              </Typography>
+            </Card.Header>
+
+            <Card.Body>
+              <div className="flex flex-col gap-2">
+                Tags
+              </div>
+            </Card.Body>
+          </Card>
+        </CardsSection.Body>
+      </CardsSection>
+
+      <CreateManagementAccount
+        isOpen={isCreateManagementAccountModalOpen}
+        tenantId={tenantId}
+        onClose={handleCreateManagementAccountModalClose}
+      />
     </BasePage>
   )
 }

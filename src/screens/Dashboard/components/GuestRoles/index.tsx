@@ -187,7 +187,7 @@ export default function GuestRoles() {
                   Slug:
                 </Typography>
                 <Typography as="small">
-                  <span className="flex items-center justify-center gap-1 group">
+                  <span className="flex items-center justify-center gap-1 group group/clip">
                     {guestRole.slug} <CopyToClipboard text={guestRole.slug} inline groupHidden size="sm" />
                   </span>
                 </Typography>

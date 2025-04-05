@@ -10,7 +10,7 @@ const styles = cva("px-1", {
       true: "hidden hover:block hover:text-blue-500 dark:hover:text-lime-400",
     },
     groupHidden: {
-      true: "hidden group-hover:block",
+      true: "hidden group-hover/clip:block",
     },
     inline: {
       true: "inline-block mt-1 hover:cursor-pointer",
@@ -35,7 +35,7 @@ export default function CopyToClipboard({ text, hidden, groupHidden, inline, siz
     <div className={styles({ hidden, groupHidden, inline, size })}>
       <button
         title="Click to copy to clipboard"
-        className="text-slate-500 hover:text-slate-700 hover:dark:text-slate-300 group-hover:text-blue-500 dark:group-hover:text-lime-400"
+        className="text-slate-500 hover:text-slate-700 hover:dark:text-slate-300 group-hover:text-blue-500 dark:group-hover:text-lime-400 group-hover/clip:text-blue-500 dark:group-hover/clip:text-lime-400 focus:outline-none focus:rounded-md focus:ring-2 focus:ring-blue-500 dark:focus:ring-lime-400 p-1 -mt-2 focus:animate-pulse rounded-md"
         onClick={() => navigator.clipboard.writeText(text)}
       >
         <FaRegCopy />

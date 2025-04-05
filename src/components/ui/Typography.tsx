@@ -67,9 +67,13 @@ const styles = cva("whitespace-normal", {
     },
     nowrap: {
       true: "whitespace-nowrap",
+      false: "whitespace-normal",
     },
     title: {
       true: "hover:cursor-help",
+    },
+    group: {
+      true: "group",
     },
   },
   defaultVariants: {
@@ -81,6 +85,7 @@ const styles = cva("whitespace-normal", {
     width: "fit",
     uppercase: false,
     highlight: false,
+    group: false,
   },
 });
 
@@ -106,6 +111,7 @@ export default function Typography({
   nowrap,
   title,
   alternativeColor,
+  group,
   ...props
 }: Props) {
   const Element = (as === "title" ? "h1" : as) || "p";
@@ -126,6 +132,7 @@ export default function Typography({
         center,
         truncate,
         nowrap,
+        group,
         title: title ? true : false,
       })}
       style={{

@@ -26,6 +26,12 @@ const styles = cva("text-gray-700 dark:text-gray-50", {
       md: "py-2 px-4 text-base",
       lg: "py-3 px-6 text-lg",
     },
+    padding: {
+      none: "!p-0",
+      sm: "!px-1 !py-0.5",
+      md: "!px-2 !py-1",
+      lg: "!px-3 !py-2",
+    },
     disabled: {
       true: "opacity-50 cursor-not-allowed",
     },
@@ -35,6 +41,7 @@ const styles = cva("text-gray-700 dark:text-gray-50", {
     intent: "primary",
     size: "md",
     rounded: false,
+    padding: "md",
   },
 });
 
@@ -51,6 +58,7 @@ export default function Button({
   size,
   role,
   rounded,
+  padding,
   onClick,
   type,
   disabled,
@@ -59,7 +67,7 @@ export default function Button({
   return (
     <button
       onClick={disabled ? undefined : onClick}
-      className={styles({ fullWidth, intent, size, rounded, disabled })}
+      className={styles({ fullWidth, intent, size, rounded, disabled, padding })}
       type={type}
       disabled={disabled}
       {...props}

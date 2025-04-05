@@ -62,9 +62,7 @@ export default function LicensedResourcesSection({ licensedResources }: Props) {
                             />
                           </div>
                         )}
-                        <Typography
-                          title={`The account which you have access to: ${resource.accName}`}
-                        >
+                        <Typography title={`The account which you have access to: ${resource.accName}`}>
                           {resource.accName}
                         </Typography>
                       </div>

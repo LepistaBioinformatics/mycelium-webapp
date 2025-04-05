@@ -62,22 +62,26 @@ const cardContainerStyles = cva("border border-blue-200 dark:border-indigo-900 s
       col: "flex flex-col",
       row: "flex flex-row",
       none: ""
+    },
+    group: {
+      true: "group",
     }
   },
   defaultVariants: {
     ...projectDefaultVariants,
     width: "md",
     padding: "md",
-    textAlign: "left"
+    textAlign: "left",
+    group: false
   }
 });
 
 interface CardContainerProps extends BaseProps, VariantProps<typeof cardContainerStyles> { }
 
-function CardContainer({ height, minHeight, maxHeight, width, padding, flex, textAlign, dashed, flex1, ...props }: CardContainerProps) {
+function CardContainer({ height, minHeight, maxHeight, width, padding, flex, textAlign, dashed, flex1, group, ...props }: CardContainerProps) {
   return (
     <div
-      className={cardContainerStyles({ height, minHeight, maxHeight, width, padding, flex, textAlign, dashed, flex1 })}
+      className={cardContainerStyles({ height, minHeight, maxHeight, width, padding, flex, textAlign, dashed, flex1, group })}
       {...props}
     />
   );

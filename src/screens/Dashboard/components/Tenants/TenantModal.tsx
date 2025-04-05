@@ -5,6 +5,7 @@ import FormField from "@/components/ui/FomField";
 import Modal from "@/components/ui/Modal";
 import Typography from "@/components/ui/Typography";
 import useProfile from "@/hooks/use-profile";
+import useSuspenseError from "@/hooks/use-suspense-error";
 import { buildPath } from "@/services/openapi/mycelium-api";
 import { components } from "@/services/openapi/mycelium-schema";
 import { Textarea, TextInput } from "flowbite-react";
@@ -29,6 +30,8 @@ export interface TenantModalProps {
 export default function TenantModal({ isOpen, onClose, onSuccess, tenant }: TenantModalProps) {
   const { profile, getAccessTokenSilently } = useProfile();
   const [isLoading, setIsLoading] = useState(false);
+
+  const { parseHttpError } = useSuspenseError();
 
   const principalOwner = useMemo(() => {
     if (!tenant) return null;
@@ -88,10 +91,11 @@ export default function TenantModal({ isOpen, onClose, onSuccess, tenant }: Tena
       body: JSON.stringify(data)
     });
 
-    if (response.ok) {
-      handleLocalSuccess();
+    if (!response.ok) {
+      parseHttpError(response);
     }
 
+    handleLocalSuccess();
     setIsLoading(false);
   }
 

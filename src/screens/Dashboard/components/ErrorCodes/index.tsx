@@ -183,7 +183,7 @@ export default function ErrorCodes() {
               <div className="flex justify-between gap-3">
                 <Typography as="h3">
                   <button
-                    className="flex items-center gap-2 group"
+                    className="flex items-center gap-2 group group/clip"
                     onClick={() => console.log(errorCode)}
                   >
                     <ErrorCodeParts part={errorCode.prefix} subpart="prefix" />
