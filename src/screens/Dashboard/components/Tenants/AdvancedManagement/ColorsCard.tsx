@@ -9,7 +9,7 @@ interface Props {
   mutateTenantStatus: () => void,
 }
 
-export default function ColorsCard({ tenant }: Props) {
+export default function ColorsCard({ }: Props) {
   return (
     <Card
       minHeight="50vh"

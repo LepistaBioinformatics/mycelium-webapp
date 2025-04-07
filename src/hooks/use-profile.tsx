@@ -87,11 +87,17 @@ export default function useProfile(args?: Props) {
    */
   const hasEnoughPermissions = useMemo(
     () => {
-      if (args?.shouldBeStaff && profile?.isStaff && !args?.denyStaff) {
+      if (
+        (profile?.isStaff && !args?.denyStaff) ||
+        (args?.shouldBeStaff && profile?.isStaff && !args?.denyStaff)
+      ) {
         return true;
       }
 
-      if (args?.shouldBeManager && profile?.isManager && !args?.denyManager) {
+      if (
+        (profile?.isManager && !args?.denyManager) ||
+        (args?.shouldBeManager && profile?.isManager && !args?.denyManager)
+      ) {
         return true;
       }
 

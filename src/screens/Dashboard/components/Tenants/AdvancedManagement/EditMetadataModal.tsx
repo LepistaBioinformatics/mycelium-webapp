@@ -2,8 +2,8 @@ import Modal from "@/components/ui/Modal";
 import Typography from "@/components/ui/Typography";
 import useProfile from "@/hooks/use-profile";
 import { components } from "@/services/openapi/mycelium-schema";
-import { TextInput } from "flowbite-react";
 import { useMemo } from "react";
+import { useForm } from "react-hook-form";
 
 type TenantMetaKey = components["schemas"]["TenantMetaKey"];
 
@@ -21,10 +21,12 @@ interface Props {
   editMetadataValue?: string | null;
 }
 
-export default function EditMetadataModal({ isOpen, onClose, onSuccess, tenantId, editMetadataKey, editMetadataValue }: Props) {
+export default function EditMetadataModal({ isOpen, onClose, editMetadataKey }: Props) {
   const { hasEnoughPermissions } = useProfile({
     shouldBeManager: true,
   });
+
+  const { } = useForm<Inputs>();
 
   const key = useMemo(() => {
     if (!editMetadataKey) return null;
