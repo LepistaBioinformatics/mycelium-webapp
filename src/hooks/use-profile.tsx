@@ -44,6 +44,14 @@ interface Props {
    * Whether to deny staff access. Default is false.
    */
   denyStaff?: boolean;
+  /**
+   * Whether the user should be a manager. Default is false.
+   */
+  shouldBeManager?: boolean;
+  /**
+   * Whether the user should be a staff. Default is false.
+   */
+  shouldBeStaff?: boolean;
 }
 
 /**
@@ -79,11 +87,11 @@ export default function useProfile(args?: Props) {
    */
   const hasEnoughPermissions = useMemo(
     () => {
-      if (profile?.isStaff && !args?.denyStaff) {
+      if (args?.shouldBeStaff && profile?.isStaff && !args?.denyStaff) {
         return true;
       }
 
-      if (profile?.isManager && !args?.denyManager) {
+      if (args?.shouldBeManager && profile?.isManager && !args?.denyManager) {
         return true;
       }
 

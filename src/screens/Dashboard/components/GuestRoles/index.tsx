@@ -178,7 +178,7 @@ export default function GuestRoles() {
                 </div>
               </div>
 
-              <div className="flex gap-1">
+              <div className="flex items-center gap-1">
                 <Typography
                   as="small"
                   decoration="smooth"

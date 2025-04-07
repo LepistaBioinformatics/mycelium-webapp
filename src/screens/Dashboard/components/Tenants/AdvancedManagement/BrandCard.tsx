@@ -203,7 +203,7 @@ export default function BrandCard({ tenant, mutateTenantStatus }: Props) {
       minHeight="50vh"
       maxHeight="80vh"
       padding="sm"
-      width="6xl"
+      width="2xl"
       flex1
       group
     >

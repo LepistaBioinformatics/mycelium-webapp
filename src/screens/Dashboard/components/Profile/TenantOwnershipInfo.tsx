@@ -6,6 +6,7 @@ import { TenantResolverChildProps } from "./TenantResolver";
 import MiniBox from "@/components/ui/MiniBox";
 import IntroSection from "@/components/ui/IntroSection";
 import { Link } from "react-router";
+import { TenantTagTypes } from "@/types/TenantTagTypes";
 
 interface Props extends TenantResolverChildProps {
   since: string;
@@ -56,11 +57,43 @@ export default function TenantOwnershipInfo({
       );
     }
 
+    const TenantLogo = () => {
+      const tags = tenantStatus.active.tags;
+      if (!tags) return null;
+
+      const tenantLogo = tags
+        ?.find((tag: any) => tag?.value === TenantTagTypes.Brand)
+        ?.meta
+        ?.base64Logo;
+
+      if (tenantLogo) {
+        return (
+          <img
+            src={tenantLogo}
+            alt="Tenant logo"
+            title="The tenant logo"
+            className="w-full h-full object-cover hover:scale-[3] hover:translate-x-3 hover:translate-y-3 rounded-full hover:rounded-sm transition-all duration-200 hover:border-[0.1px] border-blue-500 dark:border-lime-500 hover:shadow-lg bg-white dark:bg-gray-800"
+            style={{
+              width: "24px",
+              height: "24px",
+              objectFit: "cover",
+            }}
+          />
+        );
+      }
+
+      return null;
+    };
+
     return (
       <div>
         <IntroSection
-          content={tenantStatus.active.name}
-          title="The tenant name"
+          content={(
+            <div className="flex items-center gap-2">
+              <TenantLogo />
+              <span title="The tenant name">{tenantStatus.active.name}</span>
+            </div>
+          )}
           as="h3"
         >
           <Since />

@@ -15,7 +15,7 @@ export default function ColorsCard({ tenant }: Props) {
       minHeight="50vh"
       maxHeight="50vh"
       padding="sm"
-      width="6xl"
+      width="2xl"
       flex1
       group
     >

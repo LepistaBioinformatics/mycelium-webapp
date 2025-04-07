@@ -28,7 +28,10 @@ export interface TenantModalProps {
 }
 
 export default function TenantModal({ isOpen, onClose, onSuccess, tenant }: TenantModalProps) {
-  const { profile, getAccessTokenSilently } = useProfile();
+  const { hasEnoughPermissions, profile, getAccessTokenSilently } = useProfile({
+    shouldBeManager: true,
+  });
+
   const [isLoading, setIsLoading] = useState(false);
 
   const { parseHttpError } = useSuspenseError();
@@ -97,6 +100,10 @@ export default function TenantModal({ isOpen, onClose, onSuccess, tenant }: Tena
 
     handleLocalSuccess();
     setIsLoading(false);
+  }
+
+  if (!hasEnoughPermissions) {
+    return null;
   }
 
   return (

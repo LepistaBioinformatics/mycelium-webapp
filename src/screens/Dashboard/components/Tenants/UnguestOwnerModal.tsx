@@ -1,7 +1,5 @@
 import useProfile from "@/hooks/use-profile";
 import { components } from "@/services/openapi/mycelium-schema";
-import { MycPermission } from "@/types/MyceliumPermission";
-import { MycRole } from "@/types/MyceliumRole";
 import Modal from "@/components/ui/Modal";
 import Typography from "@/components/ui/Typography";
 import useSuspenseError from "@/hooks/use-suspense-error";
@@ -25,9 +23,8 @@ interface Props {
 
 export default function UnguestOwner({ isOpen, onClose, tenant, owner, onSuccess }: Props) {
   const { hasEnoughPermissions, getAccessTokenSilently } = useProfile({
-    roles: [MycRole.TenantOwner],
-    permissions: [MycPermission.Write],
     restrictSystemAccount: true,
+    tenantOwnerNeeded: [tenant?.id ?? ""],
   });
 
   const { parseHttpError } = useSuspenseError();

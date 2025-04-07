@@ -1,5 +1,4 @@
 import AuthorizedOr from "@/components/ui/AuthorizedOr";
-import { GoGear } from "react-icons/go";
 import PageBody from "@/components/ui/PageBody";
 import useProfile from "@/hooks/use-profile";
 import { MycPermission } from "@/types/MyceliumPermission";
@@ -10,7 +9,6 @@ import ControlPanelBreadcrumbItem from "../../ControlPanelBreadcrumbItem";
 import { SlOrganization } from "react-icons/sl";
 import useTenantDetails from "@/hooks/use-tenant-details";
 import { buildPath } from "@/services/openapi/mycelium-api";
-import Card from "@/components/ui/Card";
 import Typography from "@/components/ui/Typography";
 import CardsSection from "@/components/ui/CardsSection";
 import { formatDDMMYY } from "@/functions/format-dd-mm-yy";
@@ -206,11 +204,18 @@ export default function AdvancedManagement() {
       <CardsSection>
         <CardsSection.Header>
           <Typography as="h6" decoration="smooth">
-            Peoples on Tenant
+            About Tenant Administration
           </Typography>
         </CardsSection.Header>
 
         <CardsSection.Body>
+          {activeTenant && (
+            <LegalSettings
+              tenant={activeTenant}
+              mutateTenantStatus={mutateTenantStatus}
+            />
+          )}
+
           {activeTenant && (
             <OwnersCard
               tenant={activeTenant}
@@ -244,23 +249,6 @@ export default function AdvancedManagement() {
 
           {activeTenant && (
             <ColorsCard
-              tenant={activeTenant}
-              mutateTenantStatus={mutateTenantStatus}
-            />
-          )}
-        </CardsSection.Body>
-      </CardsSection>
-
-      <CardsSection>
-        <CardsSection.Header>
-          <Typography as="h6" decoration="smooth">
-            <span>Legal settings</span>
-          </Typography>
-        </CardsSection.Header>
-
-        <CardsSection.Body>
-          {activeTenant && (
-            <LegalSettings
               tenant={activeTenant}
               mutateTenantStatus={mutateTenantStatus}
             />

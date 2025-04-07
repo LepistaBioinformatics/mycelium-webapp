@@ -37,21 +37,37 @@ function Container({ prefix, content, title, children, as = "h2", prefixProps, c
 };
 
 const introItemStyles = cva("flex items-baseline flex-col xl:flex-row xl:flex-wrap gap-0 xl:gap-2", {
-  variants: {},
+  variants: {
+    fullWidth: {
+      true: "w-full justify-between",
+    },
+  },
+});
+
+const introItemLinkLineStyles = cva("h-[1px] border-b-2 border-dashed border-gray-300 dark:border-gray-700", {
+  variants: {
+    fullWidth: {
+      true: "flex-1",
+    },
+  },
 });
 
 interface IntroItemProps extends
   Omit<Base, "content">,
   VariantProps<typeof introItemStyles> {
   prefix: string;
+  linkLine?: boolean;
 }
 
-function IntroItem({ prefix, children, title, width, prefixProps, contentProps, ...props }: IntroItemProps) {
+function IntroItem({ prefix, children, title, width, prefixProps, contentProps, fullWidth, linkLine, ...props }: IntroItemProps) {
   return (
-    <div className={introItemStyles()} {...props}>
+    <div className={introItemStyles({ fullWidth })} {...props}>
       <Typography as="span" decoration="smooth" {...prefixProps}>
         {prefix}
       </Typography>
+      {linkLine && (
+        <div className={introItemLinkLineStyles({ fullWidth })} />
+      )}
       {children && (
         <Typography as="span" title={title} width={width} {...contentProps}>
           {children}

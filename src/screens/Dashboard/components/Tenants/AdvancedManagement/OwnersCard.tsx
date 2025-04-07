@@ -77,7 +77,7 @@ export default function OwnersCard({ tenant, mutateTenantStatus }: Props) {
         minHeight="50vh"
         maxHeight="80vh"
         padding="sm"
-        width="6xl"
+        width="2xl"
         flex1
         group
       >
@@ -103,7 +103,7 @@ export default function OwnersCard({ tenant, mutateTenantStatus }: Props) {
 
               return (
                 <MiniBox key={owner.id}>
-                  <div className="flex items-center justify-between group/item group/clip">
+                  <div className="flex items-center gap-2 justify-between group/item group/clip min-w-fit">
                     <IntroSection
                       content={ownerName}
                       title="Owner name"
@@ -125,12 +125,14 @@ export default function OwnersCard({ tenant, mutateTenantStatus }: Props) {
                       </IntroSection.Item>
                     </IntroSection>
 
-                    <button
-                      className="text-red-500 cursor-pointer hidden group-hover/item:block transition-opacity duration-300"
-                      onClick={() => handleUnguestOwnerModalOpen(owner)}
-                    >
-                      <FaRegTrashAlt />
-                    </button>
+                    <div className="cursor-pointer opacity-0 group-hover/item:opacity-100 transition-opacity duration-300">
+                      <button
+                        className="text-red-500"
+                        onClick={() => handleUnguestOwnerModalOpen(owner)}
+                      >
+                        <FaRegTrashAlt />
+                      </button>
+                    </div>
                   </div>
                 </MiniBox>
               )

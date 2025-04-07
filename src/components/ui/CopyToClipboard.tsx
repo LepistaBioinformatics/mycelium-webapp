@@ -7,18 +7,20 @@ const styles = cva("px-1", {
      * If true, the button will be hidden and only shown on hover
      */
     hidden: {
-      true: "hidden hover:block hover:text-blue-500 dark:hover:text-lime-400",
+      true: "hidden group-hover/clip:block",
     },
     groupHidden: {
-      true: "hidden group-hover/clip:block",
+      true: "opacity-0 group-hover/clip:opacity-100 transition-opacity duration-300",
     },
     inline: {
       true: "inline-block mt-1 hover:cursor-pointer",
     },
     size: {
+      xs: "text-xs",
       sm: "text-sm",
       md: "text-base",
       lg: "text-lg",
+      xl: "text-xl",
     },
   },
   defaultVariants: {

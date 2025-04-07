@@ -1,3 +1,4 @@
+import { GoUnverified } from "react-icons/go";
 import Typography from "@/components/ui/Typography";
 import { formatDDMMYY } from "@/functions/format-dd-mm-yy";
 import useProfile from "@/hooks/use-profile";
@@ -112,11 +113,12 @@ export default function AccountInvitations({ account, tenantId, setCurrentGuestU
               <MiniBox>
                 <IntroSection
                   content={(
-                    <div className="flex justify-between gap-2 items-center">
-                      {formatEmail(invitation.email)}
-                      <Typography as="small" decoration="smooth" title="If the invitation was verified by the guest user">
-                        {invitation.wasVerified ? "Verified" : "Unverified"}
-                      </Typography>
+                    <div className="flex flex-nowrap justify-between items-center mb-1">
+                      {!invitation.wasVerified && <GoUnverified
+                        className="text-red-500 mr-2"
+                        title="Invitation was not verified by the guest user"
+                      />}
+                      <span>{formatEmail(invitation.email)}</span>
                     </div>
                   )}
                   title="Invited email"
@@ -165,37 +167,40 @@ export default function AccountInvitations({ account, tenantId, setCurrentGuestU
                 </DetailsBox>
               </MiniBox>
             </Fragment>
-          ))}
-      </div>
+          ))
+        }
+      </div >
 
-      {invitations.count > pageSize && (
-        <div className="flex justify-center">
-          {showMaxInvitations
-            ? (
-              <Button
-                rounded
-                fullWidth
-                intent="link"
-                size="xs"
-                onClick={() => setShowMaxInvitations(false)}
-              >
-                <Typography as="small" decoration="underline">Show less</Typography>
-              </Button>
-            )
-            : (
-              <Button
-                rounded
-                fullWidth
-                intent="link"
-                size="xs"
-                onClick={() => setShowMaxInvitations(true)}
-              >
-                <Typography as="small" decoration="underline">Show all</Typography>
-              </Button>
-            )}
-        </div>
-      )}
-    </div>
+      {
+        invitations.count > pageSize && (
+          <div className="flex justify-center">
+            {showMaxInvitations
+              ? (
+                <Button
+                  rounded
+                  fullWidth
+                  intent="link"
+                  size="xs"
+                  onClick={() => setShowMaxInvitations(false)}
+                >
+                  <Typography as="small" decoration="underline">Show less</Typography>
+                </Button>
+              )
+              : (
+                <Button
+                  rounded
+                  fullWidth
+                  intent="link"
+                  size="xs"
+                  onClick={() => setShowMaxInvitations(true)}
+                >
+                  <Typography as="small" decoration="underline">Show all</Typography>
+                </Button>
+              )}
+          </div>
+        )
+      }
+    </div >
   )
 }
 
