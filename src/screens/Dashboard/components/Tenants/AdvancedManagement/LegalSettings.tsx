@@ -15,7 +15,7 @@ interface Props {
   mutateTenantStatus: () => void,
 }
 
-export default function LegalSettings({ tenant }: Props) {
+export default function LegalSettings({ tenant, mutateTenantStatus }: Props) {
   const [isEditMetadataModalOpen, setIsEditMetadataModalOpen] = useState(false);
   const [editMetadataKey, setEditMetadataKey] = useState<TenantMetaKey | null>(null);
   const [editMetadataValue, setEditMetadataValue] = useState<string | null>(null);
@@ -25,20 +25,37 @@ export default function LegalSettings({ tenant }: Props) {
   });
 
   const handleEditMetadata = (key: TenantMetaKey, value: string) => {
+    console.log("key", key);
+    console.log("value", value);
     setEditMetadataKey(key);
     setEditMetadataValue(value);
     setIsEditMetadataModalOpen(true);
   }
 
-  const frrWithType = useMemo(() => {
+  const handleOnSuccess = () => {
+    setIsEditMetadataModalOpen(false);
+    setEditMetadataKey(null);
+    setEditMetadataValue(null);
+    mutateTenantStatus();
+  }
+
+  const handleOnClose = () => {
+    setIsEditMetadataModalOpen(false);
+    setEditMetadataKey(null);
+    setEditMetadataValue(null);
+    mutateTenantStatus();
+  }
+
+  const frr = useMemo(() => {
     if (!tenant?.meta) return null;
 
-    const frr = tenant?.meta?.["federal_revenue_register"];
-    const frrType = tenant?.meta?.["federal_revenue_register_type"];
+    return tenant?.meta?.["federal_revenue_register"];
+  }, [tenant?.meta]);
 
-    if (!frr || !frrType) return null;
+  const frrType = useMemo(() => {
+    if (!tenant?.meta) return null;
 
-    return `${frr} (${frrType})`;
+    return tenant?.meta?.["federal_revenue_register_type"];
   }, [tenant?.meta]);
 
   const country = useMemo(() => {
@@ -89,6 +106,23 @@ export default function LegalSettings({ tenant }: Props) {
     />
   );
 
+  const Set = ({ key, value, children }: { key: TenantMetaKey, value: string } & BaseProps) => (
+    <Typography
+      as="span"
+      decoration="thin"
+      width="xxs"
+      truncate
+    >
+      <span
+        className="lg:text-end gap-1"
+        onDoubleClick={() => handleEditMetadata(key, value)}
+        title="Double click to edit"
+      >
+        {children}
+      </span>
+    </Typography>
+  );
+
   return (
     <>
       <Card
@@ -118,9 +152,20 @@ export default function LegalSettings({ tenant }: Props) {
               fullWidth
               linkLine
             >
-              {frrWithType
-                ? <span>{frrWithType}</span>
-                : <NotSet metadataKey="federal_revenue_register" value={frrWithType ?? ""} />}
+              {frr
+                ? <Set key="federal_revenue_register" value={frr ?? ""}>{frr}</Set>
+                : <NotSet metadataKey="federal_revenue_register" value={frr ?? ""} />}
+            </IntroSection.Item>
+
+            <IntroSection.Item
+              prefix="FRR Type"
+              title="Federal Revenue Register Type"
+              fullWidth
+              linkLine
+            >
+              {frrType
+                ? <Set key="federal_revenue_register_type" value={frrType ?? ""}>{frrType}</Set>
+                : <NotSet metadataKey="federal_revenue_register_type" value={frrType ?? ""} />}
             </IntroSection.Item>
 
             <IntroSection.Item
@@ -130,7 +175,7 @@ export default function LegalSettings({ tenant }: Props) {
               linkLine
             >
               {country
-                ? <span>{country}</span>
+                ? <Set key="country" value={country ?? ""}>{country}</Set>
                 : <NotSet metadataKey="country" value={country ?? ""} />}
             </IntroSection.Item>
 
@@ -141,7 +186,7 @@ export default function LegalSettings({ tenant }: Props) {
               linkLine
             >
               {state
-                ? <span>{state}</span>
+                ? <Set key="state" value={state ?? ""}>{state}</Set>
                 : <NotSet metadataKey="state" value={state ?? ""} />}
             </IntroSection.Item>
 
@@ -152,7 +197,7 @@ export default function LegalSettings({ tenant }: Props) {
               linkLine
             >
               {city
-                ? <span>{city}</span>
+                ? <Set key="city" value={city ?? ""}>{city}</Set>
                 : <NotSet metadataKey="city" value={city ?? ""} />}
             </IntroSection.Item>
 
@@ -161,9 +206,13 @@ export default function LegalSettings({ tenant }: Props) {
               title="Address 1"
               fullWidth
               linkLine
+              contentProps={{
+                truncate: true,
+                className: "max-w-[150px] text-end whitespace-nowrap truncate",
+              }}
             >
               {address1
-                ? <span>{address1}</span>
+                ? <Set key="address1" value={address1 ?? ""}>{address1}</Set>
                 : <NotSet metadataKey="address1" value={address1 ?? ""} />}
             </IntroSection.Item>
 
@@ -174,7 +223,7 @@ export default function LegalSettings({ tenant }: Props) {
               linkLine
             >
               {address2
-                ? <span>{address2}</span>
+                ? <Set key="address2" value={address2 ?? ""}>{address2}</Set>
                 : <NotSet metadataKey="address2" value={address2 ?? ""} />}
             </IntroSection.Item>
 
@@ -185,7 +234,7 @@ export default function LegalSettings({ tenant }: Props) {
               linkLine
             >
               {zipCode
-                ? <span>{zipCode}</span>
+                ? <Set key="zip_code" value={zipCode ?? ""}>{zipCode}</Set>
                 : <NotSet metadataKey="zip_code" value={zipCode ?? ""} />}
             </IntroSection.Item>
           </IntroSection>
@@ -195,12 +244,8 @@ export default function LegalSettings({ tenant }: Props) {
       {tenant.id && (
         <EditMetadataModal
           isOpen={isEditMetadataModalOpen}
-          onClose={() => setIsEditMetadataModalOpen(false)}
-          onSuccess={() => {
-            setIsEditMetadataModalOpen(false);
-            setEditMetadataKey(null);
-            setEditMetadataValue(null);
-          }}
+          onClose={handleOnClose}
+          onSuccess={handleOnSuccess}
           tenantId={tenant.id}
           editMetadataKey={editMetadataKey}
           editMetadataValue={editMetadataValue}

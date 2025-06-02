@@ -87,7 +87,7 @@ export default function ManagersCard({ tenant, mutateTenantStatus }: Props) {
             title="Peples listed here contains would perform management actions on the tenant"
           >
             <div className="flex items-center gap-2">
-              <span>Management account invitations</span>
+              <span>Managers</span>
               <GoGear
                 title="Guest to management account"
                 className="cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-blue-500 dark:text-lime-500"

@@ -175,7 +175,7 @@ export default function AdvancedManagement() {
                 prefix="created at"
                 title="Tenant created at"
               >
-                {formatDDMMYY(new Date(activeTenant?.created))}
+                {formatDDMMYY(new Date(activeTenant?.created), true)}
               </IntroSection.Item>
             )}
 
@@ -184,7 +184,7 @@ export default function AdvancedManagement() {
                 prefix="updated at"
                 title="Tenant updated at"
               >
-                {formatDDMMYY(new Date(activeTenant?.updated))}
+                {formatDDMMYY(new Date(activeTenant?.updated), true)}
               </IntroSection.Item>
             )}
           </IntroSection>
@@ -204,7 +204,7 @@ export default function AdvancedManagement() {
       <CardsSection>
         <CardsSection.Header>
           <Typography as="h6" decoration="smooth">
-            About Tenant Administration
+            Legal Settings and People's
           </Typography>
         </CardsSection.Header>
 
@@ -235,7 +235,7 @@ export default function AdvancedManagement() {
       <CardsSection>
         <CardsSection.Header>
           <Typography as="h6" decoration="smooth">
-            <span>Customize tenant</span>
+            <span>Customization</span>
           </Typography>
         </CardsSection.Header>
 

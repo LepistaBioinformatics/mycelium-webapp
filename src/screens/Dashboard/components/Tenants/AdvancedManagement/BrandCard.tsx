@@ -225,8 +225,8 @@ export default function BrandCard({ tenant, mutateTenantStatus }: Props) {
                 alt="Preview"
                 className="w-full h-full object-cover"
                 style={{
-                  width: `${DIMENSIONS.WIDTH}px`,
-                  height: `${DIMENSIONS.HEIGHT}px`,
+                  width: "200px",
+                  height: "200px",
                   objectFit: "cover",
                   borderRadius: "10%",
                 }}

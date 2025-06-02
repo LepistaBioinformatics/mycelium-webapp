@@ -25,7 +25,7 @@ ReactDOM.createRoot(
             clientId={CLIENT_ID}
             authorizationParams={{
               redirect_uri: window.location.origin,
-              display: 'popup',
+              display: 'page',
               prompt: 'login',
               scope: SCOPE,
               response_type: 'code',

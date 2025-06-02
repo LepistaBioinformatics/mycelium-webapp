@@ -8,7 +8,7 @@ interface Base extends BaseProps,
   content: React.ReactNode;
   title?: string | any;
   prefixProps?: ComponentProps<typeof Typography>;
-  contentProps?: ComponentProps<typeof Typography>;
+  contentProps?: ComponentProps<typeof Typography> & { className?: string };
 }
 
 const containerStyles = cva("flex flex-col gap-3 xl:gap-0", {
