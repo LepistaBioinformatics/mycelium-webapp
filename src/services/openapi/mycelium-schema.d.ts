@@ -1451,6 +1451,29 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/adm/svc/tools": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List routes by service
+         * @description This function is restricted to the GatewayManager users. List routes by
+         *     service name or service id.
+         *
+         *
+         */
+        get: operations["list_discoverable_services_url"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/health": {
         parameters: {
             query?: never;
@@ -2055,9 +2078,62 @@ export interface components {
         HashMap: {
             [key: string]: string;
         };
-        HealthCheckConfig: {
-            path: string;
-            healthResponseCodes: number[];
+        /** @description The health status of the service
+         *
+         *     The status should be Unknown, Healthy or Unhealthy. At the startup of the
+         *     service, the status should be Unknown. When the health check is successful,
+         *     the status should be Healthy. When the health check is not successful, the
+         *     status should be Unhealthy.
+         *      */
+        HealthStatus: "unknown" | {
+            /** @description The health status is healthy
+             *      */
+            healthy: {
+                /**
+                 * Format: date-time
+                 * @description The timestamp for the last health check
+                 *
+                 */
+                checkedAt: string;
+            };
+        } | {
+            /** @description The health status is fully unhealthy
+             *      */
+            unhealthy: {
+                /**
+                 * Format: date-time
+                 * @description The timestamp for the last health check
+                 *
+                 */
+                checkedAt: string;
+                /**
+                 * Format: int32
+                 * @description The number of attempts with unhealthy status
+                 *
+                 */
+                attempts: number;
+                /** @description Unhealthy instances
+                 *      */
+                unhealthyInstances: components["schemas"]["UnhealthyInstance"][];
+            };
+        } | {
+            unavailable: {
+                /**
+                 * Format: date-time
+                 * @description The timestamp for the last health check
+                 *
+                 */
+                checkedAt: string;
+                /**
+                 * Format: int32
+                 * @description The number of attempts with unavailable status
+                 *
+                 */
+                attempts: number;
+                /** @description The error message
+                 *      */
+                errorMessage: string;
+            };
         };
         HttpJsonResponse: {
             msg?: string | null;
@@ -2166,6 +2242,8 @@ export interface components {
         ListGuestRolesParams: {
             /** @description The name of the guest role. */
             name?: string | null;
+            /** @description The slug of the guest role. */
+            slug?: string | null;
             /** @description If it is a system role. */
             system?: boolean | null;
         };
@@ -2186,12 +2264,38 @@ export interface components {
             /** Format: uuid */
             id?: string | null;
             name?: string | null;
-            includeServiceDetails?: boolean | null;
         };
         ListServicesParams: {
             /** Format: uuid */
             id?: string | null;
             name?: string | null;
+        };
+        ListServicesResponse: {
+            /** @description Description
+             *
+             *     The description of the service.
+             *      */
+            description: string;
+            /** @description The contexts
+             *
+             *     The contexts of the service. This key snould include the context where
+             *     the service should run, including authentication and authorization
+             *     information.
+             *      */
+            contexts: components["schemas"]["Tool"][];
+            /**
+             * Format: date-time
+             * @description The last updated date
+             *
+             *     The last updated date of the service.
+             *
+             */
+            lastUpdated?: string | null;
+            /** @description A list of tools
+             *
+             *     A list of tools that are discoverable by the service.
+             *      */
+            tools: components["schemas"]["Tool"][];
         };
         ListSubscriptionAccountParams: {
             term?: string | null;
@@ -2422,17 +2526,87 @@ export interface components {
                 /**
                  * Format: uuid
                  * @description The service id
+                 *
+                 *     The id of the service. If the id is not provided, the service will be
+                 *     generated using the name of the service.
+                 *
                  */
-                id?: string | null;
-                /** @description The service unique name */
+                id: string;
+                /** @description The service unique name
+                 *
+                 *     The name of the service. The name should be unique and is used to
+                 *     identify the service and call it from the gateway url path.
+                 *      */
                 name: string;
-                /** @description The service host */
-                host: string;
-                healthCheck?: null | components["schemas"]["HealthCheckConfig"];
-                /** @description The service routes */
-                routes: components["schemas"]["UntaggedChildren_Route_String"];
-                /** @description The service secrets */
+                /** @description The service host
+                 *
+                 *     The host of the service. The host should include the port number. It
+                 *     can be a single host or a vector of hosts.
+                 *      */
+                host: components["schemas"]["ServiceHost"];
+                /** @description The service protocol
+                 *
+                 *     The protocol of the service.
+                 *      */
+                protocol?: components["schemas"]["Protocol"];
+                /** @description The service routes
+                 *
+                 *     The routes of the service.
+                 *      */
+                routes: components["schemas"]["Route"][];
+                /** @description The health status of the service
+                 *      */
+                healthStatus: components["schemas"]["HealthStatus"];
+                /** @description The service health check configuration
+                 *
+                 *     The health check configuration for the service.
+                 *      */
+                healthCheckPath: string;
+                /** @description The service discoverable
+                 *
+                 *     When true, the service will be discovered by LLM agents.
+                 *      */
+                discoverable?: boolean | null;
+                serviceType?: null | components["schemas"]["ServiceType"];
+                /** @description If is a context api
+                 *
+                 *     If is a context api, the service will be discovered by LLM agents.
+                 *      */
+                isContextApi?: boolean | null;
+                /** @description The service capabilities
+                 *
+                 *     Optional together with discoverable field. The capabilities of the
+                 *     service.
+                 *      */
+                capabilities?: string[] | null;
+                /** @description The service description
+                 *
+                 *     Optional together with discoverable field. The description of the
+                 *     service. The description should be used during the service discovery by
+                 *     LLM agents.
+                 *      */
+                description?: string | null;
+                /** @description The service openapi path
+                 *
+                 *     Optional together with discoverable field. The path to the openapi.json
+                 *     file. The file should be used for external clients to discover the
+                 *     service. Is is used for the service discovery by LLM agents.
+                 *      */
+                openapiPath?: string | null;
+                /** @description The service secrets
+                 *
+                 *     The secrets of the service. Secrets are used to authenticate the api
+                 *     gateway at the downstream service. Individual routes can request a
+                 *     specific secret of this secrets vector.
+                 *      */
                 secrets?: components["schemas"]["ServiceSecret"][] | null;
+                /** @description The allowed sources
+                 *
+                 *     A list of sources with permissions to access the downstream service.
+                 *     Values can be a domain name, ip address, a cidr block or a wildcard
+                 *     domain name.
+                 *      */
+                allowedSources?: string[] | null;
             };
         } | {
             id: string;
@@ -2556,15 +2730,11 @@ export interface components {
             /** @description The route service */
             service: components["schemas"]["Parent_Service_String"];
             /** @description The route name */
-            group: components["schemas"]["RouteType"];
+            securityGroup: components["schemas"]["SecurityGroup"];
             /** @description The route description */
             methods: components["schemas"]["HttpMethod"][];
             /** @description The route url */
             path: string;
-            /** @description The route protocol */
-            protocol: components["schemas"]["Protocol"];
-            /** @description The route is active */
-            allowedSources?: string[] | null;
             /** @description The route secret name if it exists */
             secretName?: string | null;
             /** @description The route without tls
@@ -2573,43 +2743,6 @@ export interface components {
              *     be send to the downstream service, if the route is not secure.
              *      */
             acceptInsecureRouting?: boolean | null;
-        };
-        RouteType: "public" | "authenticated" | "protected" | {
-            /** @description
-             *     Protect the route with the user profile filtered by roles
-             *      */
-            protectedByRoles: {
-                roles: string[];
-            };
-        } | {
-            /** @description
-             *     Protect the route with the user profile filtered by roles and
-             *     permissions
-             *      */
-            protectedByPermissionedRoles: {
-                permissionedRoles: [
-                    string,
-                    "read" | "write"
-                ][];
-            };
-        } | {
-            /** @description
-             *     Protect the route with service token associated to a specific role list
-             *      */
-            protectedByServiceTokenWithRole: {
-                roles: string[];
-            };
-        } | {
-            /** @description
-             *     Protect the route with service token associated to a specific role and
-             *     permissions
-             *      */
-            protectedByServiceTokenWithPermissionedRoles: {
-                permissionedRoles: [
-                    string,
-                    "read" | "write"
-                ][];
-            };
         };
         /** @description A secret resolver
          *
@@ -2701,6 +2834,43 @@ export interface components {
                 };
             };
         };
+        SecurityGroup: "public" | "authenticated" | "protected" | {
+            /** @description
+             *     Protect the route with the user profile filtered by roles
+             *      */
+            protectedByRoles: {
+                roles: string[];
+            };
+        } | {
+            /** @description
+             *     Protect the route with the user profile filtered by roles and
+             *     permissions
+             *      */
+            protectedByPermissionedRoles: {
+                permissionedRoles: [
+                    string,
+                    "read" | "write"
+                ][];
+            };
+        } | {
+            /** @description
+             *     Protect the route with service token associated to a specific role list
+             *      */
+            protectedByServiceTokenWithRole: {
+                roles: string[];
+            };
+        } | {
+            /** @description
+             *     Protect the route with service token associated to a specific role and
+             *     permissions
+             *      */
+            protectedByServiceTokenWithPermissionedRoles: {
+                permissionedRoles: [
+                    string,
+                    "read" | "write"
+                ][];
+            };
+        };
         /** @description The Upstream Service
          *
          *     The service is the upstream service that the route will proxy to.
@@ -2709,22 +2879,95 @@ export interface components {
             /**
              * Format: uuid
              * @description The service id
+             *
+             *     The id of the service. If the id is not provided, the service will be
+             *     generated using the name of the service.
+             *
              */
-            id?: string | null;
-            /** @description The service unique name */
+            id: string;
+            /** @description The service unique name
+             *
+             *     The name of the service. The name should be unique and is used to
+             *     identify the service and call it from the gateway url path.
+             *      */
             name: string;
-            /** @description The service host */
-            host: string;
-            healthCheck?: null | components["schemas"]["HealthCheckConfig"];
-            /** @description The service routes */
-            routes: components["schemas"]["UntaggedChildren_Route_String"];
-            /** @description The service secrets */
+            /** @description The service host
+             *
+             *     The host of the service. The host should include the port number. It
+             *     can be a single host or a vector of hosts.
+             *      */
+            host: components["schemas"]["ServiceHost"];
+            /** @description The service protocol
+             *
+             *     The protocol of the service.
+             *      */
+            protocol?: components["schemas"]["Protocol"];
+            /** @description The service routes
+             *
+             *     The routes of the service.
+             *      */
+            routes: components["schemas"]["Route"][];
+            /** @description The health status of the service
+             *      */
+            healthStatus: components["schemas"]["HealthStatus"];
+            /** @description The service health check configuration
+             *
+             *     The health check configuration for the service.
+             *      */
+            healthCheckPath: string;
+            /** @description The service discoverable
+             *
+             *     When true, the service will be discovered by LLM agents.
+             *      */
+            discoverable?: boolean | null;
+            serviceType?: null | components["schemas"]["ServiceType"];
+            /** @description If is a context api
+             *
+             *     If is a context api, the service will be discovered by LLM agents.
+             *      */
+            isContextApi?: boolean | null;
+            /** @description The service capabilities
+             *
+             *     Optional together with discoverable field. The capabilities of the
+             *     service.
+             *      */
+            capabilities?: string[] | null;
+            /** @description The service description
+             *
+             *     Optional together with discoverable field. The description of the
+             *     service. The description should be used during the service discovery by
+             *     LLM agents.
+             *      */
+            description?: string | null;
+            /** @description The service openapi path
+             *
+             *     Optional together with discoverable field. The path to the openapi.json
+             *     file. The file should be used for external clients to discover the
+             *     service. Is is used for the service discovery by LLM agents.
+             *      */
+            openapiPath?: string | null;
+            /** @description The service secrets
+             *
+             *     The secrets of the service. Secrets are used to authenticate the api
+             *     gateway at the downstream service. Individual routes can request a
+             *     specific secret of this secrets vector.
+             *      */
             secrets?: components["schemas"]["ServiceSecret"][] | null;
+            /** @description The allowed sources
+             *
+             *     A list of sources with permissions to access the downstream service.
+             *     Values can be a domain name, ip address, a cidr block or a wildcard
+             *     domain name.
+             *      */
+            allowedSources?: string[] | null;
         };
         ServiceGuestUserBody: components["schemas"]["Account"];
+        ServiceHost: string | string[];
         ServiceSecret: components["schemas"]["SecretResolver_HttpSecret"] & {
             name: string;
         };
+        /** @enum {string} */
+        ServiceType: "rest-api" | "unknown";
         StartPasswordResetBody: {
             email: string;
         };
@@ -2843,6 +3086,48 @@ export interface components {
         } | {
             urls: string[];
         };
+        Tool: {
+            /** @description The service unique name
+             *
+             *     The name of the service. The name should be unique and is used to
+             *     identify the service and call it from the gateway url path.
+             *      */
+            name: string;
+            /** @description The service description
+             *
+             *     Optional together with discoverable field. The description of the
+             *     service. The description should be used during the service discovery by
+             *     LLM agents.
+             *      */
+            description: string;
+            /** @description The service type
+             *
+             *     The type of the service.
+             *      */
+            toolType: components["schemas"]["ServiceType"];
+            /** @description If is a context api
+             *
+             *     If is a context api, the service will be discovered by LLM agents.
+             *      */
+            isContextApi: boolean;
+            /** @description The service capabilities
+             *
+             *     The capabilities of the service.
+             *      */
+            capabilities: string[];
+            /** @description The service openapi path
+             *
+             *     Optional together with discoverable field. The path to the openapi.json
+             *     file. The file should be used for external clients to discover the
+             *     service. Is is used for the service discovery by LLM agents.
+             *      */
+            openapiPath: string;
+            /** @description The service health status
+             *
+             *     The health status of the service.
+             *      */
+            healthStatus: components["schemas"]["HealthStatus"];
+        };
         Totp: "unknown" | "disabled" | {
             /** @description The TOTP when enabled
              *
@@ -2862,33 +3147,34 @@ export interface components {
         TotpUpdatingValidationBody: {
             token: string;
         };
-        UntaggedChildren_Route_String: {
-            /**
-             * Format: uuid
-             * @description The route id
-             */
-            id?: string | null;
-            /** @description The route service */
-            service: components["schemas"]["Parent_Service_String"];
-            /** @description The route name */
-            group: components["schemas"]["RouteType"];
-            /** @description The route description */
-            methods: components["schemas"]["HttpMethod"][];
-            /** @description The route url */
-            path: string;
-            /** @description The route protocol */
-            protocol: components["schemas"]["Protocol"];
-            /** @description The route is active */
-            allowedSources?: string[] | null;
-            /** @description The route secret name if it exists */
-            secretName?: string | null;
-            /** @description The route without tls
-             *
-             *     This field should be evaluated if the route should request a secret to
-             *     be send to the downstream service, if the route is not secure.
+        /** @description The unhealthy instance
+         *
+         *     The unhealthy instance is a single instance of the service that is
+         *     unhealthy.
+         *      */
+        UnhealthyInstance: {
+            /** @description The instance ID
              *      */
-            acceptInsecureRouting?: boolean | null;
-        }[] | string[];
+            host: string;
+            /**
+             * Format: int32
+             * @description The instance status code
+             *
+             */
+            statusCode: number;
+            /** @description The instance response body
+             *      */
+            responseBody?: string | null;
+            /** @description The error message
+             *      */
+            errorMessage?: string | null;
+            /**
+             * Format: date-time
+             * @description The timestamp for the last health check
+             *
+             */
+            checkedAt: string;
+        };
         UpdateAccountTagBody: {
             /** Format: uuid */
             accountId: string;
@@ -2993,7 +3279,7 @@ export interface components {
             secret?: null | components["schemas"]["HttpSecret"];
         };
         /** @enum {string} */
-        WebHookTrigger: "subscriptionAccount.created" | "userAccount.created";
+        WebHookTrigger: "subscriptionAccount.created" | "subscriptionAccount.updated" | "subscriptionAccount.deleted" | "userAccount.created" | "userAccount.updated" | "userAccount.deleted";
     };
     responses: {
         AzureLoginResponse: {
@@ -3049,6 +3335,40 @@ export interface components {
                     msg?: string | null;
                     code?: string | null;
                     body?: string | null;
+                };
+            };
+        };
+        ListServicesResponse: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": {
+                    /** @description Description
+                     *
+                     *     The description of the service.
+                     *      */
+                    description: string;
+                    /** @description The contexts
+                     *
+                     *     The contexts of the service. This key snould include the context where
+                     *     the service should run, including authentication and authorization
+                     *     information.
+                     *      */
+                    contexts: components["schemas"]["Tool"][];
+                    /**
+                     * Format: date-time
+                     * @description The last updated date
+                     *
+                     *     The last updated date of the service.
+                     *
+                     */
+                    lastUpdated?: string | null;
+                    /** @description A list of tools
+                     *
+                     *     A list of tools that are discoverable by the service.
+                     *      */
+                    tools: components["schemas"]["Tool"][];
                 };
             };
         };
@@ -4272,7 +4592,6 @@ export interface operations {
             query?: {
                 id?: string | null;
                 name?: string | null;
-                includeServiceDetails?: boolean | null;
             };
             header?: never;
             path?: never;
@@ -4387,6 +4706,8 @@ export interface operations {
             query?: {
                 /** @description The name of the guest role. */
                 name?: string | null;
+                /** @description The slug of the guest role. */
+                slug?: string | null;
                 /** @description If it is a system role. */
                 system?: boolean | null;
             };
@@ -5244,6 +5565,8 @@ export interface operations {
             query?: {
                 /** @description The name of the guest role. */
                 name?: string | null;
+                /** @description The slug of the guest role. */
+                slug?: string | null;
                 /** @description If it is a system role. */
                 system?: boolean | null;
             };
@@ -8251,6 +8574,63 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["HttpJsonResponse"];
                 };
+            };
+            /** @description Unauthorized. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Forbidden. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Unknown internal server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+        };
+    };
+    list_discoverable_services_url: {
+        parameters: {
+            query?: {
+                id?: string | null;
+                name?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Fetching success. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListServicesResponse"];
+                };
+            };
+            /** @description Not found. */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Unauthorized. */
             401: {

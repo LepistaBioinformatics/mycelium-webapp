@@ -1,7 +1,7 @@
 import { projectVariants } from "@/constants/shared-component-styles";
 import { cva, VariantProps } from "class-variance-authority";
 
-const { width, margin, padding } = projectVariants;
+const { width, margin, padding, gap } = projectVariants;
 
 const styles = cva("whitespace-normal", {
   variants: {
@@ -75,6 +75,15 @@ const styles = cva("whitespace-normal", {
     group: {
       true: "group",
     },
+    flex: {
+      true: "flex",
+      false: "inline",
+      row: "flex-row",
+      col: "flex-col",
+    },
+    gap: {
+      ...gap,
+    },
   },
   defaultVariants: {
     as: "p",
@@ -86,12 +95,12 @@ const styles = cva("whitespace-normal", {
     uppercase: false,
     highlight: false,
     group: false,
+    flex: false,
+    gap: 0,
   },
 });
 
-interface Props extends
-  BaseProps,
-  VariantProps<typeof styles> {
+interface Props extends BaseProps, VariantProps<typeof styles> {
   title?: string | any;
   alternativeColor?: string;
 }
@@ -112,6 +121,8 @@ export default function Typography({
   title,
   alternativeColor,
   group,
+  flex,
+  gap,
   ...props
 }: Props) {
   const Element = (as === "title" ? "h1" : as) || "p";
@@ -133,6 +144,8 @@ export default function Typography({
         truncate,
         nowrap,
         group,
+        flex,
+        gap,
         title: title ? true : false,
       })}
       style={{
