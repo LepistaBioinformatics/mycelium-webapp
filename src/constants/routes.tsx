@@ -119,14 +119,14 @@ const ROUTES = {
     icon: <MdWebhook />,
     position: 8,
   } as AppRoute,
-  SERVICES: {
+  /* SERVICES: {
     name: "Services",
     path: "/dashboard/services",
     element: <Services />,
     errorElement: <ErrorBoundary />,
     icon: <TbApi />,
     position: 9,
-  } as AppRoute,
+  } as AppRoute, */
   DISCOVERY: {
     name: "Discovery",
     path: "/dashboard/discovery",

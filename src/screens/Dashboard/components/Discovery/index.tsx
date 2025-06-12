@@ -96,10 +96,13 @@ export default function Discovery() {
 
             return (
               <ListItem key={operation.operationId}>
-                <div className="flex justify-between gap-3">
+                <div className="flex justify-between gap-0">
                   <Typography as="div">
-                    <div className="flex flex-col gap-3">
-                      <div className="flex gap-5">
+                    <div className="flex flex-col gap-2">
+                      <Typography decoration="semibold">
+                        {operation.operationId}
+                      </Typography>
+                      <div className="flex gap-5 items-center">
                         <OperationMethod method={operation.method} />
                         <FormattedPath
                           path={operation.path}
@@ -122,6 +125,14 @@ export default function Discovery() {
                     </Typography>
                     <Typography decoration="bold">{score}</Typography>
                   </div>
+                </div>
+
+                <div className="flex gap-2">
+                  {operation.operation.tags.map((tag) => (
+                    <span className="text-sm rounded-r-full border border-dashed border-indigo-700 dark:border-indigo-600 bg-indigo-300 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 px-2 mt-2 flex flex-col gap-2">
+                      {tag}
+                    </span>
+                  ))}
                 </div>
 
                 {operation?.operation?.requestBody && (
@@ -230,7 +241,7 @@ const ResolveReference = ({
  */
 const OperationMethod = ({ method }: { method: string }) => {
   const style = (className: string) =>
-    `${className} text-sm text-center font-bold rounded-md px-2 py-1 text-white border bg-opacity-50 min-w-[5rem]`;
+    `${className} text-sm text-center font-bold rounded-md px-2 py-0 text-white border bg-opacity-50 h-fit min-w-[5rem]`;
 
   switch (method) {
     case "GET":
@@ -278,37 +289,38 @@ const FormattedPath = ({
   path: string;
   parameters?: Parameter[];
 }) => {
-  const Part = ({ part, highlight }: { part: string; highlight: boolean }) => (
-    <span className={highlight ? "font-bold text-lime-500" : ""}>{part}</span>
-  );
-
   const formattedPath = useMemo(() => {
-    let composedPathParts = [];
+    let composedPathParts: {
+      part: string;
+      param?: Parameter;
+      isService?: boolean;
+    }[] = [];
 
-    for (const part of path.split("/")) {
+    path.split("/").forEach((part, index) => {
+      const isService = index === 0;
+
       if (part.startsWith("{") && part.endsWith("}")) {
         const paramName = part.slice(1, -1);
         const param = parameters?.find((param) => param.name === paramName);
 
         composedPathParts.push({
+          isService,
           param,
           part,
         });
-
-        continue;
+      } else {
+        composedPathParts.push({ part, param: undefined, isService });
       }
-
-      composedPathParts.push({ part, param: undefined });
-    }
+    });
 
     return composedPathParts;
   }, [path, parameters]);
 
   return (
-    <Typography as="div" decoration="semibold" nowrap>
+    <Typography as="div" nowrap>
       <div className="flex flex-row gap-0">
         {formattedPath.map((child, index) => {
-          const { part, param } = child;
+          const { part, param, isService } = child;
 
           return (
             <span key={index} className="flex gap-0">
@@ -327,10 +339,14 @@ const FormattedPath = ({
                     </Typography>
                   }
                 >
-                  <Part part={param?.name || ""} highlight={true} />
+                  <Part
+                    part={param?.name || ""}
+                    highlight={true}
+                    isService={isService}
+                  />
                 </Tooltip>
               ) : (
-                <Part part={part} highlight={false} />
+                <Part part={part} highlight={false} isService={isService} />
               )}
             </span>
           );
@@ -338,4 +354,21 @@ const FormattedPath = ({
       </div>
     </Typography>
   );
+};
+
+const Part = ({
+  part,
+  highlight,
+  isService,
+}: {
+  part: string;
+  highlight: boolean;
+  isService?: boolean;
+}) => {
+  let className = "font-bold";
+
+  if (isService) className += " text-red-500";
+  if (highlight) className += " text-blue-500 dark:text-lime-400 cursor-help";
+
+  return <span className={className}>{part}</span>;
 };
