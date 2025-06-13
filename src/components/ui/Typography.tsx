@@ -95,8 +95,6 @@ const styles = cva("whitespace-normal", {
     uppercase: false,
     highlight: false,
     group: false,
-    flex: false,
-    gap: 0,
   },
 });
 

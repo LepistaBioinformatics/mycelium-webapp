@@ -18,9 +18,9 @@ import {
 import { useMemo } from "react";
 import ListItem from "@/components/ui/ListItem";
 import { components } from "@/services/openapi/mycelium-schema";
-import { Tooltip } from "flowbite-react";
 import DetailsBox from "@/components/ui/DetailsBox";
 import { GetSchema } from "@/types/GetSchema";
+import CopyToClipboard from "@/components/ui/CopyToClipboard";
 
 type SecurityGroup = components["schemas"]["SecurityGroup"];
 
@@ -99,14 +99,22 @@ export default function Discovery() {
                 <div className="flex justify-between gap-0">
                   <Typography as="div">
                     <div className="flex flex-col gap-2">
-                      <Typography decoration="semibold">
-                        {operation.operationId}
-                      </Typography>
-                      <div className="flex gap-5 items-center">
+                      <div className="flex gap-3 items-center">
                         <OperationMethod method={operation.method} />
                         <FormattedPath
                           path={operation.path}
                           parameters={operation.operation?.parameters}
+                        />
+                      </div>
+
+                      <div className="flex gap-1 group/clip">
+                        <Typography decoration="smooth" title="Operation ID">
+                          {operation.operationId}
+                        </Typography>
+                        <CopyToClipboard
+                          text={operation.operationId}
+                          groupHidden
+                          inline
                         />
                       </div>
 
@@ -318,39 +326,29 @@ const FormattedPath = ({
 
   return (
     <Typography as="div" nowrap>
-      <div className="flex flex-row gap-0">
+      <div className="flex flex-row gap-1 group/clip">
         {formattedPath.map((child, index) => {
           const { part, param, isService } = child;
 
           return (
-            <span key={index} className="flex gap-0">
+            <span key={index} className="flex gap-1">
               {index > 0 && <span className="text-slate-500">/</span>}
 
               {param ? (
-                <Tooltip
-                  content={
-                    <Typography as="div" flex gap={2}>
-                      <Typography as="span" decoration="semibold">
-                        {param?.name}
-                      </Typography>
-                      <Typography as="span" decoration="smooth">
-                        {param?.description}
-                      </Typography>
-                    </Typography>
-                  }
-                >
-                  <Part
-                    part={param?.name || ""}
-                    highlight={true}
-                    isService={isService}
-                  />
-                </Tooltip>
+                <Part
+                  part={param?.name || ""}
+                  highlight={true}
+                  isService={isService}
+                  title={`${param?.name} - ${param?.description}`}
+                />
               ) : (
                 <Part part={part} highlight={false} isService={isService} />
               )}
             </span>
           );
         })}
+
+        <CopyToClipboard text={path} groupHidden />
       </div>
     </Typography>
   );
@@ -360,15 +358,21 @@ const Part = ({
   part,
   highlight,
   isService,
+  title,
 }: {
   part: string;
   highlight: boolean;
   isService?: boolean;
+  title?: string;
 }) => {
   let className = "font-bold";
 
   if (isService) className += " text-red-500";
   if (highlight) className += " text-blue-500 dark:text-lime-400 cursor-help";
 
-  return <span className={className}>{part}</span>;
+  return (
+    <span className={className} title={title}>
+      {part}
+    </span>
+  );
 };

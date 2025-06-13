@@ -40,57 +40,66 @@ enum OpenedSection {
 
 export default function AccountDetails({ isOpen, onClose, accountId }: Props) {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [isGuestToAccountModalOpen, setIsGuestToAccountModalOpen] = useState(false);
+  const [isGuestToAccountModalOpen, setIsGuestToAccountModalOpen] =
+    useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [isUpgradeOrDowngradeModalOpen, setIsUpgradeOrDowngradeModalOpen] = useState(false);
-  const [currentGuestUser, setCurrentGuestUser] = useState<GuestUser | null>(null);
+  const [isUpgradeOrDowngradeModalOpen, setIsUpgradeOrDowngradeModalOpen] =
+    useState(false);
+  const [currentGuestUser, setCurrentGuestUser] = useState<GuestUser | null>(
+    null
+  );
   const [isUnInviteModalOpen, setIsUnInviteModalOpen] = useState(false);
 
   const { profile, getAccessTokenSilently } = useProfile();
 
   const { parseHttpError } = useSuspenseError();
 
-  const [openedSection, setOpenedSection] = useState<OpenedSection>(OpenedSection.Details);
+  const [openedSection, setOpenedSection] = useState<OpenedSection>(
+    OpenedSection.Details
+  );
 
   const { tenantInfo } = useSelector((state: RootState) => state.tenant);
 
-  const handleToggleSection = (section: OpenedSection, state: "open" | "closed") => {
+  const handleToggleSection = (
+    section: OpenedSection,
+    state: "open" | "closed"
+  ) => {
     if (state === "open") setOpenedSection(section);
-  }
+  };
 
   const handleCloseGuestToAccountModal = () => {
     setIsGuestToAccountModalOpen(false);
-  }
+  };
 
   const handleCloseDeleteModal = () => {
     setIsDeleteModalOpen(false);
-  }
+  };
 
   const handleCloseUnInviteModal = () => {
     setIsUnInviteModalOpen(false);
-  }
+  };
 
   const handleCloseEditModal = () => {
     setIsEditModalOpen(false);
     mutateAccount(account, { rollbackOnError: true });
-  }
+  };
 
   const handleSuccess = () => {
     handleCloseEditModal();
-  }
+  };
 
   const handleCloseUpgradeOrDowngradeModal = () => {
     setIsUpgradeOrDowngradeModalOpen(false);
-  }
+  };
 
   const handleOpenUnInviteModal = (guestUser: GuestUser) => {
     setIsUnInviteModalOpen(true);
     setCurrentGuestUser(guestUser);
-  }
+  };
 
   const { data: account, mutate: mutateAccount } = useSWR<Account>(
     buildPath("/adm/rs/subscriptions-manager/accounts/{account_id}", {
-      path: { account_id: accountId }
+      path: { account_id: accountId },
     }),
     async (url: string) => {
       const token = await getAccessTokenSilently();
@@ -98,8 +107,8 @@ export default function AccountDetails({ isOpen, onClose, accountId }: Props) {
       return fetch(url, {
         headers: {
           Authorization: `Bearer ${token}`,
-          [TENANT_ID_HEADER]: tenantInfo?.id ?? ""
-        }
+          [TENANT_ID_HEADER]: tenantInfo?.id ?? "",
+        },
       })
         .then(parseHttpError)
         .catch((err) => {
@@ -124,9 +133,9 @@ export default function AccountDetails({ isOpen, onClose, accountId }: Props) {
     if (typeof accountType === "string") return false;
 
     if (
-      ("subscription" in accountType) ||
-      ("tenantManager" in accountType) ||
-      ("roleAssociated" in accountType)
+      "subscription" in accountType ||
+      "tenantManager" in accountType ||
+      "roleAssociated" in accountType
     ) {
       return true;
     }
@@ -141,16 +150,17 @@ export default function AccountDetails({ isOpen, onClose, accountId }: Props) {
     if ("ids" in account.owners) {
       const accountOwners = account.owners.ids;
 
-      if (accountOwners.includes(
-        profile?.owners.find((owner) => owner.isPrincipal)?.id ?? ""
-      )) {
-
+      if (
+        accountOwners.includes(
+          profile?.owners.find((owner) => owner.isPrincipal)?.id ?? ""
+        )
+      ) {
         if (accountOwners.length === 1) {
           return "You";
         } else {
-          return <>You and {accountOwners.length - 1} other</>
+          return <>You and {accountOwners.length - 1} other</>;
         }
-      };
+      }
 
       return null;
     }
@@ -164,11 +174,7 @@ export default function AccountDetails({ isOpen, onClose, accountId }: Props) {
   }, [account]);
 
   return (
-    <SideCurtain
-      open={isOpen}
-      title="Account details"
-      handleClose={onClose}
-    >
+    <SideCurtain open={isOpen} title="Account details" handleClose={onClose}>
       {account && (
         <IntroSection
           prefix="Seeing"
@@ -177,10 +183,7 @@ export default function AccountDetails({ isOpen, onClose, accountId }: Props) {
         >
           {tenantInfo?.id && showTenantInfo && (
             <>
-              <IntroSection.Item
-                prefix="from"
-                title="Tenant name"
-              >
+              <IntroSection.Item prefix="from" title="Tenant name">
                 {tenantInfo.name}
               </IntroSection.Item>
 
@@ -200,42 +203,58 @@ export default function AccountDetails({ isOpen, onClose, accountId }: Props) {
         onToggle={(state) => handleToggleSection(OpenedSection.Details, state)}
       >
         <DetailsBox.Summary>
-          <Typography as="span">
-            Details
-          </Typography>
+          <Typography as="span">Details</Typography>
         </DetailsBox.Summary>
 
         <DetailsBox.Content minHeight="30">
           <div className="flex flex-col gap-5">
-            <div>
-              <Typography as="span" decoration="smooth">Slug</Typography>
+            <div className="flex gap-2 items-center">
+              <Typography as="span" decoration="smooth">
+                Slug
+              </Typography>
               <Typography as="p">{account?.slug}</Typography>
             </div>
 
-            <div>
-              <Typography as="span" decoration="smooth">Created</Typography>
-              <Typography as="p">{formatDDMMYY(new Date(account?.created ?? ""), true)}</Typography>
+            <div className="flex gap-2 items-center">
+              <Typography as="span" decoration="smooth">
+                Created
+              </Typography>
+              <Typography as="p">
+                {formatDDMMYY(new Date(account?.created ?? ""), true)}
+              </Typography>
             </div>
 
-            <div>
-              <Typography as="span" decoration="smooth">Last updated</Typography>
-              <Typography as="p">{formatDDMMYY(new Date(account?.updated ?? ""), true)}</Typography>
+            <div className="flex gap-2 items-center">
+              <Typography as="span" decoration="smooth">
+                Last updated
+              </Typography>
+              <Typography as="p">
+                {formatDDMMYY(new Date(account?.updated ?? ""), true)}
+              </Typography>
             </div>
 
-            <div>
-              <Typography as="span" decoration="smooth">Status</Typography>
-              <Typography as="p">{camelToHumanText(account?.verboseStatus ?? "")}</Typography>
+            <div className="flex gap-2 items-center">
+              <Typography as="span" decoration="smooth">
+                Status
+              </Typography>
+              <Typography as="p">
+                {camelToHumanText(account?.verboseStatus ?? "")}
+              </Typography>
             </div>
 
             {owners && (
-              <div>
-                <Typography as="span" decoration="smooth">Owners</Typography>
+              <div className="flex gap-2 items-center">
+                <Typography as="span" decoration="smooth">
+                  Owners
+                </Typography>
                 <Typography as="p">{owners}</Typography>
               </div>
             )}
 
-            <div>
-              <Typography as="span" decoration="smooth">Account ID</Typography>
+            <div className="flex gap-2 items-center">
+              <Typography as="span" decoration="smooth">
+                Account ID
+              </Typography>
               <Typography as="div">
                 <span className="flex items-center gap-2 group group/clip">
                   {account?.id}
@@ -250,19 +269,21 @@ export default function AccountDetails({ isOpen, onClose, accountId }: Props) {
       {includeInvitationsFeature && (
         <DetailsBox
           open={openedSection === OpenedSection.Invitations}
-          onToggle={(state) => handleToggleSection(OpenedSection.Invitations, state)}
+          onToggle={(state) =>
+            handleToggleSection(OpenedSection.Invitations, state)
+          }
         >
           <DetailsBox.Summary>
-            <Typography as="span">
-              Invitations
-            </Typography>
+            <Typography as="span">Invitations</Typography>
           </DetailsBox.Summary>
 
           {openedSection === OpenedSection.Invitations && (
             <DetailsBox.Content minHeight="50">
               {tenantInfo?.id && account && (
                 <div className="flex flex-col gap-1">
-                  <Typography as="span" decoration="smooth">Invitations</Typography>
+                  <Typography as="span" decoration="smooth">
+                    Invitations
+                  </Typography>
                   <AccountInvitations
                     account={account}
                     tenantId={tenantInfo?.id}
@@ -277,12 +298,12 @@ export default function AccountDetails({ isOpen, onClose, accountId }: Props) {
 
       <DetailsBox
         open={openedSection === OpenedSection.AdvancedActions}
-        onToggle={(state) => handleToggleSection(OpenedSection.AdvancedActions, state)}
+        onToggle={(state) =>
+          handleToggleSection(OpenedSection.AdvancedActions, state)
+        }
       >
         <DetailsBox.Summary>
-          <Typography as="span">
-            Advanced actions
-          </Typography>
+          <Typography as="span">Advanced actions</Typography>
         </DetailsBox.Summary>
 
         <DetailsBox.Content minHeight="50">
@@ -290,12 +311,11 @@ export default function AccountDetails({ isOpen, onClose, accountId }: Props) {
             <Banner intent="info">
               <div className="flex justify-between gap-2 my-5">
                 <div className="flex flex-col gap-2">
-                  <Typography as="span">
-                    Invite user to account
-                  </Typography>
+                  <Typography as="span">Invite user to account</Typography>
 
                   <Typography as="small" decoration="smooth">
-                    Guest users should be invited to the account with specific role.
+                    Guest users should be invited to the account with specific
+                    role.
                   </Typography>
                 </div>
 
@@ -314,9 +334,7 @@ export default function AccountDetails({ isOpen, onClose, accountId }: Props) {
           <Banner intent="info">
             <div className="flex justify-between gap-2 my-5">
               <div className="flex flex-col gap-2">
-                <Typography as="span">
-                  Edit account name
-                </Typography>
+                <Typography as="span">Edit account name</Typography>
 
                 <Typography as="small" decoration="smooth">
                   Edit the account name.
@@ -324,10 +342,7 @@ export default function AccountDetails({ isOpen, onClose, accountId }: Props) {
               </div>
 
               <div>
-                <Button
-                  rounded
-                  onClick={() => setIsEditModalOpen(true)}
-                >
+                <Button rounded onClick={() => setIsEditModalOpen(true)}>
                   Edit
                 </Button>
               </div>
@@ -338,14 +353,11 @@ export default function AccountDetails({ isOpen, onClose, accountId }: Props) {
             <Banner intent="info">
               <div className="flex justify-between gap-2 my-5">
                 <div className="flex flex-col gap-2">
-                  <Typography as="span">
-                    Update account status
-                  </Typography>
+                  <Typography as="span">Update account status</Typography>
 
                   <Typography as="small" decoration="smooth" width="sm">
                     Upgrade or downgrade the account to a different status.
                     Choices should be one of the following:
-
                     <ul className="list-disc list-inside mt-2">
                       {["user", "staff", "manager"]
                         .filter((status) => status !== account?.accountType)
@@ -371,9 +383,7 @@ export default function AccountDetails({ isOpen, onClose, accountId }: Props) {
           <Banner intent="error">
             <div className="flex justify-between gap-2 my-5">
               <div className="flex flex-col gap-2">
-                <Typography as="span">
-                  Delete account
-                </Typography>
+                <Typography as="span">Delete account</Typography>
 
                 <Typography as="small" decoration="smooth">
                   This action cannot be undone.
@@ -440,5 +450,5 @@ export default function AccountDetails({ isOpen, onClose, accountId }: Props) {
         />
       )}
     </SideCurtain>
-  )
+  );
 }
