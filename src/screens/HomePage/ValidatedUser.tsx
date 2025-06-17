@@ -10,13 +10,17 @@ import Divider from "@/components/ui/Divider";
 import { useEffect } from "react";
 import { Link, useNavigate } from "react-router";
 import Banner from "@/components/ui/Banner";
+import { useTranslation } from "react-i18next";
 
 type Profile = components["schemas"]["Profile"];
 
-interface Props extends VariantProps<typeof flowContainerStyles> { }
+interface Props extends VariantProps<typeof flowContainerStyles> {}
 
 export default function ValidatedUser({ show }: Props) {
-  const { user, isAuthenticated, isLoading, getAccessTokenSilently } = useAuth0();
+  const { t } = useTranslation();
+
+  const { user, isAuthenticated, isLoading, getAccessTokenSilently } =
+    useAuth0();
   const navigate = useNavigate();
 
   const { data: profile, isLoading: isLoadingProfile } = useSWR(
@@ -27,7 +31,7 @@ export default function ValidatedUser({ show }: Props) {
 
       const response = await fetch(url, {
         headers: {
-          "Authorization": `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -52,12 +56,12 @@ export default function ValidatedUser({ show }: Props) {
 
   return (
     <FlowContainer show={show}>
-      <Card minHeight="50vh" height="fit" width="6xl">
-        {isLoading || isLoadingProfile || !profile?.accId
-          ? (
+      <div className="flex flex-col gap-4 items-center justify-center">
+        <Card width="full">
+          {isLoading || isLoadingProfile || !profile?.accId ? (
             <Card.Body>
               <Typography>
-                We are checking if you have an profile
+                {t("screens.HomePage.ValidatedUser.checkingProfile")}
                 <span className="animate-ping inline-block ml-2 h-2 w-2 rounded-full bg-blue-500" />
               </Typography>
 
@@ -69,79 +73,95 @@ export default function ValidatedUser({ show }: Props) {
                 className="mt-4 mx-auto"
               />
             </Card.Body>
-          )
-          : (
+          ) : (
             <Card.Body>
               <div className="flex flex-col gap-4 mb-12">
                 <div className="text-left">
                   <Typography>
-                    <span className="text-sm">Logged in as</span><br />
+                    <span className="text-sm">
+                      {t("screens.HomePage.ValidatedUser.loggedInAs")}
+                    </span>
+                    <br />
                   </Typography>
-                  <Typography as="h1">
-                    {user?.name}
-                  </Typography>
+                  <Typography as="h1">{user?.name}</Typography>
 
-                  <Typography>
-                    {user?.email}
-                  </Typography>
+                  <Typography>{user?.email}</Typography>
                 </div>
 
                 <Divider style="partial" />
 
                 <div className="text-left">
                   <Typography as="span">
-                    Verified account?
+                    {t("screens.HomePage.ValidatedUser.verifiedAccount")}
                   </Typography>
 
-                  <Typography as="h2">
-                    {profile?.verboseStatus}
-                  </Typography>
+                  <Typography as="h2">{profile?.verboseStatus}</Typography>
                 </div>
 
                 <div className="text-left">
                   <Typography as="span">
-                    Has privileged roles?
+                    {t("screens.HomePage.ValidatedUser.hasPrivilegedRoles")}
                   </Typography>
 
                   <Typography as="h2">
-                    {profile?.isManager || profile?.isStaff ? "Yes" : "No"}
+                    {profile?.isManager || profile?.isStaff
+                      ? t("screens.HomePage.ValidatedUser.yes")
+                      : t("screens.HomePage.ValidatedUser.no")}
                   </Typography>
                 </div>
 
-                <TenantsOwnership tenantsOwnership={profile?.tenantsOwnership} />
+                <TenantsOwnership
+                  tenantsOwnership={profile?.tenantsOwnership}
+                />
 
-                <LicensedResources licensedResources={profile?.licensedResources} />
+                <LicensedResources
+                  licensedResources={profile?.licensedResources}
+                />
               </div>
 
-              <Banner title={(
-                <>
-                  Wait for a moment
-                  <span className="animate-ping inline-block ml-2 h-2 w-2 rounded-full bg-blue-500" />
-                </>
-              )}>
+              <Banner
+                title={
+                  <>
+                    {t("screens.HomePage.ValidatedUser.redirectingToDashboard")}
+                    <span className="animate-ping inline-block ml-2 h-2 w-2 rounded-full bg-blue-500" />
+                  </>
+                }
+              >
                 <div className="flex flex-col gap-4">
                   <Typography>
-                    We are redirecting you to the dashboard
+                    {t("screens.HomePage.ValidatedUser.redirectingToDashboard")}
                   </Typography>
 
                   <Typography as="span">
-                    If you are not redirected, please click <Link to="/dashboard" className="text-blue-500">here</Link>
+                    {t(
+                      "screens.HomePage.ValidatedUser.ifNotRedirectedClickHere"
+                    )}
+                    <Link to="/dashboard" className="text-blue-500">
+                      {t("screens.HomePage.ValidatedUser.here")}
+                    </Link>
                   </Typography>
                 </div>
               </Banner>
             </Card.Body>
           )}
-      </Card>
+        </Card>
+      </div>
     </FlowContainer>
   );
 }
 
-function TenantsOwnership({ tenantsOwnership }: { tenantsOwnership: Profile["tenantsOwnership"] }) {
+function TenantsOwnership({
+  tenantsOwnership,
+}: {
+  tenantsOwnership: Profile["tenantsOwnership"];
+}) {
+  const { t } = useTranslation();
+
   if (tenantsOwnership && "records" in tenantsOwnership) {
     return (
       <div className="text-left">
         <Typography as="span">
-          Tenants ownership
+          {t("screens.HomePage.ValidatedUser.tenantsOwnership")}
         </Typography>
 
         <Typography as="h2">
@@ -154,18 +174,25 @@ function TenantsOwnership({ tenantsOwnership }: { tenantsOwnership: Profile["ten
   return null;
 }
 
-function LicensedResources({ licensedResources }: { licensedResources: Profile["licensedResources"] }) {
+function LicensedResources({
+  licensedResources,
+}: {
+  licensedResources: Profile["licensedResources"];
+}) {
+  const { t } = useTranslation();
+
   if (licensedResources && "records" in licensedResources) {
     return (
       <div className="text-left">
         <Typography as="span">
-          Licensed resources
+          {t("screens.HomePage.ValidatedUser.licensedResources")}
         </Typography>
 
         <Typography>
           {licensedResources.records.map((record) => record.accName).join(", ")}
         </Typography>
-      </div>);
+      </div>
+    );
   }
 
   return null;

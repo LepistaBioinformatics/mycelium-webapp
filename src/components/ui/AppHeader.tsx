@@ -3,6 +3,7 @@ import Typography from "./Typography";
 import { Link } from "react-router";
 import ThemeSwitcher from "./ThemeSwitcher";
 import { PiSignOutBold } from "react-icons/pi";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const appHeaderStyles = cva(
   "text-gray-500 dark:text-gray-50 absolute top-0 left-0 right-0",
@@ -35,6 +36,8 @@ export default function AppHeader({
   logout,
   ...props
 }: AppHeaderProps) {
+  const { user } = useAuth0();
+
   return (
     <header className={appHeaderStyles({ discrete })} {...props}>
       <div className="container mx-auto py-3 flex justify-between align-middle">
@@ -47,9 +50,11 @@ export default function AppHeader({
           <Typography as="span" reverseBackground={!discrete}>
             <ThemeSwitcher reverseBackground={!discrete} />
           </Typography>
-          <div onClick={logout} className="cursor-pointer">
-            <PiSignOutBold className="text-slate-800 dark:text-slate-300" />
-          </div>
+          {user && (
+            <div onClick={logout} className="cursor-pointer">
+              <PiSignOutBold className="text-slate-800 dark:text-slate-300" />
+            </div>
+          )}
         </div>
       </div>
     </header>

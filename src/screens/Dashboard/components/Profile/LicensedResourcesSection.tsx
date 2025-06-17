@@ -16,14 +16,7 @@ interface Props {
 
 export default function LicensedResourcesSection({ licensedResources }: Props) {
   return (
-    <Card
-      minHeight="50vh"
-      maxHeight="50vh"
-      padding="sm"
-      width="sm"
-      flex1
-      dashed={!licensedResources}
-    >
+    <Card padding="sm" width="sm" flex1 dashed={!licensedResources}>
       <Card.Header>
         <Typography as="h6" decoration="smooth">
           Accounts witch you have access
@@ -33,9 +26,7 @@ export default function LicensedResourcesSection({ licensedResources }: Props) {
       <Card.Body>
         {!licensedResources && (
           <div className="flex flex-col gap-2">
-            <Typography decoration="smooth">
-              No resources to show
-            </Typography>
+            <Typography decoration="smooth">No resources to show</Typography>
             <Typography as="small" decoration="smooth" width="xs">
               Accounts shared with you will appear here
             </Typography>
@@ -45,14 +36,19 @@ export default function LicensedResourcesSection({ licensedResources }: Props) {
         {licensedResources && (
           <div className="flex flex-col gap-2 scrollbar">
             {licensedResources
-              ?.sort((a, b) => (a.sysAcc ? -1 : 1) || a.accName.localeCompare(b.accName) || b.perm.localeCompare(a.perm))
+              ?.sort(
+                (a, b) =>
+                  (a.sysAcc ? -1 : 1) ||
+                  a.accName.localeCompare(b.accName) ||
+                  b.perm.localeCompare(a.perm)
+              )
               ?.map((resource, index) => (
                 <MiniBox key={index}>
                   <IntroSection
                     title="Account name"
                     prefixProps={{ nowrap: true }}
                     contentProps={{ truncate: true }}
-                    content={(
+                    content={
                       <div className="flex items-center gap-2">
                         {resource.sysAcc && (
                           <div>
@@ -62,11 +58,13 @@ export default function LicensedResourcesSection({ licensedResources }: Props) {
                             />
                           </div>
                         )}
-                        <Typography title={`The account which you have access to: ${resource.accName}`}>
+                        <Typography
+                          title={`The account which you have access to: ${resource.accName}`}
+                        >
                           {resource.accName}
                         </Typography>
                       </div>
-                    )}
+                    }
                     as="h3"
                   >
                     <TenantResolver tenantId={resource.tenantId}>
@@ -78,9 +76,7 @@ export default function LicensedResourcesSection({ licensedResources }: Props) {
                       prefixProps={{ nowrap: true }}
                       title={`The role assigned to you: ${resource.role}`}
                     >
-                      <span className="whitespace-nowrap">
-                        {resource.role}
-                      </span>
+                      <span className="whitespace-nowrap">{resource.role}</span>
                     </IntroSection.Item>
 
                     <IntroSection.Item

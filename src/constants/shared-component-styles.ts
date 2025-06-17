@@ -15,6 +15,8 @@ const sharedComponentStylesVariants: Config["variants"] = {
         min: "h-min",
         max: "h-max",
         screen: "h-screen",
+        half: "h-1/2",
+        third: "h-1/3",
     },
     padding: {
         none: "p-0",

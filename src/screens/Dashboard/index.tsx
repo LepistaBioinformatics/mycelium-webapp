@@ -33,7 +33,7 @@ export default function Dashboard() {
   return (
     <div
       id="Dashboard"
-      className="flex min-h-screen max-h-screen w-screen overflow-y-auto overflow-x-hidden border border-red-500"
+      className="flex min-h-screen max-h-screen w-screen overflow-y-auto overflow-x-hidden"
     >
       <Sidebar
         isOpen={isOpen}
@@ -53,7 +53,7 @@ export default function Dashboard() {
         ))}
       </Sidebar>
 
-      <div className="max-w-[100vw] overflow-y-auto scrollbar border border-blue-500">
+      <div className="max-w-[100vw] overflow-y-auto scrollbar">
         <Outlet />
       </div>
 

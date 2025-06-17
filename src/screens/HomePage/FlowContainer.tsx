@@ -9,17 +9,20 @@
 
 import { cva, VariantProps } from "class-variance-authority";
 
-export const flowContainerStyles = cva("sm:!max-w-1/2 sm:!min-w-max", {
-  variants: {
-    show: {
-      true: "block animate-fadeIn",
-      false: "hidden animate-fadeOut",
+export const flowContainerStyles = cva(
+  "w-full sm:w-1/3 p-3 h-screen sm:h-1/2",
+  {
+    variants: {
+      show: {
+        true: "block animate-fadeIn",
+        false: "hidden animate-fadeOut",
+      },
     },
-  },
-  defaultVariants: {
-    show: false,
-  },
-});
+    defaultVariants: {
+      show: false,
+    },
+  }
+);
 
 interface Props extends BaseProps, VariantProps<typeof flowContainerStyles> {}
 

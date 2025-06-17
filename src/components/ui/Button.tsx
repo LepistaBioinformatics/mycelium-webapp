@@ -6,6 +6,9 @@ const styles = cva("text-gray-700 dark:text-gray-50", {
     fullWidth: {
       true: "w-full",
     },
+    center: {
+      true: "text-center justify-center",
+    },
     rounded: {
       true: "rounded-lg",
       full: "rounded-full",
@@ -13,10 +16,14 @@ const styles = cva("text-gray-700 dark:text-gray-50", {
       right: "rounded-r-full",
     },
     intent: {
-      primary: "bg-indigo-500 hover:bg-indigo-600 dark:bg-lime-600 dark:hover:bg-lime-700 text-white",
-      secondary: "text-white font-semibold bg-gray-500 hover:bg-gray-600 dark:bg-gray-600 dark:hover:bg-gray-700",
-      warning: "bg-yellow-500 dark:bg-yellow-600 text-white hover:bg-yellow-600 hover:dark:bg-yellow-700 font-semibold",
-      danger: "bg-red-500 dark:bg-red-600 text-white hover:bg-red-600 dark:hover:bg-red-700",
+      primary:
+        "bg-indigo-500 hover:bg-indigo-600 dark:bg-lime-600 dark:hover:bg-lime-700 text-white",
+      secondary:
+        "text-white font-semibold bg-gray-500 hover:bg-gray-600 dark:bg-gray-600 dark:hover:bg-gray-700",
+      warning:
+        "bg-yellow-500 dark:bg-yellow-600 text-white hover:bg-yellow-600 hover:dark:bg-yellow-700 font-semibold",
+      danger:
+        "bg-red-500 dark:bg-red-600 text-white hover:bg-red-600 dark:hover:bg-red-700",
       link: "!text-blue-500 dark:text-lime-500 bg-transparent hover:bg-transparent border border-transparent hover:border-blue-500 dark:hover:border-lime-500",
       info: "bg-blue-500 text-white hover:bg-blue-600 dark:bg-blue-500 dark:hover:bg-blue-700",
     },
@@ -62,12 +69,21 @@ export default function Button({
   onClick,
   type,
   disabled,
+  center,
   ...props
 }: Props) {
   return (
     <button
       onClick={disabled ? undefined : onClick}
-      className={styles({ fullWidth, intent, size, rounded, disabled, padding })}
+      className={styles({
+        fullWidth,
+        intent,
+        size,
+        rounded,
+        disabled,
+        padding,
+        center,
+      })}
       type={type}
       disabled={disabled}
       {...props}

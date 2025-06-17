@@ -19,6 +19,7 @@
     /* Linting */
     "strict": true,
     "noUnusedLocals": true,
+    "resolveJsonModule": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedIndexedAccess": true,
@@ -50,6 +51,9 @@
       ],
       "@/screens/*": [
         "./src/screens/*"
+      ],
+      "@/translations/*": [
+        "./src/translations/*"
       ]
     }
   },

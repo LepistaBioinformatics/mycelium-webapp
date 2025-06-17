@@ -12,15 +12,13 @@ interface Props {
   tenantsOwnership: TenantOwnership[] | null;
 }
 
-export default function TenantOwnershipSection({
-  tenantsOwnership,
-}: Props) {
+export default function TenantOwnershipSection({ tenantsOwnership }: Props) {
   const [loadingSize, setLoadingSize] = useState(3);
 
   if (!tenantsOwnership) return null;
 
   return (
-    <Card minHeight="50vh" maxHeight="50vh" padding="sm" width="sm" flex1>
+    <Card padding="sm" width="sm" flex1>
       <Card.Header>
         <Typography as="h6" decoration="smooth">
           Ownership on Tenants
@@ -34,7 +32,10 @@ export default function TenantOwnershipSection({
             ?.slice(0, loadingSize)
             ?.map((tenant) => (
               <TenantResolver key={tenant.tenant} tenantId={tenant.tenant}>
-                <TenantOwnershipInfo since={tenant.since} tenantId={tenant.tenant} />
+                <TenantOwnershipInfo
+                  since={tenant.since}
+                  tenantId={tenant.tenant}
+                />
               </TenantResolver>
             ))}
         </div>

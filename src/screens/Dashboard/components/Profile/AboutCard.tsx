@@ -21,12 +21,12 @@ export default function AboutCard({
   icon,
   headerTitle,
   links,
-  aboutContent
+  aboutContent,
 }: Props) {
   const Icon = icon;
 
   return (
-    <Card minHeight="50vh" maxHeight="50vh" padding="sm" width="6xl">
+    <Card padding="sm" width="6xl">
       <Card.Header>
         <Typography as="h5" uppercase>
           <div

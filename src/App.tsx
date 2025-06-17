@@ -1,3 +1,4 @@
+import "./i18n/config";
 import { BrowserRouter, Routes, Route } from "react-router";
 import ErrorBoundary from "./components/ErrorBoundary";
 import NotFound from "./components/NotFound";

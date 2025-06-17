@@ -1,0 +1,43 @@
+{
+  "screens": {
+    "HomePage": {
+      "AnonymousUser": {
+        "title": "Welcome back",
+        "subtitle": "You are not logged in",
+        "button": "Click to login",
+        "processing": "We are checking your email address"
+      },
+      "AuthenticatedUser": {
+        "loggedInAs": "Logged in as",
+        "checkingEmailStatus": "We are checking if you have an account",
+        "emailNotFound": "Your email was not found in our records",
+        "register": "Click to register",
+        "registering": "Registering...",
+        "allReady": "You are all set",
+        "userSuccessfullyRegistered": "User successfully registered"
+      },
+      "UnRegisteredUser": {
+        "title": "Almost there!",
+        "subtitle": "Check your username",
+        "finishRegistrationButton": "Click to finish registration",
+        "registering": "Registering...",
+        "userSuccessfullyRegistered": "User successfully registered",
+        "allReady": "You are all set",
+        "userAlreadyRegistered": "User already registered"
+      },
+      "ValidatedUser": {
+        "checkingProfile": "We are checking your profile",
+        "userSuccessfullyValidated": "User successfully validated",
+        "allReady": "You are all set",
+        "userAlreadyValidated": "User already validated",
+        "verifiedAccount": "Verified account?",
+        "hasPrivilegedRoles": "Has privileged roles?",
+        "yes": "Yes",
+        "no": "No",
+        "redirectingToDashboard": "We are redirecting you to the dashboard",
+        "ifNotRedirectedClickHere": "If you are not redirected, please click",
+        "here": "here"
+      }
+    }
+  }
+}

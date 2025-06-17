@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import Typography from "@/components/ui/Typography";
 import Card from "@/components/ui/Card";
 import { useAuth0, User } from "@auth0/auth0-react";
@@ -19,6 +20,8 @@ interface Props extends VariantProps<typeof flowContainerStyles> {
 }
 
 export default function AuthenticatedUser({ show, user, setStatus }: Props) {
+  const { t } = useTranslation();
+
   const { getAccessTokenSilently } = useAuth0();
 
   const [registeringUserWithProvider, setRegisteringUserWithProvider] =
@@ -101,96 +104,110 @@ export default function AuthenticatedUser({ show, user, setStatus }: Props) {
 
   return (
     <FlowContainer show={show}>
-      <Card minHeight="50vh" height="fit" width="6xl">
-        <Card.Header>
-          <Typography as="h1">{user?.name}</Typography>
-        </Card.Header>
+      <div className="flex flex-col gap-4 items-center justify-center">
+        <Card width="full">
+          <Card.Header>
+            <Typography as="h1">{user?.name}</Typography>
+          </Card.Header>
 
-        <Card.Body>
-          <Typography>
-            <span className="text-sm">Logged in as</span>
-            <br />
-            <span className="font-semibold">{user?.email}</span>
-          </Typography>
+          <Card.Body>
+            <Typography>
+              <span className="text-sm">
+                {t("screens.HomePage.AuthenticatedUser.loggedInAs")}
+              </span>
+              <br />
+              <span className="font-semibold">{user?.email}</span>
+            </Typography>
 
-          <Divider style="partial" />
+            <Divider style="partial" />
 
-          {isLoadingEmailStatus && (
-            <div>
-              <Typography>
-                We are checking if you have an account
-                <span className="animate-ping inline-block ml-2 h-2 w-2 rounded-full bg-blue-500" />
-              </Typography>
-
-              <img
-                src="/undraw.co/undraw_file-searching_2ne8.svg"
-                alt="Searching for your email address..."
-                width={150}
-                height={150}
-                className="mt-4 mx-auto"
-              />
-            </div>
-          )}
-
-          <div className="flex flex-col gap-2">
-            {!isLoadingEmailStatus && (
+            {isLoadingEmailStatus && (
               <div>
-                {userSituation?.toUpperCase() === "NOTREGISTERED" && (
-                  <div>
-                    <Typography as="h2">{userSituation}</Typography>
+                <Typography>
+                  {t("screens.HomePage.AuthenticatedUser.checkingEmailStatus")}
+                  <span className="animate-ping inline-block ml-2 h-2 w-2 rounded-full bg-blue-500" />
+                </Typography>
 
-                    <Typography>
-                      Your email was not found in our records
-                    </Typography>
-
-                    <div className="flex flex-col items-center justify-center gap-8 mt-4">
-                      <Button
-                        rounded
-                        onClick={handleRegisterUserWithProvider}
-                        disabled={registeringUserWithProvider}
-                      >
-                        <Typography as="h4">
-                          {registeringUserWithProvider
-                            ? "Registering..."
-                            : "Click to register"}
-                        </Typography>
-                      </Button>
-
-                      <img
-                        src="/undraw.co/undraw_page-not-found_6wni.svg"
-                        alt={userSituation}
-                        width={150}
-                        height={150}
-                        className="mt-4 mx-auto"
-                      />
-                    </div>
-                  </div>
-                )}
-
-                {userSituation &&
-                  [
-                    "RegisteredWithExternalProvider".toUpperCase(),
-                    "RegisteredWithInternalProvider".toUpperCase(),
-                  ].includes(userSituation?.toUpperCase()) && (
-                    <div>
-                      <Typography as="h2">All ready!</Typography>
-
-                      <Typography>User successfully registered</Typography>
-
-                      <img
-                        src="/undraw.co/undraw_landing-page_tsx8.svg"
-                        alt={userSituation}
-                        width={150}
-                        height={150}
-                        className="mt-4 mx-auto"
-                      />
-                    </div>
-                  )}
+                <img
+                  src="/undraw.co/undraw_file-searching_2ne8.svg"
+                  alt="Searching for your email address..."
+                  width={150}
+                  height={150}
+                  className="mt-4 mx-auto"
+                />
               </div>
             )}
-          </div>
-        </Card.Body>
-      </Card>
+
+            <div className="flex flex-col gap-2">
+              {!isLoadingEmailStatus && (
+                <div>
+                  {userSituation?.toUpperCase() === "NOTREGISTERED" && (
+                    <div>
+                      <Typography as="h2">{userSituation}</Typography>
+
+                      <Typography>
+                        {t("screens.HomePage.AuthenticatedUser.emailNotFound")}
+                      </Typography>
+
+                      <div className="flex flex-col items-center justify-center gap-8 mt-4">
+                        <Button
+                          rounded
+                          onClick={handleRegisterUserWithProvider}
+                          disabled={registeringUserWithProvider}
+                        >
+                          <Typography as="h4">
+                            {registeringUserWithProvider
+                              ? t(
+                                  "screens.HomePage.AuthenticatedUser.registering"
+                                )
+                              : t(
+                                  "screens.HomePage.AuthenticatedUser.register"
+                                )}
+                          </Typography>
+                        </Button>
+
+                        <img
+                          src="/undraw.co/undraw_page-not-found_6wni.svg"
+                          alt={userSituation}
+                          width={150}
+                          height={150}
+                          className="mt-4 mx-auto"
+                        />
+                      </div>
+                    </div>
+                  )}
+
+                  {userSituation &&
+                    [
+                      "RegisteredWithExternalProvider".toUpperCase(),
+                      "RegisteredWithInternalProvider".toUpperCase(),
+                    ].includes(userSituation?.toUpperCase()) && (
+                      <div>
+                        <Typography as="h2">
+                          {t("screens.HomePage.AuthenticatedUser.allReady")}
+                        </Typography>
+
+                        <Typography>
+                          {t(
+                            "screens.HomePage.AuthenticatedUser.userSuccessfullyRegistered"
+                          )}
+                        </Typography>
+
+                        <img
+                          src="/undraw.co/undraw_landing-page_tsx8.svg"
+                          alt={userSituation}
+                          width={150}
+                          height={150}
+                          className="mt-4 mx-auto"
+                        />
+                      </div>
+                    )}
+                </div>
+              )}
+            </div>
+          </Card.Body>
+        </Card>
+      </div>
     </FlowContainer>
   );
 }

@@ -9,24 +9,27 @@ import { useState } from "react";
 import { buildPath } from "@/services/openapi/mycelium-api";
 import { TextInput } from "flowbite-react";
 import { components } from "@/services/openapi/mycelium-schema";
+import { useTranslation } from "react-i18next";
 
-type CheckEmailStatusResponse = components["schemas"]["CheckEmailStatusResponse"];
+type CheckEmailStatusResponse =
+  components["schemas"]["CheckEmailStatusResponse"];
 
 type Inputs = {
   name: string;
-}
+};
 
 interface Props extends VariantProps<typeof flowContainerStyles> {
   status: CheckEmailStatusResponse | null;
   setStatus: (status: CheckEmailStatusResponse) => void;
-};
+}
 
 export default function UnRegisteredUser({ show, status, setStatus }: Props) {
-  const { user, isAuthenticated, isLoading, getAccessTokenSilently } = useAuth0();
+  const { t } = useTranslation();
 
-  const [
-    registeringAccount, setRegisteringAccount
-  ] = useState<boolean>(false);
+  const { user, isAuthenticated, isLoading, getAccessTokenSilently } =
+    useAuth0();
+
+  const [registeringAccount, setRegisteringAccount] = useState<boolean>(false);
 
   const {
     register,
@@ -48,7 +51,7 @@ export default function UnRegisteredUser({ show, status, setStatus }: Props) {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({ name }),
         }
@@ -78,23 +81,23 @@ export default function UnRegisteredUser({ show, status, setStatus }: Props) {
 
   return (
     <FlowContainer show={show}>
-      <Card minHeight="50vh" height="fit" width="6xl">
-        <Card.Header>
-          <Typography as="h1">
-            Almost there!
-          </Typography>
-        </Card.Header>
+      <div className="flex flex-col gap-4 items-center justify-center">
+        <Card width="full">
+          <Card.Header>
+            <Typography as="h1">
+              {t("screens.HomePage.UnRegisteredUser.title")}
+            </Typography>
+          </Card.Header>
 
-        <Card.Body>
-          {user?.name && isAuthenticated && !isLoading
-            ? (
+          <Card.Body>
+            {user?.name && isAuthenticated && !isLoading ? (
               <form
                 onSubmit={handleSubmit(onSubmit)}
                 className="flex flex-col items-center justify-center gap-2 mt-4"
               >
                 <div>
                   <Typography>
-                    Check your username
+                    {t("screens.HomePage.UnRegisteredUser.subtitle")}
                   </Typography>
                   <TextInput
                     {...register("name", { required: true })}
@@ -108,7 +111,9 @@ export default function UnRegisteredUser({ show, status, setStatus }: Props) {
 
                 <div className="flex flex-col items-center justify-center gap-2 mt-4">
                   <Typography>
-                    Click to finish registration
+                    {t(
+                      "screens.HomePage.UnRegisteredUser.finishRegistrationButton"
+                    )}
                   </Typography>
 
                   <Button
@@ -117,7 +122,11 @@ export default function UnRegisteredUser({ show, status, setStatus }: Props) {
                     rounded
                     disabled={registeringAccount}
                   >
-                    {registeringAccount ? "Registering..." : "Let's go!"}
+                    {registeringAccount
+                      ? t("screens.HomePage.UnRegisteredUser.registering")
+                      : t(
+                          "screens.HomePage.UnRegisteredUser.finishRegistrationButton"
+                        )}
                   </Button>
 
                   <img
@@ -129,15 +138,16 @@ export default function UnRegisteredUser({ show, status, setStatus }: Props) {
                   />
                 </div>
               </form>
-            )
-            : (
+            ) : (
               <div className="flex flex-col items-center justify-center gap-8 mt-4">
                 <Typography as="h2">
-                  All ready!
+                  {t("screens.HomePage.UnRegisteredUser.allReady")}
                 </Typography>
 
                 <Typography>
-                  User successfully registered
+                  {t(
+                    "screens.HomePage.UnRegisteredUser.userSuccessfullyRegistered"
+                  )}
                 </Typography>
 
                 <img
@@ -149,8 +159,9 @@ export default function UnRegisteredUser({ show, status, setStatus }: Props) {
                 />
               </div>
             )}
-        </Card.Body>
-      </Card>
+          </Card.Body>
+        </Card>
+      </div>
     </FlowContainer>
   );
 }
