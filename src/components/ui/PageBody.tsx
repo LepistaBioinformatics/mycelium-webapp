@@ -8,7 +8,7 @@ import {
 
 const { width, height, margin, padding } = projectVariants;
 
-const containerStyles = cva("min-h-screen overflow-x-hidden scrollbar", {
+const containerStyles = cva("min-h-screen overflow-x-hidden scrollbar mb-24", {
   variants: {
     padding,
     margin,

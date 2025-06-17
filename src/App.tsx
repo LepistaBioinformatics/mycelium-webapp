@@ -6,6 +6,7 @@ import useProfile from "./hooks/use-profile";
 import buildRoutes, { HOME_ROUTE, DASHBOARD_ROUTE } from "./constants/routes";
 import { Fragment, useMemo } from "react";
 import Profile from "./screens/Dashboard/components/Profile";
+import MobileNavbar from "./components/ui/MobileNavbar";
 
 export default function App() {
   const { profile } = useProfile();
@@ -66,6 +67,8 @@ export default function App() {
             errorElement={<ErrorBoundary />}
           />
         </Routes>
+
+        <MobileNavbar />
       </BrowserRouter>
     </div>
   );
