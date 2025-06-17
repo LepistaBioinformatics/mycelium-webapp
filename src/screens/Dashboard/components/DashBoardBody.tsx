@@ -25,7 +25,7 @@ export default function DashBoardBody({
   isLoading,
 }: Props) {
   return (
-    <PageBody padding={padding}>
+    <PageBody padding={padding} width="full">
       {breadcrumb && (
         <PageBody.Breadcrumb>
           <ControlPanelBreadcrumbItem />
@@ -33,7 +33,7 @@ export default function DashBoardBody({
         </PageBody.Breadcrumb>
       )}
 
-      <PageBody.Content>
+      <PageBody.Content padding="md" flex="col" gap={12}>
         <SearchBar
           term={term}
           onSubmit={onSubmit}
@@ -43,13 +43,10 @@ export default function DashBoardBody({
           commandPalette={commandPalette}
         />
 
-        <AuthorizedOr
-          authorized={authorized}
-          isLoading={isLoading}
-        >
+        <AuthorizedOr authorized={authorized} isLoading={isLoading}>
           {children}
         </AuthorizedOr>
       </PageBody.Content>
     </PageBody>
-  )
+  );
 }

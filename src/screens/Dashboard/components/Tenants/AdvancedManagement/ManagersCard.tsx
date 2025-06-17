@@ -18,15 +18,21 @@ type Parent_Account_String = components["schemas"]["Parent_Account_String"];
 type GuestUser = components["schemas"]["GuestUser"];
 
 interface Props {
-  tenant: Tenant,
-  mutateTenantStatus: () => void,
+  tenant: Tenant;
+  mutateTenantStatus: () => void;
 }
 
 export default function ManagersCard({ tenant, mutateTenantStatus }: Props) {
-  const [isGuestToAccountModalOpen, setIsGuestToAccountModalOpen] = useState(false);
+  const [isGuestToAccountModalOpen, setIsGuestToAccountModalOpen] =
+    useState(false);
   const [isUnInviteModalOpen, setIsUnInviteModalOpen] = useState(false);
-  const [currentGuestUser, setCurrentGuestUser] = useState<GuestUser | null>(null);
-  const [isCreateManagementAccountModalOpen, setIsCreateManagementAccountModalOpen] = useState(false);
+  const [currentGuestUser, setCurrentGuestUser] = useState<GuestUser | null>(
+    null
+  );
+  const [
+    isCreateManagementAccountModalOpen,
+    setIsCreateManagementAccountModalOpen,
+  ] = useState(false);
 
   const { hasEnoughPermissions } = useProfile({
     roles: [MycRole.TenantManager],
@@ -36,21 +42,21 @@ export default function ManagersCard({ tenant, mutateTenantStatus }: Props) {
   const handleOpenUnInviteModal = (guestUser: GuestUser) => {
     setIsUnInviteModalOpen(true);
     setCurrentGuestUser(guestUser);
-  }
+  };
 
   const handleCloseGuestToAccountModal = () => {
     setIsGuestToAccountModalOpen(false);
-  }
+  };
 
   const handleCloseUnInviteModal = () => {
     setIsUnInviteModalOpen(false);
     setCurrentGuestUser(null);
-  }
+  };
 
   const handleCreateManagementAccountModalClose = () => {
     setIsCreateManagementAccountModalOpen(false);
     mutateTenantStatus();
-  }
+  };
 
   const manager = useMemo(() => {
     if (!tenant) return null;
@@ -72,14 +78,7 @@ export default function ManagersCard({ tenant, mutateTenantStatus }: Props) {
 
   return (
     <>
-      <Card
-        minHeight="50vh"
-        maxHeight="80vh"
-        padding="sm"
-        width="2xl"
-        flex1
-        group
-      >
+      <Card padding="sm" width="2xl" flex1 group>
         <Card.Header>
           <Typography
             as="h6"
@@ -98,41 +97,37 @@ export default function ManagersCard({ tenant, mutateTenantStatus }: Props) {
         </Card.Header>
 
         <Card.Body>
-          {tenant?.id && manager
-            ? (
-              <div className="flex flex-col gap-1">
-                <AccountInvitations
-                  account={manager}
-                  tenantId={tenant?.id}
-                  setCurrentGuestUser={handleOpenUnInviteModal}
-                />
-              </div>
-            )
-            : (
-              <Banner intent="info">
-                <div className="flex justify-between gap-2 my-5">
-                  <div className="flex flex-col gap-2">
-                    <Typography as="span">
-                      Create management account
-                    </Typography>
+          {tenant?.id && manager ? (
+            <div className="flex flex-col gap-1">
+              <AccountInvitations
+                account={manager}
+                tenantId={tenant?.id}
+                setCurrentGuestUser={handleOpenUnInviteModal}
+              />
+            </div>
+          ) : (
+            <Banner intent="info">
+              <div className="flex justify-between gap-2 my-5">
+                <div className="flex flex-col gap-2">
+                  <Typography as="span">Create management account</Typography>
 
-                    <Typography as="small" decoration="smooth">
-                      Management accounts are used to manage the tenant.
-                    </Typography>
-                  </div>
-
-                  <div>
-                    <Button
-                      rounded
-                      intent="info"
-                      onClick={() => setIsCreateManagementAccountModalOpen(true)}
-                    >
-                      Create
-                    </Button>
-                  </div>
+                  <Typography as="small" decoration="smooth">
+                    Management accounts are used to manage the tenant.
+                  </Typography>
                 </div>
-              </Banner>
-            )}
+
+                <div>
+                  <Button
+                    rounded
+                    intent="info"
+                    onClick={() => setIsCreateManagementAccountModalOpen(true)}
+                  >
+                    Create
+                  </Button>
+                </div>
+              </div>
+            </Banner>
+          )}
         </Card.Body>
       </Card>
 
@@ -161,5 +156,5 @@ export default function ManagersCard({ tenant, mutateTenantStatus }: Props) {
         onClose={handleCreateManagementAccountModalClose}
       />
     </>
-  )
+  );
 }

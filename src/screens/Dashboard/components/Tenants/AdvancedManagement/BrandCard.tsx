@@ -19,11 +19,11 @@ type Tenant = components["schemas"]["Tenant"];
 const DIMENSIONS = {
   WIDTH: 128,
   HEIGHT: 128,
-}
+};
 
 interface Props {
-  tenant: Tenant,
-  mutateTenantStatus: () => void,
+  tenant: Tenant;
+  mutateTenantStatus: () => void;
 }
 
 export default function BrandCard({ tenant, mutateTenantStatus }: Props) {
@@ -32,8 +32,8 @@ export default function BrandCard({ tenant, mutateTenantStatus }: Props) {
   const [updatingBrand, setUpdatingBrand] = useState(false);
 
   const [validationState, setValidationState] = useState<{
-    state: "valid" | "invalid" | "waiting",
-    message: string | null,
+    state: "valid" | "invalid" | "waiting";
+    message: string | null;
   }>({
     state: "waiting",
     message: null,
@@ -72,7 +72,10 @@ export default function BrandCard({ tenant, mutateTenantStatus }: Props) {
       const img = new Image();
 
       img.onload = () => {
-        if (img.width !== DIMENSIONS.WIDTH || img.height !== DIMENSIONS.HEIGHT) {
+        if (
+          img.width !== DIMENSIONS.WIDTH ||
+          img.height !== DIMENSIONS.HEIGHT
+        ) {
           setPreview(null);
           setValidationState({
             state: "invalid",
@@ -118,7 +121,7 @@ export default function BrandCard({ tenant, mutateTenantStatus }: Props) {
 
     const response = await fetch(preview);
     const blob = await response.blob();
-    return await blobToBase64(blob) as string;
+    return (await blobToBase64(blob)) as string;
   }, [preview]);
 
   /**
@@ -130,14 +133,16 @@ export default function BrandCard({ tenant, mutateTenantStatus }: Props) {
     if (updatingBrand && brandTag?.id) {
       return {
         method: "PUT",
-        url: buildPath("/adm/rs/tenant-manager/tags/{tag_id}", { path: { tag_id: brandTag.id } })
-      }
+        url: buildPath("/adm/rs/tenant-manager/tags/{tag_id}", {
+          path: { tag_id: brandTag.id },
+        }),
+      };
     }
 
     return {
       method: "POST",
-      url: buildPath("/adm/rs/tenant-manager/tags")
-    }
+      url: buildPath("/adm/rs/tenant-manager/tags"),
+    };
   }, [updatingBrand, brandTag]);
 
   /**
@@ -160,24 +165,21 @@ export default function BrandCard({ tenant, mutateTenantStatus }: Props) {
 
     const token = await getAccessTokenSilently();
 
-    const response = await fetch(
-      url,
-      {
-        method,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-          [TENANT_ID_HEADER]: tenant.id
-        },
-        body: JSON.stringify({
-          value: TenantTagTypes.Brand,
-          meta: { base64Logo: await convertPreviewToBase64() }
-        })
-      }
-    )
+    const response = await fetch(url, {
+      method,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+        [TENANT_ID_HEADER]: tenant.id,
+      },
+      body: JSON.stringify({
+        value: TenantTagTypes.Brand,
+        meta: { base64Logo: await convertPreviewToBase64() },
+      }),
+    });
 
     if (!response.ok) {
-      parseHttpError(response)
+      parseHttpError(response);
     }
 
     setIsUploading(false);
@@ -199,16 +201,11 @@ export default function BrandCard({ tenant, mutateTenantStatus }: Props) {
   }
 
   return (
-    <Card
-      minHeight="50vh"
-      maxHeight="80vh"
-      padding="sm"
-      width="2xl"
-      flex1
-      group
-    >
+    <Card padding="sm" width="2xl" flex1 group>
       <Card.Header>
-        <Typography as="h6" decoration="smooth">Brand</Typography>
+        <Typography as="h6" decoration="smooth">
+          Brand
+        </Typography>
       </Card.Header>
 
       <Card.Body>
@@ -244,9 +241,7 @@ export default function BrandCard({ tenant, mutateTenantStatus }: Props) {
               <div className="flex flex-col justify-between gap-8 my-5">
                 <div className="flex justify-between w-full">
                   <div className="flex flex-col gap-2">
-                    <Typography as="span">
-                      Register a tenant brand
-                    </Typography>
+                    <Typography as="span">Register a tenant brand</Typography>
 
                     <Typography as="small" decoration="smooth">
                       A brand is used to identify the tenant in the UI.
@@ -263,9 +258,9 @@ export default function BrandCard({ tenant, mutateTenantStatus }: Props) {
 
                 <div>
                   <FileInput
-                    accept='image/*'
-                    id='image'
-                    name='Upload image'
+                    accept="image/*"
+                    id="image"
+                    name="Upload image"
                     onChange={handleImageUpload}
                   />
                 </div>
@@ -285,7 +280,7 @@ export default function BrandCard({ tenant, mutateTenantStatus }: Props) {
                 </div>
               )}
 
-              {(preview && validationState.state === "valid") && (
+              {preview && validationState.state === "valid" && (
                 <div className="flex justify-end mt-5">
                   <Button
                     rounded

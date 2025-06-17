@@ -32,7 +32,7 @@ const cardContainerStyles = cva(
         false: "",
       },
       flex1: {
-        true: "flex-1",
+        true: "flex-none sm:flex-1",
         false: "",
       },
       flex: {

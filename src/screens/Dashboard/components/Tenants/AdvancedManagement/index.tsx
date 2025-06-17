@@ -33,11 +33,7 @@ export default function AdvancedManagement() {
     return params.tenantId as string;
   }, [params.tenantId]);
 
-  const {
-    hasEnoughPermissions,
-    isLoadingUser,
-    isLoadingProfile,
-  } = useProfile({
+  const { hasEnoughPermissions, isLoadingUser, isLoadingProfile } = useProfile({
     roles: [MycRole.TenantManager],
     permissions: [MycPermission.Read, MycPermission.Write],
     restrictSystemAccount: true,
@@ -47,10 +43,9 @@ export default function AdvancedManagement() {
   const customUrl = useMemo(() => {
     if (!tenantId) return null;
 
-    return buildPath(
-      "/adm/rs/tenant-manager/tenants/{tenant_id}",
-      { path: { tenant_id: tenantId } }
-    );
+    return buildPath("/adm/rs/tenant-manager/tenants/{tenant_id}", {
+      path: { tenant_id: tenantId },
+    });
   }, [tenantId]);
 
   const {
@@ -61,7 +56,11 @@ export default function AdvancedManagement() {
   } = useTenantDetails({ customUrl });
 
   useEffect(() => {
-    if (tenantStatus && typeof tenantStatus === "object" && "active" in tenantStatus) {
+    if (
+      tenantStatus &&
+      typeof tenantStatus === "object" &&
+      "active" in tenantStatus
+    ) {
       dispatch(setTenantInfo(tenantStatus.active));
     }
   }, [tenantStatus]);
@@ -78,20 +77,21 @@ export default function AdvancedManagement() {
 
   /**
    * Base page component that contains the breadcrumb and the content
-   * 
+   *
    * @param param0
-   * @returns 
+   * @returns
    */
   const BasePage = ({ children }: BaseProps) => (
     <PageBody padding="md" height="fit">
       <PageBody.Breadcrumb>
         <ControlPanelBreadcrumbItem />
-        <PageBody.Breadcrumb.Item href="/dashboard/tenants" icon={SlOrganization}>
+        <PageBody.Breadcrumb.Item
+          href="/dashboard/tenants"
+          icon={SlOrganization}
+        >
           Tenants
         </PageBody.Breadcrumb.Item>
-        <PageBody.Breadcrumb.Item>
-          Advanced Management
-        </PageBody.Breadcrumb.Item>
+        <PageBody.Breadcrumb.Item>Advanced Management</PageBody.Breadcrumb.Item>
       </PageBody.Breadcrumb>
 
       <PageBody.Content padding="md" container flex="col" gap={12}>
@@ -163,27 +163,18 @@ export default function AdvancedManagement() {
             title="Tenant name"
             as="h1"
           >
-            <IntroSection.Item
-              prefix="described as"
-              title="Tenant description"
-            >
+            <IntroSection.Item prefix="described as" title="Tenant description">
               {activeTenant?.description}
             </IntroSection.Item>
 
             {activeTenant?.created && (
-              <IntroSection.Item
-                prefix="created at"
-                title="Tenant created at"
-              >
+              <IntroSection.Item prefix="created at" title="Tenant created at">
                 {formatDDMMYY(new Date(activeTenant?.created), true)}
               </IntroSection.Item>
             )}
 
             {activeTenant?.updated && (
-              <IntroSection.Item
-                prefix="updated at"
-                title="Tenant updated at"
-              >
+              <IntroSection.Item prefix="updated at" title="Tenant updated at">
                 {formatDDMMYY(new Date(activeTenant?.updated), true)}
               </IntroSection.Item>
             )}
@@ -209,26 +200,28 @@ export default function AdvancedManagement() {
         </CardsSection.Header>
 
         <CardsSection.Body>
-          {activeTenant && (
-            <LegalSettings
-              tenant={activeTenant}
-              mutateTenantStatus={mutateTenantStatus}
-            />
-          )}
+          <div className="flex flex-col sm:flex-row gap-8 sm:gap-3 w-full">
+            {activeTenant && (
+              <LegalSettings
+                tenant={activeTenant}
+                mutateTenantStatus={mutateTenantStatus}
+              />
+            )}
 
-          {activeTenant && (
-            <OwnersCard
-              tenant={activeTenant}
-              mutateTenantStatus={mutateTenantStatus}
-            />
-          )}
+            {activeTenant && (
+              <OwnersCard
+                tenant={activeTenant}
+                mutateTenantStatus={mutateTenantStatus}
+              />
+            )}
 
-          {activeTenant && (
-            <ManagersCard
-              tenant={activeTenant}
-              mutateTenantStatus={mutateTenantStatus}
-            />
-          )}
+            {activeTenant && (
+              <ManagersCard
+                tenant={activeTenant}
+                mutateTenantStatus={mutateTenantStatus}
+              />
+            )}
+          </div>
         </CardsSection.Body>
       </CardsSection>
 
@@ -240,21 +233,23 @@ export default function AdvancedManagement() {
         </CardsSection.Header>
 
         <CardsSection.Body>
-          {activeTenant && (
-            <BrandCard
-              tenant={activeTenant}
-              mutateTenantStatus={mutateTenantStatus}
-            />
-          )}
+          <div className="flex flex-col sm:flex-row gap-8 sm:gap-3 w-full">
+            {activeTenant && (
+              <BrandCard
+                tenant={activeTenant}
+                mutateTenantStatus={mutateTenantStatus}
+              />
+            )}
 
-          {activeTenant && (
-            <ColorsCard
-              tenant={activeTenant}
-              mutateTenantStatus={mutateTenantStatus}
-            />
-          )}
+            {activeTenant && (
+              <ColorsCard
+                tenant={activeTenant}
+                mutateTenantStatus={mutateTenantStatus}
+              />
+            )}
+          </div>
         </CardsSection.Body>
       </CardsSection>
     </BasePage>
-  )
+  );
 }

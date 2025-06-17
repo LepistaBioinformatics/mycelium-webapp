@@ -11,14 +11,18 @@ type Tenant = components["schemas"]["Tenant"];
 type TenantMetaKey = components["schemas"]["TenantMetaKey"];
 
 interface Props {
-  tenant: Tenant,
-  mutateTenantStatus: () => void,
+  tenant: Tenant;
+  mutateTenantStatus: () => void;
 }
 
 export default function LegalSettings({ tenant, mutateTenantStatus }: Props) {
   const [isEditMetadataModalOpen, setIsEditMetadataModalOpen] = useState(false);
-  const [editMetadataKey, setEditMetadataKey] = useState<TenantMetaKey | null>(null);
-  const [editMetadataValue, setEditMetadataValue] = useState<string | null>(null);
+  const [editMetadataKey, setEditMetadataKey] = useState<TenantMetaKey | null>(
+    null
+  );
+  const [editMetadataValue, setEditMetadataValue] = useState<string | null>(
+    null
+  );
 
   const { hasEnoughPermissions } = useProfile({
     tenantOwnerNeeded: [tenant.id ?? ""],
@@ -30,21 +34,21 @@ export default function LegalSettings({ tenant, mutateTenantStatus }: Props) {
     setEditMetadataKey(key);
     setEditMetadataValue(value);
     setIsEditMetadataModalOpen(true);
-  }
+  };
 
   const handleOnSuccess = () => {
     setIsEditMetadataModalOpen(false);
     setEditMetadataKey(null);
     setEditMetadataValue(null);
     mutateTenantStatus();
-  }
+  };
 
   const handleOnClose = () => {
     setIsEditMetadataModalOpen(false);
     setEditMetadataKey(null);
     setEditMetadataValue(null);
     mutateTenantStatus();
-  }
+  };
 
   const frr = useMemo(() => {
     if (!tenant?.meta) return null;
@@ -98,7 +102,13 @@ export default function LegalSettings({ tenant, mutateTenantStatus }: Props) {
     return null;
   }
 
-  const NotSet = ({ metadataKey, value }: { metadataKey: TenantMetaKey, value: string }) => (
+  const NotSet = ({
+    metadataKey,
+    value,
+  }: {
+    metadataKey: TenantMetaKey;
+    value: string;
+  }) => (
     <MdEdit
       className="cursor-pointer text-blue-500 dark:text-lime-400 hover:scale-150 transition-all duration-200"
       title="Edit"
@@ -106,13 +116,12 @@ export default function LegalSettings({ tenant, mutateTenantStatus }: Props) {
     />
   );
 
-  const Set = ({ key, value, children }: { key: TenantMetaKey, value: string } & BaseProps) => (
-    <Typography
-      as="span"
-      decoration="thin"
-      width="xxs"
-      truncate
-    >
+  const Set = ({
+    key,
+    value,
+    children,
+  }: { key: TenantMetaKey; value: string } & BaseProps) => (
+    <Typography as="span" decoration="thin" width="xxs" truncate>
       <span
         className="lg:text-end gap-1"
         onDoubleClick={() => handleEditMetadata(key, value)}
@@ -125,14 +134,7 @@ export default function LegalSettings({ tenant, mutateTenantStatus }: Props) {
 
   return (
     <>
-      <Card
-        minHeight="50vh"
-        maxHeight="80vh"
-        padding="sm"
-        width="2xl"
-        group
-        flex1
-      >
+      <Card padding="sm" width="2xl" group flex1>
         <Card.Header>
           <Typography as="h6" decoration="smooth">
             <span>Legal information</span>
@@ -152,9 +154,16 @@ export default function LegalSettings({ tenant, mutateTenantStatus }: Props) {
               fullWidth
               linkLine
             >
-              {frr
-                ? <Set key="federal_revenue_register" value={frr ?? ""}>{frr}</Set>
-                : <NotSet metadataKey="federal_revenue_register" value={frr ?? ""} />}
+              {frr ? (
+                <Set key="federal_revenue_register" value={frr ?? ""}>
+                  {frr}
+                </Set>
+              ) : (
+                <NotSet
+                  metadataKey="federal_revenue_register"
+                  value={frr ?? ""}
+                />
+              )}
             </IntroSection.Item>
 
             <IntroSection.Item
@@ -163,9 +172,16 @@ export default function LegalSettings({ tenant, mutateTenantStatus }: Props) {
               fullWidth
               linkLine
             >
-              {frrType
-                ? <Set key="federal_revenue_register_type" value={frrType ?? ""}>{frrType}</Set>
-                : <NotSet metadataKey="federal_revenue_register_type" value={frrType ?? ""} />}
+              {frrType ? (
+                <Set key="federal_revenue_register_type" value={frrType ?? ""}>
+                  {frrType}
+                </Set>
+              ) : (
+                <NotSet
+                  metadataKey="federal_revenue_register_type"
+                  value={frrType ?? ""}
+                />
+              )}
             </IntroSection.Item>
 
             <IntroSection.Item
@@ -174,31 +190,33 @@ export default function LegalSettings({ tenant, mutateTenantStatus }: Props) {
               fullWidth
               linkLine
             >
-              {country
-                ? <Set key="country" value={country ?? ""}>{country}</Set>
-                : <NotSet metadataKey="country" value={country ?? ""} />}
+              {country ? (
+                <Set key="country" value={country ?? ""}>
+                  {country}
+                </Set>
+              ) : (
+                <NotSet metadataKey="country" value={country ?? ""} />
+              )}
             </IntroSection.Item>
 
-            <IntroSection.Item
-              prefix="State"
-              title="State"
-              fullWidth
-              linkLine
-            >
-              {state
-                ? <Set key="state" value={state ?? ""}>{state}</Set>
-                : <NotSet metadataKey="state" value={state ?? ""} />}
+            <IntroSection.Item prefix="State" title="State" fullWidth linkLine>
+              {state ? (
+                <Set key="state" value={state ?? ""}>
+                  {state}
+                </Set>
+              ) : (
+                <NotSet metadataKey="state" value={state ?? ""} />
+              )}
             </IntroSection.Item>
 
-            <IntroSection.Item
-              prefix="City"
-              title="City"
-              fullWidth
-              linkLine
-            >
-              {city
-                ? <Set key="city" value={city ?? ""}>{city}</Set>
-                : <NotSet metadataKey="city" value={city ?? ""} />}
+            <IntroSection.Item prefix="City" title="City" fullWidth linkLine>
+              {city ? (
+                <Set key="city" value={city ?? ""}>
+                  {city}
+                </Set>
+              ) : (
+                <NotSet metadataKey="city" value={city ?? ""} />
+              )}
             </IntroSection.Item>
 
             <IntroSection.Item
@@ -211,9 +229,13 @@ export default function LegalSettings({ tenant, mutateTenantStatus }: Props) {
                 className: "max-w-[150px] text-end whitespace-nowrap truncate",
               }}
             >
-              {address1
-                ? <Set key="address1" value={address1 ?? ""}>{address1}</Set>
-                : <NotSet metadataKey="address1" value={address1 ?? ""} />}
+              {address1 ? (
+                <Set key="address1" value={address1 ?? ""}>
+                  {address1}
+                </Set>
+              ) : (
+                <NotSet metadataKey="address1" value={address1 ?? ""} />
+              )}
             </IntroSection.Item>
 
             <IntroSection.Item
@@ -222,9 +244,13 @@ export default function LegalSettings({ tenant, mutateTenantStatus }: Props) {
               fullWidth
               linkLine
             >
-              {address2
-                ? <Set key="address2" value={address2 ?? ""}>{address2}</Set>
-                : <NotSet metadataKey="address2" value={address2 ?? ""} />}
+              {address2 ? (
+                <Set key="address2" value={address2 ?? ""}>
+                  {address2}
+                </Set>
+              ) : (
+                <NotSet metadataKey="address2" value={address2 ?? ""} />
+              )}
             </IntroSection.Item>
 
             <IntroSection.Item
@@ -233,9 +259,13 @@ export default function LegalSettings({ tenant, mutateTenantStatus }: Props) {
               fullWidth
               linkLine
             >
-              {zipCode
-                ? <Set key="zip_code" value={zipCode ?? ""}>{zipCode}</Set>
-                : <NotSet metadataKey="zip_code" value={zipCode ?? ""} />}
+              {zipCode ? (
+                <Set key="zip_code" value={zipCode ?? ""}>
+                  {zipCode}
+                </Set>
+              ) : (
+                <NotSet metadataKey="zip_code" value={zipCode ?? ""} />
+              )}
             </IntroSection.Item>
           </IntroSection>
         </Card.Body>
@@ -252,5 +282,5 @@ export default function LegalSettings({ tenant, mutateTenantStatus }: Props) {
         />
       )}
     </>
-  )
+  );
 }

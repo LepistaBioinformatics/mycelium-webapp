@@ -6,5 +6,5 @@ export default function ControlPanelBreadcrumbItem() {
     <PageBody.Breadcrumb.Item href="/dashboard/profile" icon={IoHomeSharp}>
       Control panel
     </PageBody.Breadcrumb.Item>
-  )
+  );
 }

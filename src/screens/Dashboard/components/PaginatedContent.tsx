@@ -5,7 +5,12 @@ interface Props extends BaseProps, PagerProps {
   isLoading: boolean;
 }
 
-export default function PaginatedContent({ children, isLoading, records, ...props }: Props) {
+export default function PaginatedContent({
+  children,
+  isLoading,
+  records,
+  ...props
+}: Props) {
   if (!isLoading && !records) return null;
 
   return (
@@ -28,5 +33,5 @@ export default function PaginatedContent({ children, isLoading, records, ...prop
         </div>
       )}
     </div>
-  )
+  );
 }

@@ -81,7 +81,7 @@ export default function Discovery() {
     >
       <div
         id="DiscoveryContent"
-        className="flex flex-col justify-center gap-4 w-[100vw] mx-auto"
+        className="flex flex-col justify-center gap-4 w-full mx-auto"
       >
         <PaginatedContent
           isLoading={isLoadingOperations}

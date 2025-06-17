@@ -17,8 +17,8 @@ type TenantOwner = components["schemas"]["Owner"];
 type Tenant = components["schemas"]["Tenant"];
 
 interface Props {
-  tenant: Tenant,
-  mutateTenantStatus: () => void,
+  tenant: Tenant;
+  mutateTenantStatus: () => void;
 }
 
 export default function OwnersCard({ tenant, mutateTenantStatus }: Props) {
@@ -33,27 +33,27 @@ export default function OwnersCard({ tenant, mutateTenantStatus }: Props) {
 
   const handleGuestOwnerModalClose = () => {
     setIsGuestOwnerModalOpen(false);
-  }
+  };
 
   const handleGuestOwnerModalSuccess = () => {
     setIsGuestOwnerModalOpen(false);
     mutateTenantStatus();
-  }
+  };
 
   const handleUnguestOwnerModalSuccess = () => {
     setIsUnguestOwnerModalOpen(false);
     mutateTenantStatus();
-  }
+  };
 
   const handleUnguestOwnerModalOpen = (owner: TenantOwner) => {
     setIsUnguestOwnerModalOpen(true);
     setSelectedOwner(owner);
-  }
+  };
 
   const handleUnguestOwnerModalClose = () => {
     setIsUnguestOwnerModalOpen(false);
     setSelectedOwner(null);
-  }
+  };
 
   const owners = useMemo(() => {
     if (!tenant) return null;
@@ -73,14 +73,7 @@ export default function OwnersCard({ tenant, mutateTenantStatus }: Props) {
 
   return (
     <>
-      <Card
-        minHeight="50vh"
-        maxHeight="80vh"
-        padding="sm"
-        width="2xl"
-        flex1
-        group
-      >
+      <Card padding="sm" width="2xl" flex1 group>
         <Card.Header>
           <Typography as="h6" decoration="smooth">
             <div className="flex items-center gap-2 group">
@@ -97,9 +90,10 @@ export default function OwnersCard({ tenant, mutateTenantStatus }: Props) {
         <Card.Body>
           <div className="flex flex-col gap-2">
             {owners?.map((owner) => {
-              const ownerName = owner.firstName && owner.lastName
-                ? `${owner.firstName} ${owner.lastName}`
-                : owner.username;
+              const ownerName =
+                owner.firstName && owner.lastName
+                  ? `${owner.firstName} ${owner.lastName}`
+                  : owner.username;
 
               return (
                 <MiniBox key={owner.id}>
@@ -109,10 +103,7 @@ export default function OwnersCard({ tenant, mutateTenantStatus }: Props) {
                       title="Owner name"
                       as="h3"
                     >
-                      <IntroSection.Item
-                        prefix="email"
-                        title="Email"
-                      >
+                      <IntroSection.Item prefix="email" title="Email">
                         <div className="flex items-center gap-2">
                           <span>{owner.email}</span>
                           <CopyToClipboard
@@ -135,7 +126,7 @@ export default function OwnersCard({ tenant, mutateTenantStatus }: Props) {
                     </div>
                   </div>
                 </MiniBox>
-              )
+              );
             })}
           </div>
         </Card.Body>

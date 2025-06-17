@@ -22,7 +22,7 @@ import useSuspenseError from "@/hooks/use-suspense-error";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/states/store";
 import { FaRegStar, FaStar } from "react-icons/fa6";
-import { setTenantInfo } from "@/states/tenant.state";
+import { setTenantInfo, setTenantIsLoading } from "@/states/tenant.state";
 import { SlOrganization } from "react-icons/sl";
 import { Link } from "react-router";
 
@@ -36,7 +36,9 @@ export default function Tenants() {
 
   const { parseHttpError } = useSuspenseError();
 
-  const { tenantInfo } = useSelector((state: RootState) => state.tenant);
+  const { tenantInfo, isLoading: isLoadingTenantInfo } = useSelector(
+    (state: RootState) => state.tenant
+  );
 
   const dispatch = useDispatch();
 
@@ -50,17 +52,11 @@ export default function Tenants() {
     permissions: [MycPermission.Read, MycPermission.Write],
   });
 
-  const {
-    skip,
-    pageSize,
-    setSkip,
-    setPageSize,
-    searchTerm,
-    setSearchTerm,
-  } = useSearchBarParams({
-    initialSkip: 0,
-    initialPageSize: 10,
-  });
+  const { skip, pageSize, setSkip, setPageSize, searchTerm, setSearchTerm } =
+    useSearchBarParams({
+      initialSkip: 0,
+      initialPageSize: 10,
+    });
 
   const memoizedUrl = useMemo(() => {
     if (!isAuthenticated) return null;
@@ -73,7 +69,7 @@ export default function Tenants() {
     if (pageSize) searchParams.pageSize = pageSize.toString();
 
     return buildPath("/adm/su/managers/tenants", {
-      query: searchParams
+      query: searchParams,
     });
   }, [searchTerm, skip, pageSize, isAuthenticated, hasEnoughPermissions]);
 
@@ -89,7 +85,7 @@ export default function Tenants() {
       return await fetch(url, {
         headers: {
           Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
       })
         .then(parseHttpError)
@@ -104,27 +100,34 @@ export default function Tenants() {
     }
   );
 
-  const setTokenPublicInformation = useCallback(async (tenantId: string | null | undefined) => {
-    if (!tenantId) return;
+  const setTokenPublicInformation = useCallback(
+    async (tenantId: string | null | undefined) => {
+      if (!tenantId) return;
 
-    if (tenantInfo?.id === tenantId) {
-      dispatch(setTenantInfo(null));
-      return;
-    };
+      if (isLoadingTenantInfo) return;
 
-    const token = await getAccessTokenSilently();
+      if (tenantInfo?.id === tenantId) {
+        dispatch(setTenantInfo(null));
+        return;
+      }
 
-    await fetch(
-      buildPath(
-        "/adm/rs/beginners/tenants/{tenant_id}",
-        { path: { tenant_id: tenantId } }
-      ),
-      { headers: { Authorization: `Bearer ${token}` } }
-    )
-      .then((res) => res.json())
-      .then((data) => dispatch(setTenantInfo(data)))
-      .catch((err) => console.error(err));
-  }, [tenantInfo, getAccessTokenSilently]);
+      dispatch(setTenantIsLoading(true));
+
+      const token = await getAccessTokenSilently();
+
+      await fetch(
+        buildPath("/adm/rs/beginners/tenants/{tenant_id}", {
+          path: { tenant_id: tenantId },
+        }),
+        { headers: { Authorization: `Bearer ${token}` } }
+      )
+        .then((res) => res.json())
+        .then((data) => dispatch(setTenantInfo(data)))
+        .catch((err) => console.error(err))
+        .finally(() => dispatch(setTenantIsLoading(false)));
+    },
+    [tenantInfo, getAccessTokenSilently, isLoadingTenantInfo]
+  );
 
   const onSubmit = (term?: string, _?: string) => {
     setSkip(0);
@@ -132,7 +135,7 @@ export default function Tenants() {
     if (term !== undefined) setSearchTerm(term);
 
     mutateTenants(tenants, { rollbackOnError: true });
-  }
+  };
 
   const handleCloseModal = () => {
     setIsNewModalOpen(false);
@@ -140,24 +143,24 @@ export default function Tenants() {
     setIsViewModalOpen(false);
     setCurrentTenant(null);
     mutateTenants(tenants, { rollbackOnError: true });
-  }
+  };
 
   const handleSuccess = () => {
     handleCloseModal();
     mutateTenants(tenants, { rollbackOnError: true });
-  }
+  };
 
   const handleViewTenantClick = (tenant: Tenant) => {
     Promise.resolve()
       .then(() => setCurrentTenant(tenant))
       .then(() => setIsViewModalOpen(true));
-  }
+  };
 
   const handleEditTenantClick = (tenant: Tenant) => {
     Promise.resolve()
       .then(() => setCurrentTenant(tenant))
       .then(() => setIsEditModalOpen(true));
-  }
+  };
 
   return (
     <DashBoardBody
@@ -172,8 +175,11 @@ export default function Tenants() {
       isLoading={isLoadingUser}
       authorized={hasEnoughPermissions}
     >
-      <div id="TenantsContent" className="flex flex-col justify-center gap-4 w-full mx-auto">
-        <div className="flex justify-start mx-auto w-full xl:max-w-4xl">
+      <div
+        id="TenantsContent"
+        className="flex flex-col justify-center gap-4 w-full mx-auto"
+      >
+        <div className="flex justify-start mx-auto w-full sm:max-w-4xl">
           <Button
             onClick={() => setIsNewModalOpen(true)}
             size="sm"
@@ -205,19 +211,6 @@ export default function Tenants() {
                     >
                       {tenant?.name}
                     </button>
-                    <span className="cursor-pointer">
-                      {tenantInfo?.id === tenant.id ? (
-                        <FaStar
-                          className="text-yellow-300"
-                          onClick={() => setTokenPublicInformation(tenant.id)}
-                        />
-                      ) : (
-                        <FaRegStar
-                          className="text-gray-500 group-hover:text-yellow-300 hidden group-hover:block"
-                          onClick={() => setTokenPublicInformation(tenant.id)}
-                        />
-                      )}
-                    </span>
 
                     <Link
                       to={`/dashboard/tenants/${tenant.id}`}
@@ -229,9 +222,17 @@ export default function Tenants() {
                   </div>
                 </Typography>
                 <div className="flex gap-5">
+                  <span className="cursor-pointer">
+                    <TenantStar
+                      tenantId={tenant.id}
+                      handleClick={() => setTokenPublicInformation(tenant.id)}
+                    />
+                  </span>
                   <CopyToClipboard text={tenant?.id ?? ""} />
                   <FaEdit
-                    className="cursor-pointer hover:text-blue-500 dark:hover:text-lime-400"
+                    className={`cursor-pointer hover:text-blue-500 dark:hover:text-lime-400 ${
+                      isLoadingTenantInfo ? "cursor-not-allowed" : ""
+                    }`}
                     onClick={() => handleEditTenantClick(tenant)}
                   />
                 </div>
@@ -266,5 +267,34 @@ export default function Tenants() {
         />
       )}
     </DashBoardBody>
+  );
+}
+
+function TenantStar({
+  tenantId,
+  handleClick,
+}: {
+  tenantId: string | null | undefined;
+  handleClick: () => void;
+}) {
+  const { tenantInfo, isLoading: isLoadingTenantInfo } = useSelector(
+    (state: RootState) => state.tenant
+  );
+
+  const style = useMemo(() => {
+    if (isLoadingTenantInfo) return "cursor-not-allowed";
+    if (tenantInfo?.id === tenantId) return "text-yellow-300";
+
+    return "text-gray-500 group-hover:text-yellow-300 group-hover:block";
+  }, [isLoadingTenantInfo, tenantInfo, tenantId]);
+
+  return (
+    <span className="cursor-pointer">
+      {tenantInfo?.id === tenantId ? (
+        <FaStar className={style} onClick={handleClick} />
+      ) : (
+        <FaRegStar className={style} onClick={handleClick} />
+      )}
+    </span>
   );
 }
