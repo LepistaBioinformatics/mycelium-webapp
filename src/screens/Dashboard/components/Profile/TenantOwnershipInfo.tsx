@@ -7,6 +7,7 @@ import MiniBox from "@/components/ui/MiniBox";
 import IntroSection from "@/components/ui/IntroSection";
 import { Link } from "react-router";
 import { TenantTagTypes } from "@/types/TenantTagTypes";
+import { useTranslation } from "react-i18next";
 
 interface Props extends TenantResolverChildProps {
   since: string;
@@ -19,12 +20,18 @@ export default function TenantOwnershipInfo({
   isLoading,
   error,
 }: Props) {
-  const title = `The tenant which the account belongs to: ${tenantId}`;
+  const { t } = useTranslation();
+
+  const title = t("Dashboard.TenantOwnershipInfo.title", {
+    tenantId,
+  });
 
   const Since = () => (
     <IntroSection.Item
-      prefix="since"
-      title={`Since on tenant: ${tenantId}`}
+      prefix={t("Dashboard.TenantOwnershipInfo.since.prefix")}
+      title={t("Dashboard.TenantOwnershipInfo.since.title", {
+        tenantId,
+      })}
     >
       {formatDDMMYY(new Date(since), true)}
     </IntroSection.Item>
@@ -40,7 +47,9 @@ export default function TenantOwnershipInfo({
         <div>
           <Since />
           <IntroSection.Item prefix="status" title={title}>
-            {tenantStatus === "deleted" ? "Tenant deleted" : "Unknown tenant"}
+            {tenantStatus === "deleted"
+              ? t("Dashboard.TenantOwnershipInfo.deleted")
+              : t("Dashboard.TenantOwnershipInfo.unknown")}
           </IntroSection.Item>
         </div>
       );
@@ -51,7 +60,7 @@ export default function TenantOwnershipInfo({
         <div>
           <Since />
           <IntroSection.Item prefix="status" title={title} isError>
-            Unauthorized
+            {t("Dashboard.TenantOwnershipInfo.unauthorized")}
           </IntroSection.Item>
         </div>
       );
@@ -61,17 +70,16 @@ export default function TenantOwnershipInfo({
       const tags = tenantStatus.active.tags;
       if (!tags) return null;
 
-      const tenantLogo = tags
-        ?.find((tag: any) => tag?.value === TenantTagTypes.Brand)
-        ?.meta
-        ?.base64Logo;
+      const tenantLogo = tags?.find(
+        (tag: any) => tag?.value === TenantTagTypes.Brand
+      )?.meta?.base64Logo;
 
       if (tenantLogo) {
         return (
           <img
             src={tenantLogo}
             alt="Tenant logo"
-            title="The tenant logo"
+            title={t("Dashboard.TenantOwnershipInfo.logo")}
             className="w-full h-full object-cover hover:scale-[3] hover:translate-x-3 hover:translate-y-3 rounded-full hover:rounded-sm transition-all duration-200 hover:border-[0.1px] border-blue-500 dark:border-lime-500 hover:shadow-lg bg-white dark:bg-gray-800"
             style={{
               width: "24px",
@@ -88,19 +96,24 @@ export default function TenantOwnershipInfo({
     return (
       <div>
         <IntroSection
-          content={(
+          content={
             <div className="flex items-center gap-2">
               <TenantLogo />
-              <span title="The tenant name">{tenantStatus.active.name}</span>
+              <span
+                title={t("Dashboard.TenantOwnershipInfo.name")}
+                className="cursor-help"
+              >
+                {tenantStatus.active.name}
+              </span>
             </div>
-          )}
+          }
           as="h3"
         >
           <Since />
           <IntroSection.Item
             prefixProps={{ nowrap: true }}
-            prefix="described as"
-            title={title}
+            prefix={t("Dashboard.TenantOwnershipInfo.description.prefix")}
+            title={t("Dashboard.TenantOwnershipInfo.description.title")}
           >
             {tenantStatus.active.description}
           </IntroSection.Item>
@@ -118,7 +131,11 @@ export default function TenantOwnershipInfo({
         </Link>
       </div>
 
-      {error && (<Typography as="small" isError>{error.message}</Typography>)}
+      {error && (
+        <Typography as="small" isError>
+          {error.message}
+        </Typography>
+      )}
     </MiniBox>
   );
 }

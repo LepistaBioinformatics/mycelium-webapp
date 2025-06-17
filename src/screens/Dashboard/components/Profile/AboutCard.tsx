@@ -26,7 +26,7 @@ export default function AboutCard({
   const Icon = icon;
 
   return (
-    <Card padding="sm" width="6xl">
+    <Card padding="sm" width="full">
       <Card.Header>
         <Typography as="h5" uppercase>
           <div

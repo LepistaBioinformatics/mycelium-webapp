@@ -25,15 +25,7 @@ const cardContainerStyles = cva(
       },
       width: {
         ...width,
-        sm: "max-w-max sm:max-w-sm",
-        md: "max-w-max sm:max-w-md",
-        lg: "max-w-max sm:max-w-lg",
-        xl: "max-w-max sm:max-w-xl",
-        "2xl": "max-w-max sm:max-w-2xl",
-        "3xl": "max-w-max sm:max-w-3xl",
-        "4xl": "max-w-max sm:max-w-4xl",
-        "5xl": "max-w-max sm:max-w-5xl",
-        "6xl": "max-w-max sm:max-w-6xl",
+        full: "w-full lg:w-1/3",
       },
       dashed: {
         true: "border-dashed",
@@ -79,6 +71,7 @@ function CardContainer({
 }: CardContainerProps) {
   return (
     <div
+      id="CardContainer"
       className={cardContainerStyles({
         height,
         width,
@@ -107,7 +100,7 @@ interface HeaderCardProps
     VariantProps<typeof headerStyles> {}
 
 function Header({ ...props }: HeaderCardProps) {
-  return <div className={headerStyles({})} {...props} />;
+  return <div id="CardHeader" className={headerStyles({})} {...props} />;
 }
 
 // ? ---------------------------------------------------------------------------
@@ -168,6 +161,7 @@ interface BodyCardProps
 function Body({ flex, gap, justify, width, align, ...props }: BodyCardProps) {
   return (
     <div
+      id="CardBody"
       className={bodyStyles({ flex, gap, justify, width, align })}
       {...props}
     />

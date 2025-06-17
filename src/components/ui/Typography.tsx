@@ -48,6 +48,7 @@ const styles = cva("whitespace-normal", {
     },
     width: {
       ...width,
+      fit: "max-w-full truncate",
       xxs: "!max-w-[15rem] !xl:max-w-[30rem] xl:max-w-max",
       xs: "!max-w-xs xl:max-w-max",
       sm: "!max-w-sm xl:max-w-max",

@@ -5,6 +5,7 @@ import TenantOwnershipInfo from "./TenantOwnershipInfo";
 import Button from "@/components/ui/Button";
 import { components } from "@/services/openapi/mycelium-schema";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 type TenantOwnership = components["schemas"]["TenantOwnership"];
 
@@ -13,20 +14,22 @@ interface Props {
 }
 
 export default function TenantOwnershipSection({ tenantsOwnership }: Props) {
+  const { t } = useTranslation();
+
   const [loadingSize, setLoadingSize] = useState(3);
 
   if (!tenantsOwnership) return null;
 
   return (
-    <Card padding="sm" width="sm" flex1>
+    <Card padding="sm" width="full">
       <Card.Header>
-        <Typography as="h6" decoration="smooth">
-          Ownership on Tenants
+        <Typography as="h3" decoration="smooth">
+          {t("Dashboard.TenantOwnershipSection.title")}
         </Typography>
       </Card.Header>
 
       <Card.Body>
-        <div className="flex flex-wrap gap-2 scrollbar">
+        <div className="flex flex-col sm:flex-row flex-wrap gap-2 scrollbar w-full">
           {tenantsOwnership
             ?.sort((a, b) => b.since.localeCompare(a.since))
             ?.slice(0, loadingSize)
@@ -50,7 +53,9 @@ export default function TenantOwnershipSection({ tenantsOwnership }: Props) {
               onClick={() => setLoadingSize(tenantsOwnership.length)}
             >
               <span className="text-sm text-blue-500 dark:text-lime-400">
-                Load all {tenantsOwnership.length}
+                {t("Dashboard.TenantOwnershipSection.loadAll", {
+                  count: tenantsOwnership.length,
+                })}
               </span>
             </Button>
           </div>

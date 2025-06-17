@@ -36,36 +36,36 @@ export default function PermissionsDetails({ profile }: Props) {
     [profile?.licensedResources]
   );
 
-  const hasRole = useCallback((role: MycRole | undefined, systemRole: boolean) => {
-    if (!licensedResources) {
-      return null;
-    }
+  const hasRole = useCallback(
+    (role: MycRole | undefined, systemRole: boolean) => {
+      if (!licensedResources) {
+        return null;
+      }
 
-    if (!role) {
-      const resources = licensedResources
-        ?.filter((resource) => (
-          resource.sysAcc === systemRole
-        ));
+      if (!role) {
+        const resources = licensedResources?.filter(
+          (resource) => resource.sysAcc === systemRole
+        );
+
+        if (resources?.length === 0) {
+          return null;
+        }
+
+        return resources;
+      }
+
+      const resources = licensedResources?.filter(
+        (resource) => resource.role === role && resource.sysAcc === systemRole
+      );
 
       if (resources?.length === 0) {
         return null;
       }
 
       return resources;
-    }
-
-    const resources = licensedResources
-      ?.filter((resource) => (
-        resource.role === role &&
-        resource.sysAcc === systemRole
-      ));
-
-    if (resources?.length === 0) {
-      return null;
-    }
-
-    return resources;
-  }, [licensedResources]);
+    },
+    [licensedResources]
+  );
 
   const hasSystemAccountManager = useMemo(
     () => hasRole(MycRole.AccountManager, true),
@@ -97,10 +97,7 @@ export default function PermissionsDetails({ profile }: Props) {
     [hasRole]
   );
 
-  const hasNonSystemRole = useMemo(
-    () => hasRole(undefined, false),
-    [hasRole]
-  );
+  const hasNonSystemRole = useMemo(() => hasRole(undefined, false), [hasRole]);
 
   return (
     <CardsSection>
@@ -121,22 +118,19 @@ export default function PermissionsDetails({ profile }: Props) {
             subtitle="High level permissions"
             icon={GiWizardStaff}
             headerTitle="Super user group"
-            links={[
-              { label: "/accounts", to: "/dashboard/accounts" },
-            ]}
-            aboutContent={(
-              <Typography as="div" width="xxs" decoration="faded">
-                Staff users can execute high-level system actions, such
-                as promoting eligible users to staff or manager roles.
-                Due to the significant level of access and control, this
-                role should be assigned with utmost caution.
-
-                <br /><br />
-
-                Additionally, staff users share the same permissions as
-                manager users.
+            links={[{ label: "/accounts", to: "/dashboard/accounts" }]}
+            aboutContent={
+              <Typography as="div" decoration="faded">
+                Staff users can execute high-level system actions, such as
+                promoting eligible users to staff or manager roles. Due to the
+                significant level of access and control, this role should be
+                assigned with utmost caution.
+                <br />
+                <br />
+                Additionally, staff users share the same permissions as manager
+                users.
               </Typography>
-            )}
+            }
           />
         )}
 
@@ -151,18 +145,16 @@ export default function PermissionsDetails({ profile }: Props) {
               { label: "/guest-roles", to: "/dashboard/guest-roles" },
             ]}
             aboutContent={
-              <Typography as="div" width="xxs" decoration="faded">
-                Wow, you're a Manager! This is a crucial role with
-                extensive authority over the system.
-
-                <br /><br />
-
-                Manager users can perform high-level actions, including
-                creating and managing tenants, configuring system-wide
-                settings, and overseeing all user roles. With this level
-                of access and control, the Manager role carries
-                significant responsibility and should be assigned with the
-                utmost caution.
+              <Typography as="div" decoration="faded">
+                Wow, you're a Manager! This is a crucial role with extensive
+                authority over the system.
+                <br />
+                <br />
+                Manager users can perform high-level actions, including creating
+                and managing tenants, configuring system-wide settings, and
+                overseeing all user roles. With this level of access and
+                control, the Manager role carries significant responsibility and
+                should be assigned with the utmost caution.
               </Typography>
             }
           />
@@ -174,17 +166,15 @@ export default function PermissionsDetails({ profile }: Props) {
             subtitle="Account-wide scope"
             icon={VscAccount}
             headerTitle="Account system role"
-            links={[
-              { label: "/accounts", to: "/dashboard/accounts" },
-            ]}
-            aboutContent={(
-              <Typography as="div" width="xxs" decoration="faded">
-                Account Manager is a account-wide role that allows you to
-                manage accounts and guests to a specific account. This
-                role is crucial for maintaining a secure and user-friendly
-                environment for all users.
+            links={[{ label: "/accounts", to: "/dashboard/accounts" }]}
+            aboutContent={
+              <Typography as="div" decoration="faded">
+                Account Manager is a account-wide role that allows you to manage
+                accounts and guests to a specific account. This role is crucial
+                for maintaining a secure and user-friendly environment for all
+                users.
               </Typography>
-            )}
+            }
           />
         )}
 
@@ -194,16 +184,14 @@ export default function PermissionsDetails({ profile }: Props) {
             subtitle="Gateway-wide scope"
             icon={MdAltRoute}
             headerTitle="Gateway system role"
-            links={[
-              { label: "/gateways", to: "/dashboard/gateways" },
-            ]}
-            aboutContent={(
-              <Typography as="div" width="xxs" decoration="faded">
-                Gateway Manager is a gateway-wide role that allows you to
-                view and manage routes and services. This role has a
-                system-wide scope, but with read-only privileges.
+            links={[{ label: "/gateways", to: "/dashboard/gateways" }]}
+            aboutContent={
+              <Typography as="div" decoration="faded">
+                Gateway Manager is a gateway-wide role that allows you to view
+                and manage routes and services. This role has a system-wide
+                scope, but with read-only privileges.
               </Typography>
-            )}
+            }
           />
         )}
 
@@ -213,23 +201,19 @@ export default function PermissionsDetails({ profile }: Props) {
             subtitle="System-wide scope"
             icon={FaUserCheck}
             headerTitle="Guest system role"
-            links={[
-              { label: "/guest-roles", to: "/dashboard/guest-roles" },
-            ]}
-            aboutContent={(
-              <Typography as="div" width="xxs" decoration="faded">
-                Guests Manager is a system-wide role that allows you to
-                manage guest roles across all tenants. Roles created with
-                this permission will be applied to all tenants, ensuring a
-                consistent and secure guest experience across the entire
-                system.
-
-                <br /><br />
-
-                This role is crucial for maintaining a secure and
-                user-friendly environment for all users.
+            links={[{ label: "/guest-roles", to: "/dashboard/guest-roles" }]}
+            aboutContent={
+              <Typography as="div" decoration="faded">
+                Guests Manager is a system-wide role that allows you to manage
+                guest roles across all tenants. Roles created with this
+                permission will be applied to all tenants, ensuring a consistent
+                and secure guest experience across the entire system.
+                <br />
+                <br />
+                This role is crucial for maintaining a secure and user-friendly
+                environment for all users.
               </Typography>
-            )}
+            }
           />
         )}
 
@@ -242,21 +226,20 @@ export default function PermissionsDetails({ profile }: Props) {
             links={[
               { label: "/subscriptions", to: "/dashboard/subscriptions" },
             ]}
-            aboutContent={(
-              <Typography as="div" width="xxs" decoration="faded">
-                Subscriptions Manager is a tenant-wide role that allows
-                you to manage subscriptions within one or more tenants.
-                Actions performed by this role include creating and
-                updating subscriptions, as well as managing associated
-                resources and settings.
-
-                <br /><br />
-
+            aboutContent={
+              <Typography as="div" decoration="faded">
+                Subscriptions Manager is a tenant-wide role that allows you to
+                manage subscriptions within one or more tenants. Actions
+                performed by this role include creating and updating
+                subscriptions, as well as managing associated resources and
+                settings.
+                <br />
+                <br />
                 Subscriptions Manager can also guest users to a specific
-                subscription account. Manage accounts tags and metadata is
-                also allowed.
+                subscription account. Manage accounts tags and metadata is also
+                allowed.
               </Typography>
-            )}
+            }
           />
         )}
 
@@ -264,7 +247,13 @@ export default function PermissionsDetails({ profile }: Props) {
           <AboutCard
             title="SYSTEM MANAGER"
             subtitle="System-wide scope"
-            icon={({ className, title }: { className: string, title: string }) => {
+            icon={({
+              className,
+              title,
+            }: {
+              className: string;
+              title: string;
+            }) => {
               return (
                 <div title={title} className="flex items-center gap-2">
                   <MdNearbyError className={className} />
@@ -277,19 +266,17 @@ export default function PermissionsDetails({ profile }: Props) {
               { label: "/error-codes", to: "/dashboard/error-codes" },
               { label: "/webhooks", to: "/dashboard/webhooks" },
             ]}
-            aboutContent={(
-              <Typography as="div" width="xxs" decoration="faded">
+            aboutContent={
+              <Typography as="div" decoration="faded">
                 System Manager should deal with system-wide issues and
-                resources. Their impact is global, so they should be
-                cautious when making changes.
-
-                <br /><br />
-
-                System managers should deal with less critical issues,
-                such as error codes management and high level as webhooks
-                configuration.
+                resources. Their impact is global, so they should be cautious
+                when making changes.
+                <br />
+                <br />
+                System managers should deal with less critical issues, such as
+                error codes management and high level as webhooks configuration.
               </Typography>
-            )}
+            }
           />
         )}
 
@@ -299,22 +286,18 @@ export default function PermissionsDetails({ profile }: Props) {
             subtitle="Tenant-wide scope"
             icon={VscOrganization}
             headerTitle="Tenant ownership"
-            links={[
-              { label: "/tenants", to: "/dashboard/tenants" },
-            ]}
-            aboutContent={(
-              <Typography as="div" width="xxs" decoration="faded">
-                You are a tenant owner. This means you have full access to
-                one or more tenants and can manage them as well as their
-                associated accounts and guests.
-
-                <br /><br />
-
+            links={[{ label: "/tenants", to: "/dashboard/tenants" }]}
+            aboutContent={
+              <Typography as="div" decoration="faded">
+                You are a tenant owner. This means you have full access to one
+                or more tenants and can manage them as well as their associated
+                accounts and guests.
+                <br />
+                <br />
                 Tenant owners has full access to the tenant's resources,
-                including management of accounts, metadata, tags, and
-                settings.
+                including management of accounts, metadata, tags, and settings.
               </Typography>
-            )}
+            }
           />
         )}
 
@@ -324,21 +307,18 @@ export default function PermissionsDetails({ profile }: Props) {
             subtitle="Tenant-wide scope"
             icon={SlOrganization}
             headerTitle="Tenant system role"
-            links={[
-              { label: "/tenants", to: "/dashboard/tenants" },
-            ]}
-            aboutContent={(
-              <Typography as="div" width="xxs" decoration="faded">
-                Tenant Manager is a tenant-wide role that allows you to
-                manage a single tenant.
-
-                <br /><br />
-
-                Actions performed by this role include creating and
-                updating tenants settings, as well as managing associated
-                resources as accounts, metadata, and tags.
+            links={[{ label: "/tenants", to: "/dashboard/tenants" }]}
+            aboutContent={
+              <Typography as="div" decoration="faded">
+                Tenant Manager is a tenant-wide role that allows you to manage a
+                single tenant.
+                <br />
+                <br />
+                Actions performed by this role include creating and updating
+                tenants settings, as well as managing associated resources as
+                accounts, metadata, and tags.
               </Typography>
-            )}
+            }
           />
         )}
 
@@ -349,13 +329,12 @@ export default function PermissionsDetails({ profile }: Props) {
             icon={LuListChecks}
             headerTitle="Custom roles"
             links={[]}
-            aboutContent={(
-              <Typography as="div" width="xxs" decoration="faded">
-                You have access to one or more custom roles. This
-                roles has a granular but non-system scope.
-
-                <br /><br />
-
+            aboutContent={
+              <Typography as="div" decoration="faded">
+                You have access to one or more custom roles. This roles has a
+                granular but non-system scope.
+                <br />
+                <br />
                 <div className="flex flex-col gap-2">
                   <Typography as="h5" decoration="smooth">
                     Roles/accounts with access to:
@@ -364,14 +343,13 @@ export default function PermissionsDetails({ profile }: Props) {
                   <SearchableNonSystemRolesList roles={hasNonSystemRole} />
                 </div>
               </Typography>
-            )}
+            }
           />
         )}
       </CardsSection.Body>
     </CardsSection>
   );
 }
-
 
 function SearchableNonSystemRolesList({
   roles,
@@ -381,7 +359,9 @@ function SearchableNonSystemRolesList({
   const [search, setSearch] = useState("");
 
   const filteredRoles = useMemo(() => {
-    return roles.filter((role) => role.role.toLowerCase().includes(search.toLowerCase()));
+    return roles.filter((role) =>
+      role.role.toLowerCase().includes(search.toLowerCase())
+    );
   }, [roles, search]);
 
   return (
@@ -396,18 +376,15 @@ function SearchableNonSystemRolesList({
 
       <div className="flex flex-col gap-2 pt-2">
         {filteredRoles
-          ?.sort((a, b) => (
-            a.accName.localeCompare(b.accName) ||
-            a.role.localeCompare(b.role) ||
-            a.perm.localeCompare(b.perm)
-          ))
+          ?.sort(
+            (a, b) =>
+              a.accName.localeCompare(b.accName) ||
+              a.role.localeCompare(b.role) ||
+              a.perm.localeCompare(b.perm)
+          )
           ?.map((resource, index) => (
             <MiniBox key={index}>
-              <IntroSection
-                title="Role"
-                content={resource.role}
-                as="h5"
-              >
+              <IntroSection title="Role" content={resource.role} as="h5">
                 <IntroSection.Item
                   prefix="on"
                   title="The account that the role is assigned to"

@@ -7,6 +7,7 @@ import TenantBasicInfo from "./TenantBasicInfo";
 import PermissionIcon from "@/components/ui/PermissionIcon";
 import MiniBox from "@/components/ui/MiniBox";
 import IntroSection from "@/components/ui/IntroSection";
+import { useTranslation } from "react-i18next";
 
 type LicensedResource = components["schemas"]["LicensedResource"];
 
@@ -15,23 +16,29 @@ interface Props {
 }
 
 export default function LicensedResourcesSection({ licensedResources }: Props) {
+  const { t } = useTranslation();
+
   return (
-    <Card padding="sm" width="sm" flex1 dashed={!licensedResources}>
+    <Card padding="sm" width="full" dashed={!licensedResources}>
       <Card.Header>
-        <Typography as="h6" decoration="smooth">
-          Accounts witch you have access
+        <Typography as="h3" decoration="smooth">
+          {t("Dashboard.LicensedResourcesSection.title")}
         </Typography>
       </Card.Header>
 
       <Card.Body>
-        {!licensedResources && (
-          <div className="flex flex-col gap-2">
-            <Typography decoration="smooth">No resources to show</Typography>
-            <Typography as="small" decoration="smooth" width="xs">
-              Accounts shared with you will appear here
-            </Typography>
-          </div>
-        )}
+        <div className="flex flex-col sm:flex-row flex-wrap gap-2 scrollbar w-full">
+          {!licensedResources && (
+            <div className="flex flex-col gap-2">
+              <Typography decoration="smooth">
+                {t("Dashboard.LicensedResourcesSection.noResources")}
+              </Typography>
+              <Typography as="small" decoration="smooth" width="xs">
+                {t("Dashboard.LicensedResourcesSection.noResourcesDescription")}
+              </Typography>
+            </div>
+          )}
+        </div>
 
         {licensedResources && (
           <div className="flex flex-col gap-2 scrollbar">
@@ -45,7 +52,9 @@ export default function LicensedResourcesSection({ licensedResources }: Props) {
               ?.map((resource, index) => (
                 <MiniBox key={index}>
                   <IntroSection
-                    title="Account name"
+                    title={t(
+                      "Dashboard.LicensedResourcesSection.accountName.title"
+                    )}
                     prefixProps={{ nowrap: true }}
                     contentProps={{ truncate: true }}
                     content={
@@ -54,12 +63,21 @@ export default function LicensedResourcesSection({ licensedResources }: Props) {
                           <div>
                             <RiRobot2Line
                               className="text-blue-500 h-4 w-4 dark:text-lime-500 hover:cursor-help"
-                              title="System account"
+                              title={t(
+                                "Dashboard.LicensedResourcesSection.accountName.system"
+                              )}
                             />
                           </div>
                         )}
                         <Typography
-                          title={`The account which you have access to: ${resource.accName}`}
+                          truncate
+                          width="fit"
+                          title={t(
+                            "Dashboard.LicensedResourcesSection.accountName.title",
+                            {
+                              accName: resource.accName,
+                            }
+                          )}
                         >
                           {resource.accName}
                         </Typography>
@@ -72,17 +90,31 @@ export default function LicensedResourcesSection({ licensedResources }: Props) {
                     </TenantResolver>
 
                     <IntroSection.Item
-                      prefix="as"
+                      prefix={t(
+                        "Dashboard.LicensedResourcesSection.role.prefix"
+                      )}
                       prefixProps={{ nowrap: true }}
-                      title={`The role assigned to you: ${resource.role}`}
+                      title={t(
+                        "Dashboard.LicensedResourcesSection.role.title",
+                        {
+                          role: resource.role,
+                        }
+                      )}
                     >
                       <span className="whitespace-nowrap">{resource.role}</span>
                     </IntroSection.Item>
 
                     <IntroSection.Item
                       prefixProps={{ nowrap: true }}
-                      prefix="able to"
-                      title={`The permission assigned to you: ${resource.perm}`}
+                      prefix={t(
+                        "Dashboard.LicensedResourcesSection.permission.prefix"
+                      )}
+                      title={t(
+                        "Dashboard.LicensedResourcesSection.permission.title",
+                        {
+                          perm: resource.perm,
+                        }
+                      )}
                     >
                       <PermissionIcon permission={resource.perm} inline />
                     </IntroSection.Item>
@@ -92,7 +124,7 @@ export default function LicensedResourcesSection({ licensedResources }: Props) {
                         className="w-fit text-red-500 dark:text-red-400 bg-red-100 dark:bg-red-500 bg-opacity-50 dark:bg-opacity-20 rounded-full px-1 py-0 mt-1 text-xs border border-red-500 dark:border-red-400 hover:cursor-help"
                         title="You not confirmed the invitation to this account"
                       >
-                        Unverified
+                        {t("Dashboard.LicensedResourcesSection.unverified")}
                       </span>
                     )}
                   </IntroSection>

@@ -14,10 +14,13 @@ import LicensedResourcesSection from "./LicensedResourcesSection";
 import { GiWizardStaff } from "react-icons/gi";
 import { GrUserAdmin } from "react-icons/gr";
 import IntroSection from "@/components/ui/IntroSection";
+import { useTranslation } from "react-i18next";
 
 type Profile = components["schemas"]["Profile"];
 
 export default function Profile() {
+  const { t } = useTranslation();
+
   const { user, profile, isLoadingUser } = useProfile();
 
   const tenantsOwnership = useMemo(
@@ -35,7 +38,7 @@ export default function Profile() {
       <PageBody.Breadcrumb>
         <ControlPanelBreadcrumbItem />
         <PageBody.Breadcrumb.Item icon={RiDashboardFill}>
-          Profile
+          {t("Dashboard.Profile.title")}
         </PageBody.Breadcrumb.Item>
       </PageBody.Breadcrumb>
 
@@ -43,24 +46,27 @@ export default function Profile() {
         <CardsSection>
           <CardsSection.Header>
             {isLoadingUser ? (
-              <Typography>Loading...</Typography>
+              <Typography>{t("Dashboard.Profile.loading")}</Typography>
             ) : (
               <IntroSection
-                prefix="You are"
+                prefix={t("Dashboard.Profile.loggedInAs.prefix")}
                 content={
-                  <Typography as="h1" title="You are logged in as">
+                  <Typography
+                    as="h1"
+                    title={t("Dashboard.Profile.loggedInAs.title")}
+                  >
                     <div className="flex items-center gap-3">
                       <span>{user?.name}</span>
                       {profile?.isStaff && (
                         <GiWizardStaff
                           className="inline text-blue-500 dark:text-lime-500 hover:cursor-help p-0.5"
-                          title="Staff user"
+                          title={t("Dashboard.Profile.loggedInAs.staff")}
                         />
                       )}
                       {profile?.isManager && (
                         <GrUserAdmin
                           className="inline text-blue-500 dark:text-lime-500 hover:cursor-help p-0.5"
-                          title="Manager user"
+                          title={t("Dashboard.Profile.loggedInAs.manager")}
                         />
                       )}
                     </div>
@@ -68,7 +74,10 @@ export default function Profile() {
                 }
                 as="div"
               >
-                <IntroSection.Item prefix="with email" title="Your email">
+                <IntroSection.Item
+                  prefix={t("Dashboard.Profile.email.prefix")}
+                  title={t("Dashboard.Profile.email.title")}
+                >
                   {user?.email}
                 </IntroSection.Item>
               </IntroSection>
@@ -76,7 +85,7 @@ export default function Profile() {
           </CardsSection.Header>
 
           <CardsSection.Body>
-            <div className="flex flex-col md:flex-row md:flex-wrap gap-3">
+            <div className="flex flex-wrap gap-8 sm:gap-3 w-full">
               <TenantOwnershipSection tenantsOwnership={tenantsOwnership} />
               <LicensedResourcesSection licensedResources={licensedResources} />
             </div>

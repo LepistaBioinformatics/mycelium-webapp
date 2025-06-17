@@ -39,5 +39,59 @@
         "here": "here"
       }
     }
+  },
+  "Dashboard": {
+    "Profile": {
+      "title": "Profile",
+      "loading": "Loading profile...",
+      "loggedInAs": {
+        "prefix": "Logged in as",
+        "title": "Your name",
+        "staff": "Staff user",
+        "manager": "Manager user"
+      },
+      "email": {
+        "prefix": "with email",
+        "title": "Your email"
+      }
+    },
+    "TenantOwnershipSection": {
+      "title": "Ownership on Tenants",
+      "loadAll": "Load all {{count}} tenants"
+    },
+    "LicensedResourcesSection": {
+      "title": "Accounts witch you have access",
+      "noResources": "No accounts shared with you",
+      "noResourcesDescription": "You don't have access to any accounts",
+      "accountName": {
+        "title": "Account name",
+        "system": "System account"
+      },
+      "role": {
+        "title": "The role assigned to you",
+        "prefix": "as"
+      },
+      "permission": {
+        "title": "The permission assigned to you",
+        "prefix": "able to"
+      },
+      "unverified": "Unverified"
+    },
+    "TenantOwnershipInfo": {
+      "title": "The tenant which the account belongs to: {{tenantId}}",
+      "since": {
+        "title": "Since on tenant: {{tenantId}}",
+        "prefix": "Since"
+      },
+      "deleted": "Deleted",
+      "unknown": "Unknown",
+      "unauthorized": "Unauthorized",
+      "logo": "The tenant logo",
+      "name": "The tenant name",
+      "description": {
+        "title": "The tenant description",
+        "prefix": "The tenant is described as"
+      }
+    }
   }
 }

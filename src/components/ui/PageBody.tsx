@@ -95,7 +95,7 @@ function Container({
   );
 }
 
-const breadcrumbStyles = cva("mt-1 mb-2 sm:flex gap-2", {
+const breadcrumbStyles = cva("mt-1 pb-4 flex overflow-x-auto gap-2", {
   variants: {},
   defaultVariants: {},
 });
