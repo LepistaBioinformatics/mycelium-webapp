@@ -21,21 +21,21 @@ type SystemActor = components["schemas"]["SystemActor"];
 
 type Inputs = {
   name: string;
-}
+};
 
 export interface GuestRoleSelectorProps {
   title: string;
-  selectedRole?: GuestRole | null,
-  parentRole?: GuestRole | null,
-  ignoreList?: string[],
-  setSelectedRole: (role: GuestRole) => void,
-  shouldBeSystemRole: boolean,
-  restrictRoleToSlug?: SystemActor
+  selectedRole?: GuestRole | null;
+  parentRole?: GuestRole | null;
+  ignoreList?: string[];
+  setSelectedRole: (role: GuestRole) => void;
+  shouldBeSystemRole: boolean;
+  restrictRoleToSlug?: SystemActor;
 }
 
 /**
  * A custom implementation of Select component
- * 
+ *
  * @param param0 A set of props
  * @returns A custom implementation of Select component
  */
@@ -46,21 +46,18 @@ export default function GuestRoleSelector({
   setSelectedRole,
   ignoreList,
   shouldBeSystemRole,
-  restrictRoleToSlug
+  restrictRoleToSlug,
 }: GuestRoleSelectorProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isEditing, setIsEditing] = useState(selectedRole ? false : true);
 
   const { parseHttpError } = useSuspenseError();
 
-  const {
-    isAuthenticated,
-    hasEnoughPermissions,
-    getAccessTokenSilently
-  } = useProfile({
-    roles: [MycRole.SubscriptionsManager],
-    permissions: [MycPermission.Read],
-  });
+  const { isAuthenticated, hasEnoughPermissions, getAccessTokenSilently } =
+    useProfile({
+      roles: [MycRole.SubscriptionsManager],
+      permissions: [MycPermission.Read],
+    });
 
   const { searchTerm, setSearchTerm, pageSize } = useSearchBarParams({
     initialSkip: 0,
@@ -73,46 +70,48 @@ export default function GuestRoleSelector({
     formState: { errors },
   } = useForm<Inputs>({
     defaultValues: {
-      name: ""
-    }
-  })
+      name: "",
+    },
+  });
 
   const memoizedUrl = useMemo(() => {
     if (!isAuthenticated) return null;
     if (!hasEnoughPermissions) return null;
 
-    let searchParams: Record<string, string> = { pageSize: pageSize.toString() };
+    let searchParams: Record<string, string> = {
+      pageSize: pageSize.toString(),
+    };
 
     if (searchTerm && searchTerm !== "") {
-      searchParams.name = searchTerm
-    };
+      searchParams.name = searchTerm;
+    }
 
     if (restrictRoleToSlug) {
-      searchParams.slug = camelCaseToKebabCase(restrictRoleToSlug as string)
-    };
+      searchParams.slug = camelCaseToKebabCase(restrictRoleToSlug as string);
+    }
 
     if (shouldBeSystemRole) {
-      searchParams.system = "true"
+      searchParams.system = "true";
     } else {
-      searchParams.system = "false"
+      searchParams.system = "false";
     }
 
     return buildPath("/adm/rs/subscriptions-manager/guest-roles", {
-      query: searchParams
+      query: searchParams,
     });
   }, [
     searchTerm,
     isAuthenticated,
     hasEnoughPermissions,
     restrictRoleToSlug,
-    shouldBeSystemRole
+    shouldBeSystemRole,
   ]);
 
   const {
     data: guestRoles,
     isLoading,
     isValidating,
-    mutate
+    mutate,
   } = useSWR<PaginatedRecords<GuestRole>>(
     memoizedUrl,
     async (url: string) => {
@@ -141,24 +140,21 @@ export default function GuestRoleSelector({
     setSearchTerm(name);
     mutate(guestRoles, { rollbackOnError: true });
     setIsSubmitting(false);
-  }
+  };
 
   const handleSelectRole = (role: GuestRole) => {
     setSelectedRole(role);
     setSearchTerm("");
     setIsEditing(false);
-  }
+  };
 
   return (
-    <FormField
-      label={title}
-      title="The role of the guest user"
-    >
+    <FormField label={title} title="The role of the guest user">
       <div>
         {selectedRole && !isEditing && (
           <div className="flex flex-col gap-2">
             <div onClick={() => setIsEditing(true)}>
-              <div className="flex items-center gap-2 border-2 border-slate-300 dark:border-slate-700 rounded-lg pb-2 bg-blue-50 dark:bg-slate-600 px-4 py-2 hover:cursor-pointer">
+              <div className="flex items-center gap-2 border-2 border-zinc-300 dark:border-zinc-700 rounded-lg pb-2 bg-blue-50 dark:bg-zinc-600 px-4 py-2 hover:cursor-pointer">
                 {selectedRole?.name}
                 {selectedRole?.permission && (
                   <PermissionIcon permission={selectedRole?.permission} />
@@ -186,10 +182,11 @@ export default function GuestRoleSelector({
                   field: {
                     input: {
                       colors: {
-                        custom: "border-slate-400 bg-blue-50 text-slate-900 focus:border-cyan-500 focus:ring-slate-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white placeholder-slate-500  dark:placeholder-slate-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500",
+                        custom:
+                          "border-zinc-400 bg-blue-50 text-zinc-900 focus:border-cyan-500 focus:ring-zinc-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white placeholder-zinc-500  dark:placeholder-zinc-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500",
                       },
-                    }
-                  }
+                    },
+                  },
                 }}
                 {...register("name")}
               />
@@ -198,15 +195,22 @@ export default function GuestRoleSelector({
               <input type="submit" className="hidden" />
             </form>
 
-            {(isLoading || isValidating || isSubmitting)
-              ? <span>Loading...</span>
-              : <Typography as="small" decoration="smooth">Click to select</Typography>
-            }
+            {isLoading || isValidating || isSubmitting ? (
+              <span>Loading...</span>
+            ) : (
+              <Typography as="small" decoration="smooth">
+                Click to select
+              </Typography>
+            )}
 
             <div className="flex flex-col mt-2 shadow-lg relative">
-              {guestRoles
-                ?.records
-                ?.sort((a, b) => a.name.localeCompare(b.name) || getNumericPermission(a.permission as MycPermission) - getNumericPermission(b.permission as MycPermission))
+              {guestRoles?.records
+                ?.sort(
+                  (a, b) =>
+                    a.name.localeCompare(b.name) ||
+                    getNumericPermission(a.permission as MycPermission) -
+                      getNumericPermission(b.permission as MycPermission)
+                )
                 ?.map((role) => (
                   <SelectionItem
                     key={role.id}
@@ -221,22 +225,27 @@ export default function GuestRoleSelector({
         )}
       </div>
     </FormField>
-  )
+  );
 }
 
-const selectionItemStyles = cva("flex gap-0 bg-blue-50 dark:bg-slate-800 p-2 border-t-2 border-t-blue-200 dark:border-t-slate-700 hover:bg-blue-100 dark:hover:bg-slate-700", {
-  variants: {
-    active: {
-      true: "cursor-pointer",
-      false: "cursor-not-allowed opacity-50",
-    }
-  },
-  defaultVariants: {
-    active: false,
-  },
-});
+const selectionItemStyles = cva(
+  "flex gap-0 bg-blue-50 dark:bg-zinc-800 p-2 border-t-2 border-t-blue-200 dark:border-t-zinc-700 hover:bg-blue-100 dark:hover:bg-zinc-700",
+  {
+    variants: {
+      active: {
+        true: "cursor-pointer",
+        false: "cursor-not-allowed opacity-50",
+      },
+    },
+    defaultVariants: {
+      active: false,
+    },
+  }
+);
 
-interface SelectionItemProps extends BaseProps, VariantProps<typeof selectionItemStyles> {
+interface SelectionItemProps
+  extends BaseProps,
+    VariantProps<typeof selectionItemStyles> {
   desiredRole: GuestRole;
   parentRole?: GuestRole | null;
   onClick: (role: GuestRole) => void;
@@ -257,26 +266,28 @@ function SelectionItem({
     if (desiredRole?.id && ignoreList?.includes(desiredRole.id)) {
       return {
         active: false,
-        reason: "The role is in the ignore list"
+        reason: "The role is in the ignore list",
       };
     }
 
     //
     // If there is no parent role, the role is active
     //
-    if (!parentRole) return {
-      active: true,
-      reason: "No parent role"
-    };
+    if (!parentRole)
+      return {
+        active: true,
+        reason: "No parent role",
+      };
 
     //
     // If the parent role is the same as the desired role, the role is not
     // active
     //
-    if (parentRole.id === desiredRole.id) return {
-      active: false,
-      reason: "The role is the same as the parent role"
-    };
+    if (parentRole.id === desiredRole.id)
+      return {
+        active: false,
+        reason: "The role is the same as the parent role",
+      };
 
     //
     // If the parent role has the same slug as the desired role, and the
@@ -291,10 +302,12 @@ function SelectionItem({
         parentRole.permission as MycPermission
       );
 
-      if (desiredRolePermission >= parentRolePermission) return {
-        active: false,
-        reason: "The role has the same slug as the parent role and the permissions are lower or equal"
-      };
+      if (desiredRolePermission >= parentRolePermission)
+        return {
+          active: false,
+          reason:
+            "The role has the same slug as the parent role and the permissions are lower or equal",
+        };
     }
 
     //
@@ -302,7 +315,7 @@ function SelectionItem({
     //
     return {
       active: true,
-      reason: "The role is active"
+      reason: "The role is active",
     };
   }, [desiredRole, ignoreList, parentRole]);
 
@@ -321,14 +334,16 @@ function SelectionItem({
     >
       <div className="flex flex-col w-full gap-2">
         <Typography>{desiredRole.name}</Typography>
-        <Typography as="small" decoration="smooth">{desiredRole.description}</Typography>
+        <Typography as="small" decoration="smooth">
+          {desiredRole.description}
+        </Typography>
       </div>
 
       <div className="flex items-center gap-2">
         <PermissionIcon permission={desiredRole.permission} size="lg" />
       </div>
     </div>
-  )
+  );
 }
 
 function getNumericPermission(permission: MycPermission): number {

@@ -9,7 +9,7 @@ const containerStyles = cva(
   {
     variants: {
       commandPalette: {
-        true: "rounded-lg p-2 border border-slate-200 dark:border-slate-600 w-full",
+        true: "rounded-lg p-2 border border-zinc-200 dark:border-zinc-600 w-full",
         false: "rounded-full",
       },
       fullWidth: {
@@ -107,7 +107,7 @@ function Container({
                           base: "block w-full border disabled:cursor-not-allowed disabled:opacity-50 text-center text-lg",
                           colors: {
                             custom:
-                              "border-slate-400 bg-blue-50 text-slate-900 focus:border-cyan-500 focus:ring-slate-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white placeholder-slate-500  dark:placeholder-slate-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500",
+                              "border-zinc-400 bg-blue-50 text-zinc-900 focus:border-cyan-500 focus:ring-zinc-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white placeholder-zinc-500  dark:placeholder-zinc-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500",
                           },
                           withAddon: {
                             off: "rounded-full",
@@ -143,7 +143,7 @@ function Container({
 }
 
 const commandPaletteContentStyles = cva(
-  "flex flex-col absolute left-0 gap-8 max-h-[250px] overflow-y-auto bg-blue-50 dark:bg-gray-800 rounded-lg p-2 mt-4 border-2 border-slate-300 dark:border-slate-500 scrollbar w-full shadow-lg dark:shadow-slate-900",
+  "flex flex-col absolute left-0 gap-8 max-h-[250px] overflow-y-auto bg-blue-50 dark:bg-gray-800 rounded-lg p-2 mt-4 border-2 border-zinc-300 dark:border-zinc-500 scrollbar w-full shadow-lg dark:shadow-zinc-900",
   {
     variants: {},
     defaultVariants: {},

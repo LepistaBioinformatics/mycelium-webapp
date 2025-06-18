@@ -21,7 +21,7 @@ type Inputs = {
   description: string;
   permission?: MycPermission | undefined;
   system: boolean;
-}
+};
 
 export interface GuestRolesModalProps {
   isOpen: boolean;
@@ -34,20 +34,17 @@ export default function GuestRolesModal({
   isOpen,
   onClose,
   onSuccess,
-  guestRole
+  guestRole,
 }: GuestRolesModalProps) {
   const [isLoading, setIsLoading] = useState(false);
 
   const { parseHttpError } = useSuspenseError();
 
-  const {
-    isAuthenticated,
-    hasEnoughPermissions,
-    getAccessTokenSilently
-  } = useProfile({
-    roles: [MycRole.GuestsManager],
-    permissions: [MycPermission.Write],
-  });
+  const { isAuthenticated, hasEnoughPermissions, getAccessTokenSilently } =
+    useProfile({
+      roles: [MycRole.GuestsManager],
+      permissions: [MycPermission.Write],
+    });
 
   const {
     register,
@@ -59,10 +56,12 @@ export default function GuestRolesModal({
     defaultValues: {
       name: guestRole?.name ?? "",
       description: guestRole?.description ?? "",
-      permission: guestRole?.permission as MycPermission | undefined || MycPermission.Read,
-      system: false
-    }
-  })
+      permission:
+        (guestRole?.permission as MycPermission | undefined) ||
+        MycPermission.Read,
+      system: false,
+    },
+  });
 
   const nameWatch = watch("name");
   const descriptionWatch = watch("description");
@@ -70,26 +69,30 @@ export default function GuestRolesModal({
   const handleLocalSuccess = () => {
     onSuccess();
     reset();
-  }
+  };
 
   const buildBaseUrl = useCallback(() => {
-    if (!isAuthenticated || !hasEnoughPermissions) return {
-      baseUrl: null,
-      method: null
-    };
+    if (!isAuthenticated || !hasEnoughPermissions)
+      return {
+        baseUrl: null,
+        method: null,
+      };
 
     if (guestRole && guestRole?.id) {
       return {
-        baseUrl: buildPath("/adm/rs/guests-manager/guest-roles/{guest_role_id}", {
-          path: { guest_role_id: guestRole.id }
-        }),
-        method: "PATCH"
+        baseUrl: buildPath(
+          "/adm/rs/guests-manager/guest-roles/{guest_role_id}",
+          {
+            path: { guest_role_id: guestRole.id },
+          }
+        ),
+        method: "PATCH",
       };
     }
 
     return {
       baseUrl: buildPath("/adm/rs/guests-manager/guest-roles"),
-      method: "POST"
+      method: "POST",
     };
   }, [guestRole, isAuthenticated, hasEnoughPermissions]);
 
@@ -114,9 +117,9 @@ export default function GuestRolesModal({
       method,
       headers: {
         Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify(data)
+      body: JSON.stringify(data),
     });
 
     if (response.ok) {
@@ -127,7 +130,7 @@ export default function GuestRolesModal({
 
     parseHttpError(response);
     setIsLoading(false);
-  }
+  };
 
   return (
     <Modal open={isOpen}>
@@ -151,10 +154,11 @@ export default function GuestRolesModal({
                 field: {
                   input: {
                     colors: {
-                      custom: "border-slate-400 bg-blue-50 text-slate-900 focus:border-cyan-500 focus:ring-slate-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white placeholder-slate-500  dark:placeholder-slate-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500",
+                      custom:
+                        "border-zinc-400 bg-blue-50 text-zinc-900 focus:border-cyan-500 focus:ring-zinc-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white placeholder-zinc-500  dark:placeholder-zinc-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500",
                     },
-                  }
-                }
+                  },
+                },
               }}
               {...register("name")}
             />
@@ -170,7 +174,8 @@ export default function GuestRolesModal({
               color="custom"
               theme={{
                 colors: {
-                  custom: "border-slate-400 bg-blue-50 text-slate-900 focus:border-cyan-500 focus:ring-slate-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white placeholder-slate-500  dark:placeholder-slate-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500",
+                  custom:
+                    "border-zinc-400 bg-blue-50 text-zinc-900 focus:border-cyan-500 focus:ring-zinc-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white placeholder-zinc-500  dark:placeholder-zinc-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500",
                 },
               }}
               {...register("description")}
@@ -180,14 +185,25 @@ export default function GuestRolesModal({
 
           <FormField
             label="Permission"
-            title={guestRole ? "This field is read-only" : "Permission of your guest role"}
+            title={
+              guestRole
+                ? "This field is read-only"
+                : "Permission of your guest role"
+            }
           >
             <Select
               id="permission"
               sizing="lg"
               disabled={!!guestRole}
-              title={guestRole ? "This field is read-only" : "Permission of your guest role"}
-              defaultValue={guestRole?.permission as MycPermission | undefined || MycPermission.Read}
+              title={
+                guestRole
+                  ? "This field is read-only"
+                  : "Permission of your guest role"
+              }
+              defaultValue={
+                (guestRole?.permission as MycPermission | undefined) ||
+                MycPermission.Read
+              }
               {...register("permission")}
             >
               <option value={MycPermission.Read}>Read</option>
@@ -201,8 +217,12 @@ export default function GuestRolesModal({
             disabled={!nameWatch || !descriptionWatch || isLoading}
           >
             {guestRole
-              ? isLoading ? "Updating..." : "Update"
-              : isLoading ? "Creating..." : "Create"}
+              ? isLoading
+                ? "Updating..."
+                : "Update"
+              : isLoading
+              ? "Creating..."
+              : "Create"}
           </Button>
         </form>
       </Modal.Body>

@@ -30,7 +30,7 @@ enum SystemAccountTypes {
 type Inputs = {
   name: string;
   accountType?: SystemAccountTypes;
-}
+};
 
 export interface AccountModalProps {
   isOpen: boolean;
@@ -56,7 +56,8 @@ export default function AccountModal({
   });
 
   const [isLoading, setIsLoading] = useState(false);
-  const [systemAccountType, setSystemAccountType] = useState<SystemAccountTypes | null>(null);
+  const [systemAccountType, setSystemAccountType] =
+    useState<SystemAccountTypes | null>(null);
 
   const { tenantInfo } = useSelector((state: RootState) => state.tenant);
 
@@ -69,36 +70,39 @@ export default function AccountModal({
   } = useForm<Inputs>({
     defaultValues: {
       name: account?.name ?? "",
-    }
-  })
+    },
+  });
 
   const nameWatch = watch("name");
 
   const handleLocalSuccess = () => {
     onSuccess();
     reset();
-  }
+  };
 
   const buildBaseUrl = useCallback(() => {
     if (systemAccountType) {
       return {
         baseUrl: buildPath("/adm/su/managers/accounts"),
-        method: "POST"
+        method: "POST",
       };
     }
 
     if (account) {
       return {
-        baseUrl: buildPath("/adm/rs/subscriptions-manager/accounts/{account_id}", {
-          path: { account_id: accountId ?? "" }
-        }),
-        method: "PATCH"
+        baseUrl: buildPath(
+          "/adm/rs/subscriptions-manager/accounts/{account_id}",
+          {
+            path: { account_id: accountId ?? "" },
+          }
+        ),
+        method: "PATCH",
       };
     }
 
     return {
       baseUrl: buildPath("/adm/rs/subscriptions-manager/accounts"),
-      method: "POST"
+      method: "POST",
     };
   }, [systemAccountType, account]);
 
@@ -119,9 +123,9 @@ export default function AccountModal({
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
-        [TENANT_ID_HEADER]: tenantInfo?.id ?? ""
+        [TENANT_ID_HEADER]: tenantInfo?.id ?? "",
       },
-      body: JSON.stringify({ name, actor: systemAccountType })
+      body: JSON.stringify({ name, actor: systemAccountType }),
     });
 
     if (!response.ok) {
@@ -132,11 +136,11 @@ export default function AccountModal({
 
     handleLocalSuccess();
     setIsLoading(false);
-  }
+  };
 
   const handleCreateSystemAccount = (accountType: SystemAccountTypes) => {
     setSystemAccountType(accountType);
-  }
+  };
 
   return (
     <Modal open={isOpen}>
@@ -159,10 +163,11 @@ export default function AccountModal({
                 field: {
                   input: {
                     colors: {
-                      custom: "border-slate-400 bg-blue-50 text-slate-900 focus:border-cyan-500 focus:ring-slate-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white placeholder-slate-500  dark:placeholder-slate-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500",
+                      custom:
+                        "border-zinc-400 bg-blue-50 text-zinc-900 focus:border-cyan-500 focus:ring-zinc-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white placeholder-zinc-500  dark:placeholder-zinc-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500",
                     },
-                  }
-                }
+                  },
+                },
               }}
               {...register("name")}
             />
@@ -175,8 +180,12 @@ export default function AccountModal({
             disabled={!nameWatch || isLoading || !tenantInfo?.id}
           >
             {account
-              ? isLoading ? "Updating..." : "Update Subscription Account"
-              : isLoading ? "Creating..." : "Create Subscription Account"}
+              ? isLoading
+                ? "Updating..."
+                : "Update Subscription Account"
+              : isLoading
+              ? "Creating..."
+              : "Create Subscription Account"}
           </Button>
 
           {hasAdminPrivileges && !account && (
@@ -207,7 +216,11 @@ export default function AccountModal({
                         rounded
                         type="submit"
                         disabled={!nameWatch || isLoading}
-                        onClick={() => handleCreateSystemAccount(SystemAccountTypes.GUEST_MANAGER)}
+                        onClick={() =>
+                          handleCreateSystemAccount(
+                            SystemAccountTypes.GUEST_MANAGER
+                          )
+                        }
                       >
                         Create
                       </Button>
@@ -233,7 +246,11 @@ export default function AccountModal({
                         rounded
                         type="submit"
                         disabled={!nameWatch || isLoading}
-                        onClick={() => handleCreateSystemAccount(SystemAccountTypes.GATEWAY_MANAGER)}
+                        onClick={() =>
+                          handleCreateSystemAccount(
+                            SystemAccountTypes.GATEWAY_MANAGER
+                          )
+                        }
                       >
                         Create
                       </Button>
@@ -259,7 +276,11 @@ export default function AccountModal({
                         rounded
                         type="submit"
                         disabled={!nameWatch || isLoading}
-                        onClick={() => handleCreateSystemAccount(SystemAccountTypes.SYSTEM_MANAGER)}
+                        onClick={() =>
+                          handleCreateSystemAccount(
+                            SystemAccountTypes.SYSTEM_MANAGER
+                          )
+                        }
                       >
                         Create
                       </Button>
@@ -269,7 +290,6 @@ export default function AccountModal({
               </div>
             </>
           )}
-
         </form>
       </Modal.Body>
     </Modal>

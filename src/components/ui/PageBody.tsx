@@ -107,7 +107,7 @@ interface BreadcrumbProps
 function BreadcrumbContainer({ children, ...props }: BreadcrumbProps) {
   children = React.Children.map(children, (child, index) => (
     <span key={index} className="flex gap-2">
-      <span className="mr-1 text-slate-500">/</span>
+      <span className="mr-1 text-zinc-500">/</span>
       <span className="mr-1">{child}</span>
     </span>
   ));
@@ -123,7 +123,7 @@ const breadcrumbItemStyles = cva("flex whitespace-nowrap gap-2", {
   variants: {
     withHref: {
       true: "hover:underline text-blue-500 dark:text-lime-500",
-      false: "text-slate-500",
+      false: "text-zinc-500",
     },
   },
   defaultVariants: {},

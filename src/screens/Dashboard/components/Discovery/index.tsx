@@ -157,13 +157,13 @@ export default function Discovery() {
                     </DetailsBox.Summary>
 
                     <DetailsBox.Content>
-                      <div className="bg-slate-200 dark:bg-slate-700 rounded-lg p-2 mt-2 flex flex-col gap-2">
+                      <div className="bg-zinc-200 dark:bg-zinc-700 rounded-lg p-2 mt-2 flex flex-col gap-2">
                         {Object.keys(
                           operation?.operation?.requestBody?.schema?.content
                         )?.map((key) => (
                           <div
                             key={key}
-                            className="flex flex-col gap-3 border border-slate-300 dark:border-slate-600 p-2 rounded-lg bg-white dark:bg-slate-800"
+                            className="flex flex-col gap-3 border border-zinc-300 dark:border-zinc-600 p-2 rounded-lg bg-white dark:bg-zinc-800"
                           >
                             <div className="flex flex-col">
                               <Typography as="span" decoration="smooth">
@@ -335,7 +335,7 @@ const FormattedPath = ({
               key={index}
               className="flex flex-nowrap gap-1 whitespace-normal"
             >
-              {index > 0 && <span className="text-slate-500">/</span>}
+              {index > 0 && <span className="text-zinc-500">/</span>}
 
               {param ? (
                 <Part

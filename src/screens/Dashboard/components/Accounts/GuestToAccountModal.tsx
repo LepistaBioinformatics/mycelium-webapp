@@ -16,20 +16,22 @@ import { TextInput } from "flowbite-react";
 import { useMemo, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
-import GuestRoleSelector, { GuestRoleSelectorProps } from "../GuestRoles/GuestRoleSelector";
+import GuestRoleSelector, {
+  GuestRoleSelectorProps,
+} from "../GuestRoles/GuestRoleSelector";
 
 type Account = components["schemas"]["Account"];
 type GuestRole = components["schemas"]["GuestRole"];
 
 type Inputs = {
   email: string;
-}
+};
 
 interface Props extends Pick<GuestRoleSelectorProps, "restrictRoleToSlug"> {
-  account: Account,
-  isOpen: boolean,
-  onClose: () => void,
-  tenantId?: string | null
+  account: Account;
+  isOpen: boolean;
+  onClose: () => void;
+  tenantId?: string | null;
 }
 
 export default function GuestToAccountModal({
@@ -68,9 +70,9 @@ export default function GuestToAccountModal({
     formState: { errors },
   } = useForm<Inputs>({
     defaultValues: {
-      email: ""
-    }
-  })
+      email: "",
+    },
+  });
 
   const onSubmit: SubmitHandler<Inputs> = async (data, event) => {
     event?.preventDefault();
@@ -90,9 +92,12 @@ export default function GuestToAccountModal({
     const token = await getAccessTokenSilently();
 
     const response = await fetch(
-      buildPath("/adm/rs/subscriptions-manager/guests/accounts/{account_id}/roles/{role_id}", {
-        path: { account_id: account.id, role_id: selectedRole?.id },
-      }),
+      buildPath(
+        "/adm/rs/subscriptions-manager/guests/accounts/{account_id}/roles/{role_id}",
+        {
+          path: { account_id: account.id, role_id: selectedRole?.id },
+        }
+      ),
       {
         method: "POST",
         headers: {
@@ -101,9 +106,10 @@ export default function GuestToAccountModal({
           ...(tenantId ? { [TENANT_ID_HEADER]: tenantId } : {}),
         },
         body: JSON.stringify({
-          email: data.email
-        })
-      });
+          email: data.email,
+        }),
+      }
+    );
 
     if (!response.ok) {
       parseHttpError(response);
@@ -114,7 +120,7 @@ export default function GuestToAccountModal({
     setIsSubmitting(false);
     onClose();
     reset();
-  }
+  };
 
   const emailIsValid = useMemo(() => {
     return validateEmail(watch("email"));
@@ -144,10 +150,11 @@ export default function GuestToAccountModal({
                 field: {
                   input: {
                     colors: {
-                      custom: "border-slate-400 bg-blue-50 text-slate-900 focus:border-cyan-500 focus:ring-slate-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white placeholder-slate-500  dark:placeholder-slate-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500",
-                    }
-                  }
-                }
+                      custom:
+                        "border-zinc-400 bg-blue-50 text-zinc-900 focus:border-cyan-500 focus:ring-zinc-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white placeholder-zinc-500  dark:placeholder-zinc-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500",
+                    },
+                  },
+                },
               }}
               {...register("email", { required: true })}
             />
@@ -197,5 +204,5 @@ export default function GuestToAccountModal({
         </div>
       </Modal.Body>
     </Modal>
-  )
+  );
 }

@@ -9,7 +9,7 @@ import ThemeSwitcher from "./ThemeSwitcher";
 import Divider from "./Divider";
 
 const containerStyles = cva(
-  "hidden sm:flex bg-blue-50 dark:bg-slate-700 min-w-md max-h-screen overflow-y-auto scrollbar px-2 pt-2 pb-5 flex flex-col gap-8 justify-between align-middle border-r-2 border-blue-300 dark:border-lime-700 shadow",
+  "hidden sm:flex bg-blue-50 dark:bg-zinc-700 min-w-md max-h-screen overflow-y-auto scrollbar px-2 pt-2 pb-5 flex flex-col gap-8 justify-between align-middle border-r-2 border-blue-300 dark:border-lime-700 shadow",
   {
     variants: {
       open: {
@@ -50,7 +50,7 @@ function Container({
       <div className="flex flex-col gap-1 w-full">
         <Divider style="partial" marginY="none" thickness="sm" />
 
-        <div className="flex justify-center items-center w-full text-center rounded-full p-2 hover:bg-blue-200 dark:hover:bg-slate-600">
+        <div className="flex justify-center items-center w-full text-center rounded-full p-2 hover:bg-blue-200 dark:hover:bg-zinc-600">
           <Tooltip
             content="Toggle theme"
             className="px-2 border-2 border-white dark:border-lime-500 text-blue-800 dark:text-lime-500"
@@ -61,13 +61,13 @@ function Container({
 
         <button
           onClick={toggle}
-          className="flex justify-center items-center w-full text-center bg-blue-50 dark:bg-slate-700 hover:bg-blue-200 dark:hover:bg-slate-600 rounded-full p-2"
+          className="flex justify-center items-center w-full text-center bg-blue-50 dark:bg-zinc-700 hover:bg-blue-200 dark:hover:bg-zinc-600 rounded-full p-2"
         >
           <Tooltip
             content="Toggle sidebar"
             className="px-2 border-2 border-white dark:border-lime-500 text-blue-800 dark:text-lime-500"
           >
-            <PiSidebarSimple className="text-slate-800 dark:text-slate-300" />
+            <PiSidebarSimple className="text-zinc-800 dark:text-zinc-300" />
           </Tooltip>
         </button>
 
@@ -75,13 +75,13 @@ function Container({
 
         <button
           onClick={logout}
-          className="flex justify-center items-center w-full text-center bg-blue-50 dark:bg-slate-700 hover:bg-blue-200 dark:hover:bg-slate-600 rounded-full p-2"
+          className="flex justify-center items-center w-full text-center bg-blue-50 dark:bg-zinc-700 hover:bg-blue-200 dark:hover:bg-zinc-600 rounded-full p-2"
         >
           <Tooltip
             content="Logout"
             className="px-2 border-2 border-white dark:border-lime-500 text-blue-800 dark:text-lime-500"
           >
-            <PiSignOutBold className="text-slate-800 dark:text-slate-300" />
+            <PiSignOutBold className="text-zinc-800 dark:text-zinc-300" />
           </Tooltip>
         </button>
       </div>
@@ -90,12 +90,12 @@ function Container({
 }
 
 const sidebarItemStyles = cva(
-  "flex items-center align-middle gap-2 border border-blue-300 dark:border-lime-500 rounded-full p-2 text-slate-800 dark:text-lime-500 transition-all duration-300 ease-in-out hover:bg-blue-300 dark:hover:bg-slate-600 w-full",
+  "flex items-center align-middle gap-2 border border-blue-300 dark:border-lime-500 rounded-full p-2 text-zinc-800 dark:text-lime-500 transition-all duration-300 ease-in-out hover:bg-blue-300 dark:hover:bg-zinc-600 w-full",
   {
     variants: {
       active: {
-        true: "bg-blue-200 dark:bg-slate-600",
-        false: "bg-white dark:bg-slate-700",
+        true: "bg-blue-200 dark:bg-zinc-600",
+        false: "bg-white dark:bg-zinc-700",
       },
       open: {
         true: "w-fit px-4 py-2",
@@ -150,7 +150,7 @@ function SidebarItem({
       <Tooltip
         placement="right"
         content={text}
-        className="px-4 border-2 border-white dark:border-lime-500 bg-blue-200 dark:bg-slate-600 text-blue-800 dark:text-lime-500"
+        className="px-4 border-2 border-white dark:border-lime-500 bg-blue-200 dark:bg-zinc-600 text-blue-800 dark:text-lime-500"
       >
         <Icon />
       </Tooltip>

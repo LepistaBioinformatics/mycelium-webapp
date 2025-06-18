@@ -9,7 +9,7 @@ export function HorizontalLoadingBar({ isLoading }: Props) {
     <>
       {isLoading ? (
         <div
-          className="bg-neutral-900 dark:bg-neutral-100 h-[1px] w-[60%] overflow-hidden"
+          className="bg-zinc-900 dark:bg-zinc-100 h-[1px] w-[60%] overflow-hidden"
           style={{
             transformOrigin: "0% 50%",
             animation: "indeterminateAnimation 2s infinite linear",

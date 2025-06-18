@@ -24,7 +24,7 @@ export default function SeeMoreText({ text, maxLength = 100, props }: Props) {
       {displayText}
       {text.length > maxLength && (
         <span className="ml-1">
-          {!showMore && <span className="text-slate-500 mr-1">...</span>}
+          {!showMore && <span className="text-zinc-500 mr-1">...</span>}
           <Button
             intent="link"
             size="xs"

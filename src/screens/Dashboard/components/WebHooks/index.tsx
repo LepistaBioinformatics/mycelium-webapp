@@ -35,17 +35,11 @@ export default function Webhooks() {
     permissions: [MycPermission.Read, MycPermission.Write],
   });
 
-  const {
-    skip,
-    pageSize,
-    setSkip,
-    setPageSize,
-    searchTerm,
-    setSearchTerm,
-  } = useSearchBarParams({
-    initialSkip: 0,
-    initialPageSize: 10,
-  });
+  const { skip, pageSize, setSkip, setPageSize, searchTerm, setSearchTerm } =
+    useSearchBarParams({
+      initialSkip: 0,
+      initialPageSize: 10,
+    });
 
   const memoizedUrl = useMemo(() => {
     if (!isAuthenticated) return null;
@@ -58,7 +52,7 @@ export default function Webhooks() {
     if (pageSize) searchParams.pageSize = pageSize.toString();
 
     return buildPath("/adm/rs/system-manager/webhooks", {
-      query: searchParams
+      query: searchParams,
     });
   }, [searchTerm, skip, pageSize, isAuthenticated, hasEnoughPermissions]);
 
@@ -74,7 +68,7 @@ export default function Webhooks() {
       return await fetch(url, {
         headers: {
           Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
       })
         .then(parseHttpError)
@@ -95,7 +89,7 @@ export default function Webhooks() {
     if (term !== undefined) setSearchTerm(term);
 
     mutateWebhooks(webhooks, { rollbackOnError: true });
-  }
+  };
 
   return (
     <DashBoardBody
@@ -110,7 +104,10 @@ export default function Webhooks() {
       isLoading={isLoadingUser}
       authorized={hasEnoughPermissions}
     >
-      <div id="TenantsContent" className="flex flex-col justify-center gap-4 w-full mx-auto">
+      <div
+        id="TenantsContent"
+        className="flex flex-col justify-center gap-4 w-full mx-auto"
+      >
         <div className="flex justify-start mx-auto w-full xl:max-w-4xl">
           <Button
             onClick={() => console.log("clicked")}
@@ -151,15 +148,24 @@ export default function Webhooks() {
                 Trigger: <span className="font-bold">{webhook?.trigger}</span>
               </Typography>
               <Typography as="small" decoration="smooth">
-                Created: <span className="font-bold">{formatDDMMYY(new Date(webhook?.created), true)}</span>
+                Created:{" "}
+                <span className="font-bold">
+                  {formatDDMMYY(new Date(webhook?.created), true)}
+                </span>
               </Typography>
               {webhook?.updated && (
                 <Typography as="small" decoration="smooth">
-                  Updated: <span className="font-bold">{formatDDMMYY(new Date(webhook?.updated || ""), true)}</span>
+                  Updated:{" "}
+                  <span className="font-bold">
+                    {formatDDMMYY(new Date(webhook?.updated || ""), true)}
+                  </span>
                 </Typography>
               )}
               <Typography as="small" decoration="smooth">
-                Active: <span className="font-bold">{webhook?.isActive ? "Yes" : "No"}</span>
+                Active:{" "}
+                <span className="font-bold">
+                  {webhook?.isActive ? "Yes" : "No"}
+                </span>
               </Typography>
 
               <Typography as="span" decoration="smooth">
@@ -170,17 +176,18 @@ export default function Webhooks() {
                 <DetailsBox>
                   <DetailsBox.Summary>
                     <VscGistSecret className="w-4 h-4 inline-block text-green-500" />
-                    <Typography as="span" decoration="smooth">Secure</Typography>
+                    <Typography as="span" decoration="smooth">
+                      Secure
+                    </Typography>
                   </DetailsBox.Summary>
 
                   <DetailsBox.Content>
-                    <div className="bg-slate-200 dark:bg-slate-700 rounded-lg p-2 mt-2">
+                    <div className="bg-zinc-200 dark:bg-zinc-700 rounded-lg p-2 mt-2">
                       <Secret secret={webhook?.secret} />
                     </div>
                   </DetailsBox.Content>
                 </DetailsBox>
               )}
-
             </ListItem>
           ))}
         </PaginatedContent>
@@ -189,7 +196,11 @@ export default function Webhooks() {
   );
 }
 
-const Secret = ({ secret }: { secret: components["schemas"]["HttpSecret"] }) => {
+const Secret = ({
+  secret,
+}: {
+  secret: components["schemas"]["HttpSecret"];
+}) => {
   if ("authorizationHeader" in secret) {
     const { authorizationHeader } = secret;
     const { headerName, prefix, token } = authorizationHeader;
@@ -197,13 +208,16 @@ const Secret = ({ secret }: { secret: components["schemas"]["HttpSecret"] }) => 
     return (
       <div className="flex flex-col gap-2">
         <Typography as="small">
-          Secret Type: <span className="font-bold">{Object.keys(secret).at(0)}</span>
+          Secret Type:{" "}
+          <span className="font-bold">{Object.keys(secret).at(0)}</span>
         </Typography>
         <Typography as="small">
-          Header Name: <span className="font-bold">{headerName || "Authorization"}</span>
+          Header Name:{" "}
+          <span className="font-bold">{headerName || "Authorization"}</span>
         </Typography>
         <Typography as="small">
-          Token Prefix: <span className="font-bold">{prefix || "Bearer (default)"}</span>
+          Token Prefix:{" "}
+          <span className="font-bold">{prefix || "Bearer (default)"}</span>
         </Typography>
         <Typography as="small">
           Token Value: <span className="font-bold">{token}</span>
@@ -219,7 +233,8 @@ const Secret = ({ secret }: { secret: components["schemas"]["HttpSecret"] }) => 
     return (
       <div className="flex flex-col gap-2">
         <Typography as="small">
-          Secret Type: <span className="font-bold">{Object.keys(secret).at(0)}</span>
+          Secret Type:{" "}
+          <span className="font-bold">{Object.keys(secret).at(0)}</span>
         </Typography>
         <Typography as="small">
           Query Parameter Name: <span className="font-bold">{name}</span>
@@ -234,8 +249,9 @@ const Secret = ({ secret }: { secret: components["schemas"]["HttpSecret"] }) => 
   return (
     <div className="flex flex-col gap-2">
       <Typography as="small">
-        Secret Type: <span className="font-bold">{Object.keys(secret).at(0)}</span>
+        Secret Type:{" "}
+        <span className="font-bold">{Object.keys(secret).at(0)}</span>
       </Typography>
     </div>
   );
-}
+};

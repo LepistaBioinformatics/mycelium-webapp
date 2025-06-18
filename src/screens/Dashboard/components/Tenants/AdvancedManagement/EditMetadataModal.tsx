@@ -16,7 +16,7 @@ type TenantMetaKey = components["schemas"]["TenantMetaKey"];
 
 type Inputs = {
   value: string;
-}
+};
 
 interface Props {
   isOpen: boolean;
@@ -27,7 +27,14 @@ interface Props {
   editMetadataValue?: string | null;
 }
 
-export default function EditMetadataModal({ isOpen, onClose, onSuccess, tenantId, editMetadataKey, editMetadataValue }: Props) {
+export default function EditMetadataModal({
+  isOpen,
+  onClose,
+  onSuccess,
+  tenantId,
+  editMetadataKey,
+  editMetadataValue,
+}: Props) {
   const { hasEnoughPermissions, getAccessTokenSilently } = useProfile({
     shouldBeManager: true,
   });
@@ -39,11 +46,11 @@ export default function EditMetadataModal({ isOpen, onClose, onSuccess, tenantId
   const {
     register,
     handleSubmit,
-    formState: { errors }
+    formState: { errors },
   } = useForm<Inputs>({
     defaultValues: {
       value: editMetadataValue ?? "",
-    }
+    },
   });
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
@@ -70,12 +77,12 @@ export default function EditMetadataModal({ isOpen, onClose, onSuccess, tenantId
       headers: {
         Authorization: `Bearer ${token}`,
         [TENANT_ID_HEADER]: tenantId,
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         key: editMetadataKey?.toString(),
         value: data.value,
-      })
+      }),
     });
 
     if (!response.ok) {
@@ -84,7 +91,7 @@ export default function EditMetadataModal({ isOpen, onClose, onSuccess, tenantId
 
     onSuccess();
     setIsLoading(false);
-  }
+  };
 
   if (!hasEnoughPermissions) {
     return null;
@@ -101,10 +108,7 @@ export default function EditMetadataModal({ isOpen, onClose, onSuccess, tenantId
           className="flex flex-col gap-2 w-full"
           onSubmit={handleSubmit(onSubmit)}
         >
-          <FormField
-            label="Key"
-            title="Key of your metadata"
-          >
+          <FormField label="Key" title="Key of your metadata">
             <Typography as="h3">
               {snakeToHumanText(editMetadataKey?.toString() ?? "")}
             </Typography>
@@ -121,21 +125,18 @@ export default function EditMetadataModal({ isOpen, onClose, onSuccess, tenantId
                 field: {
                   input: {
                     colors: {
-                      custom: "border-slate-400 bg-blue-50 text-slate-900 focus:border-cyan-500 focus:ring-slate-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white placeholder-slate-500  dark:placeholder-slate-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500",
+                      custom:
+                        "border-zinc-400 bg-blue-50 text-zinc-900 focus:border-cyan-500 focus:ring-zinc-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white placeholder-zinc-500  dark:placeholder-zinc-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500",
                     },
-                  }
-                }
+                  },
+                },
               }}
               {...register("value")}
             />
             {errors.value && <span>This field is required</span>}
           </FormField>
 
-          <Button
-            rounded
-            type="submit"
-            disabled={isLoading}
-          >
+          <Button rounded type="submit" disabled={isLoading}>
             {isLoading ? "Updating..." : "Update"}
           </Button>
         </form>

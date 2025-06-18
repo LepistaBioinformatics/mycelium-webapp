@@ -18,7 +18,7 @@ export default function App() {
   }, [profile]);
 
   return (
-    <div id="App" className="bg-slate-50 dark:bg-slate-900">
+    <div id="App" className="bg-zinc-50 dark:bg-zinc-900">
       <BrowserRouter>
         <Routes>
           <Route

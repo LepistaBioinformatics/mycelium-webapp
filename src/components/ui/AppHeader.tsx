@@ -46,13 +46,13 @@ export default function AppHeader({
             <Link to="/">Mycelium</Link>
           </Typography>
         </div>
-        <div className="flex items-center gap-8 rounded-full border border-transparent border-dashed hover:border-slate-500 p-2">
+        <div className="flex items-center gap-8 rounded-full border border-transparent border-dashed hover:border-zinc-500 p-2">
           <Typography as="span" reverseBackground={!discrete}>
             <ThemeSwitcher reverseBackground={!discrete} />
           </Typography>
           {user && (
             <div onClick={logout} className="cursor-pointer">
-              <PiSignOutBold className="text-slate-800 dark:text-slate-300" />
+              <PiSignOutBold className="text-zinc-800 dark:text-zinc-300" />
             </div>
           )}
         </div>

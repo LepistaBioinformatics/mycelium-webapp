@@ -15,7 +15,7 @@ const containerStyles = cva("text-gray-500 dark:text-gray-50", {
     padding,
     margin,
     type: {
-      screen: "bg-slate-50 dark:bg-slate-900 min-h-screen w-full",
+      screen: "bg-zinc-50 dark:bg-zinc-900 min-h-screen w-full",
     },
   },
   defaultVariants: {
@@ -53,7 +53,7 @@ const boxStyles = cva("text-gray-500 dark:text-gray-50", {
   variants: {
     type: {
       highlight:
-        "bg-gray-100 dark:bg-neutral-800 shadow-md rounded-lg border-2 dark:border-indigo-900 p-4",
+        "bg-gray-100 dark:bg-zinc-800 shadow-md rounded-lg border-2 dark:border-indigo-900 p-4",
       discreet: "bg-transparent p-4",
     },
   },

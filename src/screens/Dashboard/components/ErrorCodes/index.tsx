@@ -32,17 +32,11 @@ export default function ErrorCodes() {
     permissions: [MycPermission.Read, MycPermission.Write],
   });
 
-  const {
-    skip,
-    pageSize,
-    setSkip,
-    setPageSize,
-    searchTerm,
-    setSearchTerm,
-  } = useSearchBarParams({
-    initialSkip: 0,
-    initialPageSize: 10,
-  });
+  const { skip, pageSize, setSkip, setPageSize, searchTerm, setSearchTerm } =
+    useSearchBarParams({
+      initialSkip: 0,
+      initialPageSize: 10,
+    });
 
   const memoizedUrl = useMemo(() => {
     if (!isAuthenticated) return null;
@@ -75,7 +69,6 @@ export default function ErrorCodes() {
         } else if (internalNoMatch) {
           searchParams.isInternal = "false";
         }
-
       }
 
       //
@@ -88,13 +81,13 @@ export default function ErrorCodes() {
           searchParams.code = codeMatch[1] as string;
         }
       }
-    };
+    }
 
     if (skip) searchParams.skip = skip.toString();
     if (pageSize) searchParams.pageSize = pageSize.toString();
 
     return buildPath("/adm/rs/system-manager/error-codes", {
-      query: searchParams
+      query: searchParams,
     });
   }, [searchTerm, skip, pageSize, isAuthenticated, hasEnoughPermissions]);
 
@@ -131,7 +124,7 @@ export default function ErrorCodes() {
     if (term !== undefined) setSearchTerm(term);
 
     mutateErrorCodes(errorCodes, { rollbackOnError: true });
-  }
+  };
 
   /**
    * Builds the error code id from the error code prefix and error code number
@@ -142,7 +135,7 @@ export default function ErrorCodes() {
     const number = errorCode?.errorNumber.toString().padStart(4, "0");
 
     return `${errorCode?.prefix}${number}`;
-  }
+  };
 
   return (
     <DashBoardBody
@@ -158,7 +151,10 @@ export default function ErrorCodes() {
       isLoading={isLoadingUser}
       authorized={hasEnoughPermissions}
     >
-      <div id="ErrorCodesContent" className="flex flex-col justify-center gap-4 w-full mx-auto">
+      <div
+        id="ErrorCodesContent"
+        className="flex flex-col justify-center gap-4 w-full mx-auto"
+      >
         <div className="flex justify-start mx-auto w-full xl:max-w-4xl">
           <Button
             onClick={() => console.log("clicked")}
@@ -187,7 +183,10 @@ export default function ErrorCodes() {
                     onClick={() => console.log(errorCode)}
                   >
                     <ErrorCodeParts part={errorCode.prefix} subpart="prefix" />
-                    <ErrorCodeParts part={errorCode.errorNumber.toString().padStart(4, "0")} subpart="code" />
+                    <ErrorCodeParts
+                      part={errorCode.errorNumber.toString().padStart(4, "0")}
+                      subpart="code"
+                    />
                   </button>
                 </Typography>
                 <div className="flex gap-5">
@@ -195,13 +194,21 @@ export default function ErrorCodes() {
                 </div>
               </div>
               <Typography as="span">{errorCode?.message}</Typography>
-              <Typography as="small" decoration="smooth">{errorCode?.details}</Typography>
+              <Typography as="small" decoration="smooth">
+                {errorCode?.details}
+              </Typography>
               <div className="flex flex-col gap-2">
                 <Typography as="small" decoration="smooth">
-                  Internal: <span className="font-bold">{errorCode?.isInternal ? "Yes" : "No"}</span>
+                  Internal:{" "}
+                  <span className="font-bold">
+                    {errorCode?.isInternal ? "Yes" : "No"}
+                  </span>
                 </Typography>
                 <Typography as="small" decoration="smooth">
-                  Native: <span className="font-bold">{errorCode?.isNative ? "Yes" : "No"}</span>
+                  Native:{" "}
+                  <span className="font-bold">
+                    {errorCode?.isNative ? "Yes" : "No"}
+                  </span>
                 </Typography>
               </div>
             </ListItem>
@@ -212,15 +219,15 @@ export default function ErrorCodes() {
   );
 }
 
-function ErrorCodeParts({ part, subpart }: { part: string, subpart: string }) {
+function ErrorCodeParts({ part, subpart }: { part: string; subpart: string }) {
   return (
     <div className="flex flex-col align-top gap-0 text-left">
       <span className="group-hover:underline text-blue-500 dark:text-lime-400">
         {part}
       </span>
-      <span className="text-xs text-slate-400 dark:text-slate-500 -mt-1">
+      <span className="text-xs text-zinc-400 dark:text-zinc-500 -mt-1">
         {subpart}
       </span>
     </div>
-  )
+  );
 }

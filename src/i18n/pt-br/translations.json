@@ -44,7 +44,7 @@
         "title": "Perfil",
         "loading": "Carregando perfil...",
         "loggedInAs": {
-          "prefix": "Logado como",
+          "prefix": "Usuário",
           "title": "Seu nome",
           "staff": "Usuário da equipe",
           "manager": "Usuário gerente"

@@ -23,7 +23,7 @@ interface ContainerProps
 function Container({ children, open, ...props }: ContainerProps) {
   return (
     <main className={containerStyles({ open })} {...props}>
-      <div className="bg-white dark:bg-gray-900 rounded-lg p-2 border-2 border-gray-300 dark:border-gray-700 max-h-[95vh] overflow-y-hidden scrollbar w-full sm:w-1/3">
+      <div className="bg-white dark:bg-zinc-900 rounded-lg p-2 border-2 border-gray-300 dark:border-gray-700 max-h-[95vh] overflow-y-hidden scrollbar w-full sm:w-1/3">
         {children}
       </div>
     </main>

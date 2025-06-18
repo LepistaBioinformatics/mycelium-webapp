@@ -179,7 +179,7 @@ export default function Services() {
                   </DetailsBox.Summary>
 
                   <DetailsBox.Content>
-                    <div className="bg-slate-200 dark:bg-slate-700 rounded-lg p-2 mt-2">
+                    <div className="bg-zinc-200 dark:bg-zinc-700 rounded-lg p-2 mt-2">
                       <Secret secret={webhook?.secret} />
                     </div>
                   </DetailsBox.Content>
