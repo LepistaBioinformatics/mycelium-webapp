@@ -34,9 +34,13 @@ interface Props {
   initialPageSize?: number;
   handleClickOnAccount?: (account: Account) => void;
   padding?: keyof typeof padding;
-  tiny?: boolean;
   forceMutate?: Date | null;
-  restrictAccountTypeTo?: ("subscription" | "roleAssociated" | "actorAssociated" | "tenantManager")[];
+  restrictAccountTypeTo?: (
+    | "subscription"
+    | "roleAssociated"
+    | "actorAssociated"
+    | "tenantManager"
+  )[];
 }
 
 const COMMANDS = {
@@ -65,28 +69,32 @@ const COMMANDS = {
     subscription: {
       brief: "Select Subscription accounts",
       command: "/subscription",
-      description: "Action restricted to subscriptions-manager users. Disabled if tenant is not selected",
+      description:
+        "Action restricted to subscriptions-manager users. Disabled if tenant is not selected",
       adminOnly: false,
       tenantNeeded: true,
     },
     roleAssociated: {
       brief: "Select Role Associated accounts",
       command: "/roleAssociated",
-      description: "Action restricted to subscriptions-manager users. Disabled if tenant is not selected",
+      description:
+        "Action restricted to subscriptions-manager users. Disabled if tenant is not selected",
       adminOnly: false,
       tenantNeeded: true,
     },
     actorAssociated: {
       brief: "Select Actor Associated accounts",
       command: "/actorAssociated",
-      description: "Action restricted to subscriptions-manager users. Disabled if tenant is not selected",
+      description:
+        "Action restricted to subscriptions-manager users. Disabled if tenant is not selected",
       adminOnly: false,
       tenantNeeded: false,
     },
     tenantManager: {
       brief: "Select Tenant Manager accounts",
       command: "/tenantManager",
-      description: "Action restricted to subscriptions-manager users. Disabled if tenant is not selected",
+      description:
+        "Action restricted to subscriptions-manager users. Disabled if tenant is not selected",
       adminOnly: false,
       tenantNeeded: true,
     },
@@ -95,33 +103,37 @@ const COMMANDS = {
     unverified: {
       brief: "Select Unverified accounts",
       command: "/unverified",
-      description: "Action restricted to subscriptions-manager users. Disabled if tenant is not selected",
+      description:
+        "Action restricted to subscriptions-manager users. Disabled if tenant is not selected",
       adminOnly: false,
       tenantNeeded: true,
     },
     verified: {
       brief: "Select Verified accounts",
       command: "/verified",
-      description: "Action restricted to subscriptions-manager users. Disabled if tenant is not selected",
+      description:
+        "Action restricted to subscriptions-manager users. Disabled if tenant is not selected",
       adminOnly: false,
       tenantNeeded: true,
     },
     inactive: {
       brief: "Select Inactive accounts",
       command: "/inactive",
-      description: "Action restricted to subscriptions-manager users. Disabled if tenant is not selected",
+      description:
+        "Action restricted to subscriptions-manager users. Disabled if tenant is not selected",
       adminOnly: false,
       tenantNeeded: true,
     },
     archived: {
       brief: "Select Archived accounts",
       command: "/archived",
-      description: "Action restricted to subscriptions-manager users. Disabled if tenant is not selected",
+      description:
+        "Action restricted to subscriptions-manager users. Disabled if tenant is not selected",
       adminOnly: false,
       tenantNeeded: true,
     },
   },
-}
+};
 
 export default function PaginatedAccounts({
   tenantId,
@@ -130,7 +142,6 @@ export default function PaginatedAccounts({
   handleClickOnAccount,
   initialSkip,
   initialPageSize,
-  tiny,
   forceMutate,
   restrictAccountTypeTo,
 }: Props) {
@@ -149,17 +160,11 @@ export default function PaginatedAccounts({
     restrictSystemAccount: true,
   });
 
-  const {
-    skip,
-    pageSize,
-    setSkip,
-    setPageSize,
-    searchTerm,
-    setSearchTerm,
-  } = useSearchBarParams({
-    initialSkip,
-    initialPageSize,
-  });
+  const { skip, pageSize, setSkip, setPageSize, searchTerm, setSearchTerm } =
+    useSearchBarParams({
+      initialSkip,
+      initialPageSize,
+    });
 
   const memoizedUrl = useMemo(() => {
     if (!isAuthenticated) return null;
@@ -222,7 +227,8 @@ export default function PaginatedAccounts({
       //
       // Match /staff, /manager, /user, /subscription, /roleAssociated, /actorAssociated, /tenantManager
       //
-      const typePattern = /(\/staff|\/manager|\/user|\/subscription|\/roleAssociated|\/actorAssociated|\/tenantManager)/;
+      const typePattern =
+        /(\/staff|\/manager|\/user|\/subscription|\/roleAssociated|\/actorAssociated|\/tenantManager)/;
 
       if (typePattern.test(searchTerm)) {
         const typeValue = typePattern.exec(searchTerm)?.[1];
@@ -246,7 +252,7 @@ export default function PaginatedAccounts({
           }
 
           searchParams.accountType = parsedValue;
-        };
+        }
       }
 
       //
@@ -281,7 +287,7 @@ export default function PaginatedAccounts({
     }
 
     return buildPath("/adm/rs/subscriptions-manager/accounts", {
-      query: searchParams
+      query: searchParams,
     });
   }, [
     searchTerm,
@@ -343,59 +349,65 @@ export default function PaginatedAccounts({
     if (term !== undefined) setSearchTerm(term);
 
     mutateAccounts(accounts, { rollbackOnError: true });
-  }
+  };
 
-  const AccountHeader = useCallback(({ account }: { account: Account }) => {
-    if (handleClickOnAccount) {
+  const AccountHeader = useCallback(
+    ({ account }: { account: Account }) => {
+      if (handleClickOnAccount) {
+        return (
+          <button
+            className="hover:underline text-blue-500 dark:text-lime-400 flex items-center gap-2"
+            onClick={() => handleClickOnAccount(account)}
+          >
+            <div className="flex items-center gap-2">{account?.name}</div>
+            {account.isDefault && (
+              <span className="text-xs text-gray-500 dark:text-gray-400">
+                (Default)
+              </span>
+            )}
+          </button>
+        );
+      }
+
       return (
-        <button
-          className="hover:underline text-blue-500 dark:text-lime-400 flex items-center gap-2"
-          onClick={() => handleClickOnAccount(account)}
-        >
-          <div className="flex items-center gap-2">
-            {account?.name}
-          </div>
+        <>
+          <div className="flex items-center gap-2">{account?.name}</div>
           {account.isDefault && (
             <span className="text-xs text-gray-500 dark:text-gray-400">
               (Default)
             </span>
           )}
-        </button>
+        </>
       );
-    };
-
-    return (
-      <>
-        <div className="flex items-center gap-2">
-          {account?.name}
-        </div>
-        {account.isDefault && (
-          <span className="text-xs text-gray-500 dark:text-gray-400">
-            (Default)
-          </span>
-        )}
-      </>
-    )
-  }, [handleClickOnAccount]);
+    },
+    [handleClickOnAccount]
+  );
 
   return (
     <DashBoardBody
-      tiny={tiny}
       term={searchTerm ?? undefined}
       breadcrumb={breadcrumb}
       onSubmit={onSubmit}
       setSkip={setSkip}
       setPageSize={setPageSize}
-      placeholder="Search by name or use command palette"
+      placeholder="Search or use command palette..."
       isLoading={isLoadingUser}
       authorized={hasEnoughPermissions}
       padding={padding}
-      commandPalette={(
+      commandPalette={
         <SearchBar.Content>
           <div className="flex flex-col gap-1">
-            <Typography as="h4" decoration="smooth">Account Type Filters</Typography>
+            <Typography as="h4" decoration="smooth">
+              Account Type Filters
+            </Typography>
             {Object.entries(COMMANDS.accountType)
-              ?.filter(([_, value]) => !restrictAccountTypeTo || restrictAccountTypeTo.includes(value.command.replace("/", "") as any))
+              ?.filter(
+                ([_, value]) =>
+                  !restrictAccountTypeTo ||
+                  restrictAccountTypeTo.includes(
+                    value.command.replace("/", "") as any
+                  )
+              )
               ?.map(([key, value]) => (
                 <SearchBar.Item
                   key={key}
@@ -403,14 +415,19 @@ export default function PaginatedAccounts({
                   command={value.command}
                   description={value?.description}
                   onClick={() => setSearchTerm(value.command)}
-                  disabled={(value.adminOnly && !hasEnoughPermissions) || value.tenantNeeded && !tenantId}
+                  disabled={
+                    (value.adminOnly && !hasEnoughPermissions) ||
+                    (value.tenantNeeded && !tenantId)
+                  }
                 />
               ))}
           </div>
 
           {!restrictAccountTypeTo && (
             <div className="flex flex-col gap-1">
-              <Typography as="h4" decoration="smooth">Account Status Filters</Typography>
+              <Typography as="h4" decoration="smooth">
+                Account Status Filters
+              </Typography>
               {Object.entries(COMMANDS.status).map(([key, value]) => (
                 <SearchBar.Item
                   key={key}
@@ -426,17 +443,24 @@ export default function PaginatedAccounts({
               ))}
             </div>
           )}
-        </ SearchBar.Content>
-      )}
+        </SearchBar.Content>
+      }
     >
-      <div id="AccountsContent" className="flex flex-col justify-center gap-4 w-full mx-auto">
+      <div
+        id="AccountsContent"
+        className="flex flex-col justify-center gap-4 w-full mx-auto"
+      >
         {toolbar}
 
         <div className="flex justify-center mx-auto w-full xl:max-w-4xl">
           {tenantInfo?.id && (
             <div className="flex items-center gap-2">
-              <Typography as="span" decoration="smooth">Results based on tenant:</Typography>
-              <Typography as="span" decoration="semibold">{tenantInfo.name}</Typography>
+              <Typography as="span" decoration="smooth">
+                Results based on tenant:
+              </Typography>
+              <Typography as="span" decoration="semibold">
+                {tenantInfo.name}
+              </Typography>
             </div>
           )}
         </div>

@@ -33,7 +33,7 @@ export default function DashBoardBody({
         </PageBody.Breadcrumb>
       )}
 
-      <PageBody.Content padding="md" flex="col" gap={1}>
+      <PageBody.Content flex="col" gap={1}>
         <SearchBar
           term={term}
           onSubmit={onSubmit}

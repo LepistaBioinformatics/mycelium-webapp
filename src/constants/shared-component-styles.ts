@@ -21,7 +21,7 @@ const sharedComponentStylesVariants: Config["variants"] = {
     padding: {
         none: "p-0",
         xs: "p-1",
-        sm: "p-2",
+        sm: "p-1 sm:p-2",
         md: "p-1 sm:p-5",
         lg: "p-1 sm:p-8",
         xl: "p-1 sm:p-10",

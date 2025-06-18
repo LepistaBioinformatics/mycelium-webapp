@@ -122,7 +122,7 @@
           "advancedActions": "Ações avançadas",
           "name": {
             "title": "Nome do locatário",
-            "prefix": "Vendo",
+            "prefix": "Você vê",
             "viewTenantAdvancedDetails": "Ver detalhes avançados do locatário",
             "makeTenantFavorite": "Favoritar locatário"
           },
@@ -169,7 +169,7 @@
           "manageAccountsDescription": "Clique aqui para ver as contas registradas no locatário.",
           "name": {
             "title": "Nome do locatário",
-            "prefix": "Vendo"
+            "prefix": "Você vê"
           },
           "description": {
             "title": "Descrição do locatário",

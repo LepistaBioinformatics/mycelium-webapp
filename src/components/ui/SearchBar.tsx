@@ -4,29 +4,21 @@ import { TextInput } from "flowbite-react";
 import { useEffect } from "react";
 import Typography from "./Typography";
 
-const containerStyles = cva(
-  "mx-auto sticky top-2 bg-white dark:bg-gray-700 shadow z-10",
-  {
-    variants: {
-      commandPalette: {
-        true: "rounded-lg p-2 border border-zinc-200 dark:border-zinc-600 w-full",
-        false: "rounded-full",
-      },
-      fullWidth: {
-        true: "w-[100%]",
-        false: "mx-auto w-full xl:max-w-4xl",
-      },
-      tiny: {
-        true: "mt-2 mb-8",
-        false: "my-12",
-      },
+const containerStyles = cva("mx-auto sticky top-2 z-5 my-2 sm:my-12", {
+  variants: {
+    commandPalette: {
+      true: "rounded-lg w-full",
+      false: "rounded-full",
     },
-    defaultVariants: {
-      fullWidth: false,
-      tiny: false,
+    fullWidth: {
+      true: "w-[100%]",
+      false: "mx-auto w-full xl:max-w-4xl",
     },
-  }
-);
+  },
+  defaultVariants: {
+    fullWidth: false,
+  },
+});
 
 interface IFormInputs {
   term: string;
@@ -50,7 +42,6 @@ function Container({
   setSkip,
   setPageSize,
   placeholder,
-  tiny,
   commandPalette,
   ...props
 }: SearchProps) {
@@ -78,7 +69,6 @@ function Container({
       id="SearchBar"
       className={containerStyles({
         fullWidth,
-        tiny,
         commandPalette: !!commandPalette,
       })}
       {...props}
@@ -95,7 +85,7 @@ function Container({
                     id="term"
                     autoFocus
                     type="search"
-                    sizing={tiny ? "sm" : "lg"}
+                    sizing="md"
                     color="custom"
                     placeholder={placeholder || "Type to search..."}
                     autoComplete="off"
@@ -107,7 +97,7 @@ function Container({
                           base: "block w-full border disabled:cursor-not-allowed disabled:opacity-50 text-center text-lg",
                           colors: {
                             custom:
-                              "border-zinc-400 bg-blue-50 text-zinc-900 focus:border-cyan-500 focus:ring-zinc-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white placeholder-zinc-500  dark:placeholder-zinc-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500",
+                              "border-zinc-400 bg-blue-50 text-zinc-900 focus:border-cyan-500 focus:ring-zinc-500 dark:border-gray-600 dark:bg-zinc-800 dark:text-white placeholder-zinc-500 dark:placeholder-zinc-400 dark:focus:border-lime-500 dark:focus:ring-lime-500",
                           },
                           withAddon: {
                             off: "rounded-full",
@@ -143,7 +133,7 @@ function Container({
 }
 
 const commandPaletteContentStyles = cva(
-  "flex flex-col absolute left-0 gap-8 max-h-[250px] overflow-y-auto bg-blue-50 dark:bg-gray-800 rounded-lg p-2 mt-4 border-2 border-zinc-300 dark:border-zinc-500 scrollbar w-full shadow-lg dark:shadow-zinc-900",
+  "flex flex-col absolute left-0 gap-8 max-h-[250px] overflow-y-auto bg-blue-50 dark:bg-zinc-800 rounded-lg p-2 mt-4 border-2 border-zinc-300 dark:border-zinc-500 scrollbar w-full shadow-lg dark:shadow-zinc-900",
   {
     variants: {},
     defaultVariants: {},
@@ -160,7 +150,7 @@ function CommandPaletteContent({ children }: CommandPaletteContentProps) {
 }
 
 const commandPaletteItemStyles = cva(
-  "flex flex-col gap-0 mb-1 hover:bg-blue-100 dark:hover:bg-gray-700 w-full group",
+  "flex flex-col gap-0 mb-1 hover:bg-blue-100 dark:hover:bg-zinc-700 w-full group",
   {
     variants: {
       disabled: {

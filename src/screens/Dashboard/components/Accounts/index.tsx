@@ -78,7 +78,7 @@ export default function Accounts() {
   }, [hasAdminPrivileges, tenantInfo]);
 
   return (
-    <div className="p-5">
+    <div className="p-1 sm:p-5">
       <PaginatedAccounts
         tenantId={tenantInfo?.id ?? ""}
         handleClickOnAccount={handleClickOnAccount}
