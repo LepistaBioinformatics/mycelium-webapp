@@ -38,7 +38,7 @@ export default function Profile() {
       <PageBody.Breadcrumb>
         <ControlPanelBreadcrumbItem />
         <PageBody.Breadcrumb.Item icon={RiDashboardFill}>
-          {t("Dashboard.Profile.title")}
+          {t("screens.Dashboard.Profile.title")}
         </PageBody.Breadcrumb.Item>
       </PageBody.Breadcrumb>
 
@@ -46,27 +46,31 @@ export default function Profile() {
         <CardsSection>
           <CardsSection.Header>
             {isLoadingUser ? (
-              <Typography>{t("Dashboard.Profile.loading")}</Typography>
+              <Typography>{t("screens.Dashboard.Profile.loading")}</Typography>
             ) : (
               <IntroSection
-                prefix={t("Dashboard.Profile.loggedInAs.prefix")}
+                prefix={t("screens.Dashboard.Profile.loggedInAs.prefix")}
                 content={
                   <Typography
                     as="h1"
-                    title={t("Dashboard.Profile.loggedInAs.title")}
+                    title={t("screens.Dashboard.Profile.loggedInAs.title")}
                   >
                     <div className="flex items-center gap-3">
                       <span>{user?.name}</span>
                       {profile?.isStaff && (
                         <GiWizardStaff
                           className="inline text-blue-500 dark:text-lime-500 hover:cursor-help p-0.5"
-                          title={t("Dashboard.Profile.loggedInAs.staff")}
+                          title={t(
+                            "screens.Dashboard.Profile.loggedInAs.staff"
+                          )}
                         />
                       )}
                       {profile?.isManager && (
                         <GrUserAdmin
                           className="inline text-blue-500 dark:text-lime-500 hover:cursor-help p-0.5"
-                          title={t("Dashboard.Profile.loggedInAs.manager")}
+                          title={t(
+                            "screens.Dashboard.Profile.loggedInAs.manager"
+                          )}
                         />
                       )}
                     </div>
@@ -75,8 +79,8 @@ export default function Profile() {
                 as="div"
               >
                 <IntroSection.Item
-                  prefix={t("Dashboard.Profile.email.prefix")}
-                  title={t("Dashboard.Profile.email.title")}
+                  prefix={t("screens.Dashboard.Profile.email.prefix")}
+                  title={t("screens.Dashboard.Profile.email.title")}
                 >
                   {user?.email}
                 </IntroSection.Item>

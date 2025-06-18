@@ -24,7 +24,7 @@ export default function TenantOwnershipSection({ tenantsOwnership }: Props) {
     <Card padding="sm" width="full">
       <Card.Header>
         <Typography as="h3" decoration="smooth">
-          {t("Dashboard.TenantOwnershipSection.title")}
+          {t("screens.Dashboard.TenantOwnershipSection.title")}
         </Typography>
       </Card.Header>
 
@@ -53,7 +53,7 @@ export default function TenantOwnershipSection({ tenantsOwnership }: Props) {
               onClick={() => setLoadingSize(tenantsOwnership.length)}
             >
               <span className="text-sm text-blue-500 dark:text-lime-400">
-                {t("Dashboard.TenantOwnershipSection.loadAll", {
+                {t("screens.Dashboard.TenantOwnershipSection.loadAll", {
                   count: tenantsOwnership.length,
                 })}
               </span>

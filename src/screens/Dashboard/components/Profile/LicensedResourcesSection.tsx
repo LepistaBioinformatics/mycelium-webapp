@@ -22,7 +22,7 @@ export default function LicensedResourcesSection({ licensedResources }: Props) {
     <Card padding="sm" width="full" dashed={!licensedResources}>
       <Card.Header>
         <Typography as="h3" decoration="smooth">
-          {t("Dashboard.LicensedResourcesSection.title")}
+          {t("screens.Dashboard.LicensedResourcesSection.title")}
         </Typography>
       </Card.Header>
 
@@ -31,10 +31,12 @@ export default function LicensedResourcesSection({ licensedResources }: Props) {
           {!licensedResources && (
             <div className="flex flex-col gap-2">
               <Typography decoration="smooth">
-                {t("Dashboard.LicensedResourcesSection.noResources")}
+                {t("screens.Dashboard.LicensedResourcesSection.noResources")}
               </Typography>
               <Typography as="small" decoration="smooth" width="xs">
-                {t("Dashboard.LicensedResourcesSection.noResourcesDescription")}
+                {t(
+                  "screens.Dashboard.LicensedResourcesSection.noResourcesDescription"
+                )}
               </Typography>
             </div>
           )}
@@ -53,7 +55,7 @@ export default function LicensedResourcesSection({ licensedResources }: Props) {
                 <MiniBox key={index}>
                   <IntroSection
                     title={t(
-                      "Dashboard.LicensedResourcesSection.accountName.title"
+                      "screens.Dashboard.LicensedResourcesSection.accountName.title"
                     )}
                     prefixProps={{ nowrap: true }}
                     contentProps={{ truncate: true }}
@@ -64,7 +66,7 @@ export default function LicensedResourcesSection({ licensedResources }: Props) {
                             <RiRobot2Line
                               className="text-blue-500 h-4 w-4 dark:text-lime-500 hover:cursor-help"
                               title={t(
-                                "Dashboard.LicensedResourcesSection.accountName.system"
+                                "screens.Dashboard.LicensedResourcesSection.accountName.system"
                               )}
                             />
                           </div>
@@ -73,7 +75,7 @@ export default function LicensedResourcesSection({ licensedResources }: Props) {
                           truncate
                           width="fit"
                           title={t(
-                            "Dashboard.LicensedResourcesSection.accountName.title",
+                            "screens.Dashboard.LicensedResourcesSection.accountName.title",
                             {
                               accName: resource.accName,
                             }
@@ -91,11 +93,11 @@ export default function LicensedResourcesSection({ licensedResources }: Props) {
 
                     <IntroSection.Item
                       prefix={t(
-                        "Dashboard.LicensedResourcesSection.role.prefix"
+                        "screens.Dashboard.LicensedResourcesSection.role.prefix"
                       )}
                       prefixProps={{ nowrap: true }}
                       title={t(
-                        "Dashboard.LicensedResourcesSection.role.title",
+                        "screens.Dashboard.LicensedResourcesSection.role.title",
                         {
                           role: resource.role,
                         }
@@ -107,10 +109,10 @@ export default function LicensedResourcesSection({ licensedResources }: Props) {
                     <IntroSection.Item
                       prefixProps={{ nowrap: true }}
                       prefix={t(
-                        "Dashboard.LicensedResourcesSection.permission.prefix"
+                        "screens.Dashboard.LicensedResourcesSection.permission.prefix"
                       )}
                       title={t(
-                        "Dashboard.LicensedResourcesSection.permission.title",
+                        "screens.Dashboard.LicensedResourcesSection.permission.title",
                         {
                           perm: resource.perm,
                         }
@@ -124,7 +126,9 @@ export default function LicensedResourcesSection({ licensedResources }: Props) {
                         className="w-fit text-red-500 dark:text-red-400 bg-red-100 dark:bg-red-500 bg-opacity-50 dark:bg-opacity-20 rounded-full px-1 py-0 mt-1 text-xs border border-red-500 dark:border-red-400 hover:cursor-help"
                         title="You not confirmed the invitation to this account"
                       >
-                        {t("Dashboard.LicensedResourcesSection.unverified")}
+                        {t(
+                          "screens.Dashboard.LicensedResourcesSection.unverified"
+                        )}
                       </span>
                     )}
                   </IntroSection>

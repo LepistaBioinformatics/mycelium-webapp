@@ -22,14 +22,14 @@ export default function TenantOwnershipInfo({
 }: Props) {
   const { t } = useTranslation();
 
-  const title = t("Dashboard.TenantOwnershipInfo.title", {
+  const title = t("screens.Dashboard.TenantOwnershipInfo.title", {
     tenantId,
   });
 
   const Since = () => (
     <IntroSection.Item
-      prefix={t("Dashboard.TenantOwnershipInfo.since.prefix")}
-      title={t("Dashboard.TenantOwnershipInfo.since.title", {
+      prefix={t("screens.Dashboard.TenantOwnershipInfo.since.prefix")}
+      title={t("screens.Dashboard.TenantOwnershipInfo.since.title", {
         tenantId,
       })}
     >
@@ -48,8 +48,8 @@ export default function TenantOwnershipInfo({
           <Since />
           <IntroSection.Item prefix="status" title={title}>
             {tenantStatus === "deleted"
-              ? t("Dashboard.TenantOwnershipInfo.deleted")
-              : t("Dashboard.TenantOwnershipInfo.unknown")}
+              ? t("screens.Dashboard.TenantOwnershipInfo.deleted")
+              : t("screens.Dashboard.TenantOwnershipInfo.unknown")}
           </IntroSection.Item>
         </div>
       );
@@ -60,7 +60,7 @@ export default function TenantOwnershipInfo({
         <div>
           <Since />
           <IntroSection.Item prefix="status" title={title} isError>
-            {t("Dashboard.TenantOwnershipInfo.unauthorized")}
+            {t("screens.Dashboard.TenantOwnershipInfo.unauthorized")}
           </IntroSection.Item>
         </div>
       );
@@ -79,7 +79,7 @@ export default function TenantOwnershipInfo({
           <img
             src={tenantLogo}
             alt="Tenant logo"
-            title={t("Dashboard.TenantOwnershipInfo.logo")}
+            title={t("screens.Dashboard.TenantOwnershipInfo.logo")}
             className="w-full h-full object-cover hover:scale-[3] hover:translate-x-3 hover:translate-y-3 rounded-full hover:rounded-sm transition-all duration-200 hover:border-[0.1px] border-blue-500 dark:border-lime-500 hover:shadow-lg bg-white dark:bg-gray-800"
             style={{
               width: "24px",
@@ -100,7 +100,7 @@ export default function TenantOwnershipInfo({
             <div className="flex items-center gap-2">
               <TenantLogo />
               <span
-                title={t("Dashboard.TenantOwnershipInfo.name")}
+                title={t("screens.Dashboard.TenantOwnershipInfo.name")}
                 className="cursor-help"
               >
                 {tenantStatus.active.name}
@@ -112,8 +112,10 @@ export default function TenantOwnershipInfo({
           <Since />
           <IntroSection.Item
             prefixProps={{ nowrap: true }}
-            prefix={t("Dashboard.TenantOwnershipInfo.description.prefix")}
-            title={t("Dashboard.TenantOwnershipInfo.description.title")}
+            prefix={t(
+              "screens.Dashboard.TenantOwnershipInfo.description.prefix"
+            )}
+            title={t("screens.Dashboard.TenantOwnershipInfo.description.title")}
           >
             {tenantStatus.active.description}
           </IntroSection.Item>

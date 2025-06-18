@@ -1,4 +1,4 @@
-import { FaEdit, FaExternalLinkAlt } from "react-icons/fa";
+import { FaEdit, FaExternalLinkAlt, FaPlus } from "react-icons/fa";
 import Button from "@/components/ui/Button";
 import CopyToClipboard from "@/components/ui/CopyToClipboard";
 import PageBody from "@/components/ui/PageBody";
@@ -25,10 +25,13 @@ import { FaRegStar, FaStar } from "react-icons/fa6";
 import { setTenantInfo, setTenantIsLoading } from "@/states/tenant.state";
 import { SlOrganization } from "react-icons/sl";
 import { Link } from "react-router";
+import { useTranslation } from "react-i18next";
 
 type Tenant = components["schemas"]["Tenant"];
 
 export default function Tenants() {
+  const { t } = useTranslation();
+
   const [isNewModalOpen, setIsNewModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
@@ -166,7 +169,7 @@ export default function Tenants() {
     <DashBoardBody
       breadcrumb={
         <PageBody.Breadcrumb.Item icon={SlOrganization}>
-          Tenants
+          {t("screens.Dashboard.Tenants.title")}
         </PageBody.Breadcrumb.Item>
       }
       onSubmit={onSubmit}
@@ -179,7 +182,7 @@ export default function Tenants() {
         id="TenantsContent"
         className="flex flex-col justify-center gap-4 w-full mx-auto"
       >
-        <div className="flex justify-start mx-auto w-full sm:max-w-4xl">
+        <div className="flex justify-end mx-auto w-full sm:max-w-4xl">
           <Button
             onClick={() => setIsNewModalOpen(true)}
             size="sm"
@@ -187,7 +190,10 @@ export default function Tenants() {
             intent="link"
             disabled={!hasEnoughPermissions}
           >
-            <span className="mx-2">Create tenant</span>
+            <FaPlus
+              title={t("screens.Dashboard.Tenants.createTenant")}
+              className="text-2xl"
+            />
           </Button>
         </div>
 
@@ -201,11 +207,13 @@ export default function Tenants() {
         >
           {tenants?.records?.map((tenant) => (
             <ListItem key={tenant?.id}>
-              <div className="flex justify-between gap-3 group">
+              <div className="flex flex-col sm:flex-row justify-between gap-3 group">
                 <Typography as="h3" highlight>
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center justify-between sm:justify-start gap-3">
                     <button
-                      title="View tenant basic details"
+                      title={t(
+                        "screens.Dashboard.Tenants.viewTenantBasicDetails"
+                      )}
                       className="hover:underline text-blue-500 dark:text-lime-400"
                       onClick={() => handleViewTenantClick(tenant)}
                     >
@@ -214,7 +222,9 @@ export default function Tenants() {
 
                     <Link
                       to={`/dashboard/tenants/${tenant.id}`}
-                      title="View tenant advanced details"
+                      title={t(
+                        "screens.Dashboard.Tenants.viewTenantAdvancedDetails"
+                      )}
                       className="cursor-pointer hidden group-hover:block"
                     >
                       <FaExternalLinkAlt size={16} />
@@ -222,17 +232,13 @@ export default function Tenants() {
                   </div>
                 </Typography>
                 <div className="flex gap-5">
-                  <span className="cursor-pointer">
-                    <TenantStar
-                      tenantId={tenant.id}
-                      handleClick={() => setTokenPublicInformation(tenant.id)}
-                    />
-                  </span>
+                  <TenantStar
+                    tenantId={tenant.id}
+                    handleClick={() => setTokenPublicInformation(tenant.id)}
+                  />
                   <CopyToClipboard text={tenant?.id ?? ""} />
                   <FaEdit
-                    className={`cursor-pointer hover:text-blue-500 dark:hover:text-lime-400 ${
-                      isLoadingTenantInfo ? "cursor-not-allowed" : ""
-                    }`}
+                    className="cursor-pointer hover:text-blue-500 dark:group-hover:text-lime-400 text-gray-500"
                     onClick={() => handleEditTenantClick(tenant)}
                   />
                 </div>
@@ -285,7 +291,7 @@ function TenantStar({
     if (isLoadingTenantInfo) return "cursor-not-allowed";
     if (tenantInfo?.id === tenantId) return "text-yellow-300";
 
-    return "text-gray-500 group-hover:text-yellow-300 group-hover:block";
+    return "text-gray-500 group-hover:text-yellow-300 group-hover:block cursor-pointer";
   }, [isLoadingTenantInfo, tenantInfo, tenantId]);
 
   return (

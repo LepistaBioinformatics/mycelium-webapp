@@ -1,0 +1,167 @@
+{
+  "screens": {
+    "HomePage": {
+      "AnonymousUser": {
+        "title": "Bem-vindo de volta",
+        "subtitle": "Você não está logado",
+        "button": "Clique para entrar",
+        "processing": "Estamos verificando seu endereço de e-mail"
+      },
+      "AuthenticatedUser": {
+        "loggedInAs": "Logado como",
+        "checkingEmailStatus": "Estamos verificando se você tem uma conta",
+        "emailNotFound": "Seu e-mail não foi encontrado em nossos registros",
+        "register": "Clique para se registrar",
+        "registering": "Registrando...",
+        "allReady": "Tudo pronto",
+        "userSuccessfullyRegistered": "Usuário registrado com sucesso"
+      },
+      "UnRegisteredUser": {
+        "title": "Quase lá!",
+        "subtitle": "Verifique seu nome de usuário",
+        "finishRegistrationButton": "Clique para finalizar o registro",
+        "registering": "Registrando...",
+        "userSuccessfullyRegistered": "Usuário registrado com sucesso",
+        "allReady": "Tudo pronto",
+        "userAlreadyRegistered": "Usuário já registrado"
+      },
+      "ValidatedUser": {
+        "checkingProfile": "Estamos verificando seu perfil",
+        "userSuccessfullyValidated": "Usuário validado com sucesso",
+        "allReady": "Tudo pronto",
+        "userAlreadyValidated": "Usuário já validado",
+        "verifiedAccount": "Conta verificada?",
+        "hasPrivilegedRoles": "Possui funções privilegiadas?",
+        "yes": "Sim",
+        "no": "Não",
+        "redirectingToDashboard": "Estamos redirecionando você para o painel",
+        "ifNotRedirectedClickHere": "Se você não for redirecionado, clique",
+        "here": "aqui"
+      }
+    },
+    "Dashboard": {
+      "Profile": {
+        "title": "Perfil",
+        "loading": "Carregando perfil...",
+        "loggedInAs": {
+          "prefix": "Logado como",
+          "title": "Seu nome",
+          "staff": "Usuário da equipe",
+          "manager": "Usuário gerente"
+        },
+        "email": {
+          "prefix": "com e-mail",
+          "title": "Seu e-mail"
+        }
+      },
+      "TenantOwnershipSection": {
+        "title": "Propriedade em locatários",
+        "loadAll": "Carregar todos os {{count}} locatários"
+      },
+      "LicensedResourcesSection": {
+        "title": "Contas às quais você tem acesso",
+        "noResources": "Nenhuma conta compartilhada com você",
+        "noResourcesDescription": "Você não tem acesso a nenhuma conta",
+        "accountName": {
+          "title": "Nome da conta",
+          "system": "Conta do sistema"
+        },
+        "role": {
+          "title": "Função atribuída a você",
+          "prefix": "como"
+        },
+        "permission": {
+          "title": "Permissão atribuída a você",
+          "prefix": "habilitado para"
+        },
+        "unverified": "Não verificado"
+      },
+      "TenantOwnershipInfo": {
+        "title": "O locatário ao qual a conta pertence: {{tenantId}}",
+        "since": {
+          "title": "Desde no locatário: {{tenantId}}",
+          "prefix": "Desde"
+        },
+        "deleted": "Excluído",
+        "unknown": "Desconhecido",
+        "unauthorized": "Não autorizado",
+        "logo": "Logotipo do locatário",
+        "name": "Nome do locatário",
+        "description": {
+          "title": "Descrição do locatário",
+          "prefix": "O locatário é descrito como"
+        }
+      },
+      "Tenants": {
+        "title": "Locatários",
+        "createTenant": "Criar locatário",
+        "viewTenantBasicDetails": "Ver detalhes básicos do locatário",
+        "viewTenantAdvancedDetails": "Ver detalhes avançados do locatário",
+        "TenantModal": {
+          "title": "Criar locatário",
+          "titleExistingTenant": "Editar locatário",
+          "formFields": {
+            "name": {
+              "label": "Nome",
+              "placeholder": "Nome do locatário",
+              "title": "Nome do locatário"
+            },
+            "description": {
+              "label": "Descrição",
+              "placeholder": "Descreva o locatário",
+              "title": "Descrição do locatário"
+            },
+            "create": "Criar",
+            "creating": "Criando...",
+            "update": "Atualizar",
+            "updating": "Atualizando..."
+          }
+        },
+        "TenantDetails": {
+          "title": "Detalhes do locatário",
+          "details": "Detalhes",
+          "advancedActions": "Ações avançadas",
+          "name": {
+            "title": "Nome do locatário",
+            "prefix": "Vendo",
+            "viewTenantAdvancedDetails": "Ver detalhes avançados do locatário"
+          },
+          "description": {
+            "title": "Descrição do locatário",
+            "prefix": "Descrito como"
+          },
+          "created": {
+            "title": "Criado em",
+            "prefix": "Criado em"
+          },
+          "updated": {
+            "title": "Atualizado em",
+            "prefix": "Atualizado em"
+          },
+          "owners": {
+            "title": "Proprietários",
+            "prefix": "Proprietários"
+          },
+          "manager": {
+            "title": "Gerente",
+            "prefix": "Gerente"
+          },
+          "tenantId": {
+            "title": "ID do locatário",
+            "prefix": "ID do locatário"
+          },
+          "createManagementAccount": {
+            "title": "Criar conta de gerenciamento",
+            "description": "Crie uma conta de gerenciamento para o locatário. Essa conta será utilizada para convidar usuários com permissões de gerenciamento. que farão a gestão do locatário.",
+            "button": "Criar"
+          },
+          "deleteTenant": {
+            "title": "Deletar locatário",
+            "description": "Deletar o locatário irá remover todos os dados do locatário e não poderá ser revertido.",
+            "button": "Deletar"
+          }
+        }
+      }
+    }
+  }
+}

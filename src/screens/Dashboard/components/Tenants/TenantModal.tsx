@@ -11,6 +11,7 @@ import { components } from "@/services/openapi/mycelium-schema";
 import { Textarea, TextInput } from "flowbite-react";
 import { useMemo, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 
 type Tenant = components["schemas"]["Tenant"];
 
@@ -18,7 +19,7 @@ type Inputs = {
   name: string;
   description: string;
   ownerId?: string;
-}
+};
 
 export interface TenantModalProps {
   isOpen: boolean;
@@ -27,7 +28,14 @@ export interface TenantModalProps {
   tenant: Tenant | null;
 }
 
-export default function TenantModal({ isOpen, onClose, onSuccess, tenant }: TenantModalProps) {
+export default function TenantModal({
+  isOpen,
+  onClose,
+  onSuccess,
+  tenant,
+}: TenantModalProps) {
+  const { t } = useTranslation();
+
   const { hasEnoughPermissions, profile, getAccessTokenSilently } = useProfile({
     shouldBeManager: true,
   });
@@ -56,9 +64,9 @@ export default function TenantModal({ isOpen, onClose, onSuccess, tenant }: Tena
     defaultValues: {
       name: tenant?.name ?? "",
       description: tenant?.description ?? "",
-      ownerId: principalOwner?.id ?? ""
-    }
-  })
+      ownerId: principalOwner?.id ?? "",
+    },
+  });
 
   const nameWatch = watch("name");
   const descriptionWatch = watch("description");
@@ -66,7 +74,7 @@ export default function TenantModal({ isOpen, onClose, onSuccess, tenant }: Tena
   const handleLocalSuccess = () => {
     onSuccess();
     reset();
-  }
+  };
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     setIsLoading(true);
@@ -79,8 +87,8 @@ export default function TenantModal({ isOpen, onClose, onSuccess, tenant }: Tena
     } else {
       data = {
         ...data,
-        ownerId: ownershipId
-      }
+        ownerId: ownershipId,
+      };
     }
 
     const token = await getAccessTokenSilently();
@@ -89,9 +97,9 @@ export default function TenantModal({ isOpen, onClose, onSuccess, tenant }: Tena
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify(data)
+      body: JSON.stringify(data),
     });
 
     if (!response.ok) {
@@ -100,7 +108,7 @@ export default function TenantModal({ isOpen, onClose, onSuccess, tenant }: Tena
 
     handleLocalSuccess();
     setIsLoading(false);
-  }
+  };
 
   if (!hasEnoughPermissions) {
     return null;
@@ -109,7 +117,11 @@ export default function TenantModal({ isOpen, onClose, onSuccess, tenant }: Tena
   return (
     <Modal open={isOpen}>
       <Modal.Header handleClose={onClose}>
-        <Typography>Create tenant</Typography>
+        <Typography>
+          {tenant
+            ? t("screens.Dashboard.Tenants.TenantModal.titleExistingTenant")
+            : t("screens.Dashboard.Tenants.TenantModal.title")}
+        </Typography>
       </Modal.Header>
 
       <Modal.Body>
@@ -117,10 +129,19 @@ export default function TenantModal({ isOpen, onClose, onSuccess, tenant }: Tena
           className="flex flex-col gap-2 w-full"
           onSubmit={handleSubmit(onSubmit)}
         >
-          <FormField label="Name" title="Name of your tenant">
+          <FormField
+            label={t(
+              "screens.Dashboard.Tenants.TenantModal.formFields.name.label"
+            )}
+            title={t(
+              "screens.Dashboard.Tenants.TenantModal.formFields.name.title"
+            )}
+          >
             <TextInput
               className="my-2"
-              placeholder="Name of your tenant"
+              placeholder={t(
+                "screens.Dashboard.Tenants.TenantModal.formFields.name.placeholder"
+              )}
               sizing="lg"
               color="custom"
               autoFocus
@@ -128,25 +149,36 @@ export default function TenantModal({ isOpen, onClose, onSuccess, tenant }: Tena
                 field: {
                   input: {
                     colors: {
-                      custom: "border-slate-400 bg-blue-50 text-slate-900 focus:border-cyan-500 focus:ring-slate-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white placeholder-slate-500  dark:placeholder-slate-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500",
+                      custom:
+                        "border-slate-400 bg-blue-50 text-slate-900 focus:border-cyan-500 focus:ring-slate-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white placeholder-slate-500  dark:placeholder-slate-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500",
                     },
-                  }
-                }
+                  },
+                },
               }}
               {...register("name")}
             />
             {errors.name && <span>This field is required</span>}
           </FormField>
 
-          <FormField label="Description" title="Describe your tenant">
+          <FormField
+            label={t(
+              "screens.Dashboard.Tenants.TenantModal.formFields.description.label"
+            )}
+            title={t(
+              "screens.Dashboard.Tenants.TenantModal.formFields.description.title"
+            )}
+          >
             <Textarea
               className="my-2 h-24 p-4"
-              placeholder="Describe your tenant"
+              placeholder={t(
+                "screens.Dashboard.Tenants.TenantModal.formFields.description.placeholder"
+              )}
               rows={4}
               color="custom"
               theme={{
                 colors: {
-                  custom: "border-slate-400 bg-blue-50 text-slate-900 focus:border-cyan-500 focus:ring-slate-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white placeholder-slate-500  dark:placeholder-slate-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500",
+                  custom:
+                    "border-slate-400 bg-blue-50 text-slate-900 focus:border-cyan-500 focus:ring-slate-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white placeholder-slate-500  dark:placeholder-slate-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500",
                 },
               }}
               {...register("description")}
@@ -160,8 +192,12 @@ export default function TenantModal({ isOpen, onClose, onSuccess, tenant }: Tena
             disabled={!nameWatch || !descriptionWatch || isLoading}
           >
             {tenant
-              ? isLoading ? "Updating..." : "Update"
-              : isLoading ? "Creating..." : "Create"}
+              ? isLoading
+                ? t("screens.Dashboard.Tenants.TenantModal.formFields.updating")
+                : t("screens.Dashboard.Tenants.TenantModal.formFields.update")
+              : isLoading
+              ? t("screens.Dashboard.Tenants.TenantModal.formFields.creating")
+              : t("screens.Dashboard.Tenants.TenantModal.formFields.create")}
           </Button>
         </form>
       </Modal.Body>

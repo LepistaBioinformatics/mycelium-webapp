@@ -4,32 +4,37 @@ import { TextInput } from "flowbite-react";
 import { useEffect } from "react";
 import Typography from "./Typography";
 
-const containerStyles = cva("mx-auto sticky top-2 bg-white dark:bg-gray-700 shadow z-50", {
-  variants: {
-    commandPalette: {
-      true: "rounded-lg p-2 border border-slate-200 dark:border-slate-600 w-full",
-      false: "rounded-full"
+const containerStyles = cva(
+  "mx-auto sticky top-2 bg-white dark:bg-gray-700 shadow z-10",
+  {
+    variants: {
+      commandPalette: {
+        true: "rounded-lg p-2 border border-slate-200 dark:border-slate-600 w-full",
+        false: "rounded-full",
+      },
+      fullWidth: {
+        true: "w-[100%]",
+        false: "mx-auto w-full xl:max-w-4xl",
+      },
+      tiny: {
+        true: "mt-2 mb-8",
+        false: "my-12",
+      },
     },
-    fullWidth: {
-      true: "w-[100%]",
-      false: "mx-auto w-full xl:max-w-4xl"
+    defaultVariants: {
+      fullWidth: false,
+      tiny: false,
     },
-    tiny: {
-      true: "mt-2 mb-8",
-      false: "my-12"
-    }
-  },
-  defaultVariants: {
-    fullWidth: false,
-    tiny: false,
-  },
-});
+  }
+);
 
 interface IFormInputs {
   term: string;
 }
 
-export interface SearchProps extends BaseProps, VariantProps<typeof containerStyles> {
+export interface SearchProps
+  extends BaseProps,
+    VariantProps<typeof containerStyles> {
   term?: string;
   onSubmit: (term?: string) => void;
   setSkip?: (skip: number) => void;
@@ -69,8 +74,13 @@ function Container({
   }: IFormInputs) => onSubmit(term);
 
   return (
-    <div id="SearchBar"
-      className={containerStyles({ fullWidth, tiny, commandPalette: !!commandPalette })}
+    <div
+      id="SearchBar"
+      className={containerStyles({
+        fullWidth,
+        tiny,
+        commandPalette: !!commandPalette,
+      })}
       {...props}
     >
       <div className="rounded-full">
@@ -96,17 +106,20 @@ function Container({
                         input: {
                           base: "block w-full border disabled:cursor-not-allowed disabled:opacity-50 text-center text-lg",
                           colors: {
-                            custom: "border-slate-400 bg-blue-50 text-slate-900 focus:border-cyan-500 focus:ring-slate-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white placeholder-slate-500  dark:placeholder-slate-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500",
+                            custom:
+                              "border-slate-400 bg-blue-50 text-slate-900 focus:border-cyan-500 focus:ring-slate-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white placeholder-slate-500  dark:placeholder-slate-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500",
                           },
                           withAddon: {
-                            off: "rounded-full"
+                            off: "rounded-full",
                           },
-                        }
-                      }
+                        },
+                      },
                     }}
                     {...field}
                   />
-                  <p className="text-sm text-red-500">{errors?.term?.message}</p>
+                  <p className="text-sm text-red-500">
+                    {errors?.term?.message}
+                  </p>
                 </>
               )}
             />
@@ -129,46 +142,56 @@ function Container({
   );
 }
 
-const commandPaletteContentStyles = cva("flex flex-col absolute left-0 gap-8 max-h-[250px] overflow-y-auto bg-blue-50 dark:bg-gray-800 rounded-lg p-2 mt-4 border-2 border-slate-300 dark:border-slate-500 scrollbar w-full shadow-lg dark:shadow-slate-900", {
-  variants: {},
-  defaultVariants: {},
-});
+const commandPaletteContentStyles = cva(
+  "flex flex-col absolute left-0 gap-8 max-h-[250px] overflow-y-auto bg-blue-50 dark:bg-gray-800 rounded-lg p-2 mt-4 border-2 border-slate-300 dark:border-slate-500 scrollbar w-full shadow-lg dark:shadow-slate-900",
+  {
+    variants: {},
+    defaultVariants: {},
+  }
+);
 
-interface CommandPaletteContentProps extends VariantProps<typeof commandPaletteContentStyles> {
+interface CommandPaletteContentProps
+  extends VariantProps<typeof commandPaletteContentStyles> {
   children: React.ReactNode;
 }
 
-function CommandPaletteContent({
-  children,
-}: CommandPaletteContentProps) {
+function CommandPaletteContent({ children }: CommandPaletteContentProps) {
   return <div className={commandPaletteContentStyles()}>{children}</div>;
 }
 
-const commandPaletteItemStyles = cva("flex flex-col gap-0 mb-1 hover:bg-blue-100 dark:hover:bg-gray-700 w-full group", {
-  variants: {
-    disabled: {
-      true: "opacity-80 cursor-not-allowed",
-      false: "hover:text-blue-500 dark:hover:text-lime-400"
-    }
-  },
-  defaultVariants: {
-    disabled: false
-  },
-});
+const commandPaletteItemStyles = cva(
+  "flex flex-col gap-0 mb-1 hover:bg-blue-100 dark:hover:bg-gray-700 w-full group",
+  {
+    variants: {
+      disabled: {
+        true: "opacity-80 cursor-not-allowed",
+        false: "hover:text-blue-500 dark:hover:text-lime-400",
+      },
+    },
+    defaultVariants: {
+      disabled: false,
+    },
+  }
+);
 
-const commandPaletteItemButtonStyles = cva("flex justify-start text-gray-700 dark:text-gray-300 items-center gap-3 ml-3", {
-  variants: {
-    disabled: {
-      true: "opacity-50 cursor-not-allowed",
-      false: "hover:text-blue-500 dark:hover:text-lime-400 group-hover:text-blue-500 dark:group-hover:text-lime-400 group-hover:cursor-pointer"
-    }
-  },
-  defaultVariants: {
-    disabled: false
-  },
-});
+const commandPaletteItemButtonStyles = cva(
+  "flex justify-start text-gray-700 dark:text-gray-300 items-center gap-3 ml-3",
+  {
+    variants: {
+      disabled: {
+        true: "opacity-50 cursor-not-allowed",
+        false:
+          "hover:text-blue-500 dark:hover:text-lime-400 group-hover:text-blue-500 dark:group-hover:text-lime-400 group-hover:cursor-pointer",
+      },
+    },
+    defaultVariants: {
+      disabled: false,
+    },
+  }
+);
 
-interface CommandPaletteItemProps extends VariantProps<typeof commandPaletteItemStyles> {
+interface CommandPaletteItemProps
+  extends VariantProps<typeof commandPaletteItemStyles> {
   brief: string;
   description?: string;
   command: string;

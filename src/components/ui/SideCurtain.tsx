@@ -2,21 +2,24 @@ import { cva, VariantProps } from "class-variance-authority";
 import { FaLongArrowAltLeft } from "react-icons/fa";
 import Typography from "./Typography";
 
-const containerStyles = cva("fixed z-50 right-0 top-0 bottom-0 w-[70%] xl:w-1/2 bg-opacity-70 bg-black rounded-lg shadow-xl", {
-  variants: {
-    open: {
-      true: "block",
-      false: "hidden",
-    }
-  },
-  defaultVariants: {
-    open: false,
+const containerStyles = cva(
+  "fixed z-50 right-0 top-0 bottom-0 w-full sm:w-[70%] xl:w-1/2 bg-opacity-70 bg-black rounded-lg sm:rounded-l-none shadow-xl",
+  {
+    variants: {
+      open: {
+        true: "block",
+        false: "hidden",
+      },
+    },
+    defaultVariants: {
+      open: false,
+    },
   }
-});
+);
 
-interface ContainerProps extends
-  BaseProps,
-  VariantProps<typeof containerStyles> {
+interface ContainerProps
+  extends BaseProps,
+    VariantProps<typeof containerStyles> {
   title: string;
   handleClose: () => void;
 }
@@ -40,7 +43,7 @@ function Container({
           </Typography>
         </div>
 
-        <div className="flex justify-normal text-left flex-col gap-2 p-5">
+        <div className="flex justify-normal text-left flex-col gap-2 py-5 px-1 sm:p-5">
           {children}
         </div>
       </div>
