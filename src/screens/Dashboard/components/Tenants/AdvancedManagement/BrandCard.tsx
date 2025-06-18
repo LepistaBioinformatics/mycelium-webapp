@@ -13,6 +13,7 @@ import useProfile from "@/hooks/use-profile";
 import { TENANT_ID_HEADER } from "@/constants/http-headers";
 import { MycRole } from "@/types/MyceliumRole";
 import { MycPermission } from "@/types/MyceliumPermission";
+import { useTranslation } from "react-i18next";
 
 type Tenant = components["schemas"]["Tenant"];
 
@@ -27,6 +28,8 @@ interface Props {
 }
 
 export default function BrandCard({ tenant, mutateTenantStatus }: Props) {
+  const { t } = useTranslation();
+
   const [preview, setPreview] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [updatingBrand, setUpdatingBrand] = useState(false);
@@ -201,20 +204,25 @@ export default function BrandCard({ tenant, mutateTenantStatus }: Props) {
   }
 
   return (
-    <Card padding="sm" width="2xl" flex1 group>
+    <Card padding="sm" group width="full">
       <Card.Header>
-        <Typography as="h6" decoration="smooth">
-          Brand
-        </Typography>
+        <div className="flex flex-col gap-2">
+          <Typography as="h6">
+            {t(
+              "screens.Dashboard.Tenants.AdvancedManagement.customization.brand.title"
+            )}
+          </Typography>
+
+          <Typography as="small" decoration="smooth" width="sm">
+            {t(
+              "screens.Dashboard.Tenants.AdvancedManagement.customization.brand.description"
+            )}
+          </Typography>
+        </div>
       </Card.Header>
 
       <Card.Body>
         <div className="flex flex-col gap-8">
-          <Typography as="small" width="xs" decoration="smooth">
-            Setup a brand for the tenant. This will be used to identify the
-            tenant in the UI.
-          </Typography>
-
           {brandTag && (
             <div className="flex justify-center gap-2">
               <img
@@ -241,10 +249,16 @@ export default function BrandCard({ tenant, mutateTenantStatus }: Props) {
               <div className="flex flex-col justify-between gap-8 my-5">
                 <div className="flex justify-between w-full">
                   <div className="flex flex-col gap-2">
-                    <Typography as="span">Register a tenant brand</Typography>
+                    <Typography as="span">
+                      {t(
+                        "screens.Dashboard.Tenants.AdvancedManagement.customization.brand.registerTenantBrand"
+                      )}
+                    </Typography>
 
                     <Typography as="small" decoration="smooth">
-                      A brand is used to identify the tenant in the UI.
+                      {t(
+                        "screens.Dashboard.Tenants.AdvancedManagement.customization.brand.registerTenantBrandDescription"
+                      )}
                     </Typography>
                   </div>
 
@@ -289,7 +303,13 @@ export default function BrandCard({ tenant, mutateTenantStatus }: Props) {
                     onClick={() => convertFileToBase64()}
                     disabled={isUploading}
                   >
-                    {isUploading ? "Uploading..." : "Upload logo"}
+                    {isUploading
+                      ? t(
+                          "screens.Dashboard.Tenants.AdvancedManagement.customization.brand.submitting"
+                        )
+                      : t(
+                          "screens.Dashboard.Tenants.AdvancedManagement.customization.brand.submit"
+                        )}
                   </Button>
                 </div>
               )}

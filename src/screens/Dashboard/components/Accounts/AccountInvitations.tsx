@@ -108,9 +108,7 @@ export default function AccountInvitations({
   if (!invitations || invitations.count === 0)
     return (
       <Typography as="span" decoration="thin">
-        {t(
-          "screens.Dashboard.Tenants.AdvancedManagement.customization.managers.noInvitations"
-        )}
+        {t("screens.Dashboard.Accounts.AccountInvitations.noInvitations")}
       </Typography>
     );
 
@@ -134,32 +132,48 @@ export default function AccountInvitations({
                       <span>{formatEmail(invitation.email)}</span>
                     </div>
                   }
-                  title="Invited email"
+                  title={t(
+                    "screens.Dashboard.Accounts.AccountInvitations.email.title"
+                  )}
                   as="h4"
                 >
-                  <Invitation guestRole={invitation.guestRole} />
-
-                  <IntroSection.Item
-                    prefix="invited at"
-                    title="The datetime for the invitation"
-                  >
-                    {formatDDMMYY(new Date(invitation.created), true)}
-                  </IntroSection.Item>
+                  <Invitation guestRole={invitation.guestRole}>
+                    <IntroSection.Item
+                      prefix={t(
+                        "screens.Dashboard.Accounts.AccountInvitations.invitedAt.prefix"
+                      )}
+                      title={t(
+                        "screens.Dashboard.Accounts.AccountInvitations.invitedAt.title"
+                      )}
+                    >
+                      {formatDDMMYY(new Date(invitation.created), true)}
+                    </IntroSection.Item>
+                  </Invitation>
                 </IntroSection>
 
                 <DetailsBox>
                   <DetailsBox.Summary>
-                    <Typography as="small">Actions</Typography>
+                    <Typography as="small">
+                      {t(
+                        "screens.Dashboard.Accounts.AccountInvitations.actions.title"
+                      )}
+                    </Typography>
                   </DetailsBox.Summary>
 
                   <DetailsBox.Content>
                     <Banner intent="warning">
                       <div className="flex justify-between gap-2 my-5">
                         <div className="flex flex-col gap-2">
-                          <Typography as="span">Uninvite user</Typography>
+                          <Typography as="span">
+                            {t(
+                              "screens.Dashboard.Accounts.AccountInvitations.actions.uninvite.title"
+                            )}
+                          </Typography>
 
                           <Typography as="small" decoration="smooth">
-                            Uninvite a user from the account.
+                            {t(
+                              "screens.Dashboard.Accounts.AccountInvitations.actions.uninvite.desctiption"
+                            )}
                           </Typography>
                         </div>
 
@@ -169,7 +183,9 @@ export default function AccountInvitations({
                             intent="warning"
                             onClick={() => setCurrentGuestUser(invitation)}
                           >
-                            Uninvite
+                            {t(
+                              "screens.Dashboard.Accounts.AccountInvitations.actions.uninvite.confirm"
+                            )}
                           </Button>
                         </div>
                       </div>
@@ -220,7 +236,12 @@ export default function AccountInvitations({
  * @param guestRole - The guest role of the invitation
  * @returns The invitation component
  */
-function Invitation({ guestRole }: { guestRole: GuestUser["guestRole"] }) {
+function Invitation({
+  guestRole,
+  children,
+}: { guestRole: GuestUser["guestRole"] } & BaseProps) {
+  const { t } = useTranslation();
+
   const { getAccessTokenSilently } = useProfile();
 
   const { parseHttpError } = useSuspenseError();
@@ -307,13 +328,26 @@ function Invitation({ guestRole }: { guestRole: GuestUser["guestRole"] }) {
   return (
     <>
       <IntroSection.Item
-        prefix="as"
-        title={`Described as ${invitationRecord.description}`}
+        prefix={t("screens.Dashboard.Accounts.AccountInvitations.role.title", {
+          roleDescription: invitationRecord.description,
+        })}
+        title={t("screens.Dashboard.Accounts.AccountInvitations.role.prefix", {
+          roleDescription: invitationRecord.description,
+        })}
       >
         {invitationRecord.name}
       </IntroSection.Item>
 
-      <IntroSection.Item prefix="able to" title="The permission of the role">
+      {children}
+
+      <IntroSection.Item
+        prefix={t(
+          "screens.Dashboard.Accounts.AccountInvitations.permission.prefix"
+        )}
+        title={t(
+          "screens.Dashboard.Accounts.AccountInvitations.permission.title"
+        )}
+      >
         <PermissionIcon permission={invitationRecord.permission} />
       </IntroSection.Item>
     </>

@@ -50,16 +50,16 @@
           "manager": "Usuário gerente"
         },
         "email": {
-          "prefix": "com e-mail",
+          "prefix": "E-mail",
           "title": "Seu e-mail"
         }
       },
       "TenantOwnershipSection": {
-        "title": "Propriedade em locatários",
+        "title": "Seus locatários",
         "loadAll": "Carregar todos os {{count}} locatários"
       },
       "LicensedResourcesSection": {
-        "title": "Contas às quais você tem acesso",
+        "title": "Contas que você tem acesso",
         "noResources": "Nenhuma conta compartilhada com você",
         "noResourcesDescription": "Você não tem acesso a nenhuma conta",
         "accountName": {
@@ -89,7 +89,7 @@
         "name": "Nome do locatário",
         "description": {
           "title": "Descrição do locatário",
-          "prefix": "O locatário é descrito como"
+          "prefix": "Mais"
         }
       },
       "Tenants": {
@@ -165,6 +165,8 @@
           "title": "Gerenciamento avançado",
           "longDescription": "Você pode gerenciar as pessoas e configurações do seu locatário aqui. Comece adicionando proprietários e contas de gerenciamento para configurar o locatário, depois convide usuários adicionais conforme necessário. Todas as outras opções de configuração estão disponíveis na seção Configurações do Locatário.",
           "breadcrumb": "Locatários",
+          "manageAccounts": "Ir para contas",
+          "manageAccountsDescription": "Clique aqui para ver as contas registradas no locatário.",
           "name": {
             "title": "Nome do locatário",
             "prefix": "Vendo"
@@ -265,6 +267,48 @@
               "createManagementAccountDescription": "Você deve completar essa ação antes de convidar gerentes para o locatário.",
               "createManagementAccountButton": "Criar",
               "noInvitations": "Nenhuma conta de gerenciamento registrada"
+            },
+            "brand": {
+              "title": "Logotipo",
+              "description": "Personalize o logotipo do locatário.",
+              "registerTenantBrand": "Registrar logotipo",
+              "registerTenantBrandDescription": "Essa logo trará identidade para o locatário.",
+              "submit": "Enviar",
+              "submitting": "Enviando..."
+            },
+            "colors": {
+              "title": "Cores",
+              "description": "Personalize as cores do locatário.",
+              "submit": "Enviar",
+              "submitting": "Enviando..."
+            }
+          }
+        }
+      },
+      "Accounts": {
+        "AccountInvitations": {
+          "noInvitations": "Nenhuma conta de gerenciamento registrada",
+          "email": {
+            "title": "E-mail convidado"
+          },
+          "invitedAt": {
+            "prefix": "Desde",
+            "title": "Data e hora do convite"
+          },
+          "permission": {
+            "title": "A permissão de sua função é",
+            "prefix": "Permissão"
+          },
+          "role": {
+            "title": "Função",
+            "prefix": "Sua função é descrita como: {{roleDescription}}"
+          },
+          "actions": {
+            "title": "Ações",
+            "uninvite": {
+              "title": "Remover convite",
+              "desctiption": "Remover o convite irá remover os acessos do usuário convidado.",
+              "confirm": "Prosseguir"
             }
           }
         }

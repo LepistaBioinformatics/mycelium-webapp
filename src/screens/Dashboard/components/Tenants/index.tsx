@@ -1,4 +1,4 @@
-import { FaEdit, FaExternalLinkAlt, FaPlus } from "react-icons/fa";
+import { FaEdit, FaPlus } from "react-icons/fa";
 import Button from "@/components/ui/Button";
 import CopyToClipboard from "@/components/ui/CopyToClipboard";
 import PageBody from "@/components/ui/PageBody";
@@ -21,7 +21,7 @@ import { MycPermission } from "@/types/MyceliumPermission";
 import useSuspenseError from "@/hooks/use-suspense-error";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/states/store";
-import { FaRegStar, FaStar } from "react-icons/fa6";
+import { FaGear, FaRegStar, FaStar } from "react-icons/fa6";
 import { setTenantInfo, setTenantIsLoading } from "@/states/tenant.state";
 import { SlOrganization } from "react-icons/sl";
 import { Link } from "react-router";
@@ -209,7 +209,7 @@ export default function Tenants() {
             <ListItem key={tenant?.id}>
               <div className="flex flex-col sm:flex-row justify-between gap-3 group">
                 <Typography as="h3" highlight>
-                  <div className="flex items-center justify-between sm:justify-start gap-3">
+                  <div className="flex items-center justify-between sm:justify-start gap-8">
                     <button
                       title={t(
                         "screens.Dashboard.Tenants.viewTenantBasicDetails"
@@ -225,9 +225,9 @@ export default function Tenants() {
                       title={t(
                         "screens.Dashboard.Tenants.viewTenantAdvancedDetails"
                       )}
-                      className="cursor-pointer hidden group-hover:block"
+                      className="cursor-pointer sm:hidden group-hover:block"
                     >
-                      <FaExternalLinkAlt size={16} />
+                      <FaGear size={16} />
                     </Link>
                   </div>
                 </Typography>

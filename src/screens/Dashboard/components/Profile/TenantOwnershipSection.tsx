@@ -23,7 +23,7 @@ export default function TenantOwnershipSection({ tenantsOwnership }: Props) {
   return (
     <Card padding="sm" width="full">
       <Card.Header>
-        <Typography as="h3" decoration="smooth">
+        <Typography as="h6" decoration="smooth">
           {t("screens.Dashboard.TenantOwnershipSection.title")}
         </Typography>
       </Card.Header>

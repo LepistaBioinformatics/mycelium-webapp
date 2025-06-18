@@ -8,7 +8,7 @@ import { components } from "@/services/openapi/mycelium-schema";
 import { useCallback, useMemo, useState } from "react";
 import DeleteTenant from "./DeleteTenant";
 import { useDispatch, useSelector } from "react-redux";
-import { FaExternalLinkAlt, FaRegStar, FaStar } from "react-icons/fa";
+import { FaRegStar, FaStar } from "react-icons/fa";
 import { RootState } from "@/states/store";
 import { setTenantInfo } from "@/states/tenant.state";
 import Banner from "@/components/ui/Banner";
@@ -18,6 +18,7 @@ import CopyToClipboard from "@/components/ui/CopyToClipboard";
 import { Link } from "react-router";
 import IntroSection from "@/components/ui/IntroSection";
 import { useTranslation } from "react-i18next";
+import { MdManageAccounts } from "react-icons/md";
 
 type Tenant = components["schemas"]["Tenant"];
 
@@ -153,7 +154,7 @@ export default function TenantDetails({ isOpen, onClose, tenant }: Props) {
               )}
               className="cursor-pointer"
             >
-              <FaExternalLinkAlt size={16} />
+              <MdManageAccounts size={24} />
             </Link>
           </div>
         }

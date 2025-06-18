@@ -1,6 +1,7 @@
 import Card from "@/components/ui/Card";
 import Typography from "@/components/ui/Typography";
 import { components } from "@/services/openapi/mycelium-schema";
+import { useTranslation } from "react-i18next";
 
 type Tenant = components["schemas"]["Tenant"];
 
@@ -10,18 +11,28 @@ interface Props {
 }
 
 export default function ColorsCard({}: Props) {
+  const { t } = useTranslation();
+
   return (
-    <Card padding="sm" width="2xl" flex1 group>
+    <Card padding="sm" group width="full">
       <Card.Header>
-        <Typography as="h6" decoration="smooth">
-          Colors
-        </Typography>
+        <div className="flex flex-col gap-2">
+          <Typography as="h6">
+            {t(
+              "screens.Dashboard.Tenants.AdvancedManagement.customization.colors.title"
+            )}
+          </Typography>
+
+          <Typography as="small" decoration="smooth" width="sm">
+            {t(
+              "screens.Dashboard.Tenants.AdvancedManagement.customization.colors.description"
+            )}
+          </Typography>
+        </div>
       </Card.Header>
 
       <Card.Body>
-        <Typography width="xs">
-          Setup tenant colors. This will be used to style the tenant in the UI.
-        </Typography>
+        <Typography decoration="smooth">Available soon!</Typography>
       </Card.Body>
     </Card>
   );

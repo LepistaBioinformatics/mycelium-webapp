@@ -4,7 +4,7 @@ import useProfile from "@/hooks/use-profile";
 import { MycPermission } from "@/types/MyceliumPermission";
 import { MycRole } from "@/types/MyceliumRole";
 import { useEffect, useMemo } from "react";
-import { useParams } from "react-router";
+import { Link, useParams } from "react-router";
 import ControlPanelBreadcrumbItem from "../../ControlPanelBreadcrumbItem";
 import { SlOrganization } from "react-icons/sl";
 import useTenantDetails from "@/hooks/use-tenant-details";
@@ -22,6 +22,7 @@ import BrandCard from "./BrandCard";
 import ColorsCard from "./ColorsCard";
 import LegalSettings from "./LegalSettings";
 import { useTranslation } from "react-i18next";
+import { MdManageAccounts } from "react-icons/md";
 
 export default function AdvancedManagement() {
   const { t } = useTranslation();
@@ -206,6 +207,20 @@ export default function AdvancedManagement() {
                 {formatDDMMYY(new Date(activeTenant?.updated), true)}
               </IntroSection.Item>
             )}
+
+            <Link
+              to={`/dashboard/accounts`}
+              className="flex gap-2 items-center align-center hover:underline text-lg text-blue-500 dark:text-lime-500 mt-2"
+              title={t(
+                "screens.Dashboard.Tenants.AdvancedManagement.manageAccountsDescription"
+              )}
+            >
+              <MdManageAccounts
+                size={24}
+                className="inline text-blue-500 dark:text-lime-500"
+              />
+              {t("screens.Dashboard.Tenants.AdvancedManagement.manageAccounts")}
+            </Link>
           </IntroSection>
         </CardsSection.Header>
 
@@ -229,7 +244,7 @@ export default function AdvancedManagement() {
         </CardsSection.Header>
 
         <CardsSection.Body>
-          <div className="flex flex-col md:flex-row md:flex-wrap gap-8 sm:gap-3 w-full">
+          <div className="flex flex-col md:flex-row md:flex-wrap gap-3 w-full">
             {activeTenant && (
               <>
                 <OwnersCard
@@ -259,7 +274,7 @@ export default function AdvancedManagement() {
         </CardsSection.Header>
 
         <CardsSection.Body>
-          <div className="flex flex-col sm:flex-row gap-8 sm:gap-3 w-full">
+          <div className="flex flex-col sm:flex-row gap-3 w-full">
             {activeTenant && (
               <>
                 <ManagersCard
