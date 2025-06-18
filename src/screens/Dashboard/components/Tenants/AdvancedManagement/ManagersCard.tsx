@@ -12,6 +12,7 @@ import CreateManagementAccount from "../CreateManagementAccount";
 import useProfile from "@/hooks/use-profile";
 import { MycRole } from "@/types/MyceliumRole";
 import { MycPermission } from "@/types/MyceliumPermission";
+import { useTranslation } from "react-i18next";
 
 type Tenant = components["schemas"]["Tenant"];
 type Parent_Account_String = components["schemas"]["Parent_Account_String"];
@@ -23,6 +24,8 @@ interface Props {
 }
 
 export default function ManagersCard({ tenant, mutateTenantStatus }: Props) {
+  const { t } = useTranslation();
+
   const [isGuestToAccountModalOpen, setIsGuestToAccountModalOpen] =
     useState(false);
   const [isUnInviteModalOpen, setIsUnInviteModalOpen] = useState(false);
@@ -78,22 +81,30 @@ export default function ManagersCard({ tenant, mutateTenantStatus }: Props) {
 
   return (
     <>
-      <Card padding="sm" width="2xl" flex1 group>
+      <Card padding="sm" width="full" group>
         <Card.Header>
-          <Typography
-            as="h6"
-            decoration="smooth"
-            title="Peples listed here contains would perform management actions on the tenant"
-          >
-            <div className="flex items-center gap-2">
-              <span>Managers</span>
-              <GoGear
-                title="Guest to management account"
-                className="cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-blue-500 dark:text-lime-500"
-                onClick={() => setIsGuestToAccountModalOpen(true)}
-              />
-            </div>
-          </Typography>
+          <div className="flex flex-col gap-2">
+            <Typography as="h6">
+              <div className="flex items-center gap-2">
+                <span>
+                  {t(
+                    "screens.Dashboard.Tenants.AdvancedManagement.customization.managers.title"
+                  )}
+                </span>
+                <GoGear
+                  title="Register tenant owner"
+                  className="cursor-pointer opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300 text-blue-500 dark:text-lime-400"
+                  onClick={() => setIsGuestToAccountModalOpen(true)}
+                />
+              </div>
+            </Typography>
+
+            <Typography as="small" decoration="smooth" width="sm">
+              {t(
+                "screens.Dashboard.Tenants.AdvancedManagement.customization.managers.description"
+              )}
+            </Typography>
+          </div>
         </Card.Header>
 
         <Card.Body>
@@ -109,10 +120,16 @@ export default function ManagersCard({ tenant, mutateTenantStatus }: Props) {
             <Banner intent="info">
               <div className="flex justify-between gap-2 my-5">
                 <div className="flex flex-col gap-2">
-                  <Typography as="span">Create management account</Typography>
+                  <Typography as="span">
+                    {t(
+                      "screens.Dashboard.Tenants.AdvancedManagement.customization.managers.createManagementAccount"
+                    )}
+                  </Typography>
 
                   <Typography as="small" decoration="smooth">
-                    Management accounts are used to manage the tenant.
+                    {t(
+                      "screens.Dashboard.Tenants.AdvancedManagement.customization.managers.createManagementAccountDescription"
+                    )}
                   </Typography>
                 </div>
 
@@ -122,7 +139,9 @@ export default function ManagersCard({ tenant, mutateTenantStatus }: Props) {
                     intent="info"
                     onClick={() => setIsCreateManagementAccountModalOpen(true)}
                   >
-                    Create
+                    {t(
+                      "screens.Dashboard.Tenants.AdvancedManagement.customization.managers.createManagementAccountButton"
+                    )}
                   </Button>
                 </div>
               </div>

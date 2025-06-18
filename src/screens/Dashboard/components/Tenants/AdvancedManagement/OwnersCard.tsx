@@ -6,12 +6,13 @@ import Typography from "@/components/ui/Typography";
 import IntroSection from "@/components/ui/IntroSection";
 import MiniBox from "@/components/ui/MiniBox";
 import { components } from "@/services/openapi/mycelium-schema";
-import GuestOwner from "../GuestOwnerModal";
-import UnguestOwner from "../UnguestOwnerModal";
+import GuestOwnerModal from "./GuestOwnerModal";
+import UnguestOwner from "./UnguestOwnerModal";
 import CopyToClipboard from "@/components/ui/CopyToClipboard";
 import useProfile from "@/hooks/use-profile";
 import { MycRole } from "@/types/MyceliumRole";
 import { MycPermission } from "@/types/MyceliumPermission";
+import { useTranslation } from "react-i18next";
 
 type TenantOwner = components["schemas"]["Owner"];
 type Tenant = components["schemas"]["Tenant"];
@@ -22,6 +23,8 @@ interface Props {
 }
 
 export default function OwnersCard({ tenant, mutateTenantStatus }: Props) {
+  const { t } = useTranslation();
+
   const [isGuestOwnerModalOpen, setIsGuestOwnerModalOpen] = useState(false);
   const [isUnguestOwnerModalOpen, setIsUnguestOwnerModalOpen] = useState(false);
   const [selectedOwner, setSelectedOwner] = useState<TenantOwner | null>(null);
@@ -73,18 +76,30 @@ export default function OwnersCard({ tenant, mutateTenantStatus }: Props) {
 
   return (
     <>
-      <Card padding="sm" width="2xl" flex1 group>
+      <Card padding="sm" width="full" group>
         <Card.Header>
-          <Typography as="h6" decoration="smooth">
-            <div className="flex items-center gap-2 group">
-              <span>Owners</span>
-              <GoGear
-                title="Register tenant owner"
-                className="cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-blue-500 dark:text-lime-500"
-                onClick={() => setIsGuestOwnerModalOpen(true)}
-              />
-            </div>
-          </Typography>
+          <div className="flex flex-col gap-2">
+            <Typography as="h6">
+              <div className="flex items-center gap-2">
+                <span>
+                  {t(
+                    "screens.Dashboard.Tenants.AdvancedManagement.legalSettingsAndPeople.owners.title"
+                  )}
+                </span>
+                <GoGear
+                  title="Register tenant owner"
+                  className="cursor-pointer opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300 text-blue-500 dark:text-lime-400"
+                  onClick={() => setIsGuestOwnerModalOpen(true)}
+                />
+              </div>
+            </Typography>
+
+            <Typography as="small" decoration="smooth" width="sm">
+              {t(
+                "screens.Dashboard.Tenants.AdvancedManagement.legalSettingsAndPeople.owners.description"
+              )}
+            </Typography>
+          </div>
         </Card.Header>
 
         <Card.Body>
@@ -100,10 +115,16 @@ export default function OwnersCard({ tenant, mutateTenantStatus }: Props) {
                   <div className="flex items-center gap-2 justify-between group/item group/clip min-w-fit">
                     <IntroSection
                       content={ownerName}
-                      title="Owner name"
+                      title={t(
+                        "screens.Dashboard.Tenants.AdvancedManagement.legalSettingsAndPeople.owners.name.title"
+                      )}
                       as="h3"
                     >
-                      <IntroSection.Item prefix="email" title="Email">
+                      <IntroSection.Item
+                        title={t(
+                          "screens.Dashboard.Tenants.AdvancedManagement.legalSettingsAndPeople.owners.email.title"
+                        )}
+                      >
                         <div className="flex items-center gap-2">
                           <span>{owner.email}</span>
                           <CopyToClipboard
@@ -116,7 +137,7 @@ export default function OwnersCard({ tenant, mutateTenantStatus }: Props) {
                       </IntroSection.Item>
                     </IntroSection>
 
-                    <div className="cursor-pointer opacity-0 group-hover/item:opacity-100 transition-opacity duration-300">
+                    <div className="cursor-pointer opacity-100 sm:opacity-0 sm:group-hover/item:opacity-100 transition-opacity duration-300">
                       <button
                         className="text-red-500"
                         onClick={() => handleUnguestOwnerModalOpen(owner)}
@@ -132,7 +153,7 @@ export default function OwnersCard({ tenant, mutateTenantStatus }: Props) {
         </Card.Body>
       </Card>
 
-      <GuestOwner
+      <GuestOwnerModal
         isOpen={isGuestOwnerModalOpen}
         onClose={handleGuestOwnerModalClose}
         onSuccess={handleGuestOwnerModalSuccess}

@@ -13,18 +13,18 @@ export default function SeeMoreText({ text, maxLength = 100, props }: Props) {
 
   const handleShowMore = () => {
     setShowMore(!showMore);
-  }
+  };
 
   const truncatedText = text.slice(0, maxLength);
 
   const displayText = showMore ? text : truncatedText;
 
   return (
-    <Typography {...props} as="small" width="md" decoration="smooth">
+    <Typography {...props} as="span" width="md" decoration="smooth">
       {displayText}
       {text.length > maxLength && (
-        <span className="text-xs ml-1">
-          {!showMore && (<span className="text-slate-500 mr-1">...</span>)}
+        <span className="ml-1">
+          {!showMore && <span className="text-slate-500 mr-1">...</span>}
           <Button
             intent="link"
             size="xs"

@@ -96,7 +96,6 @@
         "title": "Locatários",
         "createTenant": "Criar locatário",
         "viewTenantBasicDetails": "Ver detalhes básicos do locatário",
-        "viewTenantAdvancedDetails": "Ver detalhes avançados do locatário",
         "TenantModal": {
           "title": "Criar locatário",
           "titleExistingTenant": "Editar locatário",
@@ -124,7 +123,8 @@
           "name": {
             "title": "Nome do locatário",
             "prefix": "Vendo",
-            "viewTenantAdvancedDetails": "Ver detalhes avançados do locatário"
+            "viewTenantAdvancedDetails": "Ver detalhes avançados do locatário",
+            "makeTenantFavorite": "Favoritar locatário"
           },
           "description": {
             "title": "Descrição do locatário",
@@ -159,6 +159,113 @@
             "title": "Deletar locatário",
             "description": "Deletar o locatário irá remover todos os dados do locatário e não poderá ser revertido.",
             "button": "Deletar"
+          }
+        },
+        "AdvancedManagement": {
+          "title": "Gerenciamento avançado",
+          "longDescription": "Você pode gerenciar as pessoas e configurações do seu locatário aqui. Comece adicionando proprietários e contas de gerenciamento para configurar o locatário, depois convide usuários adicionais conforme necessário. Todas as outras opções de configuração estão disponíveis na seção Configurações do Locatário.",
+          "breadcrumb": "Locatários",
+          "name": {
+            "title": "Nome do locatário",
+            "prefix": "Vendo"
+          },
+          "description": {
+            "title": "Descrição do locatário",
+            "prefix": "Descrito como"
+          },
+          "created": {
+            "title": "Criado em",
+            "prefix": "Criado em"
+          },
+          "updated": {
+            "title": "Atualizado em",
+            "prefix": "Atualizado em"
+          },
+          "legalSettingsAndPeople": {
+            "title": "Proprietários e Informações legais",
+            "legalSettings": {
+              "title": "Informações legais",
+              "description": "Forneça aqui as informações legais do locatário. Elas serão exibidas publicamente a usuários registrados desse locatário.",
+              "name": {
+                "title": "Nome do locatário",
+                "prefix": "Nome público"
+              },
+              "federalRevenueRegister": {
+                "title": "CNPJ",
+                "prefix": "Registro de Receita Federal"
+              },
+              "federalRevenueRegisterType": {
+                "title": "Tipo de Registro de Receita Federal",
+                "prefix": "CNPJ ou CPF"
+              },
+              "country": {
+                "title": "País",
+                "prefix": "País"
+              },
+              "state": {
+                "title": "Estado",
+                "prefix": "Estado"
+              },
+              "city": {
+                "title": "Cidade",
+                "prefix": "Cidade"
+              },
+              "zipCode": {
+                "title": "CEP",
+                "prefix": "CEP"
+              },
+              "address1": {
+                "title": "Endereço 1",
+                "prefix": "Endereço 1"
+              },
+              "address2": {
+                "title": "Endereço 2",
+                "prefix": "Endereço 2"
+              }
+            },
+            "owners": {
+              "title": "Proprietários",
+              "description": "Proprietários podem gerenciar as informações legais e estrutura organizacional do locatário, assim como possuir autonomia para convidar gerentes e outros proprietários. Use o botão de registro para adicionar proprietários.",
+              "name": {
+                "title": "Nome do proprietário",
+                "prefix": "Nome"
+              },
+              "email": {
+                "title": "E-mail do proprietário",
+                "prefix": "E-mail"
+              },
+              "guestOwner": {
+                "title": "Registre um proprietário convidado",
+                "description": "O email deve ser de um usuário já cadastrado na plataforma.",
+                "form": {
+                  "email": {
+                    "label": "E-mail",
+                    "placeholder": "E-mail do proprietário convidado",
+                    "title": "E-mail do proprietário convidado"
+                  },
+                  "register": "Registrar",
+                  "registering": "Registrando..."
+                }
+              },
+              "unguestOwner": {
+                "title": "Remover proprietário convidado",
+                "description": "Tem certeza que deseja remover o proprietário convidado?",
+                "confirm": "Sim, quero remover",
+                "confirming": "Removendo..."
+              }
+            }
+          },
+          "customization": {
+            "title": "Personalização",
+            "description": "Personalize o locatário com tags, marca e configurações de contas de subscrição.",
+            "managers": {
+              "title": "Gerentes",
+              "description": "Gerentes administrarão tags, marca e configurações de contas de subscrição do locatário. Use o botão de registro para adicionar gerentes.",
+              "createManagementAccount": "Criar conta de gerenciamento",
+              "createManagementAccountDescription": "Você deve completar essa ação antes de convidar gerentes para o locatário.",
+              "createManagementAccountButton": "Criar",
+              "noInvitations": "Nenhuma conta de gerenciamento registrada"
+            }
           }
         }
       }

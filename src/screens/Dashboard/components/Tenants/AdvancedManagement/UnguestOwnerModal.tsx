@@ -9,6 +9,7 @@ import { TENANT_ID_HEADER } from "@/constants/http-headers";
 import Button from "@/components/ui/Button";
 import IntroSection from "@/components/ui/IntroSection";
 import Divider from "@/components/ui/Divider";
+import { useTranslation } from "react-i18next";
 
 type Tenant = components["schemas"]["Tenant"];
 type TenantOwner = components["schemas"]["Owner"];
@@ -21,7 +22,15 @@ interface Props {
   owner: TenantOwner;
 }
 
-export default function UnguestOwner({ isOpen, onClose, tenant, owner, onSuccess }: Props) {
+export default function UnguestOwner({
+  isOpen,
+  onClose,
+  tenant,
+  owner,
+  onSuccess,
+}: Props) {
+  const { t } = useTranslation();
+
   const { hasEnoughPermissions, getAccessTokenSilently } = useProfile({
     restrictSystemAccount: true,
     tenantOwnerNeeded: [tenant?.id ?? ""],
@@ -41,26 +50,24 @@ export default function UnguestOwner({ isOpen, onClose, tenant, owner, onSuccess
 
     const token = await getAccessTokenSilently();
 
-    await fetch(
-      buildPath("/adm/rs/tenant-owner/owners"),
-      {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          [TENANT_ID_HEADER]: tenant.id,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: owner?.email,
-        }),
-      })
+    await fetch(buildPath("/adm/rs/tenant-owner/owners"), {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        [TENANT_ID_HEADER]: tenant.id,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: owner?.email,
+      }),
+    })
       .then(parseHttpError)
       .catch(console.error)
       .finally(() => {
         setIsLoading(false);
         onSuccess();
       });
-  }
+  };
 
   if (!hasEnoughPermissions) {
     return null;
@@ -69,29 +76,28 @@ export default function UnguestOwner({ isOpen, onClose, tenant, owner, onSuccess
   return (
     <Modal open={isOpen}>
       <Modal.Header handleClose={onClose}>
-        <Typography as="h2">Unguest Owner</Typography>
+        <Typography as="h2">
+          {t(
+            "screens.Dashboard.Tenants.AdvancedManagement.legalSettingsAndPeople.owners.unguestOwner.title"
+          )}
+        </Typography>
       </Modal.Header>
 
       <Modal.Body>
         <div className="flex flex-col gap-2 w-full pt-5 px-1">
           <IntroSection
-            content="Are you sure you want to unguest owner?"
-            title="Unguest Owner"
+            content={t(
+              "screens.Dashboard.Tenants.AdvancedManagement.legalSettingsAndPeople.owners.unguestOwner.description"
+            )}
             as="h3"
           >
             <Divider style="invisible" />
 
-            <IntroSection.Item
-              prefix="email"
-              title="Email"
-            >
+            <IntroSection.Item prefix="email" title="Email">
               {owner.email}
             </IntroSection.Item>
 
-            <IntroSection.Item
-              prefix="tenant"
-              title="Tenant"
-            >
+            <IntroSection.Item prefix="tenant" title="Tenant">
               {tenant?.name}
             </IntroSection.Item>
           </IntroSection>
@@ -104,11 +110,17 @@ export default function UnguestOwner({ isOpen, onClose, tenant, owner, onSuccess
               rounded
               fullWidth
             >
-              {isLoading ? "Unguesting..." : "Yes, I want to unguest"}
+              {isLoading
+                ? t(
+                    "screens.Dashboard.Tenants.AdvancedManagement.legalSettingsAndPeople.owners.unguestOwner.confirming"
+                  )
+                : t(
+                    "screens.Dashboard.Tenants.AdvancedManagement.legalSettingsAndPeople.owners.unguestOwner.confirm"
+                  )}
             </Button>
           </div>
         </div>
       </Modal.Body>
     </Modal>
-  )
+  );
 }

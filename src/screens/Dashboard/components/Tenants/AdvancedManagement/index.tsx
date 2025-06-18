@@ -21,8 +21,11 @@ import ManagersCard from "./ManagersCard";
 import BrandCard from "./BrandCard";
 import ColorsCard from "./ColorsCard";
 import LegalSettings from "./LegalSettings";
+import { useTranslation } from "react-i18next";
 
 export default function AdvancedManagement() {
+  const { t } = useTranslation();
+
   const params = useParams();
 
   const dispatch = useDispatch();
@@ -89,9 +92,11 @@ export default function AdvancedManagement() {
           href="/dashboard/tenants"
           icon={SlOrganization}
         >
-          Tenants
+          {t("screens.Dashboard.Tenants.AdvancedManagement.breadcrumb")}
         </PageBody.Breadcrumb.Item>
-        <PageBody.Breadcrumb.Item>Advanced Management</PageBody.Breadcrumb.Item>
+        <PageBody.Breadcrumb.Item>
+          {t("screens.Dashboard.Tenants.AdvancedManagement.title")}
+        </PageBody.Breadcrumb.Item>
       </PageBody.Breadcrumb>
 
       <PageBody.Content padding="md" container flex="col" gap={12}>
@@ -158,23 +163,46 @@ export default function AdvancedManagement() {
       <CardsSection>
         <CardsSection.Header>
           <IntroSection
-            prefix="Seeing"
+            prefix={t(
+              "screens.Dashboard.Tenants.AdvancedManagement.name.prefix"
+            )}
             content={activeTenant?.name}
-            title="Tenant name"
+            title={t("screens.Dashboard.Tenants.AdvancedManagement.name.title")}
             as="h1"
           >
-            <IntroSection.Item prefix="described as" title="Tenant description">
+            <IntroSection.Item
+              prefix={t(
+                "screens.Dashboard.Tenants.AdvancedManagement.description.prefix"
+              )}
+              title={t(
+                "screens.Dashboard.Tenants.AdvancedManagement.description.title"
+              )}
+            >
               {activeTenant?.description}
             </IntroSection.Item>
 
             {activeTenant?.created && (
-              <IntroSection.Item prefix="created at" title="Tenant created at">
+              <IntroSection.Item
+                prefix={t(
+                  "screens.Dashboard.Tenants.AdvancedManagement.created.prefix"
+                )}
+                title={t(
+                  "screens.Dashboard.Tenants.AdvancedManagement.created.title"
+                )}
+              >
                 {formatDDMMYY(new Date(activeTenant?.created), true)}
               </IntroSection.Item>
             )}
 
             {activeTenant?.updated && (
-              <IntroSection.Item prefix="updated at" title="Tenant updated at">
+              <IntroSection.Item
+                prefix={t(
+                  "screens.Dashboard.Tenants.AdvancedManagement.updated.prefix"
+                )}
+                title={t(
+                  "screens.Dashboard.Tenants.AdvancedManagement.updated.title"
+                )}
+              >
                 {formatDDMMYY(new Date(activeTenant?.updated), true)}
               </IntroSection.Item>
             )}
@@ -183,10 +211,9 @@ export default function AdvancedManagement() {
 
         <CardsSection.Body>
           <SeeMoreText
-            text="You can manage the people and settings for your tenant here. 
-            Start by adding owners and management accounts to configure the 
-            tenant, then invite additional users as needed. Any other 
-            configuration options are available in the Tenant Settings section."
+            text={t(
+              "screens.Dashboard.Tenants.AdvancedManagement.longDescription"
+            )}
             maxLength={100}
           />
         </CardsSection.Body>
@@ -194,32 +221,27 @@ export default function AdvancedManagement() {
 
       <CardsSection>
         <CardsSection.Header>
-          <Typography as="h6" decoration="smooth">
-            Legal Settings and People's
+          <Typography as="h3" decoration="smooth">
+            {t(
+              "screens.Dashboard.Tenants.AdvancedManagement.legalSettingsAndPeople.title"
+            )}
           </Typography>
         </CardsSection.Header>
 
         <CardsSection.Body>
-          <div className="flex flex-col sm:flex-row gap-8 sm:gap-3 w-full">
+          <div className="flex flex-col md:flex-row md:flex-wrap gap-8 sm:gap-3 w-full">
             {activeTenant && (
-              <LegalSettings
-                tenant={activeTenant}
-                mutateTenantStatus={mutateTenantStatus}
-              />
-            )}
+              <>
+                <OwnersCard
+                  tenant={activeTenant}
+                  mutateTenantStatus={mutateTenantStatus}
+                />
 
-            {activeTenant && (
-              <OwnersCard
-                tenant={activeTenant}
-                mutateTenantStatus={mutateTenantStatus}
-              />
-            )}
-
-            {activeTenant && (
-              <ManagersCard
-                tenant={activeTenant}
-                mutateTenantStatus={mutateTenantStatus}
-              />
+                <LegalSettings
+                  tenant={activeTenant}
+                  mutateTenantStatus={mutateTenantStatus}
+                />
+              </>
             )}
           </div>
         </CardsSection.Body>
@@ -227,25 +249,34 @@ export default function AdvancedManagement() {
 
       <CardsSection>
         <CardsSection.Header>
-          <Typography as="h6" decoration="smooth">
-            <span>Customization</span>
+          <Typography as="h3" decoration="smooth">
+            <span>
+              {t(
+                "screens.Dashboard.Tenants.AdvancedManagement.customization.title"
+              )}
+            </span>
           </Typography>
         </CardsSection.Header>
 
         <CardsSection.Body>
           <div className="flex flex-col sm:flex-row gap-8 sm:gap-3 w-full">
             {activeTenant && (
-              <BrandCard
-                tenant={activeTenant}
-                mutateTenantStatus={mutateTenantStatus}
-              />
-            )}
+              <>
+                <ManagersCard
+                  tenant={activeTenant}
+                  mutateTenantStatus={mutateTenantStatus}
+                />
 
-            {activeTenant && (
-              <ColorsCard
-                tenant={activeTenant}
-                mutateTenantStatus={mutateTenantStatus}
-              />
+                <BrandCard
+                  tenant={activeTenant}
+                  mutateTenantStatus={mutateTenantStatus}
+                />
+
+                <ColorsCard
+                  tenant={activeTenant}
+                  mutateTenantStatus={mutateTenantStatus}
+                />
+              </>
             )}
           </div>
         </CardsSection.Body>

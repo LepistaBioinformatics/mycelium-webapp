@@ -53,7 +53,7 @@ function Header({ children, handleClose, ...props }: HeaderProps) {
 }
 
 const bodyStyles = cva(
-  "text-gray-500 dark:text-gray-50 flex justify-between items-center min-h-24",
+  "text-gray-500 dark:text-gray-50 flex justify-between items-center min-h-24 p-3",
   {
     variants: {},
   }

@@ -12,7 +12,7 @@ const { width, height, padding, margin } = projectVariants;
 // ? ---------------------------------------------------------------------------
 
 const cardContainerStyles = cva(
-  "border border-blue-200 dark:border-indigo-900 shadow rounded-lg text-gray-500 bg-white dark:bg-slate-800 overflow-auto scrollbar h-min",
+  "border border-blue-200 dark:border-indigo-900 shadow rounded-lg text-gray-500 bg-white dark:bg-slate-800 overflow-auto scrollbar",
   {
     variants: {
       height,
@@ -25,7 +25,7 @@ const cardContainerStyles = cva(
       },
       width: {
         ...width,
-        full: "w-full lg:w-1/3",
+        full: "w-full lg:w-1/4",
       },
       dashed: {
         true: "border-dashed",

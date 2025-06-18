@@ -29,7 +29,7 @@ const styles = cva("whitespace-normal", {
       underline: "underline",
       lineThrough: "line-through",
       smooth: "!text-gray-400 dark:!text-gray-500",
-      faded: "!text-gray-600 dark:!text-gray-400",
+      faded: "font-thin text-gray-600 dark:!text-gray-400",
       bold: "!font-bold",
       semibold: "!font-semibold",
       italic: "!font-italic",

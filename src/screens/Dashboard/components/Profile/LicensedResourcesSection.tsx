@@ -21,7 +21,7 @@ export default function LicensedResourcesSection({ licensedResources }: Props) {
   return (
     <Card padding="sm" width="full" dashed={!licensedResources}>
       <Card.Header>
-        <Typography as="h3" decoration="smooth">
+        <Typography as="h5" decoration="smooth">
           {t("screens.Dashboard.LicensedResourcesSection.title")}
         </Typography>
       </Card.Header>

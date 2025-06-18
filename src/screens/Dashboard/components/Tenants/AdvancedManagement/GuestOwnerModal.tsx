@@ -11,6 +11,7 @@ import { MycPermission } from "@/types/MyceliumPermission";
 import { TextInput } from "flowbite-react";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 
 type Tenant = components["schemas"]["Tenant"];
 
@@ -23,9 +24,16 @@ interface Props {
 
 type Inputs = {
   email: string;
-}
+};
 
-export default function GuestOwner({ isOpen, onClose, onSuccess, tenant }: Props) {
+export default function GuestOwnerModal({
+  isOpen,
+  onClose,
+  onSuccess,
+  tenant,
+}: Props) {
+  const { t } = useTranslation();
+
   const { profile, hasEnoughPermissions, getAccessTokenSilently } = useProfile({
     tenantOwnerNeeded: [tenant?.id ?? ""],
     permissions: [MycPermission.Write],
@@ -44,8 +52,8 @@ export default function GuestOwner({ isOpen, onClose, onSuccess, tenant }: Props
     formState: { errors },
   } = useForm<Inputs>({
     defaultValues: {
-      email: ""
-    }
+      email: "",
+    },
   });
 
   const emailWatch = watch("email");
@@ -64,7 +72,7 @@ export default function GuestOwner({ isOpen, onClose, onSuccess, tenant }: Props
       setIsLoading(false);
       return;
     } else {
-      data = { email: emailWatch }
+      data = { email: emailWatch };
     }
 
     if (!tenant?.id) {
@@ -79,9 +87,9 @@ export default function GuestOwner({ isOpen, onClose, onSuccess, tenant }: Props
       headers: {
         Authorization: `Bearer ${token}`,
         [TENANT_ID_HEADER]: tenant.id,
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify(data)
+      body: JSON.stringify(data),
     });
 
     if (response.ok) {
@@ -91,7 +99,7 @@ export default function GuestOwner({ isOpen, onClose, onSuccess, tenant }: Props
     }
 
     setIsLoading(false);
-  }
+  };
 
   if (!hasEnoughPermissions) {
     return null;
@@ -100,7 +108,17 @@ export default function GuestOwner({ isOpen, onClose, onSuccess, tenant }: Props
   return (
     <Modal open={isOpen}>
       <Modal.Header handleClose={onClose}>
-        <Typography>Register tenant owner</Typography>
+        <Typography as="h6">
+          {t(
+            "screens.Dashboard.Tenants.AdvancedManagement.legalSettingsAndPeople.owners.guestOwner.title"
+          )}
+        </Typography>
+
+        <Typography as="small" decoration="smooth" width="sm">
+          {t(
+            "screens.Dashboard.Tenants.AdvancedManagement.legalSettingsAndPeople.owners.guestOwner.description"
+          )}
+        </Typography>
       </Modal.Header>
 
       <Modal.Body>
@@ -108,11 +126,20 @@ export default function GuestOwner({ isOpen, onClose, onSuccess, tenant }: Props
           className="flex flex-col gap-2 w-full"
           onSubmit={handleSubmit(onSubmit)}
         >
-          <FormField label="Name" title="Name of your tenant">
+          <FormField
+            label={t(
+              "screens.Dashboard.Tenants.AdvancedManagement.legalSettingsAndPeople.owners.guestOwner.form.email.label"
+            )}
+            title={t(
+              "screens.Dashboard.Tenants.AdvancedManagement.legalSettingsAndPeople.owners.guestOwner.form.email.title"
+            )}
+          >
             <TextInput
               className="my-2"
               type="email"
-              placeholder="Email of the tenant owner"
+              placeholder={t(
+                "screens.Dashboard.Tenants.AdvancedManagement.legalSettingsAndPeople.owners.guestOwner.form.email.placeholder"
+              )}
               sizing="lg"
               color="custom"
               autoFocus
@@ -120,25 +147,28 @@ export default function GuestOwner({ isOpen, onClose, onSuccess, tenant }: Props
                 field: {
                   input: {
                     colors: {
-                      custom: "border-slate-400 bg-blue-50 text-slate-900 focus:border-cyan-500 focus:ring-slate-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white placeholder-slate-500  dark:placeholder-slate-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500",
+                      custom:
+                        "border-slate-400 bg-blue-50 text-slate-900 focus:border-cyan-500 focus:ring-slate-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white placeholder-slate-500  dark:placeholder-slate-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500",
                     },
-                  }
-                }
+                  },
+                },
               }}
               {...register("email")}
             />
             {errors.email && <span>This field is required</span>}
           </FormField>
 
-          <Button
-            rounded
-            type="submit"
-            disabled={!emailWatch || isLoading}
-          >
-            {isLoading ? "Registering..." : "Register"}
+          <Button rounded type="submit" disabled={!emailWatch || isLoading}>
+            {isLoading
+              ? t(
+                  "screens.Dashboard.Tenants.AdvancedManagement.legalSettingsAndPeople.owners.guestOwner.form.registering"
+                )
+              : t(
+                  "screens.Dashboard.Tenants.AdvancedManagement.legalSettingsAndPeople.owners.guestOwner.form.register"
+                )}
           </Button>
         </form>
       </Modal.Body>
     </Modal>
-  )
+  );
 }

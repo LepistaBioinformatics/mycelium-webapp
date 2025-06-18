@@ -127,7 +127,12 @@ export default function TenantDetails({ isOpen, onClose, tenant }: Props) {
         content={
           <div className="flex items-center gap-5">
             <span>{tenant.name}</span>
-            <span className="cursor-pointer">
+            <span
+              className="cursor-pointer"
+              title={t(
+                "screens.Dashboard.Tenants.TenantDetails.name.makeTenantFavorite"
+              )}
+            >
               {tenantInfo?.id === tenant.id ? (
                 <FaStar
                   className="text-yellow-300"
@@ -144,7 +149,7 @@ export default function TenantDetails({ isOpen, onClose, tenant }: Props) {
             <Link
               to={`/dashboard/tenants/${tenant.id}`}
               title={t(
-                "screens.Dashboard.Tenants.TenantDetails.viewTenantAdvancedDetails"
+                "screens.Dashboard.Tenants.TenantDetails.name.viewTenantAdvancedDetails"
               )}
               className="cursor-pointer"
             >

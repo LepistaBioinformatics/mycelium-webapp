@@ -10,7 +10,7 @@ interface Base extends BaseProps, ComponentProps<typeof Typography> {
   contentProps?: ComponentProps<typeof Typography> & { className?: string };
 }
 
-const containerStyles = cva("flex flex-col gap-3 xl:gap-0", {
+const containerStyles = cva("flex flex-col gap-3 xl:gap-1", {
   variants: {},
 });
 
@@ -28,7 +28,7 @@ function Container({
 }: ContainerProps) {
   return (
     <div id="IntroSection" className={containerStyles()} {...props}>
-      <div className="flex flex-col xl:flex-row xl:flex-wrap gap-0 xl:gap-2 items-baseline ">
+      <div className="flex flex-col xl:flex-row xl:flex-wrap gap-0 xl:gap-2 items-baseline">
         {prefix && (
           <Typography {...prefixProps} as="span" decoration="smooth">
             {prefix}
@@ -51,12 +51,15 @@ const introItemStyles = cva(
       fullWidth: {
         true: "w-full justify-between",
       },
+      linkLine: {
+        true: "flex items-center",
+      },
     },
   }
 );
 
 const introItemLinkLineStyles = cva(
-  "h-[1px] border-b-2 border-dashed border-gray-300 dark:border-gray-700",
+  "h-[1px] border-b-2 flex-1 border-dashed border-gray-300 dark:border-gray-700",
   {
     variants: {},
   }
@@ -65,7 +68,7 @@ const introItemLinkLineStyles = cva(
 interface IntroItemProps
   extends Omit<Base, "content">,
     VariantProps<typeof introItemStyles> {
-  prefix: string;
+  prefix?: string;
   linkLine?: boolean;
 }
 
@@ -83,12 +86,14 @@ function IntroItem({
   return (
     <div
       id="IntroSectionItem"
-      className={introItemStyles({ fullWidth })}
+      className={introItemStyles({ fullWidth, linkLine })}
       {...props}
     >
-      <Typography as="span" decoration="smooth" {...prefixProps}>
-        {prefix}
-      </Typography>
+      {prefix && (
+        <Typography as="span" decoration="smooth" {...prefixProps}>
+          {prefix}
+        </Typography>
+      )}
       {linkLine && <div className={introItemLinkLineStyles()} />}
       {children && (
         <Typography as="span" title={title} width={width} {...contentProps}>

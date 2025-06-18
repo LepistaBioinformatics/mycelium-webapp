@@ -6,6 +6,7 @@ import { components } from "@/services/openapi/mycelium-schema";
 import { useMemo, useState } from "react";
 import { MdEdit } from "react-icons/md";
 import EditMetadataModal from "./EditMetadataModal";
+import { useTranslation } from "react-i18next";
 
 type Tenant = components["schemas"]["Tenant"];
 type TenantMetaKey = components["schemas"]["TenantMetaKey"];
@@ -16,6 +17,8 @@ interface Props {
 }
 
 export default function LegalSettings({ tenant, mutateTenantStatus }: Props) {
+  const { t } = useTranslation();
+
   const [isEditMetadataModalOpen, setIsEditMetadataModalOpen] = useState(false);
   const [editMetadataKey, setEditMetadataKey] = useState<TenantMetaKey | null>(
     null
@@ -29,8 +32,6 @@ export default function LegalSettings({ tenant, mutateTenantStatus }: Props) {
   });
 
   const handleEditMetadata = (key: TenantMetaKey, value: string) => {
-    console.log("key", key);
-    console.log("value", value);
     setEditMetadataKey(key);
     setEditMetadataValue(value);
     setIsEditMetadataModalOpen(true);
@@ -117,14 +118,14 @@ export default function LegalSettings({ tenant, mutateTenantStatus }: Props) {
   );
 
   const Set = ({
-    key,
+    metaKey,
     value,
     children,
-  }: { key: TenantMetaKey; value: string } & BaseProps) => (
-    <Typography as="span" decoration="thin" width="xxs" truncate>
+  }: { metaKey: TenantMetaKey; value: string } & BaseProps) => (
+    <Typography as="span" decoration="light" width="xxs" truncate>
       <span
-        className="lg:text-end gap-1"
-        onDoubleClick={() => handleEditMetadata(key, value)}
+        className="lg:text-end gap-1 cursor-pointer hover:underline hover:text-blue-500 dark:hover:text-lime-400 transition-all duration-200"
+        onDoubleClick={() => handleEditMetadata(metaKey, value)}
         title="Double click to edit"
       >
         {children}
@@ -134,28 +135,46 @@ export default function LegalSettings({ tenant, mutateTenantStatus }: Props) {
 
   return (
     <>
-      <Card padding="sm" width="2xl" group flex1>
+      <Card padding="sm" width="full">
         <Card.Header>
-          <Typography as="h6" decoration="smooth">
-            <span>Legal information</span>
-          </Typography>
+          <div className="flex flex-col gap-2">
+            <Typography as="h6">
+              {t(
+                "screens.Dashboard.Tenants.AdvancedManagement.legalSettingsAndPeople.legalSettings.title"
+              )}
+            </Typography>
+
+            <Typography as="small" decoration="smooth" width="sm">
+              {t(
+                "screens.Dashboard.Tenants.AdvancedManagement.legalSettingsAndPeople.legalSettings.description"
+              )}
+            </Typography>
+          </div>
         </Card.Header>
 
         <Card.Body>
           <IntroSection
-            prefix="Name"
+            prefix={t(
+              "screens.Dashboard.Tenants.AdvancedManagement.legalSettingsAndPeople.legalSettings.name.prefix"
+            )}
+            title={t(
+              "screens.Dashboard.Tenants.AdvancedManagement.legalSettingsAndPeople.legalSettings.name.title"
+            )}
             content={tenant?.name}
-            title="Tenant name"
             as="h3"
           >
             <IntroSection.Item
-              prefix="FRR"
-              title="Federal Revenue Register"
+              prefix={t(
+                "screens.Dashboard.Tenants.AdvancedManagement.legalSettingsAndPeople.legalSettings.federalRevenueRegister.prefix"
+              )}
+              title={t(
+                "screens.Dashboard.Tenants.AdvancedManagement.legalSettingsAndPeople.legalSettings.federalRevenueRegister.title"
+              )}
               fullWidth
               linkLine
             >
               {frr ? (
-                <Set key="federal_revenue_register" value={frr ?? ""}>
+                <Set metaKey="federal_revenue_register" value={frr ?? ""}>
                   {frr}
                 </Set>
               ) : (
@@ -167,13 +186,20 @@ export default function LegalSettings({ tenant, mutateTenantStatus }: Props) {
             </IntroSection.Item>
 
             <IntroSection.Item
-              prefix="FRR Type"
-              title="Federal Revenue Register Type"
+              prefix={t(
+                "screens.Dashboard.Tenants.AdvancedManagement.legalSettingsAndPeople.legalSettings.federalRevenueRegisterType.prefix"
+              )}
+              title={t(
+                "screens.Dashboard.Tenants.AdvancedManagement.legalSettingsAndPeople.legalSettings.federalRevenueRegisterType.title"
+              )}
               fullWidth
               linkLine
             >
               {frrType ? (
-                <Set key="federal_revenue_register_type" value={frrType ?? ""}>
+                <Set
+                  metaKey="federal_revenue_register_type"
+                  value={frrType ?? ""}
+                >
                   {frrType}
                 </Set>
               ) : (
@@ -185,13 +211,17 @@ export default function LegalSettings({ tenant, mutateTenantStatus }: Props) {
             </IntroSection.Item>
 
             <IntroSection.Item
-              prefix="Country"
-              title="Country"
+              prefix={t(
+                "screens.Dashboard.Tenants.AdvancedManagement.legalSettingsAndPeople.legalSettings.country.prefix"
+              )}
+              title={t(
+                "screens.Dashboard.Tenants.AdvancedManagement.legalSettingsAndPeople.legalSettings.country.title"
+              )}
               fullWidth
               linkLine
             >
               {country ? (
-                <Set key="country" value={country ?? ""}>
+                <Set metaKey="country" value={country ?? ""}>
                   {country}
                 </Set>
               ) : (
@@ -199,9 +229,18 @@ export default function LegalSettings({ tenant, mutateTenantStatus }: Props) {
               )}
             </IntroSection.Item>
 
-            <IntroSection.Item prefix="State" title="State" fullWidth linkLine>
+            <IntroSection.Item
+              prefix={t(
+                "screens.Dashboard.Tenants.AdvancedManagement.legalSettingsAndPeople.legalSettings.state.prefix"
+              )}
+              title={t(
+                "screens.Dashboard.Tenants.AdvancedManagement.legalSettingsAndPeople.legalSettings.state.title"
+              )}
+              fullWidth
+              linkLine
+            >
               {state ? (
-                <Set key="state" value={state ?? ""}>
+                <Set metaKey="state" value={state ?? ""}>
                   {state}
                 </Set>
               ) : (
@@ -209,9 +248,18 @@ export default function LegalSettings({ tenant, mutateTenantStatus }: Props) {
               )}
             </IntroSection.Item>
 
-            <IntroSection.Item prefix="City" title="City" fullWidth linkLine>
+            <IntroSection.Item
+              prefix={t(
+                "screens.Dashboard.Tenants.AdvancedManagement.legalSettingsAndPeople.legalSettings.city.prefix"
+              )}
+              title={t(
+                "screens.Dashboard.Tenants.AdvancedManagement.legalSettingsAndPeople.legalSettings.city.title"
+              )}
+              fullWidth
+              linkLine
+            >
               {city ? (
-                <Set key="city" value={city ?? ""}>
+                <Set metaKey="city" value={city ?? ""}>
                   {city}
                 </Set>
               ) : (
@@ -220,17 +268,39 @@ export default function LegalSettings({ tenant, mutateTenantStatus }: Props) {
             </IntroSection.Item>
 
             <IntroSection.Item
-              prefix="Address 1"
-              title="Address 1"
+              prefix={t(
+                "screens.Dashboard.Tenants.AdvancedManagement.legalSettingsAndPeople.legalSettings.zipCode.prefix"
+              )}
+              title={t(
+                "screens.Dashboard.Tenants.AdvancedManagement.legalSettingsAndPeople.legalSettings.zipCode.title"
+              )}
+              fullWidth
+              linkLine
+            >
+              {zipCode ? (
+                <Set metaKey="zip_code" value={zipCode ?? ""}>
+                  {zipCode}
+                </Set>
+              ) : (
+                <NotSet metadataKey="zip_code" value={zipCode ?? ""} />
+              )}
+            </IntroSection.Item>
+
+            <IntroSection.Item
+              prefix={t(
+                "screens.Dashboard.Tenants.AdvancedManagement.legalSettingsAndPeople.legalSettings.address1.prefix"
+              )}
+              title={t(
+                "screens.Dashboard.Tenants.AdvancedManagement.legalSettingsAndPeople.legalSettings.address1.title"
+              )}
               fullWidth
               linkLine
               contentProps={{
-                truncate: true,
-                className: "max-w-[150px] text-end whitespace-nowrap truncate",
+                className: "text-sm text-base sm:text-end w-fit",
               }}
             >
               {address1 ? (
-                <Set key="address1" value={address1 ?? ""}>
+                <Set metaKey="address1" value={address1 ?? ""}>
                   {address1}
                 </Set>
               ) : (
@@ -239,32 +309,24 @@ export default function LegalSettings({ tenant, mutateTenantStatus }: Props) {
             </IntroSection.Item>
 
             <IntroSection.Item
-              prefix="Address 2"
-              title="Address 2"
+              prefix={t(
+                "screens.Dashboard.Tenants.AdvancedManagement.legalSettingsAndPeople.legalSettings.address2.prefix"
+              )}
+              title={t(
+                "screens.Dashboard.Tenants.AdvancedManagement.legalSettingsAndPeople.legalSettings.address2.title"
+              )}
               fullWidth
               linkLine
+              contentProps={{
+                className: "text-sm text-base sm:text-end w-fit",
+              }}
             >
               {address2 ? (
-                <Set key="address2" value={address2 ?? ""}>
+                <Set metaKey="address2" value={address2 ?? ""}>
                   {address2}
                 </Set>
               ) : (
                 <NotSet metadataKey="address2" value={address2 ?? ""} />
-              )}
-            </IntroSection.Item>
-
-            <IntroSection.Item
-              prefix="Zip code"
-              title="Zip code"
-              fullWidth
-              linkLine
-            >
-              {zipCode ? (
-                <Set key="zip_code" value={zipCode ?? ""}>
-                  {zipCode}
-                </Set>
-              ) : (
-                <NotSet metadataKey="zip_code" value={zipCode ?? ""} />
               )}
             </IntroSection.Item>
           </IntroSection>

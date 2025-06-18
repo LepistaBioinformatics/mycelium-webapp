@@ -18,6 +18,7 @@ import useSuspenseError from "@/hooks/use-suspense-error";
 import PaginatedRecords from "@/types/PaginatedRecords";
 import IntroSection from "@/components/ui/IntroSection";
 import MiniBox from "@/components/ui/MiniBox";
+import { useTranslation } from "react-i18next";
 
 type Account = components["schemas"]["Account"];
 type GuestUser = components["schemas"]["GuestUser"];
@@ -31,12 +32,18 @@ interface Props {
 
 /**
  * Invitations
- * 
+ *
  * @param account - The account object
  * @param tenantId - The tenant id
  * @returns The invitations component
  */
-export default function AccountInvitations({ account, tenantId, setCurrentGuestUser }: Props) {
+export default function AccountInvitations({
+  account,
+  tenantId,
+  setCurrentGuestUser,
+}: Props) {
+  const { t } = useTranslation();
+
   const pageSize = 2;
   const [showMaxInvitations, setShowMaxInvitations] = useState<boolean>(false);
 
@@ -52,23 +59,23 @@ export default function AccountInvitations({ account, tenantId, setCurrentGuestU
     if (typeof accountType !== "object") return null;
 
     if (
-      ("subscription" in accountType) ||
-      ("tenantManager" in accountType) ||
-      ("roleAssociated" in accountType) ||
-      ("actorAssociated" in accountType)
+      "subscription" in accountType ||
+      "tenantManager" in accountType ||
+      "roleAssociated" in accountType ||
+      "actorAssociated" in accountType
     ) {
-      return buildPath("/adm/rs/subscriptions-manager/guests/accounts/{account_id}", {
-        path: { account_id: account.id }
-      });
-    };
+      return buildPath(
+        "/adm/rs/subscriptions-manager/guests/accounts/{account_id}",
+        {
+          path: { account_id: account.id },
+        }
+      );
+    }
 
     return null;
   }, [account.id, account.accountType, tenantId]);
 
-  const {
-    data: invitations,
-    isLoading
-  } = useSWR<PaginatedRecords<GuestUser>>(
+  const { data: invitations, isLoading } = useSWR<PaginatedRecords<GuestUser>>(
     memoizedUrl,
     async (url: string) => {
       if (!tenantId) return null;
@@ -78,8 +85,8 @@ export default function AccountInvitations({ account, tenantId, setCurrentGuestU
       return fetch(url, {
         headers: {
           Authorization: `Bearer ${token}`,
-          [TENANT_ID_HEADER]: tenantId
-        }
+          [TENANT_ID_HEADER]: tenantId,
+        },
       })
         .then(parseHttpError)
         .catch((err) => {
@@ -98,29 +105,35 @@ export default function AccountInvitations({ account, tenantId, setCurrentGuestU
 
   if (isLoading) return <div>Loading...</div>;
 
-  if (!invitations || invitations.count === 0) return (
-    <div>No invitations found</div>
-  );
+  if (!invitations || invitations.count === 0)
+    return (
+      <Typography as="span" decoration="thin">
+        {t(
+          "screens.Dashboard.Tenants.AdvancedManagement.customization.managers.noInvitations"
+        )}
+      </Typography>
+    );
 
   return (
     <div className="flex flex-col gap-2">
       <div className="flex flex-col gap-2">
-        {invitations
-          ?.records
+        {invitations?.records
           ?.slice(0, showMaxInvitations ? invitations.count : pageSize)
           ?.map((invitation) => (
-            <Fragment key={invitation.id} >
+            <Fragment key={invitation.id}>
               <MiniBox>
                 <IntroSection
-                  content={(
+                  content={
                     <div className="flex flex-nowrap justify-between items-center mb-1">
-                      {!invitation.wasVerified && <GoUnverified
-                        className="text-red-500 mr-2"
-                        title="Invitation was not verified by the guest user"
-                      />}
+                      {!invitation.wasVerified && (
+                        <GoUnverified
+                          className="text-red-500 mr-2"
+                          title="Invitation was not verified by the guest user"
+                        />
+                      )}
                       <span>{formatEmail(invitation.email)}</span>
                     </div>
-                  )}
+                  }
                   title="Invited email"
                   as="h4"
                 >
@@ -143,9 +156,7 @@ export default function AccountInvitations({ account, tenantId, setCurrentGuestU
                     <Banner intent="warning">
                       <div className="flex justify-between gap-2 my-5">
                         <div className="flex flex-col gap-2">
-                          <Typography as="span">
-                            Uninvite user
-                          </Typography>
+                          <Typography as="span">Uninvite user</Typography>
 
                           <Typography as="small" decoration="smooth">
                             Uninvite a user from the account.
@@ -167,46 +178,45 @@ export default function AccountInvitations({ account, tenantId, setCurrentGuestU
                 </DetailsBox>
               </MiniBox>
             </Fragment>
-          ))
-        }
-      </div >
+          ))}
+      </div>
 
-      {
-        invitations.count > pageSize && (
-          <div className="flex justify-center">
-            {showMaxInvitations
-              ? (
-                <Button
-                  rounded
-                  fullWidth
-                  intent="link"
-                  size="xs"
-                  onClick={() => setShowMaxInvitations(false)}
-                >
-                  <Typography as="small" decoration="underline">Show less</Typography>
-                </Button>
-              )
-              : (
-                <Button
-                  rounded
-                  fullWidth
-                  intent="link"
-                  size="xs"
-                  onClick={() => setShowMaxInvitations(true)}
-                >
-                  <Typography as="small" decoration="underline">Show all</Typography>
-                </Button>
-              )}
-          </div>
-        )
-      }
-    </div >
-  )
+      {invitations.count > pageSize && (
+        <div className="flex justify-center">
+          {showMaxInvitations ? (
+            <Button
+              rounded
+              fullWidth
+              intent="link"
+              size="xs"
+              onClick={() => setShowMaxInvitations(false)}
+            >
+              <Typography as="small" decoration="underline">
+                Show less
+              </Typography>
+            </Button>
+          ) : (
+            <Button
+              rounded
+              fullWidth
+              intent="link"
+              size="xs"
+              onClick={() => setShowMaxInvitations(true)}
+            >
+              <Typography as="small" decoration="underline">
+                Show all
+              </Typography>
+            </Button>
+          )}
+        </div>
+      )}
+    </div>
+  );
 }
 
 /**
  * Invitation
- * 
+ *
  * @param guestRole - The guest role of the invitation
  * @returns The invitation component
  */
@@ -234,7 +244,7 @@ function Invitation({ guestRole }: { guestRole: GuestUser["guestRole"] }) {
 
     if (typeof localInvitationRecord === "string") {
       return buildPath("/adm/rs/subscriptions-manager/guest-roles/{id}", {
-        path: { id: localInvitationRecord }
+        path: { id: localInvitationRecord },
       });
     }
 
@@ -249,8 +259,8 @@ function Invitation({ guestRole }: { guestRole: GuestUser["guestRole"] }) {
       return fetch(url, {
         headers: {
           Authorization: `Bearer ${token}`,
-          [TENANT_ID_HEADER]: tenantInfo?.id ?? ""
-        }
+          [TENANT_ID_HEADER]: tenantInfo?.id ?? "",
+        },
       })
         .then(parseHttpError)
         .catch((err) => {
@@ -268,9 +278,12 @@ function Invitation({ guestRole }: { guestRole: GuestUser["guestRole"] }) {
     // The local invitation record is an object indicates that the invitation
     // has been self-contained in the invitation record as a guest role field.
     //
-    if (typeof localInvitationRecord === "object" && localInvitationRecord !== null) {
+    if (
+      typeof localInvitationRecord === "object" &&
+      localInvitationRecord !== null
+    ) {
       return localInvitationRecord;
-    };
+    }
 
     //
     // Otherwise, if the remote invitation record is an object, return it
@@ -278,7 +291,8 @@ function Invitation({ guestRole }: { guestRole: GuestUser["guestRole"] }) {
     // The remote invitation record is an object indicates that the invitation
     // has been correctly fetched from the remote API.
     //
-    if (typeof remoteInvitationRecord === "object") return remoteInvitationRecord;
+    if (typeof remoteInvitationRecord === "object")
+      return remoteInvitationRecord;
 
     //
     // Otherwise, return undefined
@@ -299,12 +313,9 @@ function Invitation({ guestRole }: { guestRole: GuestUser["guestRole"] }) {
         {invitationRecord.name}
       </IntroSection.Item>
 
-      <IntroSection.Item
-        prefix="able to"
-        title="The permission of the role"
-      >
+      <IntroSection.Item prefix="able to" title="The permission of the role">
         <PermissionIcon permission={invitationRecord.permission} />
       </IntroSection.Item>
     </>
-  )
+  );
 }
