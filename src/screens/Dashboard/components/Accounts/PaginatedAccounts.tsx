@@ -21,6 +21,7 @@ import SearchBar from "@/components/ui/SearchBar";
 import useSuspenseError from "@/hooks/use-suspense-error";
 import { useSelector } from "react-redux";
 import { RootState } from "@/states/store";
+import { useTranslation } from "react-i18next";
 
 const { padding } = projectVariants;
 
@@ -45,6 +46,14 @@ interface Props {
 
 const COMMANDS = {
   accountType: {
+    subscription: {
+      brief: "Select Subscription accounts",
+      command: "/subscription",
+      description:
+        "Action restricted to subscriptions-manager users. Disabled if tenant is not selected",
+      adminOnly: false,
+      tenantNeeded: true,
+    },
     user: {
       brief: "Select User accounts",
       command: "/user",
@@ -65,14 +74,6 @@ const COMMANDS = {
       description: "Action restricted to manager or staff users",
       adminOnly: true,
       tenantNeeded: false,
-    },
-    subscription: {
-      brief: "Select Subscription accounts",
-      command: "/subscription",
-      description:
-        "Action restricted to subscriptions-manager users. Disabled if tenant is not selected",
-      adminOnly: false,
-      tenantNeeded: true,
     },
     roleAssociated: {
       brief: "Select Role Associated accounts",
@@ -145,6 +146,8 @@ export default function PaginatedAccounts({
   forceMutate,
   restrictAccountTypeTo,
 }: Props) {
+  const { t } = useTranslation();
+
   const { tenantInfo } = useSelector((state: RootState) => state.tenant);
 
   const { parseHttpError } = useSuspenseError();
@@ -390,15 +393,19 @@ export default function PaginatedAccounts({
       onSubmit={onSubmit}
       setSkip={setSkip}
       setPageSize={setPageSize}
-      placeholder="Search or use command palette..."
+      placeholder={t(
+        "screens.Dashboard.Accounts.PaginatedAccounts.searchPlaceholder"
+      )}
       isLoading={isLoadingUser}
       authorized={hasEnoughPermissions}
       padding={padding}
       commandPalette={
         <SearchBar.Content>
-          <div className="flex flex-col gap-1">
+          <div className="flex flex-col gap-3">
             <Typography as="h4" decoration="smooth">
-              Account Type Filters
+              {t(
+                "screens.Dashboard.Accounts.PaginatedAccounts.accountTypeFilters"
+              )}
             </Typography>
             {Object.entries(COMMANDS.accountType)
               ?.filter(
@@ -426,7 +433,9 @@ export default function PaginatedAccounts({
           {!restrictAccountTypeTo && (
             <div className="flex flex-col gap-1">
               <Typography as="h4" decoration="smooth">
-                Account Status Filters
+                {t(
+                  "screens.Dashboard.Accounts.PaginatedAccounts.accountStatusFilters"
+                )}
               </Typography>
               {Object.entries(COMMANDS.status).map(([key, value]) => (
                 <SearchBar.Item
@@ -454,9 +463,11 @@ export default function PaginatedAccounts({
 
         <div className="flex justify-center mx-auto w-full xl:max-w-4xl">
           {tenantInfo?.id && (
-            <div className="flex items-center gap-2">
+            <div className="flex flex-col sm:flex-row items-center gap-2 scale-105">
               <Typography as="span" decoration="smooth">
-                Results based on tenant:
+                {t(
+                  "screens.Dashboard.Accounts.PaginatedAccounts.resultsBasedOnTenant"
+                )}
               </Typography>
               <Typography as="span" decoration="semibold">
                 {tenantInfo.name}
@@ -476,7 +487,7 @@ export default function PaginatedAccounts({
           {accounts?.records?.map((account) => (
             <ListItem key={account?.id}>
               <div className="flex justify-between gap-3">
-                <Typography as="h3" truncate>
+                <Typography as="h4" truncate>
                   <AccountHeader account={account} />
                 </Typography>
                 <div className="flex gap-5">
@@ -485,13 +496,15 @@ export default function PaginatedAccounts({
               </div>
 
               <div className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400">
-                Type: <AccountType account={account} />
+                {t("screens.Dashboard.Accounts.PaginatedAccounts.accountType")}
+                <AccountType account={account} />
               </div>
 
               <Owners account={account} />
 
               <Typography as="small" decoration="smooth">
-                Created: {formatDDMMYY(new Date(account.created), true)}
+                {t("screens.Dashboard.Accounts.PaginatedAccounts.created")}
+                {formatDDMMYY(new Date(account.created), true)}
               </Typography>
             </ListItem>
           ))}

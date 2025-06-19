@@ -12,10 +12,14 @@ import { MycRole } from "@/types/MyceliumRole";
 import { MycPermission } from "@/types/MyceliumPermission";
 import { useSearchParams } from "react-router";
 import { MdManageAccounts } from "react-icons/md";
+import { useTranslation } from "react-i18next";
+import { FaPlus } from "react-icons/fa";
 
 type Account = components["schemas"]["Account"];
 
 export default function Accounts() {
+  const { t } = useTranslation();
+
   const [isNewModalOpen, setIsNewModalOpen] = useState(false);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [currentAccountId, setCurrentAccountId] = useState<string | null>(null);
@@ -85,11 +89,11 @@ export default function Accounts() {
         forceMutate={forceMutate}
         breadcrumb={
           <PageBody.Breadcrumb.Item icon={MdManageAccounts}>
-            Accounts
+            {t("screens.Dashboard.Accounts.title")}
           </PageBody.Breadcrumb.Item>
         }
         toolbar={
-          <div className="flex justify-start mx-auto w-full xl:max-w-4xl">
+          <div className="flex justify-end mx-auto w-full sm:max-w-4xl">
             <Button
               onClick={() => setIsNewModalOpen(true)}
               size="sm"
@@ -97,7 +101,10 @@ export default function Accounts() {
               intent="link"
               disabled={!shouldCreateAccount}
             >
-              <span className="mx-2">Create account</span>
+              <FaPlus
+                title={t("screens.Dashboard.Accounts.createAccount")}
+                className="text-2xl"
+              />
             </Button>
           </div>
         }

@@ -3,8 +3,9 @@ import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { TextInput } from "flowbite-react";
 import { useEffect } from "react";
 import Typography from "./Typography";
+import { useTranslation } from "react-i18next";
 
-const containerStyles = cva("mx-auto sticky top-2 z-5 my-2 sm:my-12", {
+const containerStyles = cva("mx-auto sticky top-2 z-10 my-2 sm:my-12", {
   variants: {
     commandPalette: {
       true: "rounded-lg w-full",
@@ -45,6 +46,8 @@ function Container({
   commandPalette,
   ...props
 }: SearchProps) {
+  const { t } = useTranslation();
+
   const {
     formState: { errors },
     handleSubmit,
@@ -87,20 +90,22 @@ function Container({
                     type="search"
                     sizing="md"
                     color="custom"
-                    placeholder={placeholder || "Type to search..."}
+                    placeholder={
+                      placeholder || t("components.SearchBar.placeholder")
+                    }
                     autoComplete="off"
                     list="autocompleteOff"
                     theme={{
                       base: "flex w-full xl:max-w-4xl",
                       field: {
                         input: {
-                          base: "block w-full border disabled:cursor-not-allowed disabled:opacity-50 text-center text-lg",
+                          base: "block w-full border disabled:cursor-not-allowed disabled:opacity-50 text-start sm:text-center text-lg",
                           colors: {
                             custom:
-                              "border-zinc-400 bg-blue-50 text-zinc-900 focus:border-cyan-500 focus:ring-zinc-500 dark:border-gray-600 dark:bg-zinc-800 dark:text-white placeholder-zinc-500 dark:placeholder-zinc-400 dark:focus:border-lime-500 dark:focus:ring-lime-500",
+                              "border-zinc-400 bg-blue-50 text-zinc-900 focus:border-cyan-500 focus:ring-zinc-500 dark:border-zinc-900 sm:dark:border-zinc-800 dark:bg-zinc-900 sm:dark:bg-zinc-800 dark:text-white placeholder-zinc-500 dark:placeholder-zinc-400 dark:focus:border-lime-500 dark:focus:ring-lime-500",
                           },
                           withAddon: {
-                            off: "rounded-full",
+                            off: "rounded-lg sm:rounded-full",
                           },
                         },
                       },
@@ -122,7 +127,7 @@ function Container({
       {commandPalette && (
         <details className="flex flex-col justify-start">
           <summary className="text-xs text-left px-2 pt-2 text-blue-500 dark:text-lime-400 hover:cursor-pointer">
-            Command Palette
+            {t("components.SearchBar.commandPalette.title")}
           </summary>
 
           {commandPalette}
@@ -165,7 +170,7 @@ const commandPaletteItemStyles = cva(
 );
 
 const commandPaletteItemButtonStyles = cva(
-  "flex justify-start text-gray-700 dark:text-gray-300 items-center gap-3 ml-3",
+  "flex flex-col sm:flex-row justify-start text-gray-700 dark:text-gray-300 items-start sm:items-center gap-1 sm:gap-3 ml-3",
   {
     variants: {
       disabled: {
@@ -196,16 +201,16 @@ function CommandPaletteItem({
   disabled,
 }: CommandPaletteItemProps) {
   return (
-    <div className={commandPaletteItemStyles({ disabled })}>
-      <div
-        className={commandPaletteItemButtonStyles({ disabled })}
-        onClick={() => !disabled && onClick(command)}
-      >
-        <span>{command}</span>
+    <div
+      className={commandPaletteItemStyles({ disabled })}
+      onClick={() => !disabled && onClick(command)}
+    >
+      <div className={commandPaletteItemButtonStyles({ disabled })}>
         <span className="font-semibold">{brief}</span>
+        <span className="ml-2">{command}</span>
       </div>
 
-      <div className="ml-8 text-left">
+      <div className="ml-5 text-left">
         {description && (
           <Typography as="small" decoration="smooth" margin="none">
             {description}

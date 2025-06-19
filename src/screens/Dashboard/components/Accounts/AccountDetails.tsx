@@ -22,6 +22,7 @@ import UpgradeOrDowngradeAccountModal from "./UpgradeOrDowngradeAccountModal";
 import IntroSection from "@/components/ui/IntroSection";
 import AccountInvitations from "./AccountInvitations";
 import UnInviteGuestModal from "./UnInviteGuestModal";
+import { useTranslation } from "react-i18next";
 
 type Account = components["schemas"]["Account"];
 type GuestUser = components["schemas"]["GuestUser"];
@@ -39,6 +40,8 @@ enum OpenedSection {
 }
 
 export default function AccountDetails({ isOpen, onClose, accountId }: Props) {
+  const { t } = useTranslation();
+
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isGuestToAccountModalOpen, setIsGuestToAccountModalOpen] =
     useState(false);
@@ -174,22 +177,36 @@ export default function AccountDetails({ isOpen, onClose, accountId }: Props) {
   }, [account]);
 
   return (
-    <SideCurtain open={isOpen} title="Account details" handleClose={onClose}>
+    <SideCurtain
+      open={isOpen}
+      title={t("screens.Dashboard.Accounts.AccountDetails.title")}
+      handleClose={onClose}
+    >
       {account && (
         <IntroSection
-          prefix="Seeing"
+          prefix={t("screens.Dashboard.Accounts.AccountDetails.name.prefix")}
           content={account?.name}
-          title="Account name"
+          title={t("screens.Dashboard.Accounts.AccountDetails.name.title")}
         >
           {tenantInfo?.id && showTenantInfo && (
             <>
-              <IntroSection.Item prefix="from" title="Tenant name">
+              <IntroSection.Item
+                prefix={t(
+                  "screens.Dashboard.Accounts.AccountDetails.onTenant.prefix"
+                )}
+                title={t(
+                  "screens.Dashboard.Accounts.AccountDetails.onTenant.title"
+                )}
+              >
                 {tenantInfo.name}
               </IntroSection.Item>
-
               <IntroSection.Item
-                prefix="described as"
-                title="Tenant description"
+                prefix={t(
+                  "screens.Dashboard.Accounts.AccountDetails.description.prefix"
+                )}
+                title={t(
+                  "screens.Dashboard.Accounts.AccountDetails.description.title"
+                )}
               >
                 {tenantInfo.description}
               </IntroSection.Item>
@@ -203,65 +220,83 @@ export default function AccountDetails({ isOpen, onClose, accountId }: Props) {
         onToggle={(state) => handleToggleSection(OpenedSection.Details, state)}
       >
         <DetailsBox.Summary>
-          <Typography as="span">Details</Typography>
+          <Typography as="span">
+            {t("screens.Dashboard.Accounts.AccountDetails.details")}
+          </Typography>
         </DetailsBox.Summary>
 
         <DetailsBox.Content minHeight="30">
           <div className="flex flex-col gap-5">
-            <div className="flex gap-2 items-center">
-              <Typography as="span" decoration="smooth">
-                Slug
-              </Typography>
-              <Typography as="p">{account?.slug}</Typography>
-            </div>
+            <IntroSection.Item
+              prefix={t(
+                "screens.Dashboard.Accounts.AccountDetails.slug.prefix"
+              )}
+              title={t("screens.Dashboard.Accounts.AccountDetails.slug.title")}
+            >
+              {account?.slug}
+            </IntroSection.Item>
 
-            <div className="flex gap-2 items-center">
-              <Typography as="span" decoration="smooth">
-                Created
-              </Typography>
-              <Typography as="p">
-                {formatDDMMYY(new Date(account?.created ?? ""), true)}
-              </Typography>
-            </div>
+            <IntroSection.Item
+              prefix={t(
+                "screens.Dashboard.Accounts.AccountDetails.created.prefix"
+              )}
+              title={t(
+                "screens.Dashboard.Accounts.AccountDetails.created.title"
+              )}
+            >
+              {formatDDMMYY(new Date(account?.created ?? ""), true)}
+            </IntroSection.Item>
 
-            <div className="flex gap-2 items-center">
-              <Typography as="span" decoration="smooth">
-                Last updated
-              </Typography>
-              <Typography as="p">
-                {formatDDMMYY(new Date(account?.updated ?? ""), true)}
-              </Typography>
-            </div>
+            <IntroSection.Item
+              prefix={t(
+                "screens.Dashboard.Accounts.AccountDetails.updated.prefix"
+              )}
+              title={t(
+                "screens.Dashboard.Accounts.AccountDetails.updated.title"
+              )}
+            >
+              {formatDDMMYY(new Date(account?.updated ?? ""), true)}
+            </IntroSection.Item>
 
-            <div className="flex gap-2 items-center">
-              <Typography as="span" decoration="smooth">
-                Status
-              </Typography>
-              <Typography as="p">
-                {camelToHumanText(account?.verboseStatus ?? "")}
-              </Typography>
-            </div>
+            <IntroSection.Item
+              prefix={t(
+                "screens.Dashboard.Accounts.AccountDetails.status.prefix"
+              )}
+              title={t(
+                "screens.Dashboard.Accounts.AccountDetails.status.title"
+              )}
+            >
+              {camelToHumanText(account?.verboseStatus ?? "")}
+            </IntroSection.Item>
 
             {owners && (
-              <div className="flex gap-2 items-center">
-                <Typography as="span" decoration="smooth">
-                  Owners
-                </Typography>
-                <Typography as="p">{owners}</Typography>
-              </div>
+              <IntroSection.Item
+                prefix={t(
+                  "screens.Dashboard.Accounts.AccountDetails.owners.prefix"
+                )}
+                title={t(
+                  "screens.Dashboard.Accounts.AccountDetails.owners.title"
+                )}
+              >
+                {owners}
+              </IntroSection.Item>
             )}
 
-            <div className="flex gap-2 items-center">
-              <Typography as="span" decoration="smooth">
-                Account ID
-              </Typography>
-              <Typography as="div">
+            <IntroSection.Item
+              prefix={t(
+                "screens.Dashboard.Accounts.AccountDetails.accountId.prefix"
+              )}
+              title={t(
+                "screens.Dashboard.Accounts.AccountDetails.accountId.title"
+              )}
+            >
+              <span className="flex items-center gap-2 group group/clip">
                 <span className="flex items-center gap-2 group group/clip">
                   {account?.id}
                   <CopyToClipboard text={account?.id ?? ""} groupHidden />
                 </span>
-              </Typography>
-            </div>
+              </span>
+            </IntroSection.Item>
           </div>
         </DetailsBox.Content>
       </DetailsBox>
@@ -274,16 +309,15 @@ export default function AccountDetails({ isOpen, onClose, accountId }: Props) {
           }
         >
           <DetailsBox.Summary>
-            <Typography as="span">Invitations</Typography>
+            <Typography as="span">
+              {t("screens.Dashboard.Accounts.AccountDetails.invitations")}
+            </Typography>
           </DetailsBox.Summary>
 
           {openedSection === OpenedSection.Invitations && (
             <DetailsBox.Content minHeight="50">
               {tenantInfo?.id && account && (
                 <div className="flex flex-col gap-1">
-                  <Typography as="span" decoration="smooth">
-                    Invitations
-                  </Typography>
                   <AccountInvitations
                     account={account}
                     tenantId={tenantInfo?.id}
@@ -303,7 +337,9 @@ export default function AccountDetails({ isOpen, onClose, accountId }: Props) {
         }
       >
         <DetailsBox.Summary>
-          <Typography as="span">Advanced actions</Typography>
+          <Typography as="span">
+            {t("screens.Dashboard.Accounts.AccountDetails.advancedActions")}
+          </Typography>
         </DetailsBox.Summary>
 
         <DetailsBox.Content minHeight="50">
@@ -311,11 +347,16 @@ export default function AccountDetails({ isOpen, onClose, accountId }: Props) {
             <Banner intent="info">
               <div className="flex justify-between gap-2 my-5">
                 <div className="flex flex-col gap-2">
-                  <Typography as="span">Invite user to account</Typography>
+                  <Typography as="span">
+                    {t(
+                      "screens.Dashboard.Accounts.AccountDetails.invite.title"
+                    )}
+                  </Typography>
 
-                  <Typography as="small" decoration="smooth">
-                    Guest users should be invited to the account with specific
-                    role.
+                  <Typography as="small" decoration="smooth" width="sm">
+                    {t(
+                      "screens.Dashboard.Accounts.AccountDetails.invite.description"
+                    )}
                   </Typography>
                 </div>
 
@@ -324,7 +365,9 @@ export default function AccountDetails({ isOpen, onClose, accountId }: Props) {
                     rounded
                     onClick={() => setIsGuestToAccountModalOpen(true)}
                   >
-                    Invite
+                    {t(
+                      "screens.Dashboard.Accounts.AccountDetails.invite.button"
+                    )}
                   </Button>
                 </div>
               </div>
@@ -334,16 +377,20 @@ export default function AccountDetails({ isOpen, onClose, accountId }: Props) {
           <Banner intent="info">
             <div className="flex justify-between gap-2 my-5">
               <div className="flex flex-col gap-2">
-                <Typography as="span">Edit account name</Typography>
+                <Typography as="span">
+                  {t("screens.Dashboard.Accounts.AccountDetails.edit.title")}
+                </Typography>
 
-                <Typography as="small" decoration="smooth">
-                  Edit the account name.
+                <Typography as="small" decoration="smooth" width="sm">
+                  {t(
+                    "screens.Dashboard.Accounts.AccountDetails.edit.description"
+                  )}
                 </Typography>
               </div>
 
               <div>
                 <Button rounded onClick={() => setIsEditModalOpen(true)}>
-                  Edit
+                  {t("screens.Dashboard.Accounts.AccountDetails.edit.button")}
                 </Button>
               </div>
             </div>
@@ -353,11 +400,16 @@ export default function AccountDetails({ isOpen, onClose, accountId }: Props) {
             <Banner intent="info">
               <div className="flex justify-between gap-2 my-5">
                 <div className="flex flex-col gap-2">
-                  <Typography as="span">Update account status</Typography>
+                  <Typography as="span">
+                    {t(
+                      "screens.Dashboard.Accounts.AccountDetails.upgradeOrDowngrade.title"
+                    )}
+                  </Typography>
 
                   <Typography as="small" decoration="smooth" width="sm">
-                    Upgrade or downgrade the account to a different status.
-                    Choices should be one of the following:
+                    {t(
+                      "screens.Dashboard.Accounts.AccountDetails.upgradeOrDowngrade.description"
+                    )}
                     <ul className="list-disc list-inside mt-2">
                       {["user", "staff", "manager"]
                         .filter((status) => status !== account?.accountType)
@@ -373,7 +425,9 @@ export default function AccountDetails({ isOpen, onClose, accountId }: Props) {
                     rounded
                     onClick={() => setIsUpgradeOrDowngradeModalOpen(true)}
                   >
-                    Open dialog
+                    {t(
+                      "screens.Dashboard.Accounts.AccountDetails.upgradeOrDowngrade.button"
+                    )}
                   </Button>
                 </div>
               </div>
@@ -383,10 +437,14 @@ export default function AccountDetails({ isOpen, onClose, accountId }: Props) {
           <Banner intent="error">
             <div className="flex justify-between gap-2 my-5">
               <div className="flex flex-col gap-2">
-                <Typography as="span">Delete account</Typography>
+                <Typography as="span">
+                  {t("screens.Dashboard.Accounts.AccountDetails.delete.title")}
+                </Typography>
 
-                <Typography as="small" decoration="smooth">
-                  This action cannot be undone.
+                <Typography as="small" decoration="smooth" width="sm">
+                  {t(
+                    "screens.Dashboard.Accounts.AccountDetails.delete.description"
+                  )}
                 </Typography>
               </div>
 
@@ -396,7 +454,7 @@ export default function AccountDetails({ isOpen, onClose, accountId }: Props) {
                   intent="danger"
                   onClick={() => setIsDeleteModalOpen(true)}
                 >
-                  Delete
+                  {t("screens.Dashboard.Accounts.AccountDetails.delete.button")}
                 </Button>
               </div>
             </div>

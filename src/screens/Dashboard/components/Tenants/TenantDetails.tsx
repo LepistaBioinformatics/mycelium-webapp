@@ -184,7 +184,7 @@ export default function TenantDetails({ isOpen, onClose, tenant }: Props) {
           <div className="flex flex-col gap-8">
             <IntroSection.Item
               prefix={t(
-                "screens.Dashboard.Tenants.TenantDetails.created.title"
+                "screens.Dashboard.Tenants.TenantDetails.created.prefix"
               )}
               title={t("screens.Dashboard.Tenants.TenantDetails.created.title")}
             >
@@ -194,7 +194,7 @@ export default function TenantDetails({ isOpen, onClose, tenant }: Props) {
             {tenant.updated && (
               <IntroSection.Item
                 prefix={t(
-                  "screens.Dashboard.Tenants.TenantDetails.updated.title"
+                  "screens.Dashboard.Tenants.TenantDetails.updated.prefix"
                 )}
                 title={t(
                   "screens.Dashboard.Tenants.TenantDetails.updated.title"
@@ -207,7 +207,7 @@ export default function TenantDetails({ isOpen, onClose, tenant }: Props) {
             {owners && (
               <IntroSection.Item
                 prefix={t(
-                  "screens.Dashboard.Tenants.TenantDetails.owners.title"
+                  "screens.Dashboard.Tenants.TenantDetails.owners.prefix"
                 )}
                 title={t(
                   "screens.Dashboard.Tenants.TenantDetails.owners.title"
@@ -220,7 +220,7 @@ export default function TenantDetails({ isOpen, onClose, tenant }: Props) {
             {manager && (
               <IntroSection.Item
                 prefix={t(
-                  "screens.Dashboard.Tenants.TenantDetails.manager.title"
+                  "screens.Dashboard.Tenants.TenantDetails.manager.prefix"
                 )}
                 title={t(
                   "screens.Dashboard.Tenants.TenantDetails.manager.title"
@@ -232,7 +232,7 @@ export default function TenantDetails({ isOpen, onClose, tenant }: Props) {
 
             <IntroSection.Item
               prefix={t(
-                "screens.Dashboard.Tenants.TenantDetails.tenantId.title"
+                "screens.Dashboard.Tenants.TenantDetails.tenantId.prefix"
               )}
               title={t(
                 "screens.Dashboard.Tenants.TenantDetails.tenantId.title"

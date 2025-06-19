@@ -165,7 +165,7 @@
           "title": "Gerenciamento avançado",
           "longDescription": "Você pode gerenciar as pessoas e configurações do seu locatário aqui. Comece adicionando proprietários e contas de gerenciamento para configurar o locatário, depois convide usuários adicionais conforme necessário. Todas as outras opções de configuração estão disponíveis na seção Configurações do Locatário.",
           "breadcrumb": "Locatários",
-          "manageAccounts": "Ir para contas",
+          "manageAccounts": "Ver contas",
           "manageAccountsDescription": "Clique aqui para ver as contas registradas no locatário.",
           "name": {
             "title": "Nome do locatário",
@@ -286,6 +286,16 @@
         }
       },
       "Accounts": {
+        "title": "Contas",
+        "createAccount": "Criar conta",
+        "PaginatedAccounts": {
+          "searchPlaceholder": "Pesquise ou use o painel de comandos...",
+          "resultsBasedOnTenant": "Contas registradas em",
+          "accountTypeFilters": "Filtros de tipo de conta",
+          "accountStatusFilters": "Filtros de status de conta",
+          "created": "Criado em",
+          "accountType": "Tipo de conta"
+        },
         "AccountInvitations": {
           "noInvitations": "Nenhuma conta de gerenciamento registrada",
           "email": {
@@ -310,8 +320,116 @@
               "desctiption": "Remover o convite irá remover os acessos do usuário convidado.",
               "confirm": "Prosseguir"
             }
+          },
+          "showAll": "Mostrar todos",
+          "showLess": "Mostrar menos"
+        },
+        "AccountDetails": {
+          "title": "Detalhes da conta",
+          "details": "Detalhes",
+          "invitations": "Compartilhamentos",
+          "advancedActions": "Ações avançadas",
+          "name": {
+            "title": "Nome da conta",
+            "prefix": "Você vê"
+          },
+          "onTenant": {
+            "title": "Nome do locatário",
+            "prefix": "Do locatário"
+          },
+          "description": {
+            "title": "Descrição do locatário",
+            "prefix": "Descrito como"
+          },
+          "slug": {
+            "title": "Slug",
+            "prefix": "Identificador único (slug)"
+          },
+          "created": {
+            "title": "Criado em",
+            "prefix": "Criado em"
+          },
+          "updated": {
+            "title": "Atualizado em",
+            "prefix": "Atualizado em"
+          },
+          "status": {
+            "title": "Status",
+            "prefix": "Status"
+          },
+          "owners": {
+            "title": "Proprietários",
+            "prefix": "Proprietários"
+          },
+          "accountId": {
+            "title": "ID da conta",
+            "prefix": "ID da conta"
+          },
+          "invite": {
+            "title": "Compartilhar conta",
+            "description": "Compartilhe a conta com outros usuários. Use o botão de compartilhamento para enviar um convite para outro usuário.",
+            "button": "Compartilhar"
+          },
+          "edit": {
+            "title": "Editar nome da conta",
+            "description": "Edite o nome da conta. Use o botão de edição para alterar o nome da conta.",
+            "button": "Editar"
+          },
+          "delete": {
+            "title": "Deletar conta",
+            "description": "Deletar a conta irá remover todos os dados da conta e não poderá ser revertido.",
+            "button": "Deletar"
+          },
+          "upgradeOrDowngrade": {
+            "title": "Atualizar status da conta",
+            "description": "Atualize o status da conta para um status diferente. Use o botão de atualização para alterar o status da conta.",
+            "button": "Atualizar"
           }
-        }
+        },
+        "AccountModal": {
+          "createAccount": "Criar conta",
+          "create": "Criar",
+          "creating": "Criando...",
+          "update": "Atualizar",
+          "updating": "Atualizando...",
+          "name": {
+            "title": "Nome da conta",
+            "prefix": "Nome",
+            "placeholder": "Minha melhor conta"
+          },
+          "description": {
+            "title": "Descrição da conta",
+            "prefix": "Descrição",
+            "placeholder": "Descrição da conta"
+          },
+          "createSystemAccount": {
+            "description": "Crie uma conta de sistema para o locatário. Essa conta será utilizada para convidar usuários com permissões de gerenciamento. que farão a gestão do locatário.",
+            "guestManager": {
+              "title": "Gerente de convidados",
+              "description": "Gerente de convidados é uma conta de sistema projetada para gerenciar funções de convidados e tokens relacionados a convidados.",
+              "button": "Criar"
+            },
+            "gatewayManager": {
+              "title": "Gerente de gateways",
+              "description": "Gerente de gateways é uma conta de sistema projetada para gerenciar funções de gateways e tokens relacionados a gateways.",
+              "button": "Criar"
+            },
+            "systemManager": {
+              "title": "Gerente de sistema",
+              "description": "Gerente de sistema é uma conta de sistema projetada para gerenciar funções de sistema e tokens relacionados ao sistema.",
+              "button": "Criar"
+            }
+          }
+        },
+        "GuestToAccountModal": {}
+      }
+    }
+  },
+  "components": {
+    "SearchBar": {
+      "placeholder": "Pesquise resultados...",
+      "commandPalette": {
+        "title": "Comandos"
       }
     }
   }

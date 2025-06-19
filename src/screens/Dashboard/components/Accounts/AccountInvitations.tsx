@@ -208,7 +208,7 @@ export default function AccountInvitations({
               onClick={() => setShowMaxInvitations(false)}
             >
               <Typography as="small" decoration="underline">
-                Show less
+                {t("screens.Dashboard.Accounts.AccountInvitations.showLess")}
               </Typography>
             </Button>
           ) : (
@@ -220,7 +220,7 @@ export default function AccountInvitations({
               onClick={() => setShowMaxInvitations(true)}
             >
               <Typography as="small" decoration="underline">
-                Show all
+                {t("screens.Dashboard.Accounts.AccountInvitations.showAll")}
               </Typography>
             </Button>
           )}

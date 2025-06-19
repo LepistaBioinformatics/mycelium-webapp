@@ -17,6 +17,7 @@ import { MycRole } from "@/types/MyceliumRole";
 import { TextInput } from "flowbite-react";
 import { useCallback, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
 type Account = components["schemas"]["Account"];
@@ -47,6 +48,8 @@ export default function AccountModal({
   account,
   accountId,
 }: AccountModalProps) {
+  const { t } = useTranslation();
+
   const { parseHttpError } = useSuspenseError();
 
   const { hasAdminPrivileges, getAccessTokenSilently } = useProfile({
@@ -145,7 +148,9 @@ export default function AccountModal({
   return (
     <Modal open={isOpen}>
       <Modal.Header handleClose={onClose}>
-        <Typography>Create account</Typography>
+        <Typography>
+          {t("screens.Dashboard.Accounts.AccountModal.createAccount")}
+        </Typography>
       </Modal.Header>
 
       <Modal.Body>
@@ -153,9 +158,14 @@ export default function AccountModal({
           className="flex flex-col gap-5 w-full mb-24"
           onSubmit={handleSubmit(onSubmit)}
         >
-          <FormField label="Name" title="Name of your account">
+          <FormField
+            label={t("screens.Dashboard.Accounts.AccountModal.name.title")}
+            title={t("screens.Dashboard.Accounts.AccountModal.name.title")}
+          >
             <TextInput
-              placeholder="My best account"
+              placeholder={t(
+                "screens.Dashboard.Accounts.AccountModal.name.placeholder"
+              )}
               sizing="lg"
               color="custom"
               autoFocus
@@ -181,11 +191,11 @@ export default function AccountModal({
           >
             {account
               ? isLoading
-                ? "Updating..."
-                : "Update Subscription Account"
+                ? t("screens.Dashboard.Accounts.AccountModal.updating")
+                : t("screens.Dashboard.Accounts.AccountModal.update")
               : isLoading
-              ? "Creating..."
-              : "Create Subscription Account"}
+              ? t("screens.Dashboard.Accounts.AccountModal.creating")
+              : t("screens.Dashboard.Accounts.AccountModal.create")}
           </Button>
 
           {hasAdminPrivileges && !account && (
@@ -193,21 +203,25 @@ export default function AccountModal({
               <Divider style="or" />
 
               <div className="flex flex-col gap-5">
-                <Typography width="md">
-                  Create System account. System accounts are not connected to a
-                  specific Tenant and have global scope.
+                <Typography width="md" as="small" decoration="smooth">
+                  {t(
+                    "screens.Dashboard.Accounts.AccountModal.createSystemAccount.description"
+                  )}
                 </Typography>
 
                 <Banner intent="success">
                   <div className="flex justify-between gap-2 my-5">
                     <div className="flex flex-col gap-2">
                       <Typography as="h5" uppercase>
-                        Guests Manager
+                        {t(
+                          "screens.Dashboard.Accounts.AccountModal.createSystemAccount.guestManager.title"
+                        )}
                       </Typography>
 
                       <Typography as="span" decoration="smooth" width="xs">
-                        Guests Manager account is a system account designed to
-                        manage guests roles and guest related tokens.
+                        {t(
+                          "screens.Dashboard.Accounts.AccountModal.createSystemAccount.guestManager.description"
+                        )}
                       </Typography>
                     </div>
 
@@ -222,7 +236,9 @@ export default function AccountModal({
                           )
                         }
                       >
-                        Create
+                        {t(
+                          "screens.Dashboard.Accounts.AccountModal.createSystemAccount.guestManager.button"
+                        )}
                       </Button>
                     </div>
                   </div>
@@ -232,12 +248,15 @@ export default function AccountModal({
                   <div className="flex justify-between gap-2 my-5">
                     <div className="flex flex-col gap-2">
                       <Typography as="h5" uppercase>
-                        Gateway Manager
+                        {t(
+                          "screens.Dashboard.Accounts.AccountModal.createSystemAccount.gatewayManager.title"
+                        )}
                       </Typography>
 
                       <Typography as="span" decoration="smooth" width="xs">
-                        Gateway Manager account is a system account designed to
-                        manage gateway downstream routes and applications.
+                        {t(
+                          "screens.Dashboard.Accounts.AccountModal.createSystemAccount.gatewayManager.description"
+                        )}
                       </Typography>
                     </div>
 
@@ -252,7 +271,9 @@ export default function AccountModal({
                           )
                         }
                       >
-                        Create
+                        {t(
+                          "screens.Dashboard.Accounts.AccountModal.createSystemAccount.gatewayManager.button"
+                        )}
                       </Button>
                     </div>
                   </div>
@@ -262,12 +283,15 @@ export default function AccountModal({
                   <div className="flex justify-between gap-2 my-5">
                     <div className="flex flex-col gap-2">
                       <Typography as="h5" uppercase>
-                        System Manager
+                        {t(
+                          "screens.Dashboard.Accounts.AccountModal.createSystemAccount.systemManager.title"
+                        )}
                       </Typography>
 
                       <Typography as="span" decoration="smooth" width="xs">
-                        System Manager account is a standard account type
-                        designed to manage webhooks and standard error codes.
+                        {t(
+                          "screens.Dashboard.Accounts.AccountModal.createSystemAccount.systemManager.description"
+                        )}
                       </Typography>
                     </div>
 
@@ -282,7 +306,9 @@ export default function AccountModal({
                           )
                         }
                       >
-                        Create
+                        {t(
+                          "screens.Dashboard.Accounts.AccountModal.createSystemAccount.systemManager.button"
+                        )}
                       </Button>
                     </div>
                   </div>
