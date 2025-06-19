@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import GuestRoleSelector from "./GuestRoleSelector";
+import GuestRoleSelector from "../GuestRoleSelector";
 import { components } from "@/services/openapi/mycelium-schema";
 import Modal from "@/components/ui/Modal";
 import Typography from "@/components/ui/Typography";
@@ -23,68 +23,71 @@ export default function RegisterGuestRoleChild({
   parentRole,
   isOpen,
   onClose,
-  onSuccess
+  onSuccess,
 }: Props) {
   const [selectedRole, setSelectedRole] = useState<GuestRole | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const {
-    isAuthenticated,
-    hasEnoughPermissions,
-    getAccessTokenSilently
-  } = useProfile({
-    roles: [MycRole.GuestsManager],
-    permissions: [MycPermission.Write],
-  });
+  const { isAuthenticated, hasEnoughPermissions, getAccessTokenSilently } =
+    useProfile({
+      roles: [MycRole.GuestsManager],
+      permissions: [MycPermission.Write],
+    });
 
   const { parseHttpError } = useSuspenseError();
 
-  const registerChild = useCallback(async (childRole: GuestRole) => {
-    setIsSubmitting(true);
+  const registerChild = useCallback(
+    async (childRole: GuestRole) => {
+      setIsSubmitting(true);
 
-    if (!isAuthenticated || !hasEnoughPermissions) {
-      setIsSubmitting(false);
-      return;
-    };
-
-    if (!parentRole.id || !childRole.id) {
-      setIsSubmitting(false);
-      return;
-    };
-
-    const accessToken = await getAccessTokenSilently();
-
-    if (!accessToken) {
-      setIsSubmitting(false);
-      return;
-    }
-
-    const response = await fetch(buildPath(
-      "/adm/rs/guests-manager/guest-roles/{guest_role_id}/children/{child_id}",
-      { path: { guest_role_id: parentRole.id, child_id: childRole.id } }
-    ), {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${accessToken}`
+      if (!isAuthenticated || !hasEnoughPermissions) {
+        setIsSubmitting(false);
+        return;
       }
-    });
 
-    if (!response.ok) {
-      parseHttpError(response);
+      if (!parentRole.id || !childRole.id) {
+        setIsSubmitting(false);
+        return;
+      }
+
+      const accessToken = await getAccessTokenSilently();
+
+      if (!accessToken) {
+        setIsSubmitting(false);
+        return;
+      }
+
+      const response = await fetch(
+        buildPath(
+          "/adm/rs/guests-manager/guest-roles/{guest_role_id}/children/{child_id}",
+          { path: { guest_role_id: parentRole.id, child_id: childRole.id } }
+        ),
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        parseHttpError(response);
+        setIsSubmitting(false);
+        return;
+      }
+
       setIsSubmitting(false);
-      return;
-    }
-
-    setIsSubmitting(false);
-    onSuccess();
-  }, [
-    getAccessTokenSilently,
-    isAuthenticated,
-    hasEnoughPermissions,
-    onSuccess,
-    parentRole.id,
-    selectedRole?.id
-  ]);
+      onSuccess();
+    },
+    [
+      getAccessTokenSilently,
+      isAuthenticated,
+      hasEnoughPermissions,
+      onSuccess,
+      parentRole.id,
+      selectedRole?.id,
+    ]
+  );
 
   return (
     <Modal open={isOpen}>
@@ -95,7 +98,7 @@ export default function RegisterGuestRoleChild({
       <Modal.Body>
         <div className="flex flex-col gap-4 w-full my-5">
           <GuestRoleSelector
-            title="Select a guest role to register as a child"
+            label="Select a guest role to register as a child"
             selectedRole={selectedRole}
             setSelectedRole={setSelectedRole}
             shouldBeSystemRole={parentRole.system}

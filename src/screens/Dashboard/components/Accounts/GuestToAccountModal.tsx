@@ -18,7 +18,8 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 import GuestRoleSelector, {
   GuestRoleSelectorProps,
-} from "../GuestRoles/GuestRoleSelector";
+} from "../GuestRoleSelector";
+import { useTranslation } from "react-i18next";
 
 type Account = components["schemas"]["Account"];
 type GuestRole = components["schemas"]["GuestRole"];
@@ -41,6 +42,8 @@ export default function GuestToAccountModal({
   tenantId: tenantIdProp,
   ...guestRoleSelectorProps
 }: Props) {
+  const { t } = useTranslation();
+
   const [selectedRole, setSelectedRole] = useState<GuestRole | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -129,20 +132,28 @@ export default function GuestToAccountModal({
   return (
     <Modal open={isOpen}>
       <Modal.Header handleClose={onClose}>
-        <Typography as="h4">Invite user</Typography>
+        <Typography as="h4">
+          {t("screens.Dashboard.Accounts.GuestToAccountModal.title")}
+        </Typography>
       </Modal.Header>
 
       <Modal.Body>
         <div className="flex flex-col gap-8 p-3 xl:min-w-[500px] w-full">
           <FormField
             id="email"
-            label="1. With the email address"
-            title="The email address of the guest user. User will be notified via email about invitation"
+            label={t(
+              "screens.Dashboard.Accounts.GuestToAccountModal.form.email.label"
+            )}
+            title={t(
+              "screens.Dashboard.Accounts.GuestToAccountModal.form.email.title"
+            )}
           >
             <TextInput
               id="email"
               type="email"
-              placeholder="username@example.com"
+              placeholder={t(
+                "screens.Dashboard.Accounts.GuestToAccountModal.form.email.placeholder"
+              )}
               color="custom"
               sizing="sm"
               autoFocus
@@ -169,14 +180,23 @@ export default function GuestToAccountModal({
           </FormField>
 
           <FormField
-            label="2. To work on account"
-            title="The account to invite the guest to"
+            label={t(
+              "screens.Dashboard.Accounts.GuestToAccountModal.form.account.label"
+            )}
+            title={t(
+              "screens.Dashboard.Accounts.GuestToAccountModal.form.account.title"
+            )}
           >
             <Typography as="h3">{account.name}</Typography>
           </FormField>
 
           <GuestRoleSelector
-            title="3. Given the role privileges"
+            label={t(
+              "screens.Dashboard.Accounts.GuestToAccountModal.form.role.label"
+            )}
+            title={t(
+              "screens.Dashboard.Accounts.GuestToAccountModal.form.role.title"
+            )}
             selectedRole={selectedRole}
             setSelectedRole={(role) => setSelectedRole(role)}
             shouldBeSystemRole={account.isDefault}
@@ -190,7 +210,7 @@ export default function GuestToAccountModal({
               onClick={() => onSubmit({ email: watch("email") })}
               disabled={isSubmitting}
             >
-              Invite
+              {t("screens.Dashboard.Accounts.GuestToAccountModal.form.invite")}
             </Button>
           )}
 

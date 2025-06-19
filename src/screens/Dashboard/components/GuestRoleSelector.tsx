@@ -24,7 +24,8 @@ type Inputs = {
 };
 
 export interface GuestRoleSelectorProps {
-  title: string;
+  label: string;
+  title?: string;
   selectedRole?: GuestRole | null;
   parentRole?: GuestRole | null;
   ignoreList?: string[];
@@ -40,6 +41,7 @@ export interface GuestRoleSelectorProps {
  * @returns A custom implementation of Select component
  */
 export default function GuestRoleSelector({
+  label,
   title,
   selectedRole,
   parentRole,
@@ -149,7 +151,7 @@ export default function GuestRoleSelector({
   };
 
   return (
-    <FormField label={title} title="The role of the guest user">
+    <FormField label={label} title={title}>
       <div>
         {selectedRole && !isEditing && (
           <div className="flex flex-col gap-2">

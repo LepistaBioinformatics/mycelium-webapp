@@ -421,7 +421,25 @@
             }
           }
         },
-        "GuestToAccountModal": {}
+        "GuestToAccountModal": {
+          "title": "Convide um usuário",
+          "form": {
+            "email": {
+              "label": "1. Com esse e-mail",
+              "placeholder": "exemplo@email.com",
+              "title": "O endereço de e-mail do usuário convidado. O usuário será notificado por e-mail sobre o convite"
+            },
+            "account": {
+              "label": "2. Para essa conta",
+              "title": "A conta para convidar o usuário"
+            },
+            "role": {
+              "label": "3. Com essa função",
+              "title": "A função do usuário convidado"
+            },
+            "invite": "Convidar"
+          }
+        }
       }
     }
   },
