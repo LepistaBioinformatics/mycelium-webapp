@@ -446,6 +446,20 @@
           "description": "Deletar a conta irá remover todos os dados da conta e não poderá ser revertido.",
           "delete": "Deletar",
           "deleting": "Deletando..."
+        },
+        "UnInviteGuestModal": {
+          "title": "Remover convite",
+          "description": "Tem certeza que deseja remover o convite?",
+          "confirm": "Prosseguir",
+          "confirming": "Removendo...",
+          "email": {
+            "title": "E-mail convidado",
+            "prefix": "E-mail"
+          },
+          "role": {
+            "title": "Função",
+            "prefix": "Função"
+          }
         }
       }
     }

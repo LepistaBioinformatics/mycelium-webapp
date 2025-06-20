@@ -13,6 +13,7 @@ import { RootState } from "@/states/store";
 import { MycPermission } from "@/types/MyceliumPermission";
 import { MycRole } from "@/types/MyceliumRole";
 import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
 type GuestUser = components["schemas"]["GuestUser"];
@@ -24,7 +25,14 @@ interface Props {
   onClose: () => void;
 }
 
-export default function UnInviteGuestModal({ guestUser, accountId, isOpen, onClose }: Props) {
+export default function UnInviteGuestModal({
+  guestUser,
+  accountId,
+  isOpen,
+  onClose,
+}: Props) {
+  const { t } = useTranslation();
+
   const { getAccessTokenSilently } = useProfile({
     roles: [MycRole.SubscriptionsManager],
     permissions: [MycPermission.Write],
@@ -74,10 +82,13 @@ export default function UnInviteGuestModal({ guestUser, accountId, isOpen, onClo
     const token = await getAccessTokenSilently();
 
     const response = await fetch(
-      buildPath("/adm/rs/subscriptions-manager/guests/accounts/{account_id}/roles/{role_id}", {
-        path: { account_id: accountId, role_id: localInvitationRecord },
-        query: { email }
-      }),
+      buildPath(
+        "/adm/rs/subscriptions-manager/guests/accounts/{account_id}/roles/{role_id}",
+        {
+          path: { account_id: accountId, role_id: localInvitationRecord },
+          query: { email },
+        }
+      ),
       {
         method: "DELETE",
         headers: {
@@ -85,7 +96,8 @@ export default function UnInviteGuestModal({ guestUser, accountId, isOpen, onClo
           "Content-Type": "application/json",
           [TENANT_ID_HEADER]: tenantInfo?.id ?? "",
         },
-      });
+      }
+    );
 
     if (!response.ok) {
       parseHttpError(response);
@@ -95,33 +107,45 @@ export default function UnInviteGuestModal({ guestUser, accountId, isOpen, onClo
 
     setIsSubmitting(false);
     onClose();
-  }
+  };
 
   return (
     <Modal open={isOpen}>
       <Modal.Header handleClose={onClose}>
-        <Typography as="h4">Uninvite user</Typography>
+        <Typography as="h4">
+          {t("screens.Dashboard.Accounts.UnInviteGuestModal.title")}
+        </Typography>
       </Modal.Header>
 
       <Modal.Body>
         <div className="flex flex-col gap-2 w-full pt-5 px-1">
           <IntroSection
-            content="Are you sure you want to uninvite user?"
-            title="Uninvite user"
+            content={t(
+              "screens.Dashboard.Accounts.UnInviteGuestModal.description"
+            )}
+            title={t("screens.Dashboard.Accounts.UnInviteGuestModal.title")}
             as="h3"
           >
             <Divider style="invisible" />
 
             <IntroSection.Item
-              prefix="email"
-              title="Email"
+              prefix={t(
+                "screens.Dashboard.Accounts.UnInviteGuestModal.email.prefix"
+              )}
+              title={t(
+                "screens.Dashboard.Accounts.UnInviteGuestModal.email.title"
+              )}
             >
               {formatEmail(guestUser.email)}
             </IntroSection.Item>
 
             <IntroSection.Item
-              prefix="role"
-              title="Role"
+              prefix={t(
+                "screens.Dashboard.Accounts.UnInviteGuestModal.role.prefix"
+              )}
+              title={t(
+                "screens.Dashboard.Accounts.UnInviteGuestModal.role.title"
+              )}
             >
               {guestRole?.name}
             </IntroSection.Item>
@@ -135,7 +159,9 @@ export default function UnInviteGuestModal({ guestUser, accountId, isOpen, onClo
               onClick={onSubmit}
               disabled={isSubmitting}
             >
-              {isSubmitting ? "Uninviting..." : "Uninvite"}
+              {isSubmitting
+                ? t("screens.Dashboard.Accounts.UnInviteGuestModal.confirming")
+                : t("screens.Dashboard.Accounts.UnInviteGuestModal.confirm")}
             </Button>
           </div>
         </div>
