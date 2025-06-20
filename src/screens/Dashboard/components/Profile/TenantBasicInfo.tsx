@@ -2,6 +2,7 @@ import { TenantResolverChildProps } from "./TenantResolver";
 import CopyToClipboard from "@/components/ui/CopyToClipboard";
 import { SYSTEM_TENANT_ID } from "@/constants/zero-tenant";
 import IntroSection from "@/components/ui/IntroSection";
+import { useTranslation } from "react-i18next";
 
 interface Props extends TenantResolverChildProps {
   tenantId: string;
@@ -11,8 +12,10 @@ export default function TenantBasicInfo({
   tenantStatus,
   isLoading,
   error,
-  tenantId
+  tenantId,
 }: Props) {
+  const { t } = useTranslation();
+
   //
   // System accounts with system roles receives a zero-uuid as tenantId
   //
@@ -29,8 +32,10 @@ export default function TenantBasicInfo({
 
   const Item = ({ status }: { status: string }) => (
     <IntroSection.Item
-      prefix="from"
-      title={`The tenant which the account belongs to: ${tenantId}`}
+      prefix={t("screens.Dashboard.TenantBasicInfo.from.prefix")}
+      title={t("screens.Dashboard.TenantBasicInfo.from.title", {
+        tenantId,
+      })}
     >
       {status}
       <CopyToClipboard text={tenantId} />
@@ -63,8 +68,10 @@ export default function TenantBasicInfo({
   //
   return (
     <IntroSection.Item
-      prefix="from"
-      title={`Tenant: ${tenantStatus.active.name} (${tenantStatus.active.description})`}
+      prefix={t("screens.Dashboard.TenantBasicInfo.from.prefix")}
+      title={t("screens.Dashboard.TenantBasicInfo.from.title", {
+        tenantId,
+      })}
     >
       {tenantStatus?.active?.name}
     </IntroSection.Item>

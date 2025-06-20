@@ -15,6 +15,8 @@ import { GiWizardStaff } from "react-icons/gi";
 import { GrUserAdmin } from "react-icons/gr";
 import IntroSection from "@/components/ui/IntroSection";
 import { useTranslation } from "react-i18next";
+import SeeMoreText from "@/components/ui/SeeMoreText";
+import CopyToClipboard from "@/components/ui/CopyToClipboard";
 
 type Profile = components["schemas"]["Profile"];
 
@@ -82,16 +84,38 @@ export default function Profile() {
                   prefix={t("screens.Dashboard.Profile.email.prefix")}
                   title={t("screens.Dashboard.Profile.email.title")}
                 >
-                  {user?.email}
+                  <span className="group/clip flex items-center gap-1">
+                    {user?.email}
+                    <CopyToClipboard text={user?.email || ""} groupHidden />
+                  </span>
                 </IntroSection.Item>
               </IntroSection>
             )}
           </CardsSection.Header>
 
           <CardsSection.Body>
-            <div className="flex flex-wrap gap-8 sm:gap-3 w-full">
-              <TenantOwnershipSection tenantsOwnership={tenantsOwnership} />
-              <LicensedResourcesSection licensedResources={licensedResources} />
+            <div className="flex flex-col gap-3 w-full mt-12">
+              <div>
+                <Typography decoration="smooth" as="h3">
+                  {t("screens.Dashboard.Profile.relationship")}
+                </Typography>
+
+                <Typography decoration="smooth" width="md">
+                  <SeeMoreText
+                    text={t(
+                      "screens.Dashboard.Profile.relationshipDescription"
+                    )}
+                    maxLength={100}
+                  />
+                </Typography>
+              </div>
+
+              <div className="flex flex-wrap gap-8 sm:gap-3 w-full">
+                <TenantOwnershipSection tenantsOwnership={tenantsOwnership} />
+                <LicensedResourcesSection
+                  licensedResources={licensedResources}
+                />
+              </div>
             </div>
           </CardsSection.Body>
         </CardsSection>

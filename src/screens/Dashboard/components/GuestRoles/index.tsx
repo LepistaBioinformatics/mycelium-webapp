@@ -170,7 +170,7 @@ export default function GuestRoles() {
                     {guestRole.system && (
                       <RiRobot2Line className="text-blue-500 dark:text-lime-500" />
                     )}
-                    <Typography as="h3" highlight>
+                    <Typography as="h3" highlight nowrap>
                       <button
                         className="hover:underline text-blue-500 dark:text-lime-400"
                         onClick={() => handleViewGuestRoleClick(guestRole)}

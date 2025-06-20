@@ -67,6 +67,8 @@
       "Profile": {
         "title": "Perfil",
         "loading": "Carregando perfil...",
+        "relationship": "Contas compartilhadas",
+        "relationshipDescription": "Aqui você pode ver as contas compartilhadas com você, além dos locatários que você tem acesso. Novos clientes verão essa seção vazios.",
         "loggedInAs": {
           "prefix": "Usuário",
           "title": "Seu nome",
@@ -92,13 +94,19 @@
         },
         "role": {
           "title": "Função atribuída a você",
-          "prefix": "como"
+          "prefix": "Com papel"
         },
         "permission": {
           "title": "Permissão atribuída a você",
-          "prefix": "habilitado para"
+          "prefix": "Você pode"
         },
         "unverified": "Não verificado"
+      },
+      "TenantBasicInfo": {
+        "from": {
+          "title": "O locatário ao qual a conta pertence: {{tenantId}}",
+          "prefix": "Locatário"
+        }
       },
       "TenantOwnershipInfo": {
         "title": "O locatário ao qual a conta pertence: {{tenantId}}",

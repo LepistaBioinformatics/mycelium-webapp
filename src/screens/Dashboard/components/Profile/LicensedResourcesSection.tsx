@@ -8,6 +8,7 @@ import PermissionIcon from "@/components/ui/PermissionIcon";
 import MiniBox from "@/components/ui/MiniBox";
 import IntroSection from "@/components/ui/IntroSection";
 import { useTranslation } from "react-i18next";
+import CopyToClipboard from "@/components/ui/CopyToClipboard";
 
 type LicensedResource = components["schemas"]["LicensedResource"];
 
@@ -103,7 +104,10 @@ export default function LicensedResourcesSection({ licensedResources }: Props) {
                         }
                       )}
                     >
-                      <span className="whitespace-nowrap">{resource.role}</span>
+                      <span className="whitespace-nowrap group/clip flex items-center gap-1">
+                        {resource.role}
+                        <CopyToClipboard text={resource.role} groupHidden />
+                      </span>
                     </IntroSection.Item>
 
                     <IntroSection.Item
