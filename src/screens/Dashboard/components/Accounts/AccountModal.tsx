@@ -149,7 +149,9 @@ export default function AccountModal({
     <Modal open={isOpen}>
       <Modal.Header handleClose={onClose}>
         <Typography>
-          {t("screens.Dashboard.Accounts.AccountModal.createAccount")}
+          {account
+            ? t("screens.Dashboard.Accounts.AccountModal.editAccount")
+            : t("screens.Dashboard.Accounts.AccountModal.createAccount")}
         </Typography>
       </Modal.Header>
 

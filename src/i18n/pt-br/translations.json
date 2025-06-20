@@ -388,6 +388,7 @@
         },
         "AccountModal": {
           "createAccount": "Criar conta",
+          "editAccount": "Editar conta",
           "create": "Criar",
           "creating": "Criando...",
           "update": "Atualizar",
@@ -439,6 +440,12 @@
             },
             "invite": "Convidar"
           }
+        },
+        "DeleteAccount": {
+          "title": "Deletar conta",
+          "description": "Deletar a conta irá remover todos os dados da conta e não poderá ser revertido.",
+          "delete": "Deletar",
+          "deleting": "Deletando..."
         }
       }
     }
