@@ -2,6 +2,7 @@ import PaginatedRecords from "@/types/PaginatedRecords";
 import { useMemo } from "react";
 import Button from "./Button";
 import Typography from "./Typography";
+import { useTranslation } from "react-i18next";
 
 export interface PagerProps {
   mutation: (records: PaginatedRecords<any>, options?: any) => void;
@@ -18,6 +19,8 @@ export default function Pager({
   setSkip,
   pageSize,
 }: PagerProps) {
+  const { t } = useTranslation();
+
   const hasMore = useMemo(() => {
     if (!records) return false;
 
@@ -67,12 +70,12 @@ export default function Pager({
         intent="link"
         disabled={showPreviousPageButton}
       >
-        Back
+        {t("components.Pager.prev")}
       </Button>
 
       <div className="flex gap-4 justify-center items-center mx-auto w-full xl:max-w-4xl">
-        <Typography center as="span">
-          {records?.count ?? 0} records
+        <Typography center as="span" decoration="thin">
+          {t("components.Pager.records", { number: records?.count ?? 0 })}
         </Typography>
       </div>
 
@@ -84,7 +87,7 @@ export default function Pager({
         intent="link"
         disabled={!showNextPageButton}
       >
-        Next
+        {t("components.Pager.next")}
       </Button>
     </div>
   );

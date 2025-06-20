@@ -22,6 +22,7 @@ import useSuspenseError from "@/hooks/use-suspense-error";
 import { useSelector } from "react-redux";
 import { RootState } from "@/states/store";
 import { useTranslation } from "react-i18next";
+import IntroSection from "@/components/ui/IntroSection";
 
 const { padding } = projectVariants;
 
@@ -495,17 +496,23 @@ export default function PaginatedAccounts({
                 </div>
               </div>
 
-              <div className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400">
-                {t("screens.Dashboard.Accounts.PaginatedAccounts.accountType")}
-                <AccountType account={account} />
-              </div>
-
               <Owners account={account} />
 
-              <Typography as="small" decoration="smooth">
-                {t("screens.Dashboard.Accounts.PaginatedAccounts.created")}
+              <IntroSection.Item
+                prefix={t(
+                  "screens.Dashboard.Accounts.PaginatedAccounts.accountType"
+                )}
+              >
+                <AccountType account={account} />
+              </IntroSection.Item>
+
+              <IntroSection.Item
+                prefix={t(
+                  "screens.Dashboard.Accounts.PaginatedAccounts.created"
+                )}
+              >
                 {formatDDMMYY(new Date(account.created), true)}
-              </Typography>
+              </IntroSection.Item>
             </ListItem>
           ))}
         </PaginatedContent>
