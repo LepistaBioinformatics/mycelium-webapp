@@ -140,8 +140,8 @@ export default function GuestRolesModal({
       <Modal.Header handleClose={onClose}>
         <Typography>
           {guestRole
-            ? t("screens.Dashboard.GuestRolesModal.editGuestRole")
-            : t("screens.Dashboard.GuestRolesModal.createGuestRole")}
+            ? t("screens.Dashboard.GuestRoles.GuestRolesModal.editGuestRole")
+            : t("screens.Dashboard.GuestRoles.GuestRolesModal.createGuestRole")}
         </Typography>
       </Modal.Header>
 
@@ -151,13 +151,17 @@ export default function GuestRolesModal({
           onSubmit={handleSubmit(onSubmit)}
         >
           <FormField
-            label={t("screens.Dashboard.GuestRolesModal.form.name.label")}
-            title={t("screens.Dashboard.GuestRolesModal.form.name.title")}
+            label={t(
+              "screens.Dashboard.GuestRoles.GuestRolesModal.form.name.label"
+            )}
+            title={t(
+              "screens.Dashboard.GuestRoles.GuestRolesModal.form.name.title"
+            )}
           >
             <TextInput
               id="name"
               placeholder={t(
-                "screens.Dashboard.GuestRolesModal.form.name.placeholder"
+                "screens.Dashboard.GuestRoles.GuestRolesModal.form.name.placeholder"
               )}
               sizing="lg"
               color="custom"
@@ -179,17 +183,17 @@ export default function GuestRolesModal({
 
           <FormField
             label={t(
-              "screens.Dashboard.GuestRolesModal.form.description.label"
+              "screens.Dashboard.GuestRoles.GuestRolesModal.form.description.label"
             )}
             title={t(
-              "screens.Dashboard.GuestRolesModal.form.description.title"
+              "screens.Dashboard.GuestRoles.GuestRolesModal.form.description.title"
             )}
           >
             <Textarea
               id="description"
               className="h-24 p-4"
               placeholder={t(
-                "screens.Dashboard.GuestRolesModal.form.description.placeholder"
+                "screens.Dashboard.GuestRoles.GuestRolesModal.form.description.placeholder"
               )}
               rows={4}
               color="custom"
@@ -205,14 +209,16 @@ export default function GuestRolesModal({
           </FormField>
 
           <FormField
-            label={t("screens.Dashboard.GuestRolesModal.form.permission.label")}
+            label={t(
+              "screens.Dashboard.GuestRoles.GuestRolesModal.form.permission.label"
+            )}
             title={
               guestRole
                 ? t(
-                    "screens.Dashboard.GuestRolesModal.form.permission.titleReadOnly"
+                    "screens.Dashboard.GuestRoles.GuestRolesModal.form.permission.titleReadOnly"
                   )
                 : t(
-                    "screens.Dashboard.GuestRolesModal.form.permission.titleWrite"
+                    "screens.Dashboard.GuestRoles.GuestRolesModal.form.permission.titleWrite"
                   )
             }
           >
@@ -223,10 +229,10 @@ export default function GuestRolesModal({
               title={
                 guestRole
                   ? t(
-                      "screens.Dashboard.GuestRolesModal.form.permission.titleReadOnly"
+                      "screens.Dashboard.GuestRoles.GuestRolesModal.form.permission.titleReadOnly"
                     )
                   : t(
-                      "screens.Dashboard.GuestRolesModal.form.permission.titleWrite"
+                      "screens.Dashboard.GuestRoles.GuestRolesModal.form.permission.titleWrite"
                     )
               }
               defaultValue={
@@ -236,10 +242,14 @@ export default function GuestRolesModal({
               {...register("permission")}
             >
               <option value={MycPermission.Read}>
-                {t("screens.Dashboard.GuestRolesModal.form.permission.read")}
+                {t(
+                  "screens.Dashboard.GuestRoles.GuestRolesModal.form.permission.read"
+                )}
               </option>
               <option value={MycPermission.Write}>
-                {t("screens.Dashboard.GuestRolesModal.form.permission.write")}
+                {t(
+                  "screens.Dashboard.GuestRoles.GuestRolesModal.form.permission.write"
+                )}
               </option>
             </Select>
           </FormField>
@@ -251,11 +261,13 @@ export default function GuestRolesModal({
           >
             {guestRole
               ? isLoading
-                ? t("screens.Dashboard.GuestRolesModal.form.updating")
-                : t("screens.Dashboard.GuestRolesModal.form.update")
+                ? t(
+                    "screens.Dashboard.GuestRoles.GuestRolesModal.form.updating"
+                  )
+                : t("screens.Dashboard.GuestRoles.GuestRolesModal.form.update")
               : isLoading
-              ? t("screens.Dashboard.GuestRolesModal.form.creating")
-              : t("screens.Dashboard.GuestRolesModal.form.create")}
+              ? t("screens.Dashboard.GuestRoles.GuestRolesModal.form.creating")
+              : t("screens.Dashboard.GuestRoles.GuestRolesModal.form.create")}
           </Button>
         </form>
       </Modal.Body>

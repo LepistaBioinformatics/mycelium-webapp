@@ -55,14 +55,14 @@ export default function DeleteGuestRole({ guestRole, isOpen, onClose }: Props) {
     <Modal open={isOpen}>
       <Modal.Header handleClose={onClose}>
         <Typography as="h2">
-          {t("screens.Dashboard.DeleteGuestRole.title")}
+          {t("screens.Dashboard.GuestRoles.DeleteGuestRole.title")}
         </Typography>
       </Modal.Header>
 
       <Modal.Body>
         <div className="flex flex-col gap-2 w-full">
           <Typography as="p">
-            {t("screens.Dashboard.DeleteGuestRole.description")}
+            {t("screens.Dashboard.GuestRoles.DeleteGuestRole.description")}
           </Typography>
 
           <div>
@@ -74,8 +74,8 @@ export default function DeleteGuestRole({ guestRole, isOpen, onClose }: Props) {
               fullWidth
             >
               {isLoading
-                ? t("screens.Dashboard.DeleteGuestRole.deleting")
-                : t("screens.Dashboard.DeleteGuestRole.delete")}
+                ? t("screens.Dashboard.GuestRoles.DeleteGuestRole.deleting")
+                : t("screens.Dashboard.GuestRoles.DeleteGuestRole.delete")}
             </Button>
           </div>
         </div>

@@ -178,7 +178,7 @@ export default function GuestRoleSelector({
               <TextInput
                 className="mb-2"
                 placeholder={t(
-                  "screens.Dashboard.GuestRoleSelector.placeholder"
+                  "screens.Dashboard.GuestRoles.GuestRoleSelector.placeholder"
                 )}
                 defaultValue={selectedRole?.name ?? ""}
                 sizing="sm"
@@ -203,10 +203,12 @@ export default function GuestRoleSelector({
             </form>
 
             {isLoading || isValidating || isSubmitting ? (
-              <span>{t("screens.Dashboard.GuestRoleSelector.loading")}</span>
+              <span>
+                {t("screens.Dashboard.GuestRoles.GuestRoleSelector.loading")}
+              </span>
             ) : (
               <Typography as="small" decoration="smooth">
-                {t("screens.Dashboard.GuestRoleSelector.button")}
+                {t("screens.Dashboard.GuestRoles.GuestRoleSelector.button")}
               </Typography>
             )}
 

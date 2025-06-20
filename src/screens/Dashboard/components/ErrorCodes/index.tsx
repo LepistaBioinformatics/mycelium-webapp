@@ -8,7 +8,6 @@ import PaginatedRecords from "@/types/PaginatedRecords";
 import { useMemo } from "react";
 import useSWR from "swr";
 import DashBoardBody from "../DashBoardBody";
-import Button from "@/components/ui/Button";
 import PaginatedContent from "../PaginatedContent";
 import CopyToClipboard from "@/components/ui/CopyToClipboard";
 import ListItem from "@/components/ui/ListItem";
@@ -16,10 +15,13 @@ import { MycRole } from "@/types/MyceliumRole";
 import { MycPermission } from "@/types/MyceliumPermission";
 import useSuspenseError from "@/hooks/use-suspense-error";
 import { MdNearbyError } from "react-icons/md";
+import { useTranslation } from "react-i18next";
 
 type ErrorCode = components["schemas"]["ErrorCode"];
 
 export default function ErrorCodes() {
+  const { t } = useTranslation();
+
   const { parseHttpError } = useSuspenseError();
 
   const {
@@ -155,17 +157,6 @@ export default function ErrorCodes() {
         id="ErrorCodesContent"
         className="flex flex-col justify-center gap-4 w-full mx-auto"
       >
-        <div className="flex justify-start mx-auto w-full xl:max-w-4xl">
-          <Button
-            onClick={() => console.log("clicked")}
-            size="sm"
-            rounded="full"
-            intent="link"
-          >
-            <span className="mx-2">Create error code</span>
-          </Button>
-        </div>
-
         <PaginatedContent
           isLoading={isLoadingErrorCodes}
           records={errorCodes}

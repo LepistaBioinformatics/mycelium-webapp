@@ -484,103 +484,103 @@
             "title": "Quando usar",
             "prefix": "Uso"
           }
-        }
-      },
-      "GuestRoleDetails": {
-        "title": "Detalhes do papel",
-        "details": "Detalhes",
-        "advancedActions": "Ações avançadas",
-        "name": {
-          "title": "Nome do papel de convidado",
-          "prefix": "Você vê"
         },
-        "slug": {
-          "title": "Chave do papel de convidado",
-          "prefix": "Identificador único (slug)"
-        },
-        "system": {
-          "title": "É um papel de sistema?",
-          "prefix": "É um papel de sistema?",
-          "yes": "Sim",
-          "no": "Não"
-        },
-        "permission": {
-          "title": "O que pode fazer os usuários com este papel?",
-          "prefix": "O que pode fazer"
-        },
-        "description": {
-          "title": "Descrição do papel de convidado",
-          "prefix": "Descrito como"
-        },
-        "id": {
-          "title": "ID do papel de convidado",
-          "prefix": "ID"
-        },
-        "children": {
-          "title": "Papéis filhos",
-          "prefix": "Papéis filhos"
-        },
-        "edit": {
-          "title": "Editar papel de convidado",
-          "description": "Atualize informações sobre nome visível e descrição.",
-          "button": "Editar"
-        },
-        "registerChildRole": {
-          "title": "Registrar papel filho",
-          "description": "Registre um papel filho para o papel de convidado.",
-          "button": "Registrar"
-        },
-        "delete": {
-          "title": "Deletar papel de convidado",
-          "description": "Tem certeza que deseja deletar o papel de convidado?",
-          "button": "Deletar"
-        }
-      },
-      "GuestRolesModal": {
-        "createGuestRole": "Criar papel de convidado",
-        "editGuestRole": "Editar papel de convidado",
-        "form": {
+        "GuestRoleDetails": {
+          "title": "Detalhes do papel",
+          "details": "Detalhes",
+          "advancedActions": "Ações avançadas",
           "name": {
-            "label": "Nome",
             "title": "Nome do papel de convidado",
-            "placeholder": "Ex: Gerente de contas"
+            "prefix": "Você vê"
           },
-          "description": {
-            "label": "Descrição",
-            "title": "Descrição do papel de convidado",
-            "placeholder": "Ex: Gerente de contas"
+          "slug": {
+            "title": "Chave do papel de convidado",
+            "prefix": "Identificador único (slug)"
+          },
+          "system": {
+            "title": "É um papel de sistema?",
+            "prefix": "É um papel de sistema?",
+            "yes": "Sim",
+            "no": "Não"
           },
           "permission": {
-            "label": "Permissão",
-            "titleReadOnly": "Esse campo não pode ser alterado",
-            "titleWrite": "Permissão do papel de convidado",
-            "placeholder": "Ex: Gerente de contas",
-            "read": "Leitura",
-            "write": "Escrita"
+            "title": "O que pode fazer os usuários com este papel?",
+            "prefix": "O que pode fazer"
           },
-          "update": "Atualizar",
-          "updating": "Atualizando...",
-          "create": "Criar",
-          "creating": "Criando..."
+          "description": {
+            "title": "Descrição do papel de convidado",
+            "prefix": "Descrito como"
+          },
+          "id": {
+            "title": "ID do papel de convidado",
+            "prefix": "ID"
+          },
+          "children": {
+            "title": "Papéis filhos",
+            "prefix": "Papéis filhos"
+          },
+          "edit": {
+            "title": "Editar papel de convidado",
+            "description": "Atualize informações sobre nome visível e descrição.",
+            "button": "Editar"
+          },
+          "registerChildRole": {
+            "title": "Registrar papel filho",
+            "description": "Registre um papel filho para o papel de convidado.",
+            "button": "Registrar"
+          },
+          "delete": {
+            "title": "Deletar papel de convidado",
+            "description": "Tem certeza que deseja deletar o papel de convidado?",
+            "button": "Deletar"
+          }
+        },
+        "GuestRolesModal": {
+          "createGuestRole": "Criar papel de convidado",
+          "editGuestRole": "Editar papel de convidado",
+          "form": {
+            "name": {
+              "label": "Nome",
+              "title": "Nome do papel de convidado",
+              "placeholder": "Ex: Gerente de contas"
+            },
+            "description": {
+              "label": "Descrição",
+              "title": "Descrição do papel de convidado",
+              "placeholder": "Ex: Gerente de contas"
+            },
+            "permission": {
+              "label": "Permissão",
+              "titleReadOnly": "Esse campo não pode ser alterado",
+              "titleWrite": "Permissão do papel de convidado",
+              "placeholder": "Ex: Gerente de contas",
+              "read": "Leitura",
+              "write": "Escrita"
+            },
+            "update": "Atualizar",
+            "updating": "Atualizando...",
+            "create": "Criar",
+            "creating": "Criando..."
+          }
+        },
+        "DeleteGuestRole": {
+          "title": "Deletar papel de convidado",
+          "description": "Tem certeza que deseja deletar o papel de convidado?",
+          "delete": "Deletar",
+          "deleting": "Deletando..."
+        },
+        "RegisterGuestRoleChild": {
+          "title": "Registrar papel filho",
+          "label": "Papel filho",
+          "button": "Registrar"
+        },
+        "GuestRoleSelector": {
+          "label": "Papel filho",
+          "title": "Selecione um papel filho",
+          "placeholder": "Selecione um papel filho",
+          "loading": "Carregando...",
+          "button": "Clique para selecionar"
         }
-      },
-      "DeleteGuestRole": {
-        "title": "Deletar papel de convidado",
-        "description": "Tem certeza que deseja deletar o papel de convidado?",
-        "delete": "Deletar",
-        "deleting": "Deletando..."
-      },
-      "RegisterGuestRoleChild": {
-        "title": "Registrar papel filho",
-        "label": "Papel filho",
-        "button": "Registrar"
-      },
-      "GuestRoleSelector": {
-        "label": "Papel filho",
-        "title": "Selecione um papel filho",
-        "placeholder": "Selecione um papel filho",
-        "loading": "Carregando...",
-        "button": "Clique para selecionar"
       }
     }
   },

@@ -64,19 +64,21 @@ export default function GuestRoleDetails({
   return (
     <SideCurtain
       open={isOpen}
-      title={t("screens.Dashboard.GuestRoleDetails.title")}
+      title={t("screens.Dashboard.GuestRoles.GuestRoleDetails.title")}
       handleClose={onClose}
     >
       {guestRole && (
         <IntroSection
-          prefix={t("screens.Dashboard.GuestRoleDetails.name.prefix")}
+          prefix={t(
+            "screens.Dashboard.GuestRoles.GuestRoleDetails.name.prefix"
+          )}
           content={
             <>
               <span>{guestRole.name}</span>
               <PermissionIcon permission={guestRole.permission} />
             </>
           }
-          title={t("screens.Dashboard.GuestRoleDetails.name.title")}
+          title={t("screens.Dashboard.GuestRoles.GuestRoleDetails.name.title")}
         />
       )}
 
@@ -86,15 +88,19 @@ export default function GuestRoleDetails({
       >
         <DetailsBox.Summary>
           <Typography as="span">
-            {t("screens.Dashboard.GuestRoleDetails.details")}
+            {t("screens.Dashboard.GuestRoles.GuestRoleDetails.details")}
           </Typography>
         </DetailsBox.Summary>
 
         <DetailsBox.Content minHeight="50">
           <div className="flex flex-col gap-8">
             <IntroSection.Item
-              prefix={t("screens.Dashboard.GuestRoleDetails.slug.prefix")}
-              title={t("screens.Dashboard.GuestRoleDetails.slug.title")}
+              prefix={t(
+                "screens.Dashboard.GuestRoles.GuestRoleDetails.slug.prefix"
+              )}
+              title={t(
+                "screens.Dashboard.GuestRoles.GuestRoleDetails.slug.title"
+              )}
             >
               <Typography as="div">
                 <div className="flex items-center gap-2 group group/clip">
@@ -106,27 +112,41 @@ export default function GuestRoleDetails({
 
             <IntroSection.Item
               prefix={t(
-                "screens.Dashboard.GuestRoleDetails.description.prefix"
+                "screens.Dashboard.GuestRoles.GuestRoleDetails.description.prefix"
               )}
-              title={t("screens.Dashboard.GuestRoleDetails.description.title")}
+              title={t(
+                "screens.Dashboard.GuestRoles.GuestRoleDetails.description.title"
+              )}
             >
               <Typography as="p">{guestRole.description}</Typography>
             </IntroSection.Item>
 
             <IntroSection.Item
-              prefix={t("screens.Dashboard.GuestRoleDetails.system.prefix")}
-              title={t("screens.Dashboard.GuestRoleDetails.system.title")}
+              prefix={t(
+                "screens.Dashboard.GuestRoles.GuestRoleDetails.system.prefix"
+              )}
+              title={t(
+                "screens.Dashboard.GuestRoles.GuestRoleDetails.system.title"
+              )}
             >
               <Typography as="p">
                 {guestRole.system
-                  ? t("screens.Dashboard.GuestRoleDetails.system.yes")
-                  : t("screens.Dashboard.GuestRoleDetails.system.no")}
+                  ? t(
+                      "screens.Dashboard.GuestRoles.GuestRoleDetails.system.yes"
+                    )
+                  : t(
+                      "screens.Dashboard.GuestRoles.GuestRoleDetails.system.no"
+                    )}
               </Typography>
             </IntroSection.Item>
 
             <IntroSection.Item
-              prefix={t("screens.Dashboard.GuestRoleDetails.permission.prefix")}
-              title={t("screens.Dashboard.GuestRoleDetails.permission.title")}
+              prefix={t(
+                "screens.Dashboard.GuestRoles.GuestRoleDetails.permission.prefix"
+              )}
+              title={t(
+                "screens.Dashboard.GuestRoles.GuestRoleDetails.permission.title"
+              )}
             >
               <Typography as="p">
                 {guestRole.permission.toUpperCase()}
@@ -134,8 +154,12 @@ export default function GuestRoleDetails({
             </IntroSection.Item>
 
             <IntroSection.Item
-              prefix={t("screens.Dashboard.GuestRoleDetails.id.prefix")}
-              title={t("screens.Dashboard.GuestRoleDetails.id.title")}
+              prefix={t(
+                "screens.Dashboard.GuestRoles.GuestRoleDetails.id.prefix"
+              )}
+              title={t(
+                "screens.Dashboard.GuestRoles.GuestRoleDetails.id.title"
+              )}
             >
               <Typography as="p">
                 <span className="flex items-center gap-2 group group/clip">
@@ -157,7 +181,9 @@ export default function GuestRoleDetails({
         >
           <DetailsBox.Summary>
             <Typography as="span">
-              {t("screens.Dashboard.GuestRoleDetails.children.title")}
+              {t(
+                "screens.Dashboard.GuestRoles.GuestRoleDetails.children.title"
+              )}
             </Typography>
           </DetailsBox.Summary>
 
@@ -191,7 +217,7 @@ export default function GuestRoleDetails({
       >
         <DetailsBox.Summary>
           <Typography as="span">
-            {t("screens.Dashboard.GuestRoleDetails.advancedActions")}
+            {t("screens.Dashboard.GuestRoles.GuestRoleDetails.advancedActions")}
           </Typography>
         </DetailsBox.Summary>
 
@@ -200,11 +226,15 @@ export default function GuestRoleDetails({
             <div className="flex justify-between gap-2 my-5">
               <div className="flex flex-col gap-2">
                 <Typography as="span">
-                  {t("screens.Dashboard.GuestRoleDetails.edit.title")}
+                  {t(
+                    "screens.Dashboard.GuestRoles.GuestRoleDetails.edit.title"
+                  )}
                 </Typography>
 
                 <Typography as="small" decoration="smooth">
-                  {t("screens.Dashboard.GuestRoleDetails.edit.description")}
+                  {t(
+                    "screens.Dashboard.GuestRoles.GuestRoleDetails.edit.description"
+                  )}
                 </Typography>
               </div>
 
@@ -214,7 +244,9 @@ export default function GuestRoleDetails({
                   intent="info"
                   onClick={() => setIsEditModalOpen(true)}
                 >
-                  {t("screens.Dashboard.GuestRoleDetails.edit.button")}
+                  {t(
+                    "screens.Dashboard.GuestRoles.GuestRoleDetails.edit.button"
+                  )}
                 </Button>
               </div>
             </div>
@@ -225,13 +257,13 @@ export default function GuestRoleDetails({
               <div className="flex flex-col gap-2">
                 <Typography as="span">
                   {t(
-                    "screens.Dashboard.GuestRoleDetails.registerChildRole.title"
+                    "screens.Dashboard.GuestRoles.GuestRoleDetails.registerChildRole.title"
                   )}
                 </Typography>
 
                 <Typography as="small" decoration="smooth">
                   {t(
-                    "screens.Dashboard.GuestRoleDetails.registerChildRole.description"
+                    "screens.Dashboard.GuestRoles.GuestRoleDetails.registerChildRole.description"
                   )}
                 </Typography>
               </div>
@@ -243,7 +275,7 @@ export default function GuestRoleDetails({
                   onClick={() => setIsRegisterChildModalOpen(true)}
                 >
                   {t(
-                    "screens.Dashboard.GuestRoleDetails.registerChildRole.button"
+                    "screens.Dashboard.GuestRoles.GuestRoleDetails.registerChildRole.button"
                   )}
                 </Button>
               </div>
@@ -254,11 +286,15 @@ export default function GuestRoleDetails({
             <div className="flex justify-between gap-2 my-5">
               <div className="flex flex-col gap-2">
                 <Typography as="span">
-                  {t("screens.Dashboard.GuestRoleDetails.delete.title")}
+                  {t(
+                    "screens.Dashboard.GuestRoles.GuestRoleDetails.delete.title"
+                  )}
                 </Typography>
 
                 <Typography as="small" decoration="smooth">
-                  {t("screens.Dashboard.GuestRoleDetails.delete.description")}
+                  {t(
+                    "screens.Dashboard.GuestRoles.GuestRoleDetails.delete.description"
+                  )}
                 </Typography>
               </div>
 
@@ -268,7 +304,9 @@ export default function GuestRoleDetails({
                   intent="danger"
                   onClick={() => setIsDeleteModalOpen(true)}
                 >
-                  {t("screens.Dashboard.GuestRoleDetails.delete.button")}
+                  {t(
+                    "screens.Dashboard.GuestRoles.GuestRoleDetails.delete.button"
+                  )}
                 </Button>
               </div>
             </div>

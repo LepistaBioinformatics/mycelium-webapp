@@ -96,14 +96,16 @@ export default function RegisterGuestRoleChild({
     <Modal open={isOpen}>
       <Modal.Header handleClose={onClose}>
         <Typography>
-          {t("screens.Dashboard.RegisterGuestRoleChild.title")}
+          {t("screens.Dashboard.GuestRoles.RegisterGuestRoleChild.title")}
         </Typography>
       </Modal.Header>
 
       <Modal.Body>
         <div className="flex flex-col gap-4 w-full my-5">
           <GuestRoleSelector
-            label={t("screens.Dashboard.RegisterGuestRoleChild.label")}
+            label={t(
+              "screens.Dashboard.GuestRoles.RegisterGuestRoleChild.label"
+            )}
             selectedRole={selectedRole}
             setSelectedRole={setSelectedRole}
             shouldBeSystemRole={parentRole.system}
@@ -119,7 +121,9 @@ export default function RegisterGuestRoleChild({
                 disabled={isSubmitting}
                 onClick={() => registerChild(selectedRole)}
               >
-                {t("screens.Dashboard.RegisterGuestRoleChild.button")}
+                {t(
+                  "screens.Dashboard.GuestRoles.RegisterGuestRoleChild.button"
+                )}
               </Button>
             </div>
           )}
