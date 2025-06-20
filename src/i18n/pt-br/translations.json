@@ -591,6 +591,31 @@
         "native": "Nativo",
         "yes": "Sim",
         "no": "Não"
+      },
+      "Webhooks": {
+        "title": "Webhooks",
+        "createWebhook": "Criar webhook",
+        "createWebhookDescription": "Crie um webhook para receber eventos de seu sistema.",
+        "create": "Criar",
+        "creating": "Criando...",
+        "webhook": "Webhook",
+        "description": "Descrição",
+        "trigger": "Trigger",
+        "created": "Criado em",
+        "updated": "Atualizado em",
+        "active": "Ativo",
+        "inactive": "Inativo",
+        "yes": "Sim",
+        "no": "Não",
+        "url": "URL",
+        "security": "Segurança",
+        "secretType": "Tipo de segredo",
+        "headerName": "Nome do cabeçalho",
+        "tokenPrefix": "Prefixo do token",
+        "tokenValue": "Valor do token",
+        "queryParameter": "Parâmetro de consulta",
+        "queryParameterName": "Nome do parâmetro de consulta",
+        "queryParameterValue": "Valor do parâmetro de consulta"
       }
     }
   },

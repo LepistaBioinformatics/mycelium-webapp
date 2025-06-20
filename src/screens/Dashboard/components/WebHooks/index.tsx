@@ -19,10 +19,15 @@ import { MycPermission } from "@/types/MyceliumPermission";
 import DetailsBox from "@/components/ui/DetailsBox";
 import useSuspenseError from "@/hooks/use-suspense-error";
 import { MdWebhook } from "react-icons/md";
+import { useTranslation } from "react-i18next";
+import { FaPlus } from "react-icons/fa";
+import IntroSection from "@/components/ui/IntroSection";
 
 type WebHook = components["schemas"]["WebHook"];
 
 export default function Webhooks() {
+  const { t } = useTranslation();
+
   const { parseHttpError } = useSuspenseError();
 
   const {
@@ -95,7 +100,7 @@ export default function Webhooks() {
     <DashBoardBody
       breadcrumb={
         <PageBody.Breadcrumb.Item icon={MdWebhook}>
-          Webhooks
+          {t("screens.Dashboard.Webhooks.title")}
         </PageBody.Breadcrumb.Item>
       }
       onSubmit={onSubmit}
@@ -108,14 +113,18 @@ export default function Webhooks() {
         id="TenantsContent"
         className="flex flex-col justify-center gap-4 w-full mx-auto"
       >
-        <div className="flex justify-start mx-auto w-full xl:max-w-4xl">
+        <div className="flex justify-end mx-auto w-full sm:max-w-4xl">
           <Button
             onClick={() => console.log("clicked")}
             size="sm"
             rounded="full"
             intent="link"
+            disabled={!hasEnoughPermissions}
           >
-            <span className="mx-2">Create webhook</span>
+            <FaPlus
+              title={t("screens.Dashboard.Webhooks.createWebhook")}
+              className="text-2xl"
+            />
           </Button>
         </div>
 
@@ -138,51 +147,58 @@ export default function Webhooks() {
                     {webhook?.name}
                   </button>
                 </Typography>
-                <div className="flex gap-5">
-                  <CopyToClipboard text={webhook?.url} />
-                </div>
               </div>
 
-              <Typography as="span">{webhook?.description}</Typography>
-              <Typography as="span" decoration="smooth">
-                Trigger: <span className="font-bold">{webhook?.trigger}</span>
-              </Typography>
-              <Typography as="small" decoration="smooth">
-                Created:{" "}
-                <span className="font-bold">
-                  {formatDDMMYY(new Date(webhook?.created), true)}
-                </span>
-              </Typography>
-              {webhook?.updated && (
-                <Typography as="small" decoration="smooth">
-                  Updated:{" "}
-                  <span className="font-bold">
-                    {formatDDMMYY(new Date(webhook?.updated || ""), true)}
-                  </span>
-                </Typography>
-              )}
-              <Typography as="small" decoration="smooth">
-                Active:{" "}
-                <span className="font-bold">
-                  {webhook?.isActive ? "Yes" : "No"}
-                </span>
-              </Typography>
+              <IntroSection.Item
+                prefix={t("screens.Dashboard.Webhooks.description")}
+              >
+                {webhook?.description}
+              </IntroSection.Item>
 
-              <Typography as="span" decoration="smooth">
-                URL: <span className="font-bold">{webhook?.url}</span>
-              </Typography>
+              <IntroSection.Item
+                prefix={t("screens.Dashboard.Webhooks.trigger")}
+              >
+                {webhook?.trigger}
+              </IntroSection.Item>
+
+              <IntroSection.Item
+                prefix={t("screens.Dashboard.Webhooks.created")}
+              >
+                {formatDDMMYY(new Date(webhook?.created), true)}
+              </IntroSection.Item>
+
+              <IntroSection.Item
+                prefix={t("screens.Dashboard.Webhooks.updated")}
+              >
+                {formatDDMMYY(new Date(webhook?.updated || ""), true)}
+              </IntroSection.Item>
+
+              <IntroSection.Item
+                prefix={t("screens.Dashboard.Webhooks.active")}
+              >
+                {webhook?.isActive
+                  ? t("screens.Dashboard.Webhooks.yes")
+                  : t("screens.Dashboard.Webhooks.no")}
+              </IntroSection.Item>
+
+              <IntroSection.Item prefix={t("screens.Dashboard.Webhooks.url")}>
+                <span className="flex items-center gap-2 group group/clip">
+                  {webhook?.url}
+                  <CopyToClipboard text={webhook?.url ?? ""} groupHidden />
+                </span>
+              </IntroSection.Item>
 
               {webhook?.secret && (
                 <DetailsBox>
                   <DetailsBox.Summary>
-                    <VscGistSecret className="w-4 h-4 inline-block text-green-500" />
+                    <VscGistSecret className="w-4 h-4 inline-block text-green-500 mr-2" />
                     <Typography as="span" decoration="smooth">
-                      Secure
+                      {t("screens.Dashboard.Webhooks.security")}
                     </Typography>
                   </DetailsBox.Summary>
 
                   <DetailsBox.Content>
-                    <div className="bg-zinc-200 dark:bg-zinc-700 rounded-lg p-2 mt-2">
+                    <div className="bg-zinc-200 dark:bg-zinc-800 rounded-lg p-2 -mt-4">
                       <Secret secret={webhook?.secret} />
                     </div>
                   </DetailsBox.Content>
@@ -201,6 +217,8 @@ const Secret = ({
 }: {
   secret: components["schemas"]["HttpSecret"];
 }) => {
+  const { t } = useTranslation();
+
   if ("authorizationHeader" in secret) {
     const { authorizationHeader } = secret;
     const { headerName, prefix, token } = authorizationHeader;
@@ -208,19 +226,20 @@ const Secret = ({
     return (
       <div className="flex flex-col gap-2">
         <Typography as="small">
-          Secret Type:{" "}
+          {t("screens.Dashboard.Webhooks.secretType")}:{" "}
           <span className="font-bold">{Object.keys(secret).at(0)}</span>
         </Typography>
         <Typography as="small">
-          Header Name:{" "}
+          {t("screens.Dashboard.Webhooks.headerName")}:{" "}
           <span className="font-bold">{headerName || "Authorization"}</span>
         </Typography>
         <Typography as="small">
-          Token Prefix:{" "}
+          {t("screens.Dashboard.Webhooks.tokenPrefix")}:{" "}
           <span className="font-bold">{prefix || "Bearer (default)"}</span>
         </Typography>
         <Typography as="small">
-          Token Value: <span className="font-bold">{token}</span>
+          {t("screens.Dashboard.Webhooks.tokenValue")}:{" "}
+          <span className="font-bold">{token}</span>
         </Typography>
       </div>
     );
@@ -233,14 +252,16 @@ const Secret = ({
     return (
       <div className="flex flex-col gap-2">
         <Typography as="small">
-          Secret Type:{" "}
+          {t("screens.Dashboard.Webhooks.secretType")}:{" "}
           <span className="font-bold">{Object.keys(secret).at(0)}</span>
         </Typography>
         <Typography as="small">
-          Query Parameter Name: <span className="font-bold">{name}</span>
+          {t("screens.Dashboard.Webhooks.queryParameterName")}:{" "}
+          <span className="font-bold">{name}</span>
         </Typography>
         <Typography as="small">
-          Query Parameter Value: <span className="font-bold">{token}</span>
+          {t("screens.Dashboard.Webhooks.queryParameterValue")}:{" "}
+          <span className="font-bold">{token}</span>
         </Typography>
       </div>
     );
@@ -249,7 +270,7 @@ const Secret = ({
   return (
     <div className="flex flex-col gap-2">
       <Typography as="small">
-        Secret Type:{" "}
+        {t("screens.Dashboard.Webhooks.secretType")}:{" "}
         <span className="font-bold">{Object.keys(secret).at(0)}</span>
       </Typography>
     </div>
