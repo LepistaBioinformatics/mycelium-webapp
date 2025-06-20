@@ -11,6 +11,7 @@ import FormField from "@/components/ui/FomField";
 import Button from "@/components/ui/Button";
 import { TextInput } from "flowbite-react";
 import { useNavigate } from "react-router";
+import Countdown from "react-countdown";
 
 type Profile = components["schemas"]["Profile"];
 
@@ -258,9 +259,23 @@ export default function MyceliumProfile({ user }: Props) {
           </Typography>
 
           {registeringStatus === RegisteringStatus.Finished && (
-            <Typography as="h5">
-              {t("screens.HomePage.MyceliumProfile.success")}
-            </Typography>
+            <>
+              <Countdown
+                date={Date.now() + 1000 * 5}
+                onComplete={navigateToDashboard}
+                renderer={({ seconds }) => (
+                  <Typography as="h5">
+                    {t("screens.HomePage.MyceliumProfile.countdown", {
+                      seconds,
+                    })}
+                  </Typography>
+                )}
+              />
+
+              <Button onClick={navigateToDashboard}>
+                {t("screens.HomePage.MyceliumProfile.forceRedirect")}
+              </Button>
+            </>
           )}
 
           {registeringStatus === RegisteringStatus.Error && (

@@ -238,6 +238,21 @@ function Content({
   );
 }
 
-const PageBody = Object.assign(Container, { Breadcrumb, Content });
+const footerStyles = cva("mt-1 p-4 overflow-auto flex flex-col gap-5", {
+  variants: {},
+  defaultVariants: {},
+});
+
+interface FooterProps extends BaseProps, VariantProps<typeof footerStyles> {}
+
+function Footer({ children, ...props }: FooterProps) {
+  return (
+    <div className={footerStyles()} {...props}>
+      {children}
+    </div>
+  );
+}
+
+const PageBody = Object.assign(Container, { Breadcrumb, Content, Footer });
 
 export default PageBody;

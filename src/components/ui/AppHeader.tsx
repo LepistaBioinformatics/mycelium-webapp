@@ -6,7 +6,7 @@ import { PiSignOutBold } from "react-icons/pi";
 import { useAuth0 } from "@auth0/auth0-react";
 
 const appHeaderStyles = cva(
-  "text-gray-500 dark:text-gray-50 absolute top-0 w-full mx-auto px-2 sm:px-5",
+  "text-white dark:text-white absolute top-0 w-full mx-auto px-2 sm:px-5 z-30",
   {
     variants: {
       discrete: {
@@ -42,7 +42,12 @@ export default function AppHeader({
     <header className={appHeaderStyles({ discrete })} {...props}>
       <div className="container mx-auto py-3 flex justify-between align-middle">
         <div>
-          <Typography as="h2" reverseBackground={!discrete}>
+          <Typography
+            as="h2"
+            reverseBackground={true}
+            uppercase
+            decoration="bold"
+          >
             <Link to="/">Mycelium</Link>
           </Typography>
         </div>

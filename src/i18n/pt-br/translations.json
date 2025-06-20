@@ -36,7 +36,9 @@
         "submit": "Salvar",
         "submitting": "Salvando...",
         "success": "Registro realizado com sucesso",
-        "error": "Erro inesperado ao registrar"
+        "error": "Erro inesperado ao registrar",
+        "countdown": "Você será redirecionado para o painel em {{seconds}} segundos",
+        "forceRedirect": "Redirecionar agora"
       },
       "UnRegisteredUser": {
         "title": "Quase lá!",
