@@ -33,14 +33,14 @@ function Container({
 }: ContainerProps) {
   return (
     <div className={containerStyles({ open })} {...props}>
-      <div className="flex flex-col w-full max-h-screen min-h-screen overflow-y-auto bg-gray-50 dark:bg-zinc-900 rounded-lg p-2 border-2 border-gray-300 dark:border-gray-700 scrollbar">
+      <div className="flex flex-col w-full max-h-screen min-h-screen overflow-y-auto bg-gray-50 dark:bg-zinc-900 sm:rounded-lg p-2 border-2 border-gray-300 dark:border-gray-700 scrollbar">
         <div className="flex justify-between items-center gap-2 w-full sticky top-0 bg-gray-50 dark:bg-zinc-900">
-          <button onClick={handleClose}>
-            <FaLongArrowAltLeft className="text-2xl text-blue-500 dark:text-lime-400" />
-          </button>
           <Typography as="h4" decoration="smooth">
             {title}
           </Typography>
+          <button onClick={handleClose}>
+            <FaLongArrowAltLeft className="text-2xl text-blue-500 dark:text-lime-400" />
+          </button>
         </div>
 
         <div className="flex justify-normal text-left flex-col gap-2 py-5 px-1 sm:p-5">

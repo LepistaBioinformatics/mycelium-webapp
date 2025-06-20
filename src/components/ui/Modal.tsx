@@ -2,7 +2,7 @@ import { cva, VariantProps } from "class-variance-authority";
 import { IoIosClose } from "react-icons/io";
 
 const containerStyles = cva(
-  "text-gray-500 dark:text-gray-50 fixed inset-0 z-50 flex flex-col justify-center items-center bg-opacity-50 bg-black h-full",
+  "text-gray-500 dark:text-gray-50 fixed inset-0 z-50 flex flex-col justify-center items-center bg-opacity-50 bg-black h-full p-2",
   {
     variants: {
       open: {

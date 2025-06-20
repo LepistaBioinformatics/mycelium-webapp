@@ -511,7 +511,9 @@ export default function PaginatedAccounts({
                   "screens.Dashboard.Accounts.PaginatedAccounts.created"
                 )}
               >
-                {formatDDMMYY(new Date(account.created), true)}
+                <Typography decoration="light">
+                  {formatDDMMYY(new Date(account.created), true)}
+                </Typography>
               </IntroSection.Item>
             </ListItem>
           ))}

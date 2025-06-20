@@ -13,7 +13,6 @@ import CopyToClipboard from "@/components/ui/CopyToClipboard";
 import useSearchBarParams from "@/hooks/use-search-bar-params";
 import DashBoardBody from "../DashBoardBody";
 import PaginatedContent from "../PaginatedContent";
-import { camelToHumanText } from "@/functions/camel-to-human-text";
 import ListItem from "@/components/ui/ListItem";
 import { MycRole } from "@/types/MyceliumRole";
 import { MycPermission } from "@/types/MyceliumPermission";
@@ -22,13 +21,20 @@ import GuestRolesModal from "./GuestRolesModal";
 import GuestRoleDetails from "./GuestRoleDetails";
 import useSuspenseError from "@/hooks/use-suspense-error";
 import { FaUserCheck } from "react-icons/fa6";
+import { useTranslation } from "react-i18next";
+import { FaPlus } from "react-icons/fa";
+import IntroSection from "@/components/ui/IntroSection";
 
 type GuestRole = components["schemas"]["GuestRole"];
 
 export default function GuestRoles() {
+  const { t } = useTranslation();
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
-  const [currentGuestRole, setCurrentGuestRole] = useState<GuestRole | null>(null);
+  const [currentGuestRole, setCurrentGuestRole] = useState<GuestRole | null>(
+    null
+  );
 
   const { parseHttpError } = useSuspenseError();
 
@@ -43,34 +49,28 @@ export default function GuestRoles() {
     restrictSystemAccount: true,
   });
 
-  const {
-    skip,
-    pageSize,
-    setSkip,
-    setPageSize,
-    searchTerm,
-    setSearchTerm,
-  } = useSearchBarParams({
-    initialSkip: 0,
-    initialPageSize: 10,
-  });
+  const { skip, pageSize, setSkip, setPageSize, searchTerm, setSearchTerm } =
+    useSearchBarParams({
+      initialSkip: 0,
+      initialPageSize: 10,
+    });
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setCurrentGuestRole(null);
     mutateGuestRoles(guestRoles, { rollbackOnError: true });
-  }
+  };
 
   const handleSuccess = () => {
     handleCloseModal();
     mutateGuestRoles(guestRoles, { rollbackOnError: true });
-  }
+  };
 
   const handleViewGuestRoleClick = (guestRole: GuestRole) => {
     Promise.resolve()
       .then(() => setCurrentGuestRole(guestRole))
       .then(() => setIsViewModalOpen(true));
-  }
+  };
 
   const memoizedUrl = useMemo(() => {
     if (!isAuthenticated) return null;
@@ -83,7 +83,7 @@ export default function GuestRoles() {
     if (pageSize) searchParams.pageSize = pageSize.toString();
 
     return buildPath("/adm/rs/guests-manager/guest-roles", {
-      query: searchParams
+      query: searchParams,
     });
   }, [searchTerm, skip, pageSize, isAuthenticated, hasEnoughPermissions]);
 
@@ -99,7 +99,7 @@ export default function GuestRoles() {
       return await fetch(url, {
         headers: {
           Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
       })
         .then(parseHttpError)
@@ -120,13 +120,13 @@ export default function GuestRoles() {
     if (term !== undefined) setSearchTerm(term);
 
     mutateGuestRoles(guestRoles, { rollbackOnError: true });
-  }
+  };
 
   return (
     <DashBoardBody
       breadcrumb={
         <PageBody.Breadcrumb.Item icon={FaUserCheck}>
-          Guest roles
+          {t("screens.Dashboard.GuestRoles.title")}
         </PageBody.Breadcrumb.Item>
       }
       onSubmit={onSubmit}
@@ -135,8 +135,11 @@ export default function GuestRoles() {
       isLoading={isLoadingUser}
       authorized={hasEnoughPermissions}
     >
-      <div id="GuestRolesContent" className="flex flex-col justify-center gap-4 w-full mx-auto">
-        <div className="flex justify-start mx-auto w-full xl:max-w-4xl">
+      <div
+        id="GuestRolesContent"
+        className="flex flex-col justify-center gap-4 w-full mx-auto"
+      >
+        <div className="flex justify-end mx-auto w-full sm:max-w-4xl">
           <Button
             onClick={() => setIsModalOpen(true)}
             size="sm"
@@ -144,7 +147,10 @@ export default function GuestRoles() {
             intent="link"
             disabled={!hasEnoughPermissions}
           >
-            <span className="mx-2">Create guest role</span>
+            <FaPlus
+              title={t("screens.Dashboard.GuestRoles.createGuestRole")}
+              className="text-2xl"
+            />
           </Button>
         </div>
 
@@ -157,11 +163,13 @@ export default function GuestRoles() {
           pageSize={pageSize}
         >
           {guestRoles?.records?.map((guestRole) => (
-            <ListItem key={guestRole?.id} >
+            <ListItem key={guestRole?.id}>
               <div className="flex justify-between gap-3">
-                <Typography as="h3" title={`${guestRole.system ? "System" : "Guest"} Role name (${guestRole?.name}) with permission (${guestRole?.permission})`}>
+                <Typography as="h3" title={guestRole?.name}>
                   <div className="flex items-center gap-2">
-                    {guestRole.system && <RiRobot2Line className="text-blue-500 dark:text-lime-500" />}
+                    {guestRole.system && (
+                      <RiRobot2Line className="text-blue-500 dark:text-lime-500" />
+                    )}
                     <Typography as="h3" highlight>
                       <button
                         className="hover:underline text-blue-500 dark:text-lime-400"
@@ -178,31 +186,38 @@ export default function GuestRoles() {
                 </div>
               </div>
 
-              <div className="flex items-center gap-1">
-                <Typography
-                  as="small"
-                  decoration="smooth"
-                  title="Use this key to setup guest roles in downstream systems and services"
+              <div className="flex flex-col gap-1 group/clip">
+                <IntroSection.Item
+                  prefix={t(
+                    "screens.Dashboard.GuestRoles.listItem.slug.prefix"
+                  )}
                 >
-                  Slug:
-                </Typography>
-                <Typography as="small">
-                  <span className="flex items-center justify-center gap-1 group group/clip">
-                    {guestRole.slug} <CopyToClipboard text={guestRole.slug} inline groupHidden size="sm" />
-                  </span>
-                </Typography>
+                  <Typography decoration="light">
+                    <span>{guestRole.slug}</span>
+                    <CopyToClipboard
+                      text={guestRole.slug}
+                      inline
+                      groupHidden
+                      size="sm"
+                    />
+                  </Typography>
+                </IntroSection.Item>
+
+                <IntroSection.Item
+                  prefix={t(
+                    "screens.Dashboard.GuestRoles.listItem.description.prefix"
+                  )}
+                >
+                  <Typography as="span" decoration="light">
+                    {guestRole?.description}
+                  </Typography>
+                </IntroSection.Item>
               </div>
-              <Typography as="span">{guestRole?.description}</Typography>
             </ListItem>
           ))}
         </PaginatedContent>
 
         <div className="flex flex-col gap-8 mb-24">
-          <div className="flex gap-2 justify-center text-sm mx-auto w-full xl:max-w-4xl items-start">
-            <PermissionText permission="read" />
-            <PermissionText permission="write" />
-          </div>
-
           <GuestRolesInitializer onSuccess={mutateGuestRoles} />
         </div>
       </div>
@@ -224,17 +239,4 @@ export default function GuestRoles() {
       )}
     </DashBoardBody>
   );
-}
-
-function PermissionText({ permission }: { permission: components["schemas"]["Permission"] }) {
-  const text = camelToHumanText(permission);
-
-  return (
-    <div className="flex items-center gap-1 pl-2 border-l-2">
-      <Typography>
-        {text}
-      </Typography>
-      <PermissionIcon permission={permission} />
-    </div>
-  )
 }

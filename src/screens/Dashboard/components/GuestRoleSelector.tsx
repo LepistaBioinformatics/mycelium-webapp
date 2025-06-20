@@ -15,6 +15,7 @@ import { useMemo, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import useSWR from "swr";
 import { camelCaseToKebabCase } from "@/functions/camel-to-kebab-text";
+import { useTranslation } from "react-i18next";
 
 type GuestRole = components["schemas"]["GuestRole"];
 type SystemActor = components["schemas"]["SystemActor"];
@@ -50,6 +51,8 @@ export default function GuestRoleSelector({
   shouldBeSystemRole,
   restrictRoleToSlug,
 }: GuestRoleSelectorProps) {
+  const { t } = useTranslation();
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isEditing, setIsEditing] = useState(selectedRole ? false : true);
 
@@ -174,7 +177,9 @@ export default function GuestRoleSelector({
             >
               <TextInput
                 className="mb-2"
-                placeholder="Search for a role"
+                placeholder={t(
+                  "screens.Dashboard.GuestRoleSelector.placeholder"
+                )}
                 defaultValue={selectedRole?.name ?? ""}
                 sizing="sm"
                 color="custom"
@@ -198,10 +203,10 @@ export default function GuestRoleSelector({
             </form>
 
             {isLoading || isValidating || isSubmitting ? (
-              <span>Loading...</span>
+              <span>{t("screens.Dashboard.GuestRoleSelector.loading")}</span>
             ) : (
               <Typography as="small" decoration="smooth">
-                Click to select
+                {t("screens.Dashboard.GuestRoleSelector.button")}
               </Typography>
             )}
 

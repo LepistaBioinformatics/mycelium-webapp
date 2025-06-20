@@ -8,6 +8,7 @@ import { buildPath } from "@/services/openapi/mycelium-api";
 import { components } from "@/services/openapi/mycelium-schema";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 type GuestRole = components["schemas"]["GuestRole"];
 
@@ -18,6 +19,8 @@ interface Props {
 }
 
 export default function DeleteGuestRole({ guestRole, isOpen, onClose }: Props) {
+  const { t } = useTranslation();
+
   const { getAccessTokenSilently } = useAuth0();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -32,32 +35,34 @@ export default function DeleteGuestRole({ guestRole, isOpen, onClose }: Props) {
     if (!guestRole.id) return;
 
     await fetch(
-      buildPath(
-        "/adm/rs/guests-manager/guest-roles/{guest_role_id}",
-        { path: { guest_role_id: guestRole.id } }
-      ),
+      buildPath("/adm/rs/guests-manager/guest-roles/{guest_role_id}", {
+        path: { guest_role_id: guestRole.id },
+      }),
       {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      })
+      }
+    )
       .then(parseHttpError)
       .then(onClose)
       .catch(console.error)
       .finally(() => setIsLoading(false));
-  }
+  };
 
   return (
-    <Modal open={isOpen} >
+    <Modal open={isOpen}>
       <Modal.Header handleClose={onClose}>
-        <Typography as="h2">Delete Guest Role</Typography>
+        <Typography as="h2">
+          {t("screens.Dashboard.DeleteGuestRole.title")}
+        </Typography>
       </Modal.Header>
 
       <Modal.Body>
         <div className="flex flex-col gap-2 w-full">
           <Typography as="p">
-            Are you sure you want to delete this guest role?
+            {t("screens.Dashboard.DeleteGuestRole.description")}
           </Typography>
 
           <div>
@@ -68,11 +73,13 @@ export default function DeleteGuestRole({ guestRole, isOpen, onClose }: Props) {
               rounded
               fullWidth
             >
-              {isLoading ? "Deleting..." : "Delete"}
+              {isLoading
+                ? t("screens.Dashboard.DeleteGuestRole.deleting")
+                : t("screens.Dashboard.DeleteGuestRole.delete")}
             </Button>
           </div>
         </div>
       </Modal.Body>
     </Modal>
-  )
+  );
 }

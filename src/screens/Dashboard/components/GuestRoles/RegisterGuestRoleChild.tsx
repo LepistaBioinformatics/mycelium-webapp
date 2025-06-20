@@ -9,6 +9,7 @@ import { MycRole } from "@/types/MyceliumRole";
 import { MycPermission } from "@/types/MyceliumPermission";
 import useSuspenseError from "@/hooks/use-suspense-error";
 import { buildPath } from "@/services/openapi/mycelium-api";
+import { useTranslation } from "react-i18next";
 
 type GuestRole = components["schemas"]["GuestRole"];
 
@@ -25,6 +26,8 @@ export default function RegisterGuestRoleChild({
   onClose,
   onSuccess,
 }: Props) {
+  const { t } = useTranslation();
+
   const [selectedRole, setSelectedRole] = useState<GuestRole | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -92,13 +95,15 @@ export default function RegisterGuestRoleChild({
   return (
     <Modal open={isOpen}>
       <Modal.Header handleClose={onClose}>
-        <Typography>Register guest role child</Typography>
+        <Typography>
+          {t("screens.Dashboard.RegisterGuestRoleChild.title")}
+        </Typography>
       </Modal.Header>
 
       <Modal.Body>
         <div className="flex flex-col gap-4 w-full my-5">
           <GuestRoleSelector
-            label="Select a guest role to register as a child"
+            label={t("screens.Dashboard.RegisterGuestRoleChild.label")}
             selectedRole={selectedRole}
             setSelectedRole={setSelectedRole}
             shouldBeSystemRole={parentRole.system}
@@ -114,7 +119,7 @@ export default function RegisterGuestRoleChild({
                 disabled={isSubmitting}
                 onClick={() => registerChild(selectedRole)}
               >
-                Register
+                {t("screens.Dashboard.RegisterGuestRoleChild.button")}
               </Button>
             </div>
           )}

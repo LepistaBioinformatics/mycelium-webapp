@@ -1,26 +1,35 @@
 import Typography from "@/components/ui/Typography";
 import { camelToHumanText } from "@/functions/camel-to-human-text";
 import { components } from "@/services/openapi/mycelium-schema";
-import { useCallback, useMemo } from "react";
+import { ComponentProps, useCallback, useMemo } from "react";
 
 type Account = components["schemas"]["Account"];
 
 interface Props {
   account: Account;
   part?: "type" | "values";
+  extraProps?: ComponentProps<typeof Typography>;
 }
+
+const attrs = { width: "max", as: "p", decoration: "light" } as ComponentProps<
+  typeof Typography
+>;
 
 /**
  * Renders the account type
- * 
+ *
  * @param account - The account to render the type of
  * @param part - The part of the account to render
  * @returns The account type
  */
-export default function AccountType({ account, part = "type" }: Props) {
+export default function AccountType({
+  account,
+  part = "type",
+  extraProps,
+}: Props) {
   if (typeof account.accountType === "string") {
     return (
-      <Typography nowrap width="max" as="p">
+      <Typography {...attrs} nowrap {...extraProps}>
         {camelToHumanText(account.accountType)}
       </Typography>
     );
@@ -33,18 +42,30 @@ export default function AccountType({ account, part = "type" }: Props) {
 
   const renderedValues = useCallback((values: any) => {
     if (typeof values === "string") {
-      return <Typography width="max" as="p">{values}</Typography>;
+      return (
+        <Typography {...attrs} {...extraProps}>
+          {values}
+        </Typography>
+      );
     }
 
     if (Array.isArray(values)) {
       return values.map((value) => {
-        return <Typography width="max" as="p">{value}</Typography>;
+        return (
+          <Typography {...attrs} {...extraProps}>
+            {value}
+          </Typography>
+        );
       });
     }
 
     if (typeof values === "object") {
       return Object.entries(values).map(([_, value]) => {
-        return <Typography width="max" as="p">{value as string}</Typography>;
+        return (
+          <Typography {...attrs} {...extraProps}>
+            {value as string}
+          </Typography>
+        );
       });
     }
 
@@ -53,7 +74,7 @@ export default function AccountType({ account, part = "type" }: Props) {
 
   if (part === "type") {
     return (
-      <Typography nowrap width="max" as="p">
+      <Typography {...attrs} nowrap {...extraProps}>
         {camelToHumanText(accountType ?? "")}
       </Typography>
     );
