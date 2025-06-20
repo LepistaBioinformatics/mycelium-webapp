@@ -6,7 +6,7 @@ import { PiSignOutBold } from "react-icons/pi";
 import { useAuth0 } from "@auth0/auth0-react";
 
 const appHeaderStyles = cva(
-  "text-gray-500 dark:text-gray-50 absolute top-0 left-0 right-0",
+  "text-gray-500 dark:text-gray-50 absolute top-0 w-full mx-auto px-2 sm:px-5",
   {
     variants: {
       discrete: {

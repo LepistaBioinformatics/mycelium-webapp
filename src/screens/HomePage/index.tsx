@@ -1,66 +1,82 @@
-import { useMemo, useState } from "react";
 import PageBody from "@/components/ui/PageBody";
 import AppHeader from "@/components/ui/AppHeader";
-import { useAuth0, User } from "@auth0/auth0-react";
-import AnonymousUser from "./AnonymousUser";
+import { useAuth0 } from "@auth0/auth0-react";
 import AuthenticatedUser from "./AuthenticatedUser";
-import { components } from "@/services/openapi/mycelium-schema";
-import ValidatedUser from "./ValidatedUser";
-import UnRegisteredUser from "./UnRegisteredUser";
-
-type CheckEmailStatusResponse =
-  components["schemas"]["CheckEmailStatusResponse"];
-
-enum Step {
-  CheckUserAuthentication = "check-user-authentication",
-  CheckEmailRegistrationStatus = "check-email-registration-status",
-  CheckAccountAvailability = "check-account-availability",
-  CheckProfileAvailability = "check-profile-availability",
-}
+import Typography from "@/components/ui/Typography";
+import { useTranslation } from "react-i18next";
+import FlowContainer from "./FlowContainer";
+import Button from "@/components/ui/Button";
+import MyceliumProfile from "./MyceliumProfile";
 
 export default function HomePage() {
-  const [user, setUser] = useState<User | null>(null);
-  const [status, setStatus] = useState<CheckEmailStatusResponse | null>(null);
-  const { logout } = useAuth0();
+  const { t } = useTranslation();
 
-  const currentStep = useMemo(() => {
-    if (!user) return Step.CheckUserAuthentication;
+  const { user, isAuthenticated, isLoading, logout, getAccessTokenWithPopup } =
+    useAuth0();
 
-    if (user.email && !status) return Step.CheckEmailRegistrationStatus;
+  const Container = ({ children }: BaseProps) => {
+    return (
+      <PageBody justify="center" flex className="h-screen pt-[5rem]">
+        <AppHeader discrete logout={logout} />
 
-    if (user.email && status && !status.hasAccount)
-      return Step.CheckAccountAvailability;
+        <PageBody.Content gap={3}>
+          <div className="flex sm:flex-row flex-col gap-4 items-center justify-around w-full">
+            <div className="flex flex-col gap-4 items-center justify-center">
+              {children}
+            </div>
 
-    if (user.email && status && status.hasAccount)
-      return Step.CheckProfileAvailability;
+            <div className="hidden sm:block">
+              <Typography as="h1">{t("screens.HomePage.title")}</Typography>
+              <img
+                src="/custom/home-logo.png"
+                alt="Mycelium logo"
+                width={150}
+                height={150}
+                className="mt-4 mx-auto"
+              />
+            </div>
+          </div>
+        </PageBody.Content>
+      </PageBody>
+    );
+  };
 
-    return Step.CheckUserAuthentication;
-  }, [user, status]);
+  if (user && isAuthenticated) {
+    return (
+      <Container>
+        <FlowContainer show>
+          <div className="flex flex-col gap-8 items-center justify-center h-[100%]">
+            <AuthenticatedUser user={user} />
+            <MyceliumProfile user={user} />
+          </div>
+        </FlowContainer>
+      </Container>
+    );
+  }
 
   return (
-    <PageBody justify="center" flex className="h-screen pt-[5rem]">
-      <AppHeader discrete logout={logout} />
+    <Container>
+      <FlowContainer show>
+        <div className="flex flex-col gap-8 items-center justify-center align-middle h-[100%]">
+          <Typography as="h2" width="xxs" center>
+            {t("screens.HomePage.AnonymousUser.title")}
+          </Typography>
 
-      <PageBody.Content flex="center" gap={3}>
-        <AnonymousUser
-          show={currentStep === Step.CheckUserAuthentication}
-          setUser={setUser}
-        />
-
-        <AuthenticatedUser
-          show={currentStep === Step.CheckEmailRegistrationStatus}
-          setStatus={setStatus}
-          user={user}
-        />
-
-        <UnRegisteredUser
-          show={currentStep === Step.CheckAccountAvailability}
-          status={status}
-          setStatus={setStatus}
-        />
-
-        <ValidatedUser show={currentStep === Step.CheckProfileAvailability} />
-      </PageBody.Content>
-    </PageBody>
+          <div className="flex flex-col gap-4 w-[100%] sm:w-[70%] mx-auto">
+            <Button
+              onClick={getAccessTokenWithPopup}
+              rounded
+              fullWidth
+              center
+              disabled={isLoading}
+            >
+              <span className="!text-white !dark:text-white text-xl">
+                {t("screens.HomePage.AnonymousUser.button")}
+              </span>
+            </Button>
+          </div>
+        </div>
+      </FlowContainer>
+    </Container>
   );
 }

@@ -1,20 +1,42 @@
 {
   "screens": {
     "HomePage": {
+      "title": "Bem-vindo de volta",
       "AnonymousUser": {
-        "title": "Bem-vindo de volta",
-        "subtitle": "Você não está logado",
-        "button": "Clique para entrar",
+        "title": "Para começar, autentique-se",
+        "button": "Clique aqui",
         "processing": "Estamos verificando seu endereço de e-mail"
       },
       "AuthenticatedUser": {
-        "loggedInAs": "Logado como",
+        "title": "Que ótimo vê-lo aqui!",
+        "loggedInAs": "Você está autenticado como",
         "checkingEmailStatus": "Estamos verificando se você tem uma conta",
         "emailNotFound": "Seu e-mail não foi encontrado em nossos registros",
         "register": "Clique para se registrar",
         "registering": "Registrando...",
         "allReady": "Tudo pronto",
-        "userSuccessfullyRegistered": "Usuário registrado com sucesso"
+        "userSuccessfullyRegistered": "Usuário registrado com sucesso",
+        "userAlreadyRegistered": "Usuário já registrado",
+        "userNotRegistered": "Usuário não registrado"
+      },
+      "MyceliumProfile": {
+        "title": "Antes de continuar, confirme algumas informações",
+        "form": {
+          "firstName": {
+            "label": "Primeiro nome",
+            "title": "Nome",
+            "placeholder": "Joaquim"
+          },
+          "lastName": {
+            "label": "Sobrenome",
+            "title": "Seus outros nomes",
+            "placeholder": "José da Silva Xavier"
+          }
+        },
+        "submit": "Salvar",
+        "submitting": "Salvando...",
+        "success": "Registro realizado com sucesso",
+        "error": "Erro inesperado ao registrar"
       },
       "UnRegisteredUser": {
         "title": "Quase lá!",

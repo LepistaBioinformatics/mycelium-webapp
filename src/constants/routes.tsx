@@ -12,7 +12,6 @@ import AdvancedManagement from "@/screens/Dashboard/components/Tenants/AdvancedM
 import React, { lazy } from "react";
 
 const Dashboard = lazy(() => import("@/screens/Dashboard"));
-//const Services = lazy(() => import("@/screens/Dashboard/components/Services"));
 const Discovery = lazy(
   () => import("@/screens/Dashboard/components/Discovery")
 );

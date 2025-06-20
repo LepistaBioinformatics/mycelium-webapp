@@ -12,6 +12,7 @@ import buildRoutes from "@/constants/routes";
 import useProfile from "@/hooks/use-profile";
 import AppNotifications from "@/components/AppNotifications";
 import useSuspenseError from "@/hooks/use-suspense-error";
+import MobileNavbar from "@/components/ui/MobileNavbar";
 
 export default function Dashboard() {
   const { isOpen, toggle } = useToggleSidebar(true);
@@ -59,6 +60,8 @@ export default function Dashboard() {
 
       <LogoutModal show={showLogoutModal} setShow={setShowLogoutModal} />
       <AppNotifications />
+
+      <MobileNavbar />
     </div>
   );
 }
