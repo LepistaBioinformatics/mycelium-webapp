@@ -13,8 +13,11 @@ import useProfile from "@/hooks/use-profile";
 import AppNotifications from "@/components/AppNotifications";
 import useSuspenseError from "@/hooks/use-suspense-error";
 import MobileNavbar from "@/components/ui/MobileNavbar";
+import { useTranslation } from "react-i18next";
 
 export default function Dashboard() {
+  const { t } = useTranslation();
+
   const { isOpen, toggle } = useToggleSidebar(true);
 
   const [showLogoutModal, setShowLogoutModal] = useState(false);
@@ -24,7 +27,7 @@ export default function Dashboard() {
   const ROUTES = useMemo(() => {
     if (!profile) return [];
 
-    return buildRoutes(profile);
+    return buildRoutes(profile, t, "Menu");
   }, [profile]);
 
   const logout = () => {

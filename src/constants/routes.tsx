@@ -10,6 +10,7 @@ import { MdWebhook } from "react-icons/md";
 import { components } from "@/services/openapi/mycelium-schema";
 import AdvancedManagement from "@/screens/Dashboard/components/Tenants/AdvancedManagement";
 import React, { lazy } from "react";
+import { TFunction } from "i18next";
 
 const Dashboard = lazy(() => import("@/screens/Dashboard"));
 const Discovery = lazy(
@@ -31,6 +32,7 @@ type ProfileType = components["schemas"]["Profile"];
 export interface AppRoute {
   position: number;
   name: string;
+  translationKey: string;
   path: string;
   element: React.ReactNode;
   errorElement: React.ReactNode;
@@ -44,6 +46,7 @@ export interface AppRoute {
 export const HOME_ROUTE = {
   name: "Home",
   path: "/",
+  translationKey: "home",
   element: <HomePage />,
   errorElement: <ErrorBoundary />,
   position: 0,
@@ -52,6 +55,7 @@ export const HOME_ROUTE = {
 export const DASHBOARD_ROUTE = {
   name: "Dashboard",
   path: "/dashboard",
+  translationKey: "dashboard",
   element: <Dashboard />,
   errorElement: <ErrorBoundary />,
   position: 1,
@@ -60,6 +64,7 @@ export const DASHBOARD_ROUTE = {
 export const PROFILE_ROUTE = {
   name: "Profile",
   path: "/dashboard/profile",
+  translationKey: "profile",
   element: <Profile />,
   errorElement: <ErrorBoundary />,
   icon: <RiDashboardFill />,
@@ -71,6 +76,7 @@ const ROUTES = {
   TENANTS: {
     name: "Tenants",
     path: "/dashboard/tenants",
+    translationKey: "tenants",
     element: <Tenants />,
     errorElement: <ErrorBoundary />,
     icon: <SlOrganization />,
@@ -89,6 +95,7 @@ const ROUTES = {
   ACCOUNTS: {
     name: "Accounts",
     path: "/dashboard/accounts",
+    translationKey: "accounts",
     element: <Accounts />,
     errorElement: <ErrorBoundary />,
     icon: <MdManageAccounts />,
@@ -97,6 +104,7 @@ const ROUTES = {
   GUEST_ROLES: {
     name: "Guest roles",
     path: "/dashboard/guest-roles",
+    translationKey: "guestRoles",
     element: <GuestRoles />,
     errorElement: <ErrorBoundary />,
     icon: <FaUserCheck />,
@@ -105,6 +113,7 @@ const ROUTES = {
   ERROR_CODES: {
     name: "Error codes",
     path: "/dashboard/error-codes",
+    translationKey: "errorCodes",
     element: <ErrorCodes />,
     errorElement: <ErrorBoundary />,
     icon: <MdNearbyError />,
@@ -113,6 +122,7 @@ const ROUTES = {
   WEBHOOKS: {
     name: "Webhooks",
     path: "/dashboard/webhooks",
+    translationKey: "webhooks",
     element: <Webhooks />,
     errorElement: <ErrorBoundary />,
     icon: <MdWebhook />,
@@ -129,6 +139,7 @@ const ROUTES = {
   DISCOVERY: {
     name: "Discovery",
     path: "/dashboard/discovery",
+    translationKey: "operations",
     element: <Discovery />,
     errorElement: <ErrorBoundary />,
     icon: <RiRouteFill />,
@@ -142,8 +153,14 @@ const ROUTES = {
  * @param profile - The profile of the user
  * @returns The routes that the user should see
  */
-export default function buildRoutes(profile: ProfileType) {
+export default function buildRoutes(
+  profile: ProfileType,
+  t: TFunction,
+  tPath: string
+) {
   return Object.values(ROUTES).map((route) => {
+    route.name = t(`${tPath}.${route.translationKey}`);
+
     if (route.shouldBeStaff && !profile.isStaff)
       return { ...route, disabled: true };
     if (route.shouldBeManager && !profile.isManager)

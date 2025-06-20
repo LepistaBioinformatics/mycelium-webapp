@@ -7,6 +7,7 @@ import { useMemo, useState } from "react";
 import buildRoutes from "@/constants/routes";
 import useProfile from "@/hooks/use-profile";
 import { IoHomeSharp } from "react-icons/io5";
+import { useTranslation } from "react-i18next";
 
 const styles = cva(
   "sm:hidden h-16 fixed bottom-0 left-0 right-0 bg-white dark:bg-zinc-900 flex items-center justify-around px-4 border-t-2 border-gray-200 dark:border-gray-800",
@@ -68,12 +69,14 @@ function MenuModal({
   isOpen: boolean;
   onClose: () => void;
 }) {
+  const { t } = useTranslation();
+
   const { profile } = useProfile();
 
   const ROUTES = useMemo(() => {
     if (!profile) return [];
 
-    return buildRoutes(profile);
+    return buildRoutes(profile, t, "Menu");
   }, [profile]);
 
   return (

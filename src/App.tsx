@@ -6,15 +6,18 @@ import useProfile from "./hooks/use-profile";
 import buildRoutes, { HOME_ROUTE, DASHBOARD_ROUTE } from "./constants/routes";
 import { Fragment, useMemo } from "react";
 import Profile from "./screens/Dashboard/components/Profile";
+import { useTranslation } from "react-i18next";
 
 export default function App() {
+  const { t } = useTranslation();
+
   const { profile } = useProfile();
 
   const ROUTES = useMemo(() => {
     if (!profile) return [];
 
-    return buildRoutes(profile);
-  }, [profile]);
+    return buildRoutes(profile, t, "Menu");
+  }, [profile, t]);
 
   return (
     <div id="App" className="bg-zinc-50 dark:bg-zinc-900">

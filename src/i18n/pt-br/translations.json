@@ -68,7 +68,7 @@
         "title": "Perfil",
         "loading": "Carregando perfil...",
         "relationship": "Contas compartilhadas",
-        "relationshipDescription": "Aqui você pode ver as contas compartilhadas com você, além dos locatários que você tem acesso. Novos clientes verão essa seção vazios.",
+        "relationshipDescription": "Aqui você pode ver as contas compartilhadas com você, além dos namespaces que você tem acesso. Novos clientes verão essa seção vazios.",
         "loggedInAs": {
           "prefix": "Usuário",
           "title": "Seu nome",
@@ -81,8 +81,8 @@
         }
       },
       "TenantOwnershipSection": {
-        "title": "Seus locatários",
-        "loadAll": "Carregar todos os {{count}} locatários"
+        "title": "Seus namespaces",
+        "loadAll": "Carregar todos os {{count}} namespaces"
       },
       "LicensedResourcesSection": {
         "title": "Contas que você tem acesso",
@@ -104,43 +104,43 @@
       },
       "TenantBasicInfo": {
         "from": {
-          "title": "O locatário ao qual a conta pertence: {{tenantId}}",
-          "prefix": "Locatário"
+          "title": "O namespace ao qual a conta pertence: {{tenantId}}",
+          "prefix": "Namespace"
         }
       },
       "TenantOwnershipInfo": {
-        "title": "O locatário ao qual a conta pertence: {{tenantId}}",
+        "title": "O namespace ao qual a conta pertence: {{tenantId}}",
         "since": {
-          "title": "Desde no locatário: {{tenantId}}",
+          "title": "Desde no namespace: {{tenantId}}",
           "prefix": "Desde"
         },
         "deleted": "Excluído",
         "unknown": "Desconhecido",
         "unauthorized": "Não autorizado",
-        "logo": "Logotipo do locatário",
-        "name": "Nome do locatário",
+        "logo": "Logotipo do namespace",
+        "name": "Nome do namespace",
         "description": {
-          "title": "Descrição do locatário",
+          "title": "Descrição do namespace",
           "prefix": "Mais"
         }
       },
       "Tenants": {
-        "title": "Locatários",
-        "createTenant": "Criar locatário",
-        "viewTenantBasicDetails": "Ver detalhes básicos do locatário",
+        "title": "Namespaces",
+        "createTenant": "Criar namespace",
+        "viewTenantBasicDetails": "Ver detalhes básicos do namespace",
         "TenantModal": {
-          "title": "Criar locatário",
-          "titleExistingTenant": "Editar locatário",
+          "title": "Criar namespace",
+          "titleExistingTenant": "Editar namespace",
           "formFields": {
             "name": {
               "label": "Nome",
-              "placeholder": "Nome do locatário",
-              "title": "Nome do locatário"
+              "placeholder": "Nome do namespace",
+              "title": "Nome do namespace"
             },
             "description": {
               "label": "Descrição",
-              "placeholder": "Descreva o locatário",
-              "title": "Descrição do locatário"
+              "placeholder": "Descreva o namespace",
+              "title": "Descrição do namespace"
             },
             "create": "Criar",
             "creating": "Criando...",
@@ -149,17 +149,17 @@
           }
         },
         "TenantDetails": {
-          "title": "Detalhes do locatário",
+          "title": "Detalhes do namespace",
           "details": "Detalhes",
           "advancedActions": "Ações avançadas",
           "name": {
-            "title": "Nome do locatário",
+            "title": "Nome do namespace",
             "prefix": "Você vê",
-            "viewTenantAdvancedDetails": "Ver detalhes avançados do locatário",
-            "makeTenantFavorite": "Favoritar locatário"
+            "viewTenantAdvancedDetails": "Ver detalhes avançados do namespace",
+            "makeTenantFavorite": "Favoritar namespace"
           },
           "description": {
-            "title": "Descrição do locatário",
+            "title": "Descrição do namespace",
             "prefix": "Descrito como"
           },
           "created": {
@@ -179,32 +179,32 @@
             "prefix": "Gerente"
           },
           "tenantId": {
-            "title": "ID do locatário",
-            "prefix": "ID do locatário"
+            "title": "ID do namespace",
+            "prefix": "ID do namespace"
           },
           "createManagementAccount": {
             "title": "Criar conta de gerenciamento",
-            "description": "Crie uma conta de gerenciamento para o locatário. Essa conta será utilizada para convidar usuários com permissões de gerenciamento. que farão a gestão do locatário.",
+            "description": "Crie uma conta de gerenciamento para o namespace. Essa conta será utilizada para convidar usuários com permissões de gerenciamento. que farão a gestão do namespace.",
             "button": "Criar"
           },
           "deleteTenant": {
-            "title": "Deletar locatário",
-            "description": "Deletar o locatário irá remover todos os dados do locatário e não poderá ser revertido.",
+            "title": "Deletar namespace",
+            "description": "Deletar o namespace irá remover todos os dados do namespace e não poderá ser revertido.",
             "button": "Deletar"
           }
         },
         "AdvancedManagement": {
           "title": "Gerenciamento avançado",
-          "longDescription": "Você pode gerenciar as pessoas e configurações do seu locatário aqui. Comece adicionando proprietários e contas de gerenciamento para configurar o locatário, depois convide usuários adicionais conforme necessário. Todas as outras opções de configuração estão disponíveis na seção Configurações do Locatário.",
-          "breadcrumb": "Locatários",
+          "longDescription": "Você pode gerenciar as pessoas e configurações do seu namespace aqui. Comece adicionando proprietários e contas de gerenciamento para configurar o namespace, depois convide usuários adicionais conforme necessário. Todas as outras opções de configuração estão disponíveis na seção Configurações do Namespace.",
+          "breadcrumb": "Namespaces",
           "manageAccounts": "Ver contas",
-          "manageAccountsDescription": "Clique aqui para ver as contas registradas no locatário.",
+          "manageAccountsDescription": "Clique aqui para ver as contas registradas no namespace.",
           "name": {
-            "title": "Nome do locatário",
+            "title": "Nome do namespace",
             "prefix": "Você vê"
           },
           "description": {
-            "title": "Descrição do locatário",
+            "title": "Descrição do namespace",
             "prefix": "Descrito como"
           },
           "created": {
@@ -219,9 +219,9 @@
             "title": "Proprietários e Informações legais",
             "legalSettings": {
               "title": "Informações legais",
-              "description": "Forneça aqui as informações legais do locatário. Elas serão exibidas publicamente a usuários registrados desse locatário.",
+              "description": "Forneça aqui as informações legais do namespace. Elas serão exibidas publicamente a usuários registrados desse namespace.",
               "name": {
-                "title": "Nome do locatário",
+                "title": "Nome do namespace",
                 "prefix": "Nome público"
               },
               "federalRevenueRegister": {
@@ -259,7 +259,7 @@
             },
             "owners": {
               "title": "Proprietários",
-              "description": "Proprietários podem gerenciar as informações legais e estrutura organizacional do locatário, assim como possuir autonomia para convidar gerentes e outros proprietários. Use o botão de registro para adicionar proprietários.",
+              "description": "Proprietários podem gerenciar as informações legais e estrutura organizacional do namespace, assim como possuir autonomia para convidar gerentes e outros proprietários. Use o botão de registro para adicionar proprietários.",
               "name": {
                 "title": "Nome do proprietário",
                 "prefix": "Nome"
@@ -291,26 +291,26 @@
           },
           "customization": {
             "title": "Personalização",
-            "description": "Personalize o locatário com tags, marca e configurações de contas de subscrição.",
+            "description": "Personalize o namespace com tags, marca e configurações de contas de subscrição.",
             "managers": {
               "title": "Gerentes",
-              "description": "Gerentes administrarão tags, marca e configurações de contas de subscrição do locatário. Use o botão de registro para adicionar gerentes.",
+              "description": "Gerentes administrarão tags, marca e configurações de contas de subscrição do namespace. Use o botão de registro para adicionar gerentes.",
               "createManagementAccount": "Criar conta de gerenciamento",
-              "createManagementAccountDescription": "Você deve completar essa ação antes de convidar gerentes para o locatário.",
+              "createManagementAccountDescription": "Você deve completar essa ação antes de convidar gerentes para o namespace.",
               "createManagementAccountButton": "Criar",
               "noInvitations": "Nenhuma conta de gerenciamento registrada"
             },
             "brand": {
               "title": "Logotipo",
-              "description": "Personalize o logotipo do locatário.",
+              "description": "Personalize o logotipo do namespace.",
               "registerTenantBrand": "Registrar logotipo",
-              "registerTenantBrandDescription": "Essa logo trará identidade para o locatário.",
+              "registerTenantBrandDescription": "Essa logo trará identidade para o namespace.",
               "submit": "Enviar",
               "submitting": "Enviando..."
             },
             "colors": {
               "title": "Cores",
-              "description": "Personalize as cores do locatário.",
+              "description": "Personalize as cores do namespace.",
               "submit": "Enviar",
               "submitting": "Enviando..."
             }
@@ -366,11 +366,11 @@
             "prefix": "Você vê"
           },
           "onTenant": {
-            "title": "Nome do locatário",
-            "prefix": "Do locatário"
+            "title": "Nome do namespace",
+            "prefix": "Do namespace"
           },
           "description": {
-            "title": "Descrição do locatário",
+            "title": "Descrição do namespace",
             "prefix": "Descrito como"
           },
           "slug": {
@@ -436,7 +436,7 @@
             "placeholder": "Descrição da conta"
           },
           "createSystemAccount": {
-            "description": "Crie uma conta de sistema para o locatário. Essa conta será utilizada para convidar usuários com permissões de gerenciamento. que farão a gestão do locatário.",
+            "description": "Crie uma conta de sistema para o namespace. Essa conta será utilizada para convidar usuários com permissões de gerenciamento. que farão a gestão do namespace.",
             "guestManager": {
               "title": "Gerente de convidados",
               "description": "Gerente de convidados é uma conta de sistema projetada para gerenciar funções de convidados e tokens relacionados a convidados.",
@@ -663,5 +663,15 @@
       "prev": "Anterior",
       "next": "Próximo"
     }
+  },
+  "Menu": {
+    "profile": "Perfil",
+    "tenants": "Namespaces",
+    "accounts": "Contas",
+    "guestRoles": "Papéis de convidado",
+    "webhooks": "Webhooks",
+    "errorCodes": "Códigos de erro",
+    "operations": "Operações",
+    "dashboard": "Dashboard"
   }
 }
