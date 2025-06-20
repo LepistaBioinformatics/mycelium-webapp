@@ -481,7 +481,7 @@
       }
     },
     "Pager": {
-      "records": "{{number}} records",
+      "records": "{{number}} resultados",
       "prev": "Anterior",
       "next": "Próximo"
     }
