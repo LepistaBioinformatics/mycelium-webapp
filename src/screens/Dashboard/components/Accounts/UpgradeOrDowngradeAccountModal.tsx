@@ -8,6 +8,7 @@ import { buildPath } from "@/services/openapi/mycelium-api";
 import useSuspenseError from "@/hooks/use-suspense-error";
 import { Spinner } from "flowbite-react";
 import Countdown from "react-countdown";
+import { useTranslation } from "react-i18next";
 
 enum AllowedAccountTypes {
   User = "user",
@@ -16,18 +17,20 @@ enum AllowedAccountTypes {
 }
 
 enum AllowedActions {
-  Upgrade = "Upgrade",
-  Downgrade = "Downgrade",
+  Upgrade = "upgrade",
+  Downgrade = "downgrade",
 }
 
-interface Props extends AccountModalProps { }
+interface Props extends AccountModalProps {}
 
 export default function UpgradeOrDowngradeAccountModal({
   isOpen,
   onClose,
   onSuccess,
-  account
+  account,
 }: Props) {
+  const { t } = useTranslation();
+
   const [isLoading, setIsLoading] = useState(false);
 
   const { parseHttpError } = useSuspenseError();
@@ -38,78 +41,94 @@ export default function UpgradeOrDowngradeAccountModal({
     if (!account) return null;
 
     if (typeof account.accountType === "string") {
-      return getNumericAccountType(account.accountType)
-    };
+      return getNumericAccountType(account.accountType);
+    }
 
     return null;
   }, [account]);
 
-  const handleStatusUpdate = useCallback(async (accountType: AllowedAccountTypes, action: AllowedActions) => {
-    setIsLoading(true);
+  const handleStatusUpdate = useCallback(
+    async (accountType: AllowedAccountTypes, action: AllowedActions) => {
+      setIsLoading(true);
 
-    if (!hasAdminPrivileges) {
+      if (!hasAdminPrivileges) {
+        setIsLoading(false);
+        return;
+      }
+
+      const token = await getAccessTokenSilently();
+
+      if (!token) {
+        setIsLoading(false);
+        return;
+      }
+
+      if (!account?.id) {
+        setIsLoading(false);
+        return;
+      }
+
+      const params = { path: { account_id: account.id } };
+      const url =
+        action === AllowedActions.Upgrade
+          ? buildPath("/adm/su/staffs/accounts/{account_id}/upgrade", params)
+          : buildPath("/adm/su/staffs/accounts/{account_id}/downgrade", params);
+
+      const response = await fetch(url, {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ to: accountType }),
+      });
+
+      if (!response.ok) {
+        setIsLoading(false);
+        parseHttpError(response);
+        return;
+      }
+
       setIsLoading(false);
-      return;
-    }
-
-    const token = await getAccessTokenSilently();
-
-    if (!token) {
-      setIsLoading(false);
-      return;
-    }
-
-    if (!account?.id) {
-      setIsLoading(false);
-      return;
-    }
-
-    const params = { path: { account_id: account.id } }
-    const url = action === AllowedActions.Upgrade
-      ? buildPath("/adm/su/staffs/accounts/{account_id}/upgrade", params)
-      : buildPath("/adm/su/staffs/accounts/{account_id}/downgrade", params)
-
-    const response = await fetch(url, {
-      method: "PATCH",
-      headers: {
-        "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ to: accountType }),
-    });
-
-    if (!response.ok) {
-      setIsLoading(false);
-      parseHttpError(response);
-      return;
-    }
-
-    setIsLoading(false);
-    onSuccess?.();
-  }, [
-    hasAdminPrivileges,
-    getAccessTokenSilently,
-    account?.id,
-    parseHttpError,
-    onSuccess
-  ]);
+      onSuccess?.();
+    },
+    [
+      hasAdminPrivileges,
+      getAccessTokenSilently,
+      account?.id,
+      parseHttpError,
+      onSuccess,
+    ]
+  );
 
   return (
     <Modal open={isOpen}>
       <Modal.Header handleClose={onClose}>
-        <Typography>Create account</Typography>
+        <Typography>
+          {t("screens.Dashboard.Accounts.UpgradeOrDowngradeAccountModal.title")}
+        </Typography>
       </Modal.Header>
 
       <Modal.Body>
         <div className="flex flex-col gap-2 w-full">
-          {Object.values(AllowedAccountTypes).map(accountType => {
-            const isDisabled = currentAccountTypeNumeric === getNumericAccountType(accountType);
+          <Typography decoration="smooth">
+            {t(
+              "screens.Dashboard.Accounts.UpgradeOrDowngradeAccountModal.description"
+            )}
+          </Typography>
 
-            const action = currentAccountTypeNumeric && currentAccountTypeNumeric >= getNumericAccountType(accountType)
-              ? AllowedActions.Downgrade
-              : AllowedActions.Upgrade;
+          {Object.values(AllowedAccountTypes).map((accountType) => {
+            const isDisabled =
+              currentAccountTypeNumeric === getNumericAccountType(accountType);
 
-            const intent = action === AllowedActions.Upgrade ? "info" : "danger";
+            const action =
+              currentAccountTypeNumeric &&
+              currentAccountTypeNumeric >= getNumericAccountType(accountType)
+                ? AllowedActions.Downgrade
+                : AllowedActions.Upgrade;
+
+            const intent =
+              action === AllowedActions.Upgrade ? "info" : "danger";
 
             return (
               <ConfirmButton
@@ -120,28 +139,7 @@ export default function UpgradeOrDowngradeAccountModal({
                 isDisabled={isDisabled || isLoading}
                 isLoading={isLoading}
               />
-            )
-
-            return (
-              <Button
-                fullWidth
-                rounded
-                intent={intent}
-                key={accountType}
-                disabled={isDisabled || isLoading}
-                onClick={() => handleStatusUpdate(accountType, action)}
-              >
-                {isLoading ? (
-                  <Spinner />
-                ) : (
-                  <div className="flex justify-center items-center gap-2 !text-white">
-                    <Typography as="span" alternativeColor="white">{action}</Typography>
-                    <Typography as="small" alternativeColor="white">to</Typography>
-                    <Typography as="span" alternativeColor="white">{accountType}</Typography>
-                  </div>
-                )}
-              </Button>
-            )
+            );
           })}
         </div>
       </Modal.Body>
@@ -166,12 +164,14 @@ function ConfirmButton({
   isDisabled,
   isLoading,
 }: ConfirmButtonProps) {
+  const { t } = useTranslation();
+
   const [wantToConfirm, setWantToConfirm] = useState(false);
 
   const handleConfirm = () => {
     setWantToConfirm(false);
     confirm();
-  }
+  };
 
   return (
     <div className="flex flex-col gap-2 w-full">
@@ -181,14 +181,13 @@ function ConfirmButton({
           onComplete={() => setWantToConfirm(false)}
           renderer={({ seconds }) => {
             return (
-              <Button
-                fullWidth
-                rounded
-                intent={intent}
-                onClick={handleConfirm}
-              >
-                Confirm (cancel in {seconds} seconds)
-              </Button>)
+              <Button fullWidth rounded intent={intent} onClick={handleConfirm}>
+                {t(
+                  "screens.Dashboard.Accounts.UpgradeOrDowngradeAccountModal.confirm",
+                  { seconds }
+                )}
+              </Button>
+            );
           }}
         />
       ) : (
@@ -204,15 +203,25 @@ function ConfirmButton({
             <Spinner />
           ) : (
             <div className="flex justify-center items-center gap-2 !text-white">
-              <Typography as="span" decoration="bold" alternativeColor="white">{action}</Typography>
-              <Typography as="small" alternativeColor="white">to</Typography>
-              <Typography as="span" decoration="bold" alternativeColor="white">{accountType}</Typography>
+              <Typography as="span" decoration="bold" alternativeColor="white">
+                {t(
+                  `screens.Dashboard.Accounts.UpgradeOrDowngradeAccountModal.${action}`
+                )}
+              </Typography>
+              <Typography as="small" alternativeColor="white">
+                {t(
+                  "screens.Dashboard.Accounts.UpgradeOrDowngradeAccountModal.to"
+                )}
+              </Typography>
+              <Typography as="span" decoration="bold" alternativeColor="white">
+                {accountType.toUpperCase()}
+              </Typography>
             </div>
           )}
         </Button>
       )}
     </div>
-  )
+  );
 }
 
 function getNumericAccountType(accountType: string) {

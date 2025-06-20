@@ -460,6 +460,15 @@
             "title": "Função",
             "prefix": "Função"
           }
+        },
+        "UpgradeOrDowngradeAccountModal": {
+          "title": "Atualizar status de usuário",
+          "description": "Faça upgrade ou downgrade das permissões de usuário.",
+          "confirm": "Confirmar (cancelar em {{seconds}} segundos)",
+          "confirming": "Atualizando...",
+          "to": "para",
+          "upgrade": "Promova",
+          "downgrade": "Demova"
         }
       }
     }
