@@ -581,6 +581,16 @@
           "loading": "Carregando...",
           "button": "Clique para selecionar"
         }
+      },
+      "ErrorCodes": {
+        "title": "Códigos de erro",
+        "placeholder": "Exemplo: {{example}}",
+        "message": "Mensagem",
+        "details": "Detalhes",
+        "internal": "Interno",
+        "native": "Nativo",
+        "yes": "Sim",
+        "no": "Não"
       }
     }
   },

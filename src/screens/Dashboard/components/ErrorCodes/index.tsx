@@ -16,6 +16,7 @@ import { MycPermission } from "@/types/MyceliumPermission";
 import useSuspenseError from "@/hooks/use-suspense-error";
 import { MdNearbyError } from "react-icons/md";
 import { useTranslation } from "react-i18next";
+import IntroSection from "@/components/ui/IntroSection";
 
 type ErrorCode = components["schemas"]["ErrorCode"];
 
@@ -143,11 +144,13 @@ export default function ErrorCodes() {
     <DashBoardBody
       breadcrumb={
         <PageBody.Breadcrumb.Item icon={MdNearbyError}>
-          Error codes
+          {t("screens.Dashboard.ErrorCodes.title")}
         </PageBody.Breadcrumb.Item>
       }
       onSubmit={onSubmit}
-      placeholder="Example: #MYC code=23 internal=yes"
+      placeholder={t("screens.Dashboard.ErrorCodes.placeholder", {
+        example: "MYC code=23 internal=yes",
+      })}
       setSkip={setSkip}
       setPageSize={setPageSize}
       isLoading={isLoadingUser}
@@ -169,39 +172,46 @@ export default function ErrorCodes() {
             <ListItem key={buildErrorCodeId(errorCode)}>
               <div className="flex justify-between gap-3">
                 <Typography as="h3">
-                  <button
-                    className="flex items-center gap-2 group group/clip"
-                    onClick={() => console.log(errorCode)}
-                  >
+                  <div className="flex items-center gap-2 group group/clip">
                     <ErrorCodeParts part={errorCode.prefix} subpart="prefix" />
                     <ErrorCodeParts
                       part={errorCode.errorNumber.toString().padStart(4, "0")}
                       subpart="code"
                     />
-                  </button>
+                  </div>
                 </Typography>
                 <div className="flex gap-5">
                   <CopyToClipboard text={buildErrorCodeId(errorCode)} />
                 </div>
               </div>
-              <Typography as="span">{errorCode?.message}</Typography>
-              <Typography as="small" decoration="smooth">
+
+              <IntroSection.Item
+                prefix={t("screens.Dashboard.ErrorCodes.message")}
+              >
+                {errorCode?.message}
+              </IntroSection.Item>
+
+              <IntroSection.Item
+                prefix={t("screens.Dashboard.ErrorCodes.details")}
+              >
                 {errorCode?.details}
-              </Typography>
-              <div className="flex flex-col gap-2">
-                <Typography as="small" decoration="smooth">
-                  Internal:{" "}
-                  <span className="font-bold">
-                    {errorCode?.isInternal ? "Yes" : "No"}
-                  </span>
-                </Typography>
-                <Typography as="small" decoration="smooth">
-                  Native:{" "}
-                  <span className="font-bold">
-                    {errorCode?.isNative ? "Yes" : "No"}
-                  </span>
-                </Typography>
-              </div>
+              </IntroSection.Item>
+
+              <IntroSection.Item
+                prefix={t("screens.Dashboard.ErrorCodes.internal")}
+              >
+                {errorCode?.isInternal
+                  ? t("screens.Dashboard.ErrorCodes.yes")
+                  : t("screens.Dashboard.ErrorCodes.no")}
+              </IntroSection.Item>
+
+              <IntroSection.Item
+                prefix={t("screens.Dashboard.ErrorCodes.native")}
+              >
+                {errorCode?.isNative
+                  ? t("screens.Dashboard.ErrorCodes.yes")
+                  : t("screens.Dashboard.ErrorCodes.no")}
+              </IntroSection.Item>
             </ListItem>
           ))}
         </PaginatedContent>
@@ -213,9 +223,7 @@ export default function ErrorCodes() {
 function ErrorCodeParts({ part, subpart }: { part: string; subpart: string }) {
   return (
     <div className="flex flex-col align-top gap-0 text-left">
-      <span className="group-hover:underline text-blue-500 dark:text-lime-400">
-        {part}
-      </span>
+      <span className="">{part}</span>
       <span className="text-xs text-zinc-400 dark:text-zinc-500 -mt-1">
         {subpart}
       </span>
