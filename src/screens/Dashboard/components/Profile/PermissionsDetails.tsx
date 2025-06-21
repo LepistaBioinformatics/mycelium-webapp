@@ -18,6 +18,9 @@ import getLicensedResourcesOrNull from "@/functions/get-licensed-resources-or-nu
 import getTenantsOwnershipOrNull from "@/functions/get-tenant-ownership-or-null";
 import MiniBox from "@/components/ui/MiniBox";
 import IntroSection from "@/components/ui/IntroSection";
+import { useTranslation } from "react-i18next";
+import { TFunction } from "i18next";
+import MarkdownViewer from "@/components/ui/MarkdownViewer";
 
 type Profile = components["schemas"]["Profile"];
 
@@ -26,6 +29,8 @@ interface Props {
 }
 
 export default function PermissionsDetails({ profile }: Props) {
+  const { t } = useTranslation();
+
   const tenantsOwnership = useMemo(
     () => getTenantsOwnershipOrNull(profile?.tenantsOwnership),
     [profile?.tenantsOwnership]
@@ -114,139 +119,141 @@ export default function PermissionsDetails({ profile }: Props) {
       <CardsSection.Body>
         {profile?.isStaff && (
           <AboutCard
-            title="STAFF"
-            subtitle="High level permissions"
+            title={t("screens.Dashboard.PermissionsDetails.staff.title")}
+            subtitle={t("screens.Dashboard.PermissionsDetails.staff.subtitle")}
             icon={GiWizardStaff}
-            headerTitle="Super user group"
+            headerTitle={t(
+              "screens.Dashboard.PermissionsDetails.staff.headerTitle"
+            )}
             links={[{ label: "/accounts", to: "/dashboard/accounts" }]}
             aboutContent={
-              <Typography as="div" decoration="faded">
-                Staff users can execute high-level system actions, such as
-                promoting eligible users to staff or manager roles. Due to the
-                significant level of access and control, this role should be
-                assigned with utmost caution.
-                <br />
-                <br />
-                Additionally, staff users share the same permissions as manager
-                users.
-              </Typography>
+              <AboutContent
+                t={t}
+                tKey="screens.Dashboard.PermissionsDetails.staff.abountContent"
+              />
             }
           />
         )}
 
         {profile?.isManager && (
           <AboutCard
-            title="MANAGER"
-            subtitle="High level permissions"
+            title={t("screens.Dashboard.PermissionsDetails.manager.title")}
+            subtitle={t(
+              "screens.Dashboard.PermissionsDetails.manager.subtitle"
+            )}
             icon={GrUserAdmin}
-            headerTitle="Super user group"
+            headerTitle={t(
+              "screens.Dashboard.PermissionsDetails.manager.headerTitle"
+            )}
             links={[
               { label: "/tenants", to: "/dashboard/tenants" },
               { label: "/guest-roles", to: "/dashboard/guest-roles" },
             ]}
             aboutContent={
-              <Typography as="div" decoration="faded">
-                Wow, you're a Manager! This is a crucial role with extensive
-                authority over the system.
-                <br />
-                <br />
-                Manager users can perform high-level actions, including creating
-                and managing tenants, configuring system-wide settings, and
-                overseeing all user roles. With this level of access and
-                control, the Manager role carries significant responsibility and
-                should be assigned with the utmost caution.
-              </Typography>
+              <AboutContent
+                t={t}
+                tKey="screens.Dashboard.PermissionsDetails.manager.abountContent"
+              />
             }
           />
         )}
 
         {hasSystemAccountManager && (
           <AboutCard
-            title="ACCOUNT MANAGER"
-            subtitle="Account-wide scope"
+            title={t(
+              "screens.Dashboard.PermissionsDetails.accountManager.title"
+            )}
+            subtitle={t(
+              "screens.Dashboard.PermissionsDetails.accountManager.subtitle"
+            )}
             icon={VscAccount}
-            headerTitle="Account system role"
+            headerTitle={t(
+              "screens.Dashboard.PermissionsDetails.accountManager.headerTitle"
+            )}
             links={[{ label: "/accounts", to: "/dashboard/accounts" }]}
             aboutContent={
-              <Typography as="div" decoration="faded">
-                Account Manager is a account-wide role that allows you to manage
-                accounts and guests to a specific account. This role is crucial
-                for maintaining a secure and user-friendly environment for all
-                users.
-              </Typography>
+              <AboutContent
+                t={t}
+                tKey="screens.Dashboard.PermissionsDetails.accountManager.abountContent"
+              />
             }
           />
         )}
 
         {hasSystemGatewayManager && (
           <AboutCard
-            title="GATEWAY MANAGER"
-            subtitle="Gateway-wide scope"
+            title={t(
+              "screens.Dashboard.PermissionsDetails.gatewayManager.title"
+            )}
+            subtitle={t(
+              "screens.Dashboard.PermissionsDetails.gatewayManager.subtitle"
+            )}
             icon={MdAltRoute}
-            headerTitle="Gateway system role"
+            headerTitle={t(
+              "screens.Dashboard.PermissionsDetails.gatewayManager.headerTitle"
+            )}
             links={[{ label: "/gateways", to: "/dashboard/gateways" }]}
             aboutContent={
-              <Typography as="div" decoration="faded">
-                Gateway Manager is a gateway-wide role that allows you to view
-                and manage routes and services. This role has a system-wide
-                scope, but with read-only privileges.
-              </Typography>
+              <AboutContent
+                t={t}
+                tKey="screens.Dashboard.PermissionsDetails.gatewayManager.abountContent"
+              />
             }
           />
         )}
 
         {hasSystemGuestsManager && (
           <AboutCard
-            title="GUEST MANAGER"
-            subtitle="System-wide scope"
+            title={t("screens.Dashboard.PermissionsDetails.guestManager.title")}
+            subtitle={t(
+              "screens.Dashboard.PermissionsDetails.guestManager.subtitle"
+            )}
             icon={FaUserCheck}
-            headerTitle="Guest system role"
+            headerTitle={t(
+              "screens.Dashboard.PermissionsDetails.guestManager.headerTitle"
+            )}
             links={[{ label: "/guest-roles", to: "/dashboard/guest-roles" }]}
             aboutContent={
-              <Typography as="div" decoration="faded">
-                Guests Manager is a system-wide role that allows you to manage
-                guest roles across all tenants. Roles created with this
-                permission will be applied to all tenants, ensuring a consistent
-                and secure guest experience across the entire system.
-                <br />
-                <br />
-                This role is crucial for maintaining a secure and user-friendly
-                environment for all users.
-              </Typography>
+              <AboutContent
+                t={t}
+                tKey="screens.Dashboard.PermissionsDetails.guestManager.abountContent"
+              />
             }
           />
         )}
 
         {hasSystemSubscriptionsManager && (
           <AboutCard
-            title="SUBSCRIPTIONS MANAGER"
-            subtitle="Tenant-wide scope"
+            title={t(
+              "screens.Dashboard.PermissionsDetails.subscriptionsManager.title"
+            )}
+            subtitle={t(
+              "screens.Dashboard.PermissionsDetails.subscriptionsManager.subtitle"
+            )}
             icon={GrOrganization}
-            headerTitle="Subscriptions system role"
+            headerTitle={t(
+              "screens.Dashboard.PermissionsDetails.subscriptionsManager.headerTitle"
+            )}
             links={[
               { label: "/subscriptions", to: "/dashboard/subscriptions" },
             ]}
             aboutContent={
-              <Typography as="div" decoration="faded">
-                Subscriptions Manager is a tenant-wide role that allows you to
-                manage subscriptions within one or more tenants. Actions
-                performed by this role include creating and updating
-                subscriptions, as well as managing associated resources and
-                settings.
-                <br />
-                <br />
-                Subscriptions Manager can also guest users to a specific
-                subscription account. Manage accounts tags and metadata is also
-                allowed.
-              </Typography>
+              <AboutContent
+                t={t}
+                tKey="screens.Dashboard.PermissionsDetails.subscriptionsManager.abountContent"
+              />
             }
           />
         )}
 
         {hasSystemSystemManager && (
           <AboutCard
-            title="SYSTEM MANAGER"
-            subtitle="System-wide scope"
+            title={t(
+              "screens.Dashboard.PermissionsDetails.systemManager.title"
+            )}
+            subtitle={t(
+              "screens.Dashboard.PermissionsDetails.systemManager.subtitle"
+            )}
             icon={({
               className,
               title,
@@ -261,88 +268,84 @@ export default function PermissionsDetails({ profile }: Props) {
                 </div>
               );
             }}
-            headerTitle="System system role"
+            headerTitle={t(
+              "screens.Dashboard.PermissionsDetails.systemManager.headerTitle"
+            )}
             links={[
               { label: "/error-codes", to: "/dashboard/error-codes" },
               { label: "/webhooks", to: "/dashboard/webhooks" },
             ]}
             aboutContent={
-              <Typography as="div" decoration="faded">
-                System Manager should deal with system-wide issues and
-                resources. Their impact is global, so they should be cautious
-                when making changes.
-                <br />
-                <br />
-                System managers should deal with less critical issues, such as
-                error codes management and high level as webhooks configuration.
-              </Typography>
+              <AboutContent
+                t={t}
+                tKey="screens.Dashboard.PermissionsDetails.systemManager.abountContent"
+              />
             }
           />
         )}
 
         {tenantsOwnership && (
           <AboutCard
-            title="TENANT OWNER"
-            subtitle="Tenant-wide scope"
+            title={t("screens.Dashboard.PermissionsDetails.tenantOwner.title")}
+            subtitle={t(
+              "screens.Dashboard.PermissionsDetails.tenantOwner.subtitle"
+            )}
             icon={VscOrganization}
-            headerTitle="Tenant ownership"
+            headerTitle={t(
+              "screens.Dashboard.PermissionsDetails.tenantOwner.headerTitle"
+            )}
             links={[{ label: "/tenants", to: "/dashboard/tenants" }]}
             aboutContent={
-              <Typography as="div" decoration="faded">
-                You are a tenant owner. This means you have full access to one
-                or more tenants and can manage them as well as their associated
-                accounts and guests.
-                <br />
-                <br />
-                Tenant owners has full access to the tenant's resources,
-                including management of accounts, metadata, tags, and settings.
-              </Typography>
+              <AboutContent
+                t={t}
+                tKey="screens.Dashboard.PermissionsDetails.tenantOwner.abountContent"
+              />
             }
           />
         )}
 
         {hasSystemTenantManager && (
           <AboutCard
-            title="TENANT MANAGER"
-            subtitle="Tenant-wide scope"
+            title={t(
+              "screens.Dashboard.PermissionsDetails.tenantManager.title"
+            )}
+            subtitle={t(
+              "screens.Dashboard.PermissionsDetails.tenantManager.subtitle"
+            )}
             icon={SlOrganization}
-            headerTitle="Tenant system role"
+            headerTitle={t(
+              "screens.Dashboard.PermissionsDetails.tenantManager.headerTitle"
+            )}
             links={[{ label: "/tenants", to: "/dashboard/tenants" }]}
             aboutContent={
-              <Typography as="div" decoration="faded">
-                Tenant Manager is a tenant-wide role that allows you to manage a
-                single tenant.
-                <br />
-                <br />
-                Actions performed by this role include creating and updating
-                tenants settings, as well as managing associated resources as
-                accounts, metadata, and tags.
-              </Typography>
+              <AboutContent
+                t={t}
+                tKey="screens.Dashboard.PermissionsDetails.tenantManager.abountContent"
+              />
             }
           />
         )}
 
         {hasNonSystemRole && (
           <AboutCard
-            title="CUSTOM ROLES"
-            subtitle="Non system roles"
+            title={t("screens.Dashboard.PermissionsDetails.customRoles.title")}
+            subtitle={t(
+              "screens.Dashboard.PermissionsDetails.customRoles.subtitle"
+            )}
             icon={LuListChecks}
-            headerTitle="Custom roles"
+            headerTitle={t(
+              "screens.Dashboard.PermissionsDetails.customRoles.headerTitle"
+            )}
             links={[]}
             aboutContent={
-              <Typography as="div" decoration="faded">
-                You have access to one or more custom roles. This roles has a
-                granular but non-system scope.
-                <br />
-                <br />
+              <AboutContent
+                t={t}
+                tKey="screens.Dashboard.PermissionsDetails.customRoles.abountContent"
+              >
                 <div className="flex flex-col gap-2">
-                  <Typography as="h5" decoration="smooth">
-                    Roles/accounts with access to:
-                  </Typography>
-
                   <SearchableNonSystemRolesList roles={hasNonSystemRole} />
                 </div>
-              </Typography>
+              </AboutContent>
             }
           />
         )}
@@ -403,5 +406,21 @@ function SearchableNonSystemRolesList({
           ))}
       </div>
     </div>
+  );
+}
+
+function AboutContent({
+  t,
+  tKey,
+  children,
+}: { t: TFunction; tKey: string } & BaseProps) {
+  return (
+    <Typography as="div">
+      <Typography as="span" decoration="faded">
+        <MarkdownViewer markdown={t(tKey)} />
+      </Typography>
+
+      {children}
+    </Typography>
   );
 }

@@ -1,5 +1,6 @@
 import Card from "@/components/ui/Card";
 import Typography from "@/components/ui/Typography";
+import { useTranslation } from "react-i18next";
 import { IconType } from "react-icons";
 import { Link } from "react-router";
 
@@ -23,6 +24,8 @@ export default function AboutCard({
   links,
   aboutContent,
 }: Props) {
+  const { t } = useTranslation();
+
   const Icon = icon;
 
   return (
@@ -31,7 +34,7 @@ export default function AboutCard({
         <Typography as="h5" uppercase>
           <div
             title={headerTitle}
-            className="flex items-center gap-2 text-indigo-500 dark:text-lime-500 hover:cursor-help"
+            className="flex items-center gap-2 hover:cursor-help"
           >
             <Icon className="hover:cursor-help" />
             {title}
@@ -46,13 +49,6 @@ export default function AboutCard({
         <div className="flex flex-col gap-2">
           {links.length > 0 && (
             <div>
-              <Typography
-                as="span"
-                decoration="smooth"
-                title="Pages containing exclusive actions"
-              >
-                Visit exclusive pages
-              </Typography>
               <Typography as="div">
                 <div className="flex flex-col gap-1">
                   {links.map((link, index) => (
@@ -71,7 +67,7 @@ export default function AboutCard({
 
           <div className="mb-24">
             <Typography as="span" decoration="smooth">
-              About
+              {t("screens.Dashboard.AboutCard.about")}
             </Typography>
 
             {aboutContent}

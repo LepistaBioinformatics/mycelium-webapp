@@ -80,6 +80,72 @@
           "title": "Seu e-mail"
         }
       },
+      "AboutCard": {
+        "about": "Sobre"
+      },
+      "PermissionsDetails": {
+        "title": "O que você pode fazer com suas permissões atuais?",
+        "staff": {
+          "title": "Super usuário",
+          "subtitle": "Super usuários",
+          "headerTitle": "Grupo de super usuários",
+          "abountContent": "Usuários com poder de executar ações de alto nível no sistema, como promover usuários qualificados para funções de staff ou gerente. Devido ao nível significativo de acesso e controle, essa função deve ser atribuída com extrema cautela.\n\nAlém disso, os usuários desse tipo compartilham as mesmas permissões que os usuários gerentes."
+        },
+        "manager": {
+          "title": "Gerente",
+          "subtitle": "Super usuários",
+          "headerTitle": "Grupo de super usuários",
+          "abountContent": "Usuários com poder de executar ações de alto nível no sistema, porém submisso aos super usuários (staff).\n\nContas com essas permissões possuem afinidade ao sistema em sí. Podem gerenciar namespaces, contas, papéis de sistema, webhooks e outros recursos."
+        },
+        "accountManager": {
+          "title": "Account Manager",
+          "subtitle": "Permissões de nível alto",
+          "headerTitle": "Grupo de super usuários",
+          "abountContent": "Gerente de Contas é uma função que abrange toda a conta e permite gerenciar contas e convidados de uma conta específica. Essa função é crucial para manter um ambiente seguro e fácil de usar para todos os usuários."
+        },
+        "gatewayManager": {
+          "title": "Gateway Manager",
+          "subtitle": "Permissões de nível alto",
+          "headerTitle": "Grupo de super usuários",
+          "abountContent": "O Gerenciador de Gateway é uma função que abrange todo o gateway e permite visualizar e gerenciar rotas e serviços. Esta função tem um escopo de todo o sistema mas com privilégios somente leitura."
+        },
+        "guestManager": {
+          "title": "Guest Manager",
+          "subtitle": "Permissões de nível alto",
+          "headerTitle": "Grupo de super usuários",
+          "abountContent": "O Gerenciador de Hóspedes é uma função de todo o sistema que permite gerenciar as funções de hóspedes em todos os locatários. As funções criadas com esta permissão serão aplicadas a todos os locatários, garantindo uma experiência consistente e segura para os hóspedes em todo o sistema.\n\nEsta função é crucial para manter um ambiente seguro e fácil de usar para todos os usuários."
+        },
+        "subscriptionsManager": {
+          "title": "Subscriptions Manager",
+          "subtitle": "Permissões de nível alto",
+          "headerTitle": "Grupo de super usuários",
+          "abountContent": "O Gerenciador de Assinaturas é uma função para todo o locatário que permite gerenciar assinaturas em um ou mais locatários. As ações executadas por esta função incluem criar e atualizar assinaturas, bem como gerenciar recursos e configurações associados.\n\n O Gerenciador de Assinaturas também pode convidar usuários para uma conta de assinatura específica. Gerenciar tags e metadados de contas também é permitido."
+        },
+        "systemManager": {
+          "title": "System Manager",
+          "subtitle": "Permissões de nível alto",
+          "headerTitle": "Grupo de super usuários",
+          "abountContent": "O Gerente de Sistema deve lidar com problemas e recursos de todo o sistema. Seu impacto é global, portanto, ele deve ser cauteloso ao fazer alterações.\n\nOs Gerentes de Sistema devem lidar com problemas menos críticos, como gerenciamento de códigos de erro e alto nível, como configuração de webhooks."
+        },
+        "tenantOwner": {
+          "title": "Tenant Owner",
+          "subtitle": "Permissões de nível alto",
+          "headerTitle": "Grupo de super usuários",
+          "abountContent": "Você é um proprietário de locatário. Isso significa que você tem acesso total a um ou mais locatários e pode gerenciá-los, bem como às suas contas e convidados associados.\n\nO proprietário de locatário tem acesso total aos recursos do locatário, incluindo gerenciamento de contas, metadados, tags e configurações."
+        },
+        "tenantManager": {
+          "title": "Tenant Manager",
+          "subtitle": "Permissões de nível alto",
+          "headerTitle": "Grupo de super usuários",
+          "abountContent": "O Gerenciador de Inquilinos é uma função que abrange todos os inquilinos e permite gerenciar um único inquilino.\n\nAs ações executadas por esta função incluem criar e atualizar as configurações dos inquilinos, bem como gerenciar recursos associados, como contas, metadados e tags."
+        },
+        "customRoles": {
+          "title": "Papéis personalizados",
+          "subtitle": "Permissões de nível alto",
+          "headerTitle": "Grupo de super usuários",
+          "abountContent": "Papeis personalizados são utilizados no gerenciamento de serviços downstream. Veja a lista dos seus papeis personalizados."
+        }
+      },
       "TenantOwnershipSection": {
         "title": "Seus namespaces",
         "loadAll": "Carregar todos os {{count}} namespaces"

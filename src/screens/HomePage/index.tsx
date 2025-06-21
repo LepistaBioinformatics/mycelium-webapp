@@ -35,7 +35,7 @@ export default function HomePage() {
                   <img
                     src="/custom/home-logo.png"
                     alt="Mycelium API Gateway"
-                    className="mx-auto rounded-full hidden border-2 border-lime-500 dark:block"
+                    className="mx-auto rounded-full border-2 border-lime-500"
                     width={300}
                     height={300}
                   />
@@ -43,7 +43,7 @@ export default function HomePage() {
               </div>
             </div>
 
-            <div className="flex flex-col gap-4 items-center justify-center w-full sm:w-1/2">
+            <div className="flex flex-col gap-4 items-center justify-center w-full sm:w-2/3 h-screen sm:h-fit">
               {children}
             </div>
           </div>
