@@ -52,7 +52,7 @@ export default function TenantOwnershipSection({ tenantsOwnership }: Props) {
               size="sm"
               onClick={() => setLoadingSize(tenantsOwnership.length)}
             >
-              <span className="text-sm text-blue-500 dark:text-lime-400">
+              <span className="text-sm text-indigo-500 dark:text-lime-400">
                 {t("screens.Dashboard.TenantOwnershipSection.loadAll", {
                   count: tenantsOwnership.length,
                 })}

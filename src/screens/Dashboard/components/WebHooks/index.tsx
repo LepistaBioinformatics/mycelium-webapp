@@ -141,7 +141,7 @@ export default function Webhooks() {
               <div className="flex justify-between gap-3">
                 <Typography as="h3">
                   <button
-                    className="hover:underline text-blue-500 dark:text-lime-400"
+                    className="hover:underline text-indigo-500 dark:text-lime-400"
                     onClick={() => console.log(webhook)}
                   >
                     {webhook?.name}

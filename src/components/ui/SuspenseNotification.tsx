@@ -20,7 +20,7 @@ const styles = cva(
       },
       intent: {
         error: "border-dashed border-red-500 dark:border-red-500",
-        info: "border-dashed border-blue-500 dark:border-blue-500",
+        info: "border-dashed border-indigo-500 dark:border-indigo-500",
         success: "border-dashed border-green-500 dark:border-green-500",
         warning: "border-dashed border-yellow-500 dark:border-yellow-500",
       },
@@ -139,7 +139,7 @@ const progressBarStyles = cva(
     variants: {
       intent: {
         error: "bg-red-500 dark:bg-red-500",
-        info: "bg-blue-500 dark:bg-blue-500",
+        info: "bg-indigo-500 dark:bg-indigo-500",
         success: "bg-green-500 dark:bg-green-500",
         warning: "bg-yellow-500 dark:bg-yellow-500",
         neutral: "bg-gray-400 dark:bg-gray-600",

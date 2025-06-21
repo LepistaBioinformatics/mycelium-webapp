@@ -10,38 +10,41 @@ const styles = cva("", {
     size: {
       sm: "text-xl",
       md: "text-2xl",
-      lg: "text-3xl"
+      lg: "text-3xl",
     },
     color: {
       read: "text-green-500",
       write: "text-yellow-400 dark:text-yellow-500",
     },
     inline: {
-      true: "inline"
-    }
+      true: "inline",
+    },
   },
   defaultVariants: {
     size: "md",
     color: "read",
-    inline: true
+    inline: true,
   },
 });
 
 interface Props extends BaseProps, VariantProps<typeof styles> {
-  permission: Permission,
+  permission: Permission;
 }
 
 export default function PermissionIcon({ permission, size, inline }: Props) {
-  const HandleTooltip = ({ children, content }: BaseProps & { content: string }) => {
+  const HandleTooltip = ({
+    children,
+    content,
+  }: BaseProps & { content: string }) => {
     return (
       <span
         title={content}
-        className="p-1 text-blue-800 dark:text-lime-400 cursor-help"
+        className="p-1 text-indigo-800 dark:text-lime-400 cursor-help"
       >
         {children}
       </span>
     );
-  }
+  };
 
   switch (permission) {
     case "read":

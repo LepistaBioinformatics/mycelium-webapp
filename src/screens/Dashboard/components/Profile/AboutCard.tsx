@@ -31,7 +31,7 @@ export default function AboutCard({
         <Typography as="h5" uppercase>
           <div
             title={headerTitle}
-            className="flex items-center gap-2 text-blue-500 dark:text-lime-500 hover:cursor-help"
+            className="flex items-center gap-2 text-indigo-500 dark:text-lime-500 hover:cursor-help"
           >
             <Icon className="hover:cursor-help" />
             {title}
@@ -59,7 +59,7 @@ export default function AboutCard({
                     <Link
                       key={index}
                       to={link.to}
-                      className="text-blue-500 dark:text-lime-500 hover:cursor-pointer"
+                      className="text-indigo-500 dark:text-lime-500 hover:cursor-pointer"
                     >
                       {link.label}
                     </Link>

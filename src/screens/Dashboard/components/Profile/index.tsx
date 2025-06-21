@@ -61,7 +61,7 @@ export default function Profile() {
                       <span>{user?.name}</span>
                       {profile?.isStaff && (
                         <GiWizardStaff
-                          className="inline text-blue-500 dark:text-lime-500 hover:cursor-help p-0.5"
+                          className="inline text-indigo-500 dark:text-lime-500 hover:cursor-help p-0.5"
                           title={t(
                             "screens.Dashboard.Profile.loggedInAs.staff"
                           )}
@@ -69,7 +69,7 @@ export default function Profile() {
                       )}
                       {profile?.isManager && (
                         <GrUserAdmin
-                          className="inline text-blue-500 dark:text-lime-500 hover:cursor-help p-0.5"
+                          className="inline text-indigo-500 dark:text-lime-500 hover:cursor-help p-0.5"
                           title={t(
                             "screens.Dashboard.Profile.loggedInAs.manager"
                           )}

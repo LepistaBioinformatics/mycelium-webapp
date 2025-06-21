@@ -214,7 +214,7 @@ export default function Tenants() {
                       title={t(
                         "screens.Dashboard.Tenants.viewTenantBasicDetails"
                       )}
-                      className="hover:underline text-blue-500 dark:text-lime-400"
+                      className="hover:underline text-indigo-500 dark:text-lime-400"
                       onClick={() => handleViewTenantClick(tenant)}
                     >
                       {tenant?.name}
@@ -238,7 +238,7 @@ export default function Tenants() {
                   />
                   <CopyToClipboard text={tenant?.id ?? ""} />
                   <FaEdit
-                    className="cursor-pointer hover:text-blue-500 dark:group-hover:text-lime-400 text-gray-500"
+                    className="cursor-pointer hover:text-indigo-500 dark:group-hover:text-lime-400 text-gray-500"
                     onClick={() => handleEditTenantClick(tenant)}
                   />
                 </div>

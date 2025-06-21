@@ -168,11 +168,11 @@ export default function GuestRoles() {
                 <Typography as="h3" title={guestRole?.name}>
                   <div className="flex items-center gap-2">
                     {guestRole.system && (
-                      <RiRobot2Line className="text-blue-500 dark:text-lime-500" />
+                      <RiRobot2Line className="text-indigo-500 dark:text-lime-500" />
                     )}
                     <Typography as="h3" highlight nowrap>
                       <button
-                        className="hover:underline text-blue-500 dark:text-lime-400"
+                        className="hover:underline text-indigo-500 dark:text-lime-400"
                         onClick={() => handleViewGuestRoleClick(guestRole)}
                       >
                         {guestRole?.name}

@@ -111,7 +111,7 @@ export default function LegalSettings({ tenant, mutateTenantStatus }: Props) {
     value: string;
   }) => (
     <MdEdit
-      className="cursor-pointer text-blue-500 dark:text-lime-400 hover:scale-150 transition-all duration-200"
+      className="cursor-pointer text-indigo-500 dark:text-lime-400 hover:scale-150 transition-all duration-200"
       title="Edit"
       onClick={() => handleEditMetadata(metadataKey, value)}
     />
@@ -124,7 +124,7 @@ export default function LegalSettings({ tenant, mutateTenantStatus }: Props) {
   }: { metaKey: TenantMetaKey; value: string } & BaseProps) => (
     <Typography as="span" decoration="light" width="xxs" truncate>
       <span
-        className="lg:text-end gap-1 cursor-pointer hover:underline hover:text-blue-500 dark:hover:text-lime-400 transition-all duration-200"
+        className="lg:text-end gap-1 cursor-pointer hover:underline hover:text-indigo-500 dark:hover:text-lime-400 transition-all duration-200"
         onDoubleClick={() => handleEditMetadata(metaKey, value)}
         title="Double click to edit"
       >

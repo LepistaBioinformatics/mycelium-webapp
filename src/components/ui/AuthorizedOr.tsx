@@ -6,7 +6,7 @@ const styles = cva(
   {
     variants: {
       event: {
-        loading: "border-blue-300 dark:border-blue-700",
+        loading: "border-indigo-300 dark:border-indigo-700",
         unauthorized: "border-yellow-300 dark:border-yellow-700",
       },
     },

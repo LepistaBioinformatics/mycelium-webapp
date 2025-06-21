@@ -210,14 +210,14 @@ export default function AdvancedManagement() {
 
             <Link
               to={`/dashboard/accounts`}
-              className="flex gap-2 items-center align-center hover:underline text-lg text-blue-500 dark:text-lime-500 mt-2"
+              className="flex gap-2 items-center align-center hover:underline text-lg text-indigo-500 dark:text-lime-500 mt-2"
               title={t(
                 "screens.Dashboard.Tenants.AdvancedManagement.manageAccountsDescription"
               )}
             >
               <MdManageAccounts
                 size={24}
-                className="inline text-blue-500 dark:text-lime-500"
+                className="inline text-indigo-500 dark:text-lime-500"
               />
               {t("screens.Dashboard.Tenants.AdvancedManagement.manageAccounts")}
             </Link>

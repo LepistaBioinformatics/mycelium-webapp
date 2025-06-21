@@ -65,7 +65,7 @@ export default function LicensedResourcesSection({ licensedResources }: Props) {
                         {resource.sysAcc && (
                           <div>
                             <RiRobot2Line
-                              className="text-blue-500 h-4 w-4 dark:text-lime-500 hover:cursor-help"
+                              className="text-indigo-500 h-4 w-4 dark:text-lime-500 hover:cursor-help"
                               title={t(
                                 "screens.Dashboard.LicensedResourcesSection.accountName.system"
                               )}

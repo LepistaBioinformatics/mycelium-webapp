@@ -159,7 +159,7 @@ export default function GuestRoleSelector({
         {selectedRole && !isEditing && (
           <div className="flex flex-col gap-2">
             <div onClick={() => setIsEditing(true)}>
-              <div className="flex items-center gap-2 border-2 border-zinc-300 dark:border-zinc-700 rounded-lg pb-2 bg-blue-50 dark:bg-zinc-600 px-4 py-2 hover:cursor-pointer">
+              <div className="flex items-center gap-2 border-2 border-zinc-300 dark:border-zinc-700 rounded-lg pb-2 bg-indigo-50 dark:bg-zinc-600 px-4 py-2 hover:cursor-pointer">
                 {selectedRole?.name}
                 {selectedRole?.permission && (
                   <PermissionIcon permission={selectedRole?.permission} />
@@ -190,7 +190,7 @@ export default function GuestRoleSelector({
                     input: {
                       colors: {
                         custom:
-                          "border-zinc-400 bg-blue-50 text-zinc-900 focus:border-cyan-500 focus:ring-zinc-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white placeholder-zinc-500  dark:placeholder-zinc-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500",
+                          "border-zinc-400 bg-indigo-50 text-zinc-900 focus:border-cyan-500 focus:ring-zinc-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white placeholder-zinc-500  dark:placeholder-zinc-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500",
                       },
                     },
                   },
@@ -238,7 +238,7 @@ export default function GuestRoleSelector({
 }
 
 const selectionItemStyles = cva(
-  "flex gap-0 bg-blue-50 dark:bg-zinc-800 p-2 border-t-2 border-t-blue-200 dark:border-t-zinc-700 hover:bg-blue-100 dark:hover:bg-zinc-700",
+  "flex gap-0 bg-indigo-50 dark:bg-zinc-800 p-2 border-t-2 border-t-indigo-200 dark:border-t-zinc-700 hover:bg-indigo-100 dark:hover:bg-zinc-700",
   {
     variants: {
       active: {

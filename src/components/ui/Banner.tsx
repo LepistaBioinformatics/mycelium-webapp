@@ -9,14 +9,14 @@ import { IoClose } from "react-icons/io5";
 const { width } = projectVariants;
 
 const styles = cva(
-  "p-2 text-left text-sm border-2 shadow rounded-lg dark:text-gray-100 text-gray-800 bg-zinc-50 dark:bg-zinc-800 mx-auto w-full sm:max-w-4xl",
+  "p-2 text-left text-sm border shadow rounded-lg dark:text-gray-100 text-gray-800 bg-zinc-50 dark:bg-zinc-800 mx-auto w-full sm:max-w-4xl",
   {
     variants: {
       width,
       intent: {
         error:
           "border-dashed border-red-500 dark:border-red-500 bg-red-50 dark:bg-red-900",
-        info: "border-dashed border-blue-500 dark:border-blue-500 bg-blue-50 dark:bg-blue-900",
+        info: "border-dashed border-indigo-500 dark:border-indigo-500 bg-indigo-50 dark:bg-indigo-900",
         success:
           "border-dashed border-green-500 dark:border-green-500 bg-green-50 dark:bg-green-900",
         warning:

@@ -39,7 +39,7 @@ function Container({
             {title}
           </Typography>
           <button onClick={handleClose}>
-            <FaLongArrowAltLeft className="text-2xl text-blue-500 dark:text-lime-400" />
+            <FaLongArrowAltLeft className="text-2xl text-indigo-500 dark:text-lime-400" />
           </button>
         </div>
 

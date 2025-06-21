@@ -3,10 +3,11 @@ import { cva, VariantProps } from "class-variance-authority";
 const styles = cva("w-full", {
   variants: {
     style: {
-      or: "flex items-center justify-between py-2 text-blue-700 dark:text-lime-700",
+      or: "flex items-center justify-between py-2 text-indigo-700 dark:text-lime-700",
       invisible: "border-0",
       smooth: "opacity-30",
-      partial: "w-48 mx-auto border-0 rounded-sm bg-blue-300 dark:bg-lime-700",
+      partial:
+        "w-48 mx-auto border-0 rounded-sm bg-indigo-300 dark:bg-lime-700",
     },
     thickness: {
       sm: "h-0.5",
@@ -31,7 +32,13 @@ interface Props extends BaseProps, VariantProps<typeof styles> {
   orText?: string;
 }
 
-export default function Divider({ style, orText, marginY, thickness, ...props }: Props) {
+export default function Divider({
+  style,
+  orText,
+  marginY,
+  thickness,
+  ...props
+}: Props) {
   if (style === "or") {
     return (
       <div className={styles({ style, marginY, thickness })} {...props}>
@@ -42,5 +49,5 @@ export default function Divider({ style, orText, marginY, thickness, ...props }:
     );
   }
 
-  return <hr className={styles({ style, thickness })} {...props} />
+  return <hr className={styles({ style, thickness })} {...props} />;
 }

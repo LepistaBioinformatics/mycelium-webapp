@@ -254,7 +254,9 @@ const OperationMethod = ({ method }: { method: string }) => {
   switch (method) {
     case "GET":
       return (
-        <span className={style("bg-blue-500 border-blue-500")}>{method}</span>
+        <span className={style("bg-indigo-500 border-indigo-500")}>
+          {method}
+        </span>
       );
     case "POST":
       return (
@@ -370,7 +372,7 @@ const Part = ({
 }) => {
   let className = "font-bold whitespace-nowrap";
 
-  if (highlight) className += " text-blue-500 dark:text-lime-400 cursor-help";
+  if (highlight) className += " text-indigo-500 dark:text-lime-400 cursor-help";
   if (isService) className += " dark:text-yellow-500";
 
   return (

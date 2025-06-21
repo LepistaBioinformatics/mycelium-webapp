@@ -138,7 +138,7 @@ function MainHeader({ isOpen }: { isOpen: boolean }) {
   };
 
   return (
-    <div className="flex justify-center items-center gap-2 text-zinc-800 dark:text-zinc-300 bg-blue-300 dark:bg-zinc-900 bg-opacity-50 dark:bg-opacity-50 backdrop-blur-sm border border-blue-500 dark:border-lime-500 rounded-full p-2">
+    <div className="flex justify-center items-center gap-2 text-zinc-800 dark:text-zinc-300 bg-indigo-300 dark:bg-zinc-900 bg-opacity-50 dark:bg-opacity-50 backdrop-blur-sm border border-indigo-500 dark:border-lime-500 rounded-full p-2">
       {isOpen ? tenantInfo.name : tenantShortName()}
     </div>
   );

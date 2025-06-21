@@ -360,7 +360,7 @@ export default function PaginatedAccounts({
       if (handleClickOnAccount) {
         return (
           <button
-            className="hover:underline text-blue-500 dark:text-lime-400 flex items-center gap-2"
+            className="hover:underline text-indigo-500 dark:text-lime-400 flex items-center gap-2"
             onClick={() => handleClickOnAccount(account)}
           >
             <div className="flex items-center gap-2">{account?.name}</div>

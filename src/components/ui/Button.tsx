@@ -24,8 +24,8 @@ const styles = cva("text-gray-700 dark:text-gray-50", {
         "bg-yellow-500 dark:bg-yellow-600 text-white hover:bg-yellow-600 hover:dark:bg-yellow-700 font-semibold",
       danger:
         "bg-red-500 dark:bg-red-600 text-white hover:bg-red-600 dark:hover:bg-red-700",
-      link: "!text-blue-500 dark:text-lime-500 bg-transparent hover:bg-transparent border border-transparent hover:border-blue-500 dark:hover:border-lime-500",
-      info: "bg-blue-500 text-white hover:bg-blue-600 dark:bg-blue-500 dark:hover:bg-blue-700",
+      link: "!text-indigo-500 dark:text-lime-500 bg-transparent hover:bg-transparent border border-transparent hover:border-indigo-500 dark:hover:border-lime-500",
+      info: "bg-indigo-500 text-white hover:bg-indigo-600 dark:bg-indigo-500 dark:hover:bg-indigo-700",
     },
     size: {
       xs: "py-1 px-2 text-xs",

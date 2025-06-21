@@ -95,7 +95,7 @@ function MenuModal({
               onClick={onClose}
               className="flex items-center gap-2"
             >
-              <span className="text-2xl text-lime-500 text-blue-500">
+              <span className="text-2xl text-lime-500 text-indigo-500">
                 {route.icon}
               </span>
               <Typography>{route.name}</Typography>

@@ -122,7 +122,7 @@ function BreadcrumbContainer({ children, ...props }: BreadcrumbProps) {
 const breadcrumbItemStyles = cva("flex whitespace-nowrap gap-2", {
   variants: {
     withHref: {
-      true: "hover:underline text-blue-500 dark:text-lime-500",
+      true: "hover:underline text-indigo-500 dark:text-lime-500",
       false: "text-zinc-500",
     },
   },
