@@ -67,3 +67,7 @@
     hyphens: auto;
   }
 }
+
+[data-testid="right-icon"] {
+  pointer-events: unset;
+}

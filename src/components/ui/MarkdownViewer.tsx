@@ -70,7 +70,7 @@ const CustomParagraph = ({ children }: BaseProps) => (
 );
 
 const CustomEmphasis = ({ children }: BaseProps) => (
-  <em className="text-blue-500">{children}</em>
+  <em className="text-indigo-500">{children}</em>
 );
 
 const CustomStrong = ({ children }: BaseProps) => (

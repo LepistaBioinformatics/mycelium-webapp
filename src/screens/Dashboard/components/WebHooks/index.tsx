@@ -6,7 +6,7 @@ import useSearchBarParams from "@/hooks/use-search-bar-params";
 import { buildPath } from "@/services/openapi/mycelium-api";
 import { components } from "@/services/openapi/mycelium-schema";
 import PaginatedRecords from "@/types/PaginatedRecords";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import useSWR from "swr";
 import DashBoardBody from "../DashBoardBody";
 import Button from "@/components/ui/Button";
@@ -22,6 +22,7 @@ import { MdWebhook } from "react-icons/md";
 import { useTranslation } from "react-i18next";
 import { FaPlus } from "react-icons/fa";
 import IntroSection from "@/components/ui/IntroSection";
+import WebhookModal from "./WebhookModal";
 
 type WebHook = components["schemas"]["WebHook"];
 
@@ -29,6 +30,9 @@ export default function Webhooks() {
   const { t } = useTranslation();
 
   const { parseHttpError } = useSuspenseError();
+
+  const [isNewModalOpen, setIsNewModalOpen] = useState(false);
+  const [currentWebhook, setCurrentWebhook] = useState<WebHook | null>(null);
 
   const {
     isLoadingUser,
@@ -88,6 +92,17 @@ export default function Webhooks() {
     }
   );
 
+  const handleCloseModal = () => {
+    setIsNewModalOpen(false);
+    setCurrentWebhook(null);
+    mutateWebhooks(webhooks, { rollbackOnError: true });
+  };
+
+  const handleSuccess = () => {
+    handleCloseModal();
+    mutateWebhooks(webhooks, { rollbackOnError: true });
+  };
+
   const onSubmit = (term?: string, _?: string) => {
     setSkip(0);
 
@@ -115,7 +130,7 @@ export default function Webhooks() {
       >
         <div className="flex justify-end mx-auto w-full sm:max-w-4xl">
           <Button
-            onClick={() => console.log("clicked")}
+            onClick={() => setIsNewModalOpen(true)}
             size="sm"
             rounded="full"
             intent="link"
@@ -208,6 +223,13 @@ export default function Webhooks() {
           ))}
         </PaginatedContent>
       </div>
+
+      <WebhookModal
+        isOpen={isNewModalOpen}
+        webhook={currentWebhook}
+        onClose={handleCloseModal}
+        onSuccess={handleSuccess}
+      />
     </DashBoardBody>
   );
 }

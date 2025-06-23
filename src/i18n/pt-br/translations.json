@@ -713,7 +713,89 @@
         "tokenValue": "Valor do token",
         "queryParameter": "Parâmetro de consulta",
         "queryParameterName": "Nome do parâmetro de consulta",
-        "queryParameterValue": "Valor do parâmetro de consulta"
+        "queryParameterValue": "Valor do parâmetro de consulta",
+        "WebhookModal": {
+          "title": "Criar webhook",
+          "titleExistingWebhook": "Editar webhook",
+          "formFields": {
+            "name": {
+              "label": "Nome",
+              "title": "Nome do webhook",
+              "placeholder": "Meu webhook"
+            },
+            "description": {
+              "label": "Descrição",
+              "title": "Descrição do webhook",
+              "placeholder": "Meu webhook"
+            },
+            "url": {
+              "label": "URL",
+              "title": "URL do webhook",
+              "placeholder": "https://meuwebhook.com/webhook"
+            },
+            "trigger": {
+              "label": "Trigger",
+              "title": "Trigger do webhook",
+              "placeholder": "Selecione um trigger",
+              "options": {
+                "subscriptionAccount.created": "Conta de trabalho criada",
+                "subscriptionAccount.updated": "Conta de trabalho atualizada",
+                "subscriptionAccount.deleted": "Conta de trabalho deletada",
+                "userAccount.created": "Conta de usuário criada",
+                "userAccount.updated": "Conta de usuário atualizada",
+                "userAccount.deleted": "Conta de usuário deletada"
+              }
+            },
+            "secret": {
+              "label": "Segredo",
+              "title": "Segredo do webhook",
+              "placeholder": "Selecione um segredo",
+              "options": {
+                "nothing": {
+                  "title": "Não utilizar segredo",
+                  "placeholder": "Não utilizar segredo"
+                },
+                "authorizationHeader": {
+                  "title": "Cabeçalho de autorização",
+                  "placeholder": "Cabeçalho de autorização",
+                  "headerName": {
+                    "label": "Nome do cabeçalho",
+                    "title": "Nome do cabeçalho",
+                    "placeholder": "Authorization (default)"
+                  },
+                  "prefix": {
+                    "label": "Prefixo do token",
+                    "title": "Prefixo do token",
+                    "placeholder": "Bearer (default)"
+                  },
+                  "token": {
+                    "label": "Valor do token",
+                    "title": "Valor do token",
+                    "placeholder": "1234567890"
+                  }
+                },
+                "queryParam": {
+                  "title": "Parâmetro de consulta",
+                  "placeholder": "Parâmetro de consulta",
+                  "name": {
+                    "label": "Nome do parâmetro de consulta",
+                    "title": "Nome do parâmetro de consulta",
+                    "placeholder": "token"
+                  },
+                  "token": {
+                    "label": "Valor do token",
+                    "title": "Valor do token",
+                    "placeholder": "1234567890"
+                  }
+                }
+              }
+            },
+            "updating": "Atualizando...",
+            "creating": "Criando...",
+            "update": "Atualizar",
+            "create": "Criar"
+          }
+        }
       }
     }
   },

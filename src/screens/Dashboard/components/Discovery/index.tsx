@@ -99,7 +99,7 @@ export default function Discovery() {
                 <div className="flex justify-between gap-0">
                   <Typography as="div">
                     <div className="flex flex-col gap-2">
-                      <div className="flex gap-3 items-center">
+                      <div className="flex gap-3 items-start sm:items-center">
                         <OperationMethod method={operation.method} />
                         <FormattedPath
                           path={operation.path}
@@ -249,7 +249,7 @@ const ResolveReference = ({
  */
 const OperationMethod = ({ method }: { method: string }) => {
   const style = (className: string) =>
-    `${className} text-sm text-center font-bold rounded-md px-2 py-0 text-white border bg-opacity-50 h-fit min-w-[5rem]`;
+    `${className} text-sm text-center font-bold rounded-md px-2 mt-2 sm:mt-0 text-white border bg-opacity-50 h-fit min-w-[5rem]`;
 
   switch (method) {
     case "GET":

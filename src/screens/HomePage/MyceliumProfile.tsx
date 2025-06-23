@@ -218,7 +218,7 @@ export default function MyceliumProfile({ user }: Props) {
       revalidateOnFocus: true,
       revalidateOnReconnect: true,
       revalidateOnMount: true,
-      refreshInterval: 3000,
+      refreshInterval: 15000,
     }
   );
 
