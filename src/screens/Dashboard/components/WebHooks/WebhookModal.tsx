@@ -201,14 +201,26 @@ export default function WebhookModal({
 
     const token = await getAccessTokenSilently();
 
-    const response = await fetch(buildPath("/adm/rs/system-manager/webhooks"), {
-      method: webhook ? "PATCH" : "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(cleanData),
-    });
+    const response = await fetch(
+      buildPath(
+        webhook
+          ? "/adm/rs/system-manager/webhooks/{webhook_id}"
+          : "/adm/rs/system-manager/webhooks",
+        {
+          path: {
+            webhook_id: webhook?.id ?? "",
+          },
+        }
+      ),
+      {
+        method: webhook ? "PATCH" : "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(cleanData),
+      }
+    );
 
     if (!response.ok) {
       parseHttpError(response);

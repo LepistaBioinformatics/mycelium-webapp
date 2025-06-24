@@ -210,7 +210,7 @@
             },
             "create": "Create",
             "creating": "Creating ...",
-            "update": "To update",
+            "update": "Update",
             "updating": "Updating ..."
           }
         },
@@ -487,7 +487,7 @@
           "upgradeOrDowngrade": {
             "title": "Update Account Status",
             "description": "Update account status for a different status. ",
-            "button": "To update"
+            "button": "Update"
           }
         },
         "AccountModal": {
@@ -495,7 +495,7 @@
           "editAccount": "Edit account",
           "create": "Create",
           "creating": "Creating ...",
-          "update": "To update",
+          "update": "Update",
           "updating": "Updating ...",
           "name": {
             "title": "Account name",
@@ -661,7 +661,7 @@
               "read": "Reading",
               "write": "Writing"
             },
-            "update": "To update",
+            "update": "Update",
             "updating": "Updating ...",
             "create": "Create",
             "creating": "Creating ..."
@@ -798,7 +798,7 @@
             },
             "updating": "Updating ...",
             "creating": "Creating ...",
-            "update": "To update",
+            "update": "Update",
             "create": "Create"
           }
         },

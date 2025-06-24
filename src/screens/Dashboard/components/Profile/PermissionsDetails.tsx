@@ -112,7 +112,7 @@ export default function PermissionsDetails({ profile }: Props) {
           decoration="smooth"
           title="Your permissions allow you to do the following actions in our system"
         >
-          What can you do with your current permissions?
+          {t("screens.Dashboard.PermissionsDetails.title")}
         </Typography>
       </CardsSection.Header>
 

@@ -99,7 +99,7 @@ export default function Discovery() {
                 <div className="flex justify-between gap-0">
                   <Typography as="div">
                     <div className="flex flex-col gap-2">
-                      <div className="flex gap-3 items-start sm:items-center">
+                      <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
                         <OperationMethod method={operation.method} />
                         <FormattedPath
                           path={operation.path}
@@ -127,7 +127,7 @@ export default function Discovery() {
                     </div>
                   </Typography>
 
-                  <div className="flex gap-2 align-bottom items-center h-fit">
+                  <div className="flex gap-2 align-bottom items-center mt-2 sm:mt-0 h-fit">
                     <Typography as="small" decoration="smooth">
                       Score
                     </Typography>

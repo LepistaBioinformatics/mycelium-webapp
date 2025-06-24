@@ -16,7 +16,9 @@ export default function AuthenticatedUser({ user }: Props) {
       <Typography as="h2" width="xs" center>
         {t("screens.HomePage.AuthenticatedUser.title")}
         <br />
+        <span className="text-sm">
         {user?.email}
+        </span>
       </Typography>
     </div>
   );

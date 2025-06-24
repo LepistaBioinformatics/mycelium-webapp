@@ -434,7 +434,11 @@ export default function AccountDetails({ isOpen, onClose, accountId }: Props) {
             </Banner>
           )}
 
-          <Banner intent="error">
+          {(
+            (typeof account?.accountType !== "string") || 
+            (!["user", "staff", "manager"].includes(account?.accountType ?? ""))
+          ) && (
+            <Banner intent="error">
             <div className="flex justify-between gap-2 my-5">
               <div className="flex flex-col gap-2">
                 <Typography as="span">
@@ -459,6 +463,7 @@ export default function AccountDetails({ isOpen, onClose, accountId }: Props) {
               </div>
             </div>
           </Banner>
+          )}
         </DetailsBox.Content>
       </DetailsBox>
 

@@ -5,7 +5,6 @@ import { useCallback, useEffect, useState } from "react";
 import { components } from "@/services/openapi/mycelium-schema";
 import useSWR from "swr";
 import { buildPath } from "@/services/openapi/mycelium-api";
-import useSuspenseError from "@/hooks/use-suspense-error";
 import { SubmitHandler, useForm } from "react-hook-form";
 import FormField from "@/components/ui/FomField";
 import Button from "@/components/ui/Button";
@@ -37,8 +36,6 @@ export default function MyceliumProfile({ user }: Props) {
   const navigate = useNavigate();
 
   const [error, setError] = useState<string | null>(null);
-
-  const { parseHttpError } = useSuspenseError();
 
   const { getAccessTokenSilently } = useAuth0();
 
@@ -115,9 +112,7 @@ export default function MyceliumProfile({ user }: Props) {
   };
 
   const handleRegisterAccount = async (response: { id?: string }) => {
-    const { id } = response;
-
-    if (!id) throw new Error("User maybe not registered");
+    console.debug("handleRegisterAccount", response);
 
     setRegisteringAccount(true);
 
@@ -205,7 +200,7 @@ export default function MyceliumProfile({ user }: Props) {
        *
        * The backend is not able to process the request.
        */
-      parseHttpError(response);
+      //parseHttpError(response);
     },
     [getAccessTokenSilently]
   );
@@ -236,17 +231,17 @@ export default function MyceliumProfile({ user }: Props) {
       });
   };
 
-  const navigateToDashboard = () => {
+  const navigateToDashboard = useCallback(() => {
     setTimeout(() => {
       navigate("/dashboard");
     }, 1000);
-  };
+  }, [navigate]);
 
   useEffect(() => {
     if (!profile) return;
 
     if (profile.accId) navigateToDashboard();
-  }, [profile]);
+  }, [navigateToDashboard, profile]);
 
   if (!user) return null;
 

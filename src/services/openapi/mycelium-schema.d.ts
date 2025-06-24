@@ -118,6 +118,28 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/adm/rs/beginners/accounts/{account_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * Delete my account
+         * @description Delete the account associated with the current user.
+         *
+         *
+         */
+        delete: operations["delete_my_account_url"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/adm/rs/beginners/accounts/{account_id}/update-account-name": {
         parameters: {
             query?: never;
@@ -293,8 +315,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Check email status
-         * @description Check if the email is already registered.
+         * DEPRECATED: Check email status
+         * @description This endpoint is deprecated. Please use the /status endpoint instead.
+         *
+         *
          *
          *
          */
@@ -999,9 +1023,37 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Create a management account. */
+        /**
+         * Create a management account
+         * @description Management accounts are used to manage tenant resources. Tenant managers
+         *     should manage subscription accounts.
+         *
+         *
+         */
         post: operations["create_management_account_url"];
         delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/adm/rs/tenant-owner/accounts/{account_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * Delete a tenant manager account
+         * @description This action will soft delete the tenant manager account.
+         *
+         *
+         */
+        delete: operations["delete_tenant_manager_account_url"];
         options?: never;
         head?: never;
         patch?: never;
@@ -1558,6 +1610,12 @@ export interface components {
              *     If the account is archived. This is used for account archiving.
              *      */
             isArchived: boolean;
+            /** @description Account is deleted
+             *
+             *     If the account is deleted. This is used for logic trash and restore
+             *     account.
+             *      */
+            isDeleted: boolean;
             verboseStatus?: null | components["schemas"]["VerboseStatus"];
             isDefault: boolean;
             /** @description The Account Owners
@@ -1631,15 +1689,6 @@ export interface components {
             accessToken: string;
             tokenType: string;
         };
-        CheckEmailStatusQuery: {
-            email: string;
-        };
-        CheckEmailStatusResponse: {
-            email: string;
-            status: string;
-            provider?: string | null;
-            hasAccount: boolean;
-        };
         CheckTokenBody: {
             token: string;
             email: string;
@@ -1690,6 +1739,12 @@ export interface components {
                  *     If the account is archived. This is used for account archiving.
                  *      */
                 isArchived: boolean;
+                /** @description Account is deleted
+                 *
+                 *     If the account is deleted. This is used for logic trash and restore
+                 *     account.
+                 *      */
+                isDeleted: boolean;
                 verboseStatus?: null | components["schemas"]["VerboseStatus"];
                 isDefault: boolean;
                 /** @description The Account Owners
@@ -2446,6 +2501,12 @@ export interface components {
                  *     If the account is archived. This is used for account archiving.
                  *      */
                 isArchived: boolean;
+                /** @description Account is deleted
+                 *
+                 *     If the account is deleted. This is used for logic trash and restore
+                 *     account.
+                 *      */
+                isDeleted: boolean;
                 verboseStatus?: null | components["schemas"]["VerboseStatus"];
                 isDefault: boolean;
                 /** @description The Account Owners
@@ -2607,6 +2668,25 @@ export interface components {
                  *     domain name.
                  *      */
                 allowedSources?: string[] | null;
+                /** @description The proxy address
+                 *
+                 *     The proxy address of the service. This is used to forward requests to
+                 *     the service through a proxy. If the service is not behind a proxy, this
+                 *     field should be empty.
+                 *
+                 *     Example:
+                 *
+                 *     ```yaml
+                 *     proxyAddress: http://proxy.example.com:8080
+                 *     ```
+                 *
+                 *     Then, the downstream url should be:
+                 *
+                 *     ```
+                 *     http://proxy.example.com:8080/http://service.example.com:8080/api/v1/service/1234567890
+                 *     ```
+                 *      */
+                proxyAddress?: string | null;
             };
         } | {
             id: string;
@@ -2666,6 +2746,11 @@ export interface components {
              *     New accounts should be archived. After archived accounts should not be
              *     included at default filtering actions. */
             accountWasArchived: boolean;
+            /** @description If the account was deleted after registration
+             *
+             *     New accounts should be deleted. After deleted accounts should not be
+             *     included at default filtering actions. */
+            accountWasDeleted: boolean;
             verboseStatus?: null | components["schemas"]["VerboseStatus"];
             licensedResources?: null | components["schemas"]["LicensedResources"];
             tenantsOwnership?: null | components["schemas"]["TenantsOwnership"];
@@ -2960,6 +3045,25 @@ export interface components {
              *     domain name.
              *      */
             allowedSources?: string[] | null;
+            /** @description The proxy address
+             *
+             *     The proxy address of the service. This is used to forward requests to
+             *     the service through a proxy. If the service is not behind a proxy, this
+             *     field should be empty.
+             *
+             *     Example:
+             *
+             *     ```yaml
+             *     proxyAddress: http://proxy.example.com:8080
+             *     ```
+             *
+             *     Then, the downstream url should be:
+             *
+             *     ```
+             *     http://proxy.example.com:8080/http://service.example.com:8080/api/v1/service/1234567890
+             *     ```
+             *      */
+            proxyAddress?: string | null;
         };
         ServiceGuestUserBody: components["schemas"]["Account"];
         ServiceHost: string | string[];
@@ -3249,7 +3353,7 @@ export interface components {
             mfa: components["schemas"]["MultiFactorAuthentication"];
         };
         /** @enum {string} */
-        VerboseStatus: "unverified" | "verified" | "inactive" | "archived" | "unknown";
+        VerboseStatus: "unverified" | "verified" | "inactive" | "archived" | "deleted" | "unknown";
         WebHook: {
             /**
              * Format: uuid
@@ -3690,6 +3794,28 @@ export interface operations {
             };
             /** @description Unknown internal server error. */
             500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+        };
+    };
+    delete_my_account_url: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Account successfully deleted. */
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -4277,54 +4403,15 @@ export interface operations {
     };
     check_email_registration_status_url: {
         parameters: {
-            query: {
-                /** @description The email to be checked. */
-                email: string;
-            };
+            query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description Success. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CheckEmailStatusResponse"];
-                };
-            };
-            /** @description Bad request. */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HttpJsonResponse"];
-                };
-            };
-            /** @description Unauthorized. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HttpJsonResponse"];
-                };
-            };
-            /** @description Forbidden. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HttpJsonResponse"];
-                };
-            };
-            /** @description Unknown internal server error. */
-            500: {
+            /** @description This endpoint is deprecated. Please use the /status endpoint instead. */
+            410: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -7066,6 +7153,58 @@ export interface operations {
             };
             /** @description Account already exists. */
             400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Unauthorized. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Forbidden. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Unknown internal server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+        };
+    };
+    delete_tenant_manager_account_url: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description The tenant unique id. */
+                "x-mycelium-tenant-id": string;
+            };
+            path: {
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Account deleted. */
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };
