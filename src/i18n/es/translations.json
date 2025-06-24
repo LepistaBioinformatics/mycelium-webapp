@@ -1,0 +1,842 @@
+{
+  "screens": {
+    "HomePage": {
+      "title": "Bienvenido de nuevo",
+      "AnonymousUser": {
+        "title": "Para comenzar, autenticar",
+        "button": "haga clic aquí",
+        "processing": "Estamos revisando su dirección de correo electrónico"
+      },
+      "AuthenticatedUser": {
+        "title": "¡Qué bueno verlo aquí!",
+        "loggedInAs": "Estás autenticado como",
+        "checkingEmailStatus": "Estamos revisando si tiene una cuenta",
+        "emailNotFound": "Su correo electrónico no fue encontrado en nuestros registros",
+        "register": "Haga clic para registrarse",
+        "registering": "Registrando ...",
+        "allReady": "Todo listo",
+        "userSuccessfullyRegistered": "Usuario registrado exitoso",
+        "userAlreadyRegistered": "Usuario ya registrado",
+        "userNotRegistered": "Usuario no registrado"
+      },
+      "MyceliumProfile": {
+        "title": "Antes de continuar, confirme alguna información",
+        "form": {
+          "firstName": {
+            "label": "Nombre de pila",
+            "title": "Nombre",
+            "placeholder": "Joaquim"
+          },
+          "lastName": {
+            "label": "Apellido",
+            "title": "Tus otros nombres",
+            "placeholder": "José da Silva Xavier"
+          }
+        },
+        "submit": "Ahorrar",
+        "submitting": "Salvando ...",
+        "success": "Registro exitoso",
+        "error": "Error inesperado al registrarse",
+        "countdown": "Serás redirigido al panel en {{seconds}} segundo",
+        "forceRedirect": "Redirigir ahora"
+      },
+      "UnRegisteredUser": {
+        "title": "¡Casi llegamos!",
+        "subtitle": "Revise su nombre de usuario",
+        "finishRegistrationButton": "Haga clic para finalizar el registro",
+        "registering": "Registrando ...",
+        "userSuccessfullyRegistered": "Usuario registrado exitoso",
+        "allReady": "Todo listo",
+        "userAlreadyRegistered": "Usuario ya registrado"
+      },
+      "ValidatedUser": {
+        "checkingProfile": "Estamos revisando su perfil",
+        "userSuccessfullyValidated": "Usuario validado exitoso",
+        "allReady": "Todo listo",
+        "userAlreadyValidated": "Usuario ya validado",
+        "verifiedAccount": "Cuenta verificada?",
+        "hasPrivilegedRoles": "¿Tiene funciones privilegiadas?",
+        "yes": "Sí",
+        "no": "No",
+        "redirectingToDashboard": "Te estamos redirigiendo al panel",
+        "ifNotRedirectedClickHere": "Si no está redirigido, haga clic",
+        "here": "aquí"
+      }
+    },
+    "Dashboard": {
+      "Profile": {
+        "title": "Perfil",
+        "loading": "Carrying Perfil ...",
+        "relationship": "Cuentas compartidas",
+        "relationshipDescription": "Aquí puede ver las cuentas compartidas con usted, además de los espacios de nombres a los que tiene acceso. Los nuevos clientes verán esta sección vacía.",
+        "loggedInAs": {
+          "prefix": "Usuario",
+          "title": "Su nombre",
+          "staff": "Usuario del equipo",
+          "manager": "Gerente"
+        },
+        "email": {
+          "prefix": "Correo electrónico",
+          "title": "Tu correo electrónico"
+        }
+      },
+      "AboutCard": {
+        "about": "En"
+      },
+      "PermissionsDetails": {
+        "title": "¿Qué puedes hacer con tus permisos actuales?",
+        "staff": {
+          "title": "Súper usuario",
+          "subtitle": "Súper usuarios",
+          "headerTitle": "Grupo de Super Usuarios",
+          "abountContent": "Los usuarios con el poder de realizar acciones de alto nivel en el sistema, como la promoción de usuarios calificados para el personal o las funciones del gerente. Debido al nivel significativo de acceso y control, esta función debe atribuirse con extrema precaución.\n\nAdemás, los usuarios de este tipo comparten los mismos permisos que la administración de usuarios."
+        },
+        "manager": {
+          "title": "Gerente",
+          "subtitle": "Súper usuarios",
+          "headerTitle": "Grupo de Super Usuarios",
+          "abountContent": "Los usuarios con el poder de realizar acciones de alto nivel en el sistema, pero sumisos a los súper usuarios (personal).\n\nLas cuentas con estos permisos tienen afinidad por el sistema en sí. Pueden administrar espacios de nombres, cuentas, documentos del sistema, webhooks y otras características."
+        },
+        "accountManager": {
+          "title": "Gerente de cuentas",
+          "subtitle": "Permisos de alto nivel",
+          "headerTitle": "Grupo de Super Usuarios",
+          "abountContent": "El administrador de cuentas es una función que cubre toda la cuenta y nos permite administrar cuentas e invitados en una cuenta específica. Esta función es crucial para mantener un entorno seguro y fácil de usar para todos los usuarios."
+        },
+        "gatewayManager": {
+          "title": "Gateway Manager",
+          "subtitle": "Permisos de alto nivel",
+          "headerTitle": "Grupo de Super Usuarios",
+          "abountContent": "Gateway Manager es una función que cubre toda la puerta de enlace y le permite ver y administrar rutas y servicios. Esta función tiene un alcance de todo el sistema pero con solo lectura de privilegios."
+        },
+        "guestManager": {
+          "title": "Gerente invitado",
+          "subtitle": "Permisos de alto nivel",
+          "headerTitle": "Grupo de Super Usuarios",
+          "abountContent": "El gerente de invitados es una función de todo el sistema que le permite administrar las funciones de invitados en todos los inquilinos. Las funciones creadas con este permiso se aplicarán a todos los inquilinos, asegurando una experiencia consistente y segura para los huéspedes en todo el sistema.\n\nEsta función es crucial para mantener un entorno seguro y fácil de usar para todos los usuarios."
+        },
+        "subscriptionsManager": {
+          "title": "Gerente de suscripciones",
+          "subtitle": "Permisos de alto nivel",
+          "headerTitle": "Grupo de Super Usuarios",
+          "abountContent": "El administrador de suscripción es una función para cada arrendatario que le permite administrar suscripciones a uno o más inquilinos. Las acciones realizadas por esta función incluyen la creación y actualización de firmas, así como la gestión de recursos y configuraciones asociados.\n\n El administrador de suscripción también puede invitar a los usuarios a una cuenta de suscripción específica. También se permite administrar etiquetas y metadatos de cuenta."
+        },
+        "systemManager": {
+          "title": "Gerente de sistema",
+          "subtitle": "Permisos de alto nivel",
+          "headerTitle": "Grupo de Super Usuarios",
+          "abountContent": "El gerente del sistema debe tratar problemas y recursos en todo el sistema. Su impacto es global, por lo que debe ser cauteloso al hacer cambios.\n\nLos gerentes de sistemas deben tratar problemas menos críticos, como errores y administración de códigos de alto nivel, como la configuración de Webhooks."
+        },
+        "tenantOwner": {
+          "title": "Propietario del inquilino",
+          "subtitle": "Permisos de alto nivel",
+          "headerTitle": "Grupo de Super Usuarios",
+          "abountContent": "Eres propietario de un inquilino. Esto significa que tiene acceso completo a uno o más inquilinos y puede administrarlos, así como a sus cuentas e invitados asociados.\n\nEl propietario del inquilino tiene acceso completo a los recursos del inquilino, incluida la administración de cuentas, metadatos, etiquetas y configuraciones."
+        },
+        "tenantManager": {
+          "title": "Gerente de inquilino",
+          "subtitle": "Permisos de alto nivel",
+          "headerTitle": "Grupo de Super Usuarios",
+          "abountContent": "El gerente de inquilinos es una función que abarca a todos los inquilinos y nos permite administrar un solo inquilino.\n\nLas acciones realizadas por esta función incluyen la creación y actualización de la configuración de los inquilinos, así como la gestión de recursos asociados, como cuentas, metadatos y etiquetas."
+        },
+        "customRoles": {
+          "title": "Documentos personalizados",
+          "subtitle": "Permisos de alto nivel",
+          "headerTitle": "Grupo de Super Usuarios",
+          "abountContent": "Los roles personalizados se utilizan en la gestión de servicios aguas abajo. Vea la lista de sus roles personalizados."
+        }
+      },
+      "TenantOwnershipSection": {
+        "title": "Tus espacios de nombres",
+        "loadAll": "Cargar todo {{count}} espacios de nombres"
+      },
+      "LicensedResourcesSection": {
+        "title": "Cuentas a las que tiene acceso",
+        "noResources": "No hay cuenta compartida contigo",
+        "noResourcesDescription": "No tiene acceso a ninguna cuenta",
+        "accountName": {
+          "title": "Nombre de cuenta",
+          "system": "Cuenta del sistema"
+        },
+        "role": {
+          "title": "Función atribuida a usted",
+          "prefix": "Con papel"
+        },
+        "permission": {
+          "title": "Permiso atribuido a usted",
+          "prefix": "Puede"
+        },
+        "unverified": "No cualificado"
+      },
+      "TenantBasicInfo": {
+        "from": {
+          "title": "El namepace al que pertenece la cuenta: {{tenantId}}",
+          "prefix": "Espacio de nombres"
+        }
+      },
+      "TenantOwnershipInfo": {
+        "title": "El namepace al que pertenece la cuenta: {{tenantId}}",
+        "since": {
+          "title": "Desde Namepace: {{tenantId}}",
+          "prefix": "Desde"
+        },
+        "deleted": "Eliminado",
+        "unknown": "Desconocido",
+        "unauthorized": "No autorizado",
+        "logo": "Logotipo del espacio de nombres",
+        "name": "Nombre del espacio de nombres",
+        "description": {
+          "title": "Descripción de NamePace",
+          "prefix": "Más"
+        }
+      },
+      "Tenants": {
+        "title": "Espacios de nombres",
+        "createTenant": "Crear espacio de nombres",
+        "viewTenantBasicDetails": "Ver detalles básicos de Namepace",
+        "TenantModal": {
+          "title": "Crear espacio de nombres",
+          "titleExistingTenant": "Editar espacio de nombres",
+          "formFields": {
+            "name": {
+              "label": "Nombre",
+              "placeholder": "Nombre del espacio de nombres",
+              "title": "Nombre del espacio de nombres"
+            },
+            "description": {
+              "label": "Descripción",
+              "placeholder": "Describe el espacio de nombres",
+              "title": "Descripción de NamePace"
+            },
+            "create": "Para crear",
+            "creating": "Creando ...",
+            "update": "Para actualizar",
+            "updating": "Actualización ..."
+          }
+        },
+        "DeleteTenant": {
+          "title": "Borrar",
+          "description": "¿Estás seguro de que quieres eliminar NamePace?",
+          "button": "Borrar",
+          "loading": "Eliminar ..."
+        },
+        "TenantDetails": {
+          "title": "Detalles del espacio de nombres",
+          "details": "Detalles",
+          "advancedActions": "Acciones avanzadas",
+          "name": {
+            "title": "Nombre del espacio de nombres",
+            "prefix": "Verás",
+            "viewTenantAdvancedDetails": "Ver detalles avanzados de NamePace",
+            "makeTenantFavorite": "Espacio de nombres favorito"
+          },
+          "description": {
+            "title": "Descripción de NamePace",
+            "prefix": "Descrito como"
+          },
+          "created": {
+            "title": "Creado en",
+            "prefix": "Creado en"
+          },
+          "updated": {
+            "title": "Actualizado en",
+            "prefix": "Actualizado en"
+          },
+          "owners": {
+            "title": "Propietarios",
+            "prefix": "Propietarios"
+          },
+          "manager": {
+            "title": "Gerente",
+            "prefix": "Gerente"
+          },
+          "tenantId": {
+            "title": "ID de namepace",
+            "prefix": "ID de namepace"
+          },
+          "createManagementAccount": {
+            "title": "Crear cuenta de gestión",
+            "description": "Cree una cuenta de gestión para el espacio de nombres. Esta cuenta se utilizará para invitar a los usuarios con permisos de administración. que administrará el espacio de nombres.",
+            "button": "Para crear"
+          },
+          "deleteTenant": {
+            "title": "Borrar",
+            "description": "Eliminar el espacio de nombres eliminará todos los datos del espacio de nombres y no se puede revertir.",
+            "button": "Borrar"
+          }
+        },
+        "AdvancedManagement": {
+          "title": "Gestión avanzada",
+          "longDescription": "Puede administrar sus personas y configuraciones de NamePace aquí. Comience agregando propietarios y cuentas de administración para configurar NamePace, luego invite a usuarios adicionales según sea necesario. Todas las demás opciones de configuración están disponibles en la sección Configuración del espacio de nombres.",
+          "breadcrumb": "Espacios de nombres",
+          "manageAccounts": "Ver Cuentas",
+          "manageAccountsDescription": "Haga clic aquí para ver las cuentas registradas en el espacio de nombres.",
+          "name": {
+            "title": "Nombre del espacio de nombres",
+            "prefix": "Verás"
+          },
+          "description": {
+            "title": "Descripción de NamePace",
+            "prefix": "Descrito como"
+          },
+          "created": {
+            "title": "Creado en",
+            "prefix": "Creado en"
+          },
+          "updated": {
+            "title": "Actualizado en",
+            "prefix": "Actualizado en"
+          },
+          "legalSettingsAndPeople": {
+            "title": "Propietarios e información legal",
+            "legalSettings": {
+              "title": "Información legal",
+              "description": "Proporcione aquí la información legal del espacio de nombres. Se mostrarán públicamente a los usuarios registrados de este NamePace.",
+              "name": {
+                "title": "Nombre del espacio de nombres",
+                "prefix": "Nombre público"
+              },
+              "federalRevenueRegister": {
+                "title": "CNPJ",
+                "prefix": "Registro del IRS"
+              },
+              "federalRevenueRegisterType": {
+                "title": "Tipo de registro de ingresos federales",
+                "prefix": "CNPJ o CPF"
+              },
+              "country": {
+                "title": "País",
+                "prefix": "País"
+              },
+              "state": {
+                "title": "Estado",
+                "prefix": "Estado"
+              },
+              "city": {
+                "title": "Ciudad",
+                "prefix": "Ciudad"
+              },
+              "zipCode": {
+                "title": "Cremallera",
+                "prefix": "Cremallera"
+              },
+              "address1": {
+                "title": "Dirección 1",
+                "prefix": "Dirección 1"
+              },
+              "address2": {
+                "title": "Dirección 2",
+                "prefix": "Dirección 2"
+              }
+            },
+            "owners": {
+              "title": "Propietarios",
+              "description": "Los propietarios pueden administrar la información legal y la estructura organizativa del espacio de nombres, así como tener autonomía para invitar a gerentes y otros propietarios. Use el botón de registro para agregar propietarios.",
+              "name": {
+                "title": "Nombre del propietario",
+                "prefix": "Nombre"
+              },
+              "email": {
+                "title": "Correo electrónico del propietario",
+                "prefix": "Correo electrónico"
+              },
+              "guestOwner": {
+                "title": "Registre a un propietario invitado",
+                "description": "El correo electrónico debe ser de un usuario ya registrado en la plataforma.",
+                "form": {
+                  "email": {
+                    "label": "Correo electrónico",
+                    "placeholder": "Correo electrónico del propietario invitado",
+                    "title": "Correo electrónico del propietario invitado"
+                  },
+                  "register": "Registro",
+                  "registering": "Registrando ..."
+                }
+              },
+              "unguestOwner": {
+                "title": "Eliminar al propietario de los invitados",
+                "description": "¿Estás seguro de que quieres eliminar al propietario de los invitados?",
+                "confirm": "Si, quiero eliminar",
+                "confirming": "Eliminando ..."
+              }
+            }
+          },
+          "customization": {
+            "title": "Personalización",
+            "description": "Personalice el espacio de nombres con etiquetas, marcas y cuentas de suscripción.",
+            "managers": {
+              "title": "Gerentes",
+              "description": "Los gerentes administrarán etiquetas, marcas y cuentas de suscripción del espacio de nombres. Use el botón de registro para agregar gerentes.",
+              "createManagementAccount": "Crear cuenta de gestión",
+              "createManagementAccountDescription": "Debe completar esta acción antes de invitar a los gerentes a NamePace.",
+              "createManagementAccountButton": "Para crear",
+              "noInvitations": "No hay cuenta de gestión registrada"
+            },
+            "brand": {
+              "title": "Logo",
+              "description": "Personaliza el logotipo del espacio de nombres.",
+              "registerTenantBrand": "Registrar el logotipo",
+              "registerTenantBrandDescription": "Esto pronto traerá identidad al espacio de nombres.",
+              "submit": "Para enviar",
+              "submitting": "Enviando ..."
+            },
+            "colors": {
+              "title": "Bandera",
+              "description": "Personaliza los colores del espacio de nombres.",
+              "submit": "Para enviar",
+              "submitting": "Enviando ..."
+            }
+          }
+        }
+      },
+      "Accounts": {
+        "title": "Cuentas",
+        "createAccount": "Crear una cuenta",
+        "PaginatedAccounts": {
+          "searchPlaceholder": "Buscar o usar el panel de comando ...",
+          "resultsBasedOnTenant": "Cuentas registradas en",
+          "accountTypeFilters": "Filtros de tipo de cuenta",
+          "accountStatusFilters": "Filtros de estado de la cuenta",
+          "created": "Creado en",
+          "accountType": "Tipo de cuenta"
+        },
+        "AccountInvitations": {
+          "noInvitations": "No hay cuenta de gestión registrada",
+          "email": {
+            "title": "Correo electrónico invitado"
+          },
+          "invitedAt": {
+            "prefix": "Desde",
+            "title": "Fecha y hora de invitación"
+          },
+          "permission": {
+            "title": "El permiso de su función es",
+            "prefix": "Permiso"
+          },
+          "role": {
+            "title": "Función",
+            "prefix": "Su función se describe como: {{roleDescription}}"
+          },
+          "actions": {
+            "title": "Comportamiento",
+            "uninvite": {
+              "title": "Eliminar la invitación",
+              "desctiption": "Eliminar la invitación eliminará los accesos del usuario invitado.",
+              "confirm": "Proceder"
+            }
+          },
+          "showAll": "Mostrar todo",
+          "showLess": "Menos"
+        },
+        "AccountDetails": {
+          "title": "Detalles de la cuenta",
+          "details": "Detalles",
+          "invitations": "Acciones",
+          "advancedActions": "Acciones avanzadas",
+          "name": {
+            "title": "Nombre de cuenta",
+            "prefix": "Verás"
+          },
+          "onTenant": {
+            "title": "Nombre del espacio de nombres",
+            "prefix": "Namepace"
+          },
+          "description": {
+            "title": "Descripción de NamePace",
+            "prefix": "Descrito como"
+          },
+          "slug": {
+            "title": "Babosa",
+            "prefix": "Identificador único (Slug)"
+          },
+          "created": {
+            "title": "Creado en",
+            "prefix": "Creado en"
+          },
+          "updated": {
+            "title": "Actualizado en",
+            "prefix": "Actualizado en"
+          },
+          "status": {
+            "title": "Estado",
+            "prefix": "Estado"
+          },
+          "owners": {
+            "title": "Propietarios",
+            "prefix": "Propietarios"
+          },
+          "accountId": {
+            "title": "ID de cuenta",
+            "prefix": "ID de cuenta"
+          },
+          "invite": {
+            "title": "Cuenta compartida",
+            "description": "Comparta la cuenta con otros usuarios. Use el botón de compartir para enviar una invitación a otro usuario.",
+            "button": "Para compartir"
+          },
+          "edit": {
+            "title": "Editar nombre de cuenta",
+            "description": "Edite el nombre de la cuenta. Use el botón de edición para cambiar el nombre de la cuenta.",
+            "button": "Editar"
+          },
+          "delete": {
+            "title": "Borrar",
+            "description": "Eliminar la cuenta eliminará todos los datos de la cuenta y no se puede revertir.",
+            "button": "Borrar"
+          },
+          "upgradeOrDowngrade": {
+            "title": "Actualizar el estado de la cuenta",
+            "description": "Actualizar el estado de la cuenta para un estado diferente. Use el botón Actualizar para cambiar el estado de la cuenta.",
+            "button": "Para actualizar"
+          }
+        },
+        "AccountModal": {
+          "createAccount": "Crear una cuenta",
+          "editAccount": "Cuenta de edición",
+          "create": "Para crear",
+          "creating": "Creando ...",
+          "update": "Para actualizar",
+          "updating": "Actualización ...",
+          "name": {
+            "title": "Nombre de cuenta",
+            "prefix": "Nombre",
+            "placeholder": "Mi mejor cuenta"
+          },
+          "description": {
+            "title": "Descripción de la cuenta",
+            "prefix": "Descripción",
+            "placeholder": "Descripción de la cuenta"
+          },
+          "createSystemAccount": {
+            "description": "Cree una cuenta del sistema para el espacio de nombres. Esta cuenta se utilizará para invitar a los usuarios con permisos de administración. que administrará el espacio de nombres.",
+            "guestManager": {
+              "title": "Gerente invitado",
+              "description": "El gerente de invitados es una cuenta de sistema diseñada para administrar funciones de invitados y tokens relacionados con los invitados.",
+              "button": "Para crear"
+            },
+            "gatewayManager": {
+              "title": "Gateway Manager",
+              "description": "Gateway Manager es una cuenta de sistema diseñada para administrar las funciones de Gateways y Gateway Tokens.",
+              "button": "Para crear"
+            },
+            "systemManager": {
+              "title": "Gerente de sistema",
+              "description": "System Manager es una cuenta de sistema diseñada para administrar funciones de sistemas y tokens relacionados con el sistema.",
+              "button": "Para crear"
+            }
+          }
+        },
+        "GuestToAccountModal": {
+          "title": "Invitar a un usuario",
+          "form": {
+            "email": {
+              "label": "1. Con este correo electrónico",
+              "placeholder": "ejemplo@email.com",
+              "title": "La dirección de correo electrónico del usuario invitado. El usuario será notificado por correo electrónico sobre la invitación"
+            },
+            "account": {
+              "label": "2. Para esta cuenta",
+              "title": "La cuenta para invitar al usuario"
+            },
+            "role": {
+              "label": "3. Con esta función",
+              "title": "La función del usuario invitado"
+            },
+            "invite": "Para invitar"
+          }
+        },
+        "DeleteAccount": {
+          "title": "Borrar",
+          "description": "Eliminar la cuenta eliminará todos los datos de la cuenta y no se puede revertir.",
+          "delete": "Borrar",
+          "deleting": "Eliminar ..."
+        },
+        "UnInviteGuestModal": {
+          "title": "Eliminar la invitación",
+          "description": "¿Estás seguro de que quieres eliminar la invitación?",
+          "confirm": "Proceder",
+          "confirming": "Eliminando ...",
+          "email": {
+            "title": "Correo electrónico invitado",
+            "prefix": "Correo electrónico"
+          },
+          "role": {
+            "title": "Función",
+            "prefix": "Función"
+          }
+        },
+        "UpgradeOrDowngradeAccountModal": {
+          "title": "Bajo el estado del usuario",
+          "description": "Actualizar o rebajar los permisos de usuario.",
+          "confirm": "Confirmar {{seconds}} artículos de segunda clase)",
+          "confirming": "Actualización ...",
+          "to": "a",
+          "upgrade": "Promover",
+          "downgrade": "Degradación"
+        }
+      },
+      "GuestRoles": {
+        "title": "Roles de invitado",
+        "createGuestRole": "Crear rol de invitado",
+        "createGuestRoleDescription": "Cree un papel invitado para administrar los permisos de invitados.",
+        "listItem": {
+          "slug": {
+            "title": "Use esta clave para configurar los roles de invitados en sistemas y servicios posteriores",
+            "prefix": "Identificador único (Slug)"
+          },
+          "description": {
+            "title": "Cuando usar",
+            "prefix": "Usar"
+          }
+        },
+        "GuestRoleDetails": {
+          "title": "Detalles del papel",
+          "details": "Detalles",
+          "advancedActions": "Acciones avanzadas",
+          "name": {
+            "title": "Nombre del papel invitado",
+            "prefix": "Verás"
+          },
+          "slug": {
+            "title": "Clave de papel invitada",
+            "prefix": "Identificador único (Slug)"
+          },
+          "system": {
+            "title": "¿Es un papel del sistema?",
+            "prefix": "¿Es un papel del sistema?",
+            "yes": "Sí",
+            "no": "No"
+          },
+          "permission": {
+            "title": "¿Qué puede usar usuarios con este rol?",
+            "prefix": "Que puede"
+          },
+          "description": {
+            "title": "Descripción del rol de invitado",
+            "prefix": "Descrito como"
+          },
+          "id": {
+            "title": "ID de rol de invitado",
+            "prefix": "IDENTIFICACIÓN"
+          },
+          "children": {
+            "title": "Roles infantiles",
+            "prefix": "Roles infantiles"
+          },
+          "edit": {
+            "title": "Editar rol de invitado",
+            "description": "Actualizar información y descripción del nombre visible.",
+            "button": "Editar"
+          },
+          "registerChildRole": {
+            "title": "Registre el documento de Filho",
+            "description": "Registre un papel infantil para el papel invitado.",
+            "button": "Registro"
+          },
+          "delete": {
+            "title": "Eliminar el rol de invitado",
+            "description": "¿Estás seguro de que quieres eliminar el papel de invitado?",
+            "button": "Borrar"
+          }
+        },
+        "GuestRolesModal": {
+          "createGuestRole": "Crear rol de invitado",
+          "editGuestRole": "Editar rol de invitado",
+          "form": {
+            "name": {
+              "label": "Nombre",
+              "title": "Nombre del papel invitado",
+              "placeholder": "Ej: Administrador de cuentas"
+            },
+            "description": {
+              "label": "Descripción",
+              "title": "Descripción del rol de invitado",
+              "placeholder": "Ej: Administrador de cuentas"
+            },
+            "permission": {
+              "label": "Permiso",
+              "titleReadOnly": "Este campo no se puede cambiar",
+              "titleWrite": "Permiso del papel de invitado",
+              "placeholder": "Ej: Administrador de cuentas",
+              "read": "Lectura",
+              "write": "Escribiendo"
+            },
+            "update": "Para actualizar",
+            "updating": "Actualización ...",
+            "create": "Para crear",
+            "creating": "Creando ..."
+          }
+        },
+        "DeleteGuestRole": {
+          "title": "Eliminar el rol de invitado",
+          "description": "¿Estás seguro de que quieres eliminar el papel de invitado?",
+          "delete": "Borrar",
+          "deleting": "Eliminar ..."
+        },
+        "RegisterGuestRoleChild": {
+          "title": "Registre el documento de Filho",
+          "label": "Papel infantil",
+          "button": "Registro"
+        },
+        "GuestRoleSelector": {
+          "label": "Papel infantil",
+          "title": "Seleccione un papel infantil",
+          "placeholder": "Seleccione un papel infantil",
+          "loading": "Cargando...",
+          "button": "Haga clic para seleccionar"
+        }
+      },
+      "ErrorCodes": {
+        "title": "Códigos de error",
+        "placeholder": "Ejemplo: {{example}}",
+        "message": "Mensaje",
+        "details": "Detalles",
+        "internal": "Interno",
+        "native": "Nativo",
+        "yes": "Sí",
+        "no": "No"
+      },
+      "Webhooks": {
+        "title": "Webhooks",
+        "createWebhook": "Crear webhook",
+        "createWebhookDescription": "Cree un webhook para recibir eventos de su sistema.",
+        "create": "Para crear",
+        "creating": "Creando ...",
+        "webhook": "Webhook",
+        "description": "Descripción",
+        "trigger": "Desencadenar",
+        "created": "Creado en",
+        "updated": "Actualizado en",
+        "active": "Activo",
+        "inactive": "Inactivo",
+        "yes": "Sí",
+        "no": "No",
+        "url": "Url",
+        "security": "Seguridad",
+        "secretType": "Tipo de secreto",
+        "headerName": "Nombre de encabezado",
+        "tokenPrefix": "Prefijo de token",
+        "tokenValue": "Valor token",
+        "queryParameter": "Parámetro de consulta",
+        "queryParameterName": "Nombre del parámetro de consulta",
+        "queryParameterValue": "Valor de parámetro de consulta",
+        "WebhookModal": {
+          "title": "Crear webhook",
+          "titleExistingWebhook": "Editar webhook",
+          "formFields": {
+            "name": {
+              "label": "Nombre",
+              "title": "Nombre de webhok",
+              "placeholder": "Mi webhook"
+            },
+            "description": {
+              "label": "Descripción",
+              "title": "Descripción del webhook",
+              "placeholder": "Mi webhook"
+            },
+            "url": {
+              "label": "Url",
+              "title": "URL de webhok",
+              "placeholder": "https://meuwebhook.com/webhook"
+            },
+            "trigger": {
+              "label": "Desencadenar",
+              "title": "Disparador de webhook",
+              "placeholder": "Seleccione un disparador",
+              "options": {
+                "subscriptionAccount.created": "Cuenta de trabajo creada",
+                "subscriptionAccount.updated": "Cuenta de trabajo actualizada",
+                "subscriptionAccount.deleted": "Cuenta de trabajo eliminada",
+                "userAccount.created": "Cuenta de usuario creada",
+                "userAccount.updated": "Cuenta de usuario actualizada",
+                "userAccount.deleted": "Cuenta de usuario eliminada"
+              }
+            },
+            "secret": {
+              "label": "Secreto",
+              "title": "Secreto de webhook",
+              "placeholder": "Seleccione un secreto",
+              "options": {
+                "nothing": {
+                  "title": "No uses secreto",
+                  "placeholder": "No uses secreto"
+                },
+                "authorizationHeader": {
+                  "title": "Encabezado de autorización",
+                  "placeholder": "Encabezado de autorización",
+                  "headerName": {
+                    "label": "Nombre de encabezado",
+                    "title": "Nombre de encabezado",
+                    "placeholder": "Autorización (predeterminado)"
+                  },
+                  "prefix": {
+                    "label": "Prefijo de token",
+                    "title": "Prefijo de token",
+                    "placeholder": "Portador (predeterminado)"
+                  },
+                  "token": {
+                    "label": "Valor token",
+                    "title": "Valor token",
+                    "placeholder": "1234567890"
+                  }
+                },
+                "queryParam": {
+                  "title": "Parámetro de consulta",
+                  "placeholder": "Parámetro de consulta",
+                  "name": {
+                    "label": "Nombre del parámetro de consulta",
+                    "title": "Nombre del parámetro de consulta",
+                    "placeholder": "simbólico"
+                  },
+                  "token": {
+                    "label": "Valor token",
+                    "title": "Valor token",
+                    "placeholder": "1234567890"
+                  }
+                }
+              }
+            },
+            "updating": "Actualización ...",
+            "creating": "Creando ...",
+            "update": "Para actualizar",
+            "create": "Para crear"
+          }
+        },
+        "DeleteWebHook": {
+          "title": "Eliminar webhook",
+          "description": "¿Estás seguro de que quieres eliminar el webhook?",
+          "button": "Borrar",
+          "loading": "Eliminar ..."
+        }
+      }
+    }
+  },
+  "components": {
+    "SearchBar": {
+      "placeholder": "Resultados de la búsqueda ...",
+      "commandPalette": {
+        "title": "Comandos"
+      }
+    },
+    "Pager": {
+      "records": "{{number}} resultados",
+      "prev": "Anterior",
+      "next": "Próximo"
+    }
+  },
+  "Menu": {
+    "title": "Menú",
+    "subtitle": "Seleccione una opción de idioma",
+    "settings": "Configuraciones",
+    "logout": "Salir de la cuenta",
+    "theme": "Cambiar tema",
+    "profile": "Perfil",
+    "tenants": "Espacios de nombres",
+    "accounts": "Cuentas",
+    "guestRoles": "Roles de invitado",
+    "webhooks": "Webhooks",
+    "errorCodes": "Códigos de error",
+    "operations": "Operaciones",
+    "dashboard": "Panel"
+  }
+}

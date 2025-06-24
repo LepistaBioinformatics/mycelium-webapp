@@ -5,10 +5,10 @@ import { useEffect } from "react";
 import Typography from "./Typography";
 import { useTranslation } from "react-i18next";
 
-const containerStyles = cva("mx-auto sticky top-2 z-10 my-2 sm:my-12", {
+const containerStyles = cva("sticky top-2 my-2 sm:my-12", {
   variants: {
     commandPalette: {
-      true: "rounded-lg w-full",
+      true: "rounded-lg w-full z-[997]",
       false: "rounded-full",
     },
     fullWidth: {

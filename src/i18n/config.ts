@@ -2,19 +2,31 @@ import i18next from "i18next";
 import { initReactI18next } from "react-i18next";
 import enTranslation from "./en/translations.json";
 import ptBrTranslation from "./pt-br/translations.json";
+import esTranslation from "./es/translations.json";
+
+export enum Language {
+    EN = "en",
+    PT_BR = "ptBr",
+    ES = "es",
+}
 
 i18next.use(initReactI18next).init({
-    lng: "ptBr", // if you're using a language detector, do not define the lng option
-    debug: true,
+    debug: import.meta.env.NODE_ENV !== "production",
     resources: {
-        en: {
+        [Language.EN]: {
             translation: enTranslation,
         },
-        ptBr: {
+        [Language.PT_BR]: {
             translation: ptBrTranslation,
         },
+        [Language.ES]: {
+            translation: esTranslation,
+        },
     },
-    // if you see an error like: "Argument of type 'DefaultTFuncReturn' is not
-    // assignable to parameter of type xyz" set returnNull to false (and also in
-    // the i18next.d.ts options) returnNull: false,
+    // Default language
+    lng: Language.EN,
+    fallbackLng: Language.EN,
+    interpolation: {
+        escapeValue: false,
+    },
 });

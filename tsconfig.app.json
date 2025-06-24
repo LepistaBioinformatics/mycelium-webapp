@@ -54,6 +54,9 @@
       ],
       "@/translations/*": [
         "./src/translations/*"
+      ],
+      "@/i18n/*": [
+        "./src/i18n/*"
       ]
     }
   },

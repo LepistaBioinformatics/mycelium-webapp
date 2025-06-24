@@ -8,6 +8,8 @@ import useProfile from "@/hooks/use-profile";
 import useSuspenseError from "@/hooks/use-suspense-error";
 import { buildPath } from "@/services/openapi/mycelium-api";
 import { components } from "@/services/openapi/mycelium-schema";
+import { MycPermission } from "@/types/MyceliumPermission";
+import { MycRole } from "@/types/MyceliumRole";
 import { Select, Textarea, TextInput } from "flowbite-react";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -51,7 +53,7 @@ const textInputTheme = {
   },
 };
 
-export interface TenantModalProps {
+export interface WebhookModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSuccess: () => void;
@@ -63,16 +65,22 @@ export default function WebhookModal({
   onClose,
   onSuccess,
   webhook,
-}: TenantModalProps) {
+}: WebhookModalProps) {
   const { t } = useTranslation();
 
   const { hasEnoughPermissions, getAccessTokenSilently } = useProfile({
     shouldBeManager: true,
+    roles: [MycRole.SystemManager],
+    permissions: [MycPermission.Read, MycPermission.Write],
   });
 
-  const [secretType, setSecretType] = useState<Secret>(Secret.Nothing);
+  const [secretType, setSecretType] = useState<Secret>(
+    webhook?.secret ? Secret.AuthorizationHeader : Secret.Nothing
+  );
 
-  const [togglePassword, setTogglePassword] = useState(false);
+  const [togglePassword, setTogglePassword] = useState(
+    webhook?.secret ? true : false
+  );
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -90,6 +98,7 @@ export default function WebhookModal({
       description: webhook?.description ?? "",
       url: webhook?.url ?? "",
       trigger: webhook?.trigger ?? "subscriptionAccount.created",
+      secret: webhook?.secret ?? null,
     },
   });
 
@@ -140,7 +149,7 @@ export default function WebhookModal({
         initialAuthorizationHeader.prefix = prefix;
       }
 
-      if (token && token !== "") {
+      if (token && token !== "" && token !== "REDACTED") {
         initialAuthorizationHeader.token = token;
       }
 
@@ -167,7 +176,7 @@ export default function WebhookModal({
         initialQueryParameter.name = name;
       }
 
-      if (token && token !== "") {
+      if (token && token !== "" && token !== "REDACTED") {
         initialQueryParameter.token = token;
       }
 
@@ -183,8 +192,8 @@ export default function WebhookModal({
     const cleanData = {
       name: data.name,
       description: data.description,
-      url: data.url,
-      trigger: data.trigger,
+      url: webhook ? webhook.url : data.url,
+      trigger: webhook ? webhook.trigger : data.trigger,
       secret: cleanSecret(data.secret),
     };
 
@@ -193,7 +202,7 @@ export default function WebhookModal({
     const token = await getAccessTokenSilently();
 
     const response = await fetch(buildPath("/adm/rs/system-manager/webhooks"), {
-      method: webhook ? "PUT" : "POST",
+      method: webhook ? "PATCH" : "POST",
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
@@ -295,6 +304,7 @@ export default function WebhookModal({
               color="custom"
               autoFocus
               required
+              disabled={!!webhook}
               theme={textInputTheme}
               {...register("url")}
             />
@@ -326,8 +336,12 @@ export default function WebhookModal({
               }
               {...register("trigger")}
             >
-              {triggers?.map((trigger) => (
-                <option value={trigger}>
+              {triggers?.map((trigger, index) => (
+                <option
+                  key={index}
+                  value={trigger}
+                  selected={trigger === triggerWatch}
+                >
                   {t(
                     `screens.Dashboard.Webhooks.WebhookModal.formFields.trigger.options.${trigger}`
                   )}
@@ -347,12 +361,15 @@ export default function WebhookModal({
           >
             <Select
               sizing="lg"
-              disabled={!!webhook}
               defaultValue={undefined}
               onChange={(e) => setSecretType(e.target.value as Secret)}
             >
-              {Object.values(Secret).map((secret) => (
-                <option value={secret}>
+              {Object.values(Secret).map((secret, index) => (
+                <option
+                  key={index}
+                  value={secret}
+                  selected={secret === secretType}
+                >
                   {t(
                     `screens.Dashboard.Webhooks.WebhookModal.formFields.secret.options.${secret}.title`
                   )}

@@ -3,10 +3,12 @@
 import { cva, VariantProps } from "class-variance-authority";
 import { Link, useLocation } from "react-router";
 import Typography from "./Typography";
-import { PiSidebarSimple, PiSignOutBold } from "react-icons/pi";
+import { PiSidebarSimple } from "react-icons/pi";
 import { Tooltip } from "flowbite-react";
 import ThemeSwitcher from "./ThemeSwitcher";
 import Divider from "./Divider";
+import LanguageSwitcher from "../LanguageSwitcher";
+import SignOutButton from "./SignOutButton";
 
 const containerStyles = cva(
   "hidden sm:flex bg-indigo-50 dark:bg-zinc-700 min-w-md max-h-screen overflow-y-auto scrollbar px-2 pt-2 pb-5 flex flex-col gap-8 justify-between align-middle border-r-2 border-indigo-300 dark:border-lime-700 shadow",
@@ -21,6 +23,15 @@ const containerStyles = cva(
     },
   }
 );
+
+const buttonStyles = cva("flex gap-1 w-full", {
+  variants: {
+    open: {
+      true: "flex-row",
+      false: "flex-col",
+    },
+  },
+});
 
 interface ContainerProps
   extends BaseProps,
@@ -47,43 +58,29 @@ function Container({
         <div className="flex flex-col gap-2 w-full">{children}</div>
       </div>
 
-      <div className="flex flex-col gap-1 w-full">
+      <div className="flex flex-col gap-2 w-full">
         <Divider style="partial" marginY="none" thickness="sm" />
 
-        <div className="flex justify-center items-center w-full text-center rounded-full p-2 hover:bg-indigo-200 dark:hover:bg-zinc-600">
-          <Tooltip
-            content="Toggle theme"
-            className="px-2 border-2 border-white dark:border-lime-500 text-indigo-800 dark:text-lime-500"
-          >
-            <ThemeSwitcher />
-          </Tooltip>
-        </div>
+        <div className={buttonStyles({ open: isOpen })}>
+          <div className="flex justify-center items-center w-full text-center rounded-full p-2 hover:bg-indigo-200 dark:hover:bg-zinc-600">
+            <LanguageSwitcher />
+          </div>
 
-        <button
-          onClick={toggle}
-          className="flex justify-center items-center w-full text-center bg-indigo-50 dark:bg-zinc-700 hover:bg-indigo-200 dark:hover:bg-zinc-600 rounded-full p-2"
-        >
-          <Tooltip
-            content="Toggle sidebar"
-            className="px-2 border-2 border-white dark:border-lime-500 text-indigo-800 dark:text-lime-500"
+          <div className="flex justify-center items-center w-full text-center rounded-full p-2 hover:bg-indigo-200 dark:hover:bg-zinc-600">
+            <ThemeSwitcher />
+          </div>
+
+          <button
+            onClick={toggle}
+            className="flex justify-center items-center w-full text-center bg-indigo-50 dark:bg-zinc-700 hover:bg-indigo-200 dark:hover:bg-zinc-600 rounded-full p-2"
           >
             <PiSidebarSimple className="text-zinc-800 dark:text-zinc-300" />
-          </Tooltip>
-        </button>
+          </button>
+        </div>
 
         <Divider style="partial" marginY="none" thickness="sm" />
 
-        <button
-          onClick={logout}
-          className="flex justify-center items-center w-full text-center bg-indigo-50 dark:bg-zinc-700 hover:bg-indigo-200 dark:hover:bg-zinc-600 rounded-full p-2"
-        >
-          <Tooltip
-            content="Logout"
-            className="px-2 border-2 border-white dark:border-lime-500 text-indigo-800 dark:text-lime-500"
-          >
-            <PiSignOutBold className="text-zinc-800 dark:text-zinc-300" />
-          </Tooltip>
-        </button>
+        <SignOutButton logout={logout} />
       </div>
     </aside>
   );

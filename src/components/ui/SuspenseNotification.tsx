@@ -11,7 +11,7 @@ import Countdown from "react-countdown";
 import { useMemo } from "react";
 
 const styles = cva(
-  "absolute top-1 right-5 w-[calc(100%-2rem)] md:w-[50%] xl:max-w-[500px] flex flex-col gap-1 z-50 transition-all duration-300",
+  "absolute top-1 left-1 sm:right-1 sm:left-auto w-[calc(100%-1rem)] md:w-[50%] xl:max-w-[500px] flex flex-col gap-1 z-[1000] transition-all duration-300",
   {
     variants: {
       show: {

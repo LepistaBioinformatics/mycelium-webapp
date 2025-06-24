@@ -10,15 +10,15 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
-type Tenant = components["schemas"]["Tenant"];
+type WebHook = components["schemas"]["WebHook"];
 
 interface Props {
-  tenant: Tenant;
+  webhook: WebHook;
   isOpen: boolean;
   onClose: () => void;
 }
 
-export default function DeleteTenant({ tenant, isOpen, onClose }: Props) {
+export default function DeleteWebHook({ webhook, isOpen, onClose }: Props) {
   const { t } = useTranslation();
 
   const { getAccessTokenSilently } = useAuth0();
@@ -32,10 +32,12 @@ export default function DeleteTenant({ tenant, isOpen, onClose }: Props) {
 
     const token = await getAccessTokenSilently();
 
-    if (!tenant.id) return;
+    if (!webhook.id) return;
 
     await fetch(
-      buildPath("/adm/su/managers/tenants/{id}", { path: { id: tenant.id } }),
+      buildPath("/adm/rs/system-manager/webhooks/{webhook_id}", {
+        path: { webhook_id: webhook.id },
+      }),
       {
         method: "DELETE",
         headers: {
@@ -55,14 +57,14 @@ export default function DeleteTenant({ tenant, isOpen, onClose }: Props) {
     <Modal open={isOpen}>
       <Modal.Header handleClose={onClose}>
         <Typography as="h2">
-          {t("screens.Dashboard.Tenants.DeleteTenant.title")}
+          {t("screens.Dashboard.Webhooks.DeleteWebHook.title")}
         </Typography>
       </Modal.Header>
 
       <Modal.Body>
         <div className="flex flex-col gap-2 w-full">
           <Typography as="p">
-            {t("screens.Dashboard.Tenants.DeleteTenant.description")}
+            {t("screens.Dashboard.Webhooks.DeleteWebHook.description")}
           </Typography>
 
           <div>
@@ -74,8 +76,8 @@ export default function DeleteTenant({ tenant, isOpen, onClose }: Props) {
               fullWidth
             >
               {isLoading
-                ? t("screens.Dashboard.Tenants.DeleteTenant.loading")
-                : t("screens.Dashboard.Tenants.DeleteTenant.button")}
+                ? t("screens.Dashboard.Webhooks.DeleteWebHook.loading")
+                : t("screens.Dashboard.Webhooks.DeleteWebHook.button")}
             </Button>
           </div>
         </div>

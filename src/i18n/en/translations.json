@@ -1,23 +1,23 @@
 {
   "screens": {
     "HomePage": {
-      "title": "Welcome back",
+      "title": "Welcome Back",
       "AnonymousUser": {
-        "title": "To get started, authenticate yourself",
+        "title": "To start, authenticate",
         "button": "Click here",
         "processing": "We are checking your email address"
       },
       "AuthenticatedUser": {
-        "title": "Great to see you here!",
+        "title": "How great to see him here!",
         "loggedInAs": "You are authenticated as",
         "checkingEmailStatus": "We are checking if you have an account",
         "emailNotFound": "Your email was not found in our records",
         "register": "Click to register",
-        "registering": "Registering...",
-        "allReady": "All set",
-        "userSuccessfullyRegistered": "User successfully registered",
-        "userAlreadyRegistered": "User already registered",
-        "userNotRegistered": "User not registered"
+        "registering": "Registering ...",
+        "allReady": "All ready",
+        "userSuccessfullyRegistered": "Successful registered user",
+        "userAlreadyRegistered": "Already registered user",
+        "userNotRegistered": "Unregistered user"
       },
       "MyceliumProfile": {
         "title": "Before continuing, confirm some information",
@@ -28,37 +28,37 @@
             "placeholder": "Joaquim"
           },
           "lastName": {
-            "label": "Last name",
+            "label": "Surname",
             "title": "Your other names",
             "placeholder": "José da Silva Xavier"
           }
         },
         "submit": "Save",
-        "submitting": "Saving...",
-        "success": "Registration completed successfully",
-        "error": "Unexpected error while registering",
-        "countdown": "You will be redirected to the dashboard in {{seconds}} seconds",
+        "submitting": "Saving ...",
+        "success": "Successful registration",
+        "error": "Unexpected error when registering",
+        "countdown": "You will be redirected to the panel in {{seconds}} second",
         "forceRedirect": "Redirect now"
       },
       "UnRegisteredUser": {
         "title": "Almost there!",
         "subtitle": "Check your username",
-        "finishRegistrationButton": "Click to finish registration",
-        "registering": "Registering...",
-        "userSuccessfullyRegistered": "User successfully registered",
-        "allReady": "All set",
-        "userAlreadyRegistered": "User already registered"
+        "finishRegistrationButton": "Click to finish the record",
+        "registering": "Registering ...",
+        "userSuccessfullyRegistered": "Successful registered user",
+        "allReady": "All ready",
+        "userAlreadyRegistered": "Already registered user"
       },
       "ValidatedUser": {
         "checkingProfile": "We are checking your profile",
-        "userSuccessfullyValidated": "User successfully validated",
-        "allReady": "All set",
-        "userAlreadyValidated": "User already validated",
+        "userSuccessfullyValidated": "Successful validated user",
+        "allReady": "All ready",
+        "userAlreadyValidated": "Already validated user",
         "verifiedAccount": "Verified account?",
-        "hasPrivilegedRoles": "Has privileged roles?",
+        "hasPrivilegedRoles": "Do you have privileged functions?",
         "yes": "Yes",
         "no": "No",
-        "redirectingToDashboard": "We are redirecting you to the dashboard",
+        "redirectingToDashboard": "We are redirecting you to the panel",
         "ifNotRedirectedClickHere": "If you are not redirected, click",
         "here": "here"
       }
@@ -66,84 +66,84 @@
     "Dashboard": {
       "Profile": {
         "title": "Profile",
-        "loading": "Loading profile...",
+        "loading": "Carrying profile ...",
         "relationship": "Shared accounts",
-        "relationshipDescription": "Here you can see the accounts shared with you, as well as the namespaces you have access to. New clients will see this section empty.",
+        "relationshipDescription": "Here you can see the shared accounts with you, in addition to the namespaces you have access to. ",
         "loggedInAs": {
           "prefix": "User",
           "title": "Your name",
           "staff": "Team user",
-          "manager": "Manager user"
+          "manager": "Manager"
         },
         "email": {
-          "prefix": "Email",
+          "prefix": "E-mail",
           "title": "Your email"
         }
       },
       "AboutCard": {
-        "about": "About"
+        "about": "On"
       },
       "PermissionsDetails": {
         "title": "What can you do with your current permissions?",
         "staff": {
           "title": "Super user",
           "subtitle": "Super users",
-          "headerTitle": "Super user group",
-          "abountContent": "Users with the power to perform high-level actions in the system, such as promoting qualified users to staff or manager roles. Due to the significant level of access and control, this role should be assigned with extreme caution.\n\nAdditionally, users of this type share the same permissions as manager users."
+          "headerTitle": "Super Users Group",
+          "abountContent": "Users with the power to perform high level actions in the system, such as promoting qualified users for staff or manager functions. "
         },
         "manager": {
           "title": "Manager",
           "subtitle": "Super users",
-          "headerTitle": "Super user group",
-          "abountContent": "Users with the power to perform high-level actions in the system, but subordinate to super users (staff).\n\nAccounts with these permissions are closely tied to the system itself. They can manage namespaces, accounts, system roles, webhooks, and other resources."
+          "headerTitle": "Super Users Group",
+          "abountContent": "Users with the power to perform high level actions in the system, but submissive to super users (staff).\n\n"
         },
         "accountManager": {
           "title": "Account Manager",
-          "subtitle": "High-level permissions",
-          "headerTitle": "Super user group",
-          "abountContent": "The Account Manager role spans the entire account and allows managing accounts and guests of a specific account. This role is crucial for maintaining a secure and user-friendly environment for all users."
+          "subtitle": "High level permissions",
+          "headerTitle": "Super Users Group",
+          "abountContent": "Account Manager is a function that covers the entire account and allows us to manage accounts and guests in a specific account. "
         },
         "gatewayManager": {
           "title": "Gateway Manager",
-          "subtitle": "High-level permissions",
-          "headerTitle": "Super user group",
-          "abountContent": "The Gateway Manager is a role that spans the entire gateway and allows viewing and managing routes and services. This role has system-wide scope but read-only privileges."
+          "subtitle": "High level permissions",
+          "headerTitle": "Super Users Group",
+          "abountContent": "Gateway manager is a function that covers the entire gateway and allows you to view and manage routes and services. "
         },
         "guestManager": {
           "title": "Guest Manager",
-          "subtitle": "High-level permissions",
-          "headerTitle": "Super user group",
-          "abountContent": "The Guest Manager is a system-wide role that allows managing guest roles across all tenants. Roles created with this permission will be applied to all tenants, ensuring a consistent and secure experience for guests throughout the system.\n\nThis role is essential for maintaining a secure and user-friendly environment for all users."
+          "subtitle": "High level permissions",
+          "headerTitle": "Super Users Group",
+          "abountContent": "The guest manager is a function of the whole system that allows you to manage guest functions in all renters. "
         },
         "subscriptionsManager": {
           "title": "Subscriptions Manager",
-          "subtitle": "High-level permissions",
-          "headerTitle": "Super user group",
-          "abountContent": "The Subscriptions Manager is a tenant-wide role that allows managing subscriptions across one or more tenants. Actions performed by this role include creating and updating subscriptions, as well as managing associated resources and settings.\n\nThe Subscriptions Manager can also invite users to a specific subscription account. Managing account tags and metadata is also permitted."
+          "subtitle": "High level permissions",
+          "headerTitle": "Super Users Group",
+          "abountContent": "Subscription manager is a function for every lessee that allows you to manage subscriptions to one or more tenants. "
         },
         "systemManager": {
           "title": "System Manager",
-          "subtitle": "High-level permissions",
-          "headerTitle": "Super user group",
-          "abountContent": "The System Manager must handle issues and resources across the entire system. Their impact is global, so they should exercise caution when making changes.\n\nSystem Managers should handle less critical issues such as error code management and high-level configurations like webhook setup."
+          "subtitle": "High level permissions",
+          "headerTitle": "Super Users Group",
+          "abountContent": "The system manager must deal with problems and resources throughout the system. "
         },
         "tenantOwner": {
           "title": "Tenant Owner",
-          "subtitle": "High-level permissions",
-          "headerTitle": "Super user group",
-          "abountContent": "You are a tenant owner. This means you have full access to one or more tenants and can manage them as well as their associated accounts and guests.\n\nThe tenant owner has full access to tenant resources, including account management, metadata, tags, and settings."
+          "subtitle": "High level permissions",
+          "headerTitle": "Super Users Group",
+          "abountContent": "You are a tenant owner. "
         },
         "tenantManager": {
           "title": "Tenant Manager",
-          "subtitle": "High-level permissions",
-          "headerTitle": "Super user group",
-          "abountContent": "The Tenant Manager is a role that spans all tenants and allows managing a single tenant.\n\nActions performed by this role include creating and updating tenant settings as well as managing associated resources such as accounts, metadata, and tags."
+          "subtitle": "High level permissions",
+          "headerTitle": "Super Users Group",
+          "abountContent": "The Tenant Manager is a function that encompasses all tenants and allows us to manage a single tenant.\n\n"
         },
         "customRoles": {
-          "title": "Custom roles",
-          "subtitle": "High-level permissions",
-          "headerTitle": "Super user group",
-          "abountContent": "Custom roles are used in the management of downstream services. See the list of your custom roles."
+          "title": "Personalized Papers",
+          "subtitle": "High level permissions",
+          "headerTitle": "Super Users Group",
+          "abountContent": "Personalized roles are used in Downstream Services Management. "
         }
       },
       "TenantOwnershipSection": {
@@ -151,33 +151,33 @@
         "loadAll": "Load all {{count}} namespaces"
       },
       "LicensedResourcesSection": {
-        "title": "Accounts you have access to",
+        "title": "Accounts you have access",
         "noResources": "No account shared with you",
-        "noResourcesDescription": "You don't have access to any account",
+        "noResourcesDescription": "You do not have access to any account",
         "accountName": {
           "title": "Account name",
           "system": "System account"
         },
         "role": {
-          "title": "Role assigned to you",
-          "prefix": "With role"
+          "title": "Function attributed to you",
+          "prefix": "With paper"
         },
         "permission": {
-          "title": "Permission assigned to you",
+          "title": "Permission attributed to you",
           "prefix": "You can"
         },
-        "unverified": "Unverified"
+        "unverified": "Unqualified"
       },
       "TenantBasicInfo": {
         "from": {
-          "title": "The namespace to which the account belongs: {{tenantId}}",
+          "title": "The namepace to which the account belongs: {{tenantId}}",
           "prefix": "Namespace"
         }
       },
       "TenantOwnershipInfo": {
-        "title": "The namespace to which the account belongs: {{tenantId}}",
+        "title": "The namepace to which the account belongs: {{tenantId}}",
         "since": {
-          "title": "Since in the namespace: {{tenantId}}",
+          "title": "Since Namepace: {{tenantId}}",
           "prefix": "Since"
         },
         "deleted": "Deleted",
@@ -186,14 +186,14 @@
         "logo": "Namespace logo",
         "name": "Namespace name",
         "description": {
-          "title": "Namespace description",
+          "title": "Namepace Description",
           "prefix": "More"
         }
       },
       "Tenants": {
         "title": "Namespaces",
         "createTenant": "Create namespace",
-        "viewTenantBasicDetails": "View basic details of the namespace",
+        "viewTenantBasicDetails": "See basic details of namepace",
         "TenantModal": {
           "title": "Create namespace",
           "titleExistingTenant": "Edit namespace",
@@ -205,76 +205,401 @@
             },
             "description": {
               "label": "Description",
-              "placeholder": "Describe the namespace",
-              "title": "Namespace description"
+              "placeholder": "Describe Namespace",
+              "title": "Namepace Description"
             },
             "create": "Create",
-            "creating": "Creating...",
-            "update": "Update",
-            "updating": "Updating..."
+            "creating": "Creating ...",
+            "update": "To update",
+            "updating": "Updating ..."
+          }
+        },
+        "DeleteTenant": {
+          "title": "Delete",
+          "description": "Are you sure you want to delete namepace?",
+          "button": "Delete",
+          "loading": "Deleting ..."
+        },
+        "TenantDetails": {
+          "title": "Namespace Details",
+          "details": "Details",
+          "advancedActions": "Advanced actions",
+          "name": {
+            "title": "Namespace name",
+            "prefix": "You see",
+            "viewTenantAdvancedDetails": "See advanced details of namepace",
+            "makeTenantFavorite": "Favorite namespace"
+          },
+          "description": {
+            "title": "Namepace Description",
+            "prefix": "Described as"
+          },
+          "created": {
+            "title": "Created in",
+            "prefix": "Created in"
+          },
+          "updated": {
+            "title": "Updated in",
+            "prefix": "Updated in"
+          },
+          "owners": {
+            "title": "Owners",
+            "prefix": "Owners"
+          },
+          "manager": {
+            "title": "Manager",
+            "prefix": "Manager"
+          },
+          "tenantId": {
+            "title": "Namepace ID",
+            "prefix": "Namepace ID"
+          },
+          "createManagementAccount": {
+            "title": "Create management account",
+            "description": "Create a management account for Namespace. ",
+            "button": "Create"
+          },
+          "deleteTenant": {
+            "title": "Delete",
+            "description": "Deleting NameSpace will remove all namespace data and cannot be reversed.",
+            "button": "Delete"
+          }
+        },
+        "AdvancedManagement": {
+          "title": "Advanced Management",
+          "longDescription": "You can manage your namepace people and settings here. ",
+          "breadcrumb": "Namespaces",
+          "manageAccounts": "See accounts",
+          "manageAccountsDescription": "Click here to see the accounts recorded in Namespace.",
+          "name": {
+            "title": "Namespace name",
+            "prefix": "You see"
+          },
+          "description": {
+            "title": "Namepace Description",
+            "prefix": "Described as"
+          },
+          "created": {
+            "title": "Created in",
+            "prefix": "Created in"
+          },
+          "updated": {
+            "title": "Updated in",
+            "prefix": "Updated in"
+          },
+          "legalSettingsAndPeople": {
+            "title": "Owners and legal information",
+            "legalSettings": {
+              "title": "Legal information",
+              "description": "Provide here the legal information of Namespace. ",
+              "name": {
+                "title": "Namespace name",
+                "prefix": "Public name"
+              },
+              "federalRevenueRegister": {
+                "title": "CNPJ",
+                "prefix": "IRS REGISTRATION"
+              },
+              "federalRevenueRegisterType": {
+                "title": "Type of federal revenue registration",
+                "prefix": "CNPJ or CPF"
+              },
+              "country": {
+                "title": "Country",
+                "prefix": "Country"
+              },
+              "state": {
+                "title": "State",
+                "prefix": "State"
+              },
+              "city": {
+                "title": "City",
+                "prefix": "City"
+              },
+              "zipCode": {
+                "title": "Zip",
+                "prefix": "Zip"
+              },
+              "address1": {
+                "title": "Address 1",
+                "prefix": "Address 1"
+              },
+              "address2": {
+                "title": "Address 2",
+                "prefix": "Address 2"
+              }
+            },
+            "owners": {
+              "title": "Owners",
+              "description": "Owners can manage the legal information and organizational structure of Namespace, as well as have autonomy to invite managers and other owners. ",
+              "name": {
+                "title": "Owner's name",
+                "prefix": "Name"
+              },
+              "email": {
+                "title": "Owner's email",
+                "prefix": "E-mail"
+              },
+              "guestOwner": {
+                "title": "Register an invited owner",
+                "description": "The email must be from a user already registered on the platform.",
+                "form": {
+                  "email": {
+                    "label": "E-mail",
+                    "placeholder": "E-mail of the guest owner",
+                    "title": "E-mail of the guest owner"
+                  },
+                  "register": "Register",
+                  "registering": "Registering ..."
+                }
+              },
+              "unguestOwner": {
+                "title": "Remove guest owner",
+                "description": "Are you sure you want to remove the guest owner?",
+                "confirm": "Yes, I want to remove",
+                "confirming": "Removing ..."
+              }
+            }
+          },
+          "customization": {
+            "title": "Personalization",
+            "description": "Customize Namespace with tags, brand and subscription accounts.",
+            "managers": {
+              "title": "Managers",
+              "description": "Managers will administer tags, brand and subscription accounts of Namespace. ",
+              "createManagementAccount": "Create management account",
+              "createManagementAccountDescription": "You should complete this action before inviting managers to namepace.",
+              "createManagementAccountButton": "Create",
+              "noInvitations": "No registered management account"
+            },
+            "brand": {
+              "title": "Logo",
+              "description": "Customize the Namespace logo.",
+              "registerTenantBrand": "Register logo",
+              "registerTenantBrandDescription": "This will soon bring identity to namespace.",
+              "submit": "To send",
+              "submitting": "Submitting ..."
+            },
+            "colors": {
+              "title": "Colors",
+              "description": "Customize the colors of Namespace.",
+              "submit": "To send",
+              "submitting": "Submitting ..."
+            }
           }
         }
       },
-      "ErrorCodes": {
-        "title": "Error codes",
-        "placeholder": "Example: {{example}}",
-        "message": "Message",
-        "details": "Details",
-        "internal": "Internal",
-        "native": "Native",
-        "yes": "Yes",
-        "no": "No"
-      },
-      "Webhooks": {
-        "title": "Webhooks",
-        "createWebhook": "Create webhook",
-        "createWebhookDescription": "Create a webhook to receive events from your system.",
-        "create": "Create",
-        "creating": "Creating...",
-        "webhook": "Webhook",
-        "description": "Description",
-        "trigger": "Trigger",
-        "created": "Created at",
-        "updated": "Updated at",
-        "active": "Active",
-        "inactive": "Inactive",
-        "yes": "Yes",
-        "no": "No",
-        "url": "URL",
-        "security": "Security",
-        "secretType": "Secret type",
-        "headerName": "Header name",
-        "tokenPrefix": "Token prefix",
-        "tokenValue": "Token value",
-        "queryParameter": "Query parameter",
-        "queryParameterName": "Query parameter name",
-        "queryParameterValue": "Query parameter value"
+      "Accounts": {
+        "title": "Accounts",
+        "createAccount": "Create Account",
+        "PaginatedAccounts": {
+          "searchPlaceholder": "Search or use the command panel ...",
+          "resultsBasedOnTenant": "Accounts registered in",
+          "accountTypeFilters": "Account Type Filters",
+          "accountStatusFilters": "Account status filters",
+          "created": "Created in",
+          "accountType": "Type of account"
+        },
+        "AccountInvitations": {
+          "noInvitations": "No registered management account",
+          "email": {
+            "title": "Invited Email"
+          },
+          "invitedAt": {
+            "prefix": "Since",
+            "title": "DATE AND TIME OF INVITATION"
+          },
+          "permission": {
+            "title": "The permission of its function is",
+            "prefix": "Permission"
+          },
+          "role": {
+            "title": "Function",
+            "prefix": "Its function is described as: {{roleDescription}}"
+          },
+          "actions": {
+            "title": "Actions",
+            "uninvite": {
+              "title": "Remove invitation",
+              "desctiption": "Removing the invitation will remove the accesses from the invited user.",
+              "confirm": "Proceed"
+            }
+          },
+          "showAll": "Show all",
+          "showLess": "Less"
+        },
+        "AccountDetails": {
+          "title": "Account Details",
+          "details": "Details",
+          "invitations": "Shares",
+          "advancedActions": "Advanced actions",
+          "name": {
+            "title": "Account name",
+            "prefix": "You see"
+          },
+          "onTenant": {
+            "title": "Namespace name",
+            "prefix": "Namepace"
+          },
+          "description": {
+            "title": "Namepace Description",
+            "prefix": "Described as"
+          },
+          "slug": {
+            "title": "Slug",
+            "prefix": "Single Identifier (Slug)"
+          },
+          "created": {
+            "title": "Created in",
+            "prefix": "Created in"
+          },
+          "updated": {
+            "title": "Updated in",
+            "prefix": "Updated in"
+          },
+          "status": {
+            "title": "Status",
+            "prefix": "Status"
+          },
+          "owners": {
+            "title": "Owners",
+            "prefix": "Owners"
+          },
+          "accountId": {
+            "title": "Account ID",
+            "prefix": "Account ID"
+          },
+          "invite": {
+            "title": "Share Account",
+            "description": "Share the account with other users. ",
+            "button": "To share"
+          },
+          "edit": {
+            "title": "Edit account name",
+            "description": "Edit the name of the account. ",
+            "button": "Edit"
+          },
+          "delete": {
+            "title": "Delete",
+            "description": "Deleting the account will remove all account data and cannot be reversed.",
+            "button": "Delete"
+          },
+          "upgradeOrDowngrade": {
+            "title": "Update Account Status",
+            "description": "Update account status for a different status. ",
+            "button": "To update"
+          }
+        },
+        "AccountModal": {
+          "createAccount": "Create Account",
+          "editAccount": "Edit account",
+          "create": "Create",
+          "creating": "Creating ...",
+          "update": "To update",
+          "updating": "Updating ...",
+          "name": {
+            "title": "Account name",
+            "prefix": "Name",
+            "placeholder": "My best account"
+          },
+          "description": {
+            "title": "Account Description",
+            "prefix": "Description",
+            "placeholder": "Account Description"
+          },
+          "createSystemAccount": {
+            "description": "Create a system account for Namespace. ",
+            "guestManager": {
+              "title": "Guest manager",
+              "description": "Guest Manager is a system account designed to manage guest functions and guest -related tokens.",
+              "button": "Create"
+            },
+            "gatewayManager": {
+              "title": "Gateway manager",
+              "description": "Gateway Manager is a system account designed to manage gateways and gateway tokens functions.",
+              "button": "Create"
+            },
+            "systemManager": {
+              "title": "System manager",
+              "description": "System Manager is a system account designed to manage system -related system and tokens functions.",
+              "button": "Create"
+            }
+          }
+        },
+        "GuestToAccountModal": {
+          "title": "Invite a user",
+          "form": {
+            "email": {
+              "label": "1. With this email",
+              "placeholder": "example@email.com",
+              "title": "The invited user's email address. "
+            },
+            "account": {
+              "label": "2. For this account",
+              "title": "The account to invite the user"
+            },
+            "role": {
+              "label": "3. With this function",
+              "title": "The function of the invited user"
+            },
+            "invite": "To invite"
+          }
+        },
+        "DeleteAccount": {
+          "title": "Delete",
+          "description": "Deleting the account will remove all account data and cannot be reversed.",
+          "delete": "Delete",
+          "deleting": "Deleting ..."
+        },
+        "UnInviteGuestModal": {
+          "title": "Remove invitation",
+          "description": "Are you sure you want to remove the invitation?",
+          "confirm": "Proceed",
+          "confirming": "Removing ...",
+          "email": {
+            "title": "Invited Email",
+            "prefix": "E-mail"
+          },
+          "role": {
+            "title": "Function",
+            "prefix": "Function"
+          }
+        },
+        "UpgradeOrDowngradeAccountModal": {
+          "title": "Under User Status",
+          "description": "Upgrade or downgrade user permissions.",
+          "confirm": "Confirm {{seconds}} seconds)",
+          "confirming": "Updating ...",
+          "to": "to",
+          "upgrade": "Promote",
+          "downgrade": "Demeaning"
+        }
       },
       "GuestRoles": {
-        "title": "Guest roles",
+        "title": "Guest Roles",
         "createGuestRole": "Create guest role",
         "createGuestRoleDescription": "Create a guest role to manage guest permissions.",
         "listItem": {
           "slug": {
-            "title": "Use this key to configure guest roles in downstream systems and services",
-            "prefix": "Unique identifier (slug)"
+            "title": "Use this key to set up guest roles on Downstream Systems and Services",
+            "prefix": "Single Identifier (Slug)"
           },
           "description": {
             "title": "When to use",
-            "prefix": "Usage"
+            "prefix": "Use"
           }
         },
         "GuestRoleDetails": {
-          "title": "Role details",
+          "title": "Paper Details",
           "details": "Details",
           "advancedActions": "Advanced actions",
           "name": {
-            "title": "Guest role name",
+            "title": "Name of the guest role",
             "prefix": "You see"
           },
           "slug": {
-            "title": "Guest role key",
-            "prefix": "Unique identifier (slug)"
+            "title": "Invited paper key",
+            "prefix": "Single Identifier (Slug)"
           },
           "system": {
             "title": "Is it a system role?",
@@ -283,29 +608,29 @@
             "no": "No"
           },
           "permission": {
-            "title": "What can users with this role do?",
-            "prefix": "Can do"
+            "title": "What can use users with this role?",
+            "prefix": "What can"
           },
           "description": {
-            "title": "Guest role description",
+            "title": "Description of the guest role",
             "prefix": "Described as"
           },
           "id": {
-            "title": "Guest role ID",
+            "title": "Guest role id",
             "prefix": "ID"
           },
           "children": {
-            "title": "Child roles",
-            "prefix": "Child roles"
+            "title": "Children's roles",
+            "prefix": "Children's roles"
           },
           "edit": {
             "title": "Edit guest role",
-            "description": "Update visible name and description information.",
+            "description": "Update visible name information and description.",
             "button": "Edit"
           },
           "registerChildRole": {
-            "title": "Register child role",
-            "description": "Register a child role for the guest role.",
+            "title": "Register Filho Paper",
+            "description": "Record a child role for the guest role.",
             "button": "Register"
           },
           "delete": {
@@ -320,52 +645,175 @@
           "form": {
             "name": {
               "label": "Name",
-              "title": "Guest role name",
+              "title": "Name of the guest role",
               "placeholder": "Ex: Account Manager"
             },
             "description": {
               "label": "Description",
-              "title": "Guest role description",
+              "title": "Description of the guest role",
               "placeholder": "Ex: Account Manager"
             },
             "permission": {
               "label": "Permission",
               "titleReadOnly": "This field cannot be changed",
-              "titleWrite": "Guest role permission",
+              "titleWrite": "Permission of the guest role",
               "placeholder": "Ex: Account Manager",
-              "read": "Read",
-              "write": "Write"
+              "read": "Reading",
+              "write": "Writing"
             },
-            "update": "Update",
-            "updating": "Updating...",
+            "update": "To update",
+            "updating": "Updating ...",
             "create": "Create",
-            "creating": "Creating..."
+            "creating": "Creating ..."
           }
         },
         "DeleteGuestRole": {
           "title": "Delete guest role",
           "description": "Are you sure you want to delete the guest role?",
           "delete": "Delete",
-          "deleting": "Deleting..."
+          "deleting": "Deleting ..."
         },
         "RegisterGuestRoleChild": {
-          "title": "Register child role",
-          "label": "Child role",
+          "title": "Register Filho Paper",
+          "label": "Child paper",
           "button": "Register"
         },
         "GuestRoleSelector": {
-          "label": "Child role",
-          "title": "Select a child role",
-          "placeholder": "Select a child role",
+          "label": "Child paper",
+          "title": "Select a child paper",
+          "placeholder": "Select a child paper",
           "loading": "Loading...",
-          "button": "Click to select"
+          "button": "Click to Select"
+        }
+      },
+      "ErrorCodes": {
+        "title": "Error codes",
+        "placeholder": "Example: {{example}}",
+        "message": "Message",
+        "details": "Details",
+        "internal": "Internal",
+        "native": "Native",
+        "yes": "Yes",
+        "no": "No"
+      },
+      "Webhooks": {
+        "title": "Webhooks",
+        "createWebhook": "Create Webhook",
+        "createWebhookDescription": "Create a webhook to receive events from your system.",
+        "create": "Create",
+        "creating": "Creating ...",
+        "webhook": "Webhook",
+        "description": "Description",
+        "trigger": "Trigger",
+        "created": "Created in",
+        "updated": "Updated in",
+        "active": "Active",
+        "inactive": "Inactive",
+        "yes": "Yes",
+        "no": "No",
+        "url": "URL",
+        "security": "Security",
+        "secretType": "Type of secret",
+        "headerName": "Header name",
+        "tokenPrefix": "Token prefix",
+        "tokenValue": "TOKEN VALUE",
+        "queryParameter": "Query parameter",
+        "queryParameterName": "Consultation parameter name",
+        "queryParameterValue": "Consultation Parameter Value",
+        "WebhookModal": {
+          "title": "Create Webhook",
+          "titleExistingWebhook": "Edit webhook",
+          "formFields": {
+            "name": {
+              "label": "Name",
+              "title": "Webhok name",
+              "placeholder": "My webhook"
+            },
+            "description": {
+              "label": "Description",
+              "title": "WEBHOOK DESCRIPTION",
+              "placeholder": "My webhook"
+            },
+            "url": {
+              "label": "URL",
+              "title": "Webhok Url",
+              "placeholder": "https://meuwebhook.com/webhook"
+            },
+            "trigger": {
+              "label": "Trigger",
+              "title": "Webhook trigger",
+              "placeholder": "Select a trigger",
+              "options": {
+                "subscriptionAccount.created": "Work Account created",
+                "subscriptionAccount.updated": "Updated work account",
+                "subscriptionAccount.deleted": "Deleted work account",
+                "userAccount.created": "User Account created",
+                "userAccount.updated": "Updated user account",
+                "userAccount.deleted": "Deleted user account"
+              }
+            },
+            "secret": {
+              "label": "Secret",
+              "title": "WEBHOOK SECRET",
+              "placeholder": "Select a secret",
+              "options": {
+                "nothing": {
+                  "title": "Do not use secret",
+                  "placeholder": "Do not use secret"
+                },
+                "authorizationHeader": {
+                  "title": "Authorization header",
+                  "placeholder": "Authorization header",
+                  "headerName": {
+                    "label": "Header name",
+                    "title": "Header name",
+                    "placeholder": "Authorization (default)"
+                  },
+                  "prefix": {
+                    "label": "Token prefix",
+                    "title": "Token prefix",
+                    "placeholder": "Bearer (default)"
+                  },
+                  "token": {
+                    "label": "TOKEN VALUE",
+                    "title": "TOKEN VALUE",
+                    "placeholder": "1234567890"
+                  }
+                },
+                "queryParam": {
+                  "title": "Query parameter",
+                  "placeholder": "Query parameter",
+                  "name": {
+                    "label": "Consultation parameter name",
+                    "title": "Consultation parameter name",
+                    "placeholder": "token"
+                  },
+                  "token": {
+                    "label": "TOKEN VALUE",
+                    "title": "TOKEN VALUE",
+                    "placeholder": "1234567890"
+                  }
+                }
+              }
+            },
+            "updating": "Updating ...",
+            "creating": "Creating ...",
+            "update": "To update",
+            "create": "Create"
+          }
+        },
+        "DeleteWebHook": {
+          "title": "Delete webhook",
+          "description": "Are you sure you want to delete webhook?",
+          "button": "Delete",
+          "loading": "Deleting ..."
         }
       }
     }
   },
   "components": {
     "SearchBar": {
-      "placeholder": "Search results...",
+      "placeholder": "Search results ...",
       "commandPalette": {
         "title": "Commands"
       }
@@ -377,10 +825,15 @@
     }
   },
   "Menu": {
+    "title": "Menu",
+    "subtitle": "Select an option of language",
+    "settings": "Settings",
+    "logout": "Logout",
+    "theme": "Change theme",
     "profile": "Profile",
     "tenants": "Namespaces",
     "accounts": "Accounts",
-    "guestRoles": "Guest roles",
+    "guestRoles": "Guest Roles",
     "webhooks": "Webhooks",
     "errorCodes": "Error codes",
     "operations": "Operations",

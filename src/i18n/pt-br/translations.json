@@ -214,6 +214,12 @@
             "updating": "Atualizando..."
           }
         },
+        "DeleteTenant": {
+          "title": "Deletar namespace",
+          "description": "Tem certeza que deseja deletar o namespace?",
+          "button": "Deletar",
+          "loading": "Deletando..."
+        },
         "TenantDetails": {
           "title": "Detalhes do namespace",
           "details": "Detalhes",
@@ -795,6 +801,12 @@
             "update": "Atualizar",
             "create": "Criar"
           }
+        },
+        "DeleteWebHook": {
+          "title": "Deletar webhook",
+          "description": "Tem certeza que deseja deletar o webhook?",
+          "button": "Deletar",
+          "loading": "Deletando..."
         }
       }
     }
@@ -813,6 +825,11 @@
     }
   },
   "Menu": {
+    "title": "Menu",
+    "subtitle": "Selecione uma opção de idioma",
+    "settings": "Configurações",
+    "logout": "Sair da conta",
+    "theme": "Alterar tema",
     "profile": "Perfil",
     "tenants": "Namespaces",
     "accounts": "Contas",

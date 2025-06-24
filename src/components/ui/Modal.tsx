@@ -1,8 +1,9 @@
 import { cva, VariantProps } from "class-variance-authority";
-import { IoIosClose } from "react-icons/io";
+import Typography from "./Typography";
+import { IoCloseSharp } from "react-icons/io5";
 
 const containerStyles = cva(
-  "text-gray-500 dark:text-gray-50 fixed inset-0 z-50 flex flex-col justify-center items-center bg-opacity-50 bg-black h-full p-2",
+  "text-gray-500 dark:text-gray-50 fixed inset-0 z-[999] flex flex-col justify-center items-center bg-opacity-10 sm:bg-opacity-60 bg-black h-full sm:pt-1 sm:px-1",
   {
     variants: {
       open: {
@@ -23,7 +24,7 @@ interface ContainerProps
 function Container({ children, open, ...props }: ContainerProps) {
   return (
     <main className={containerStyles({ open })} {...props}>
-      <div className="bg-white dark:bg-zinc-900 rounded-lg p-2 border-2 border-gray-300 dark:border-gray-700 max-h-[95vh] overflow-y-auto scrollbar w-full sm:w-1/2 md:w-1/3">
+      <div className="bg-white dark:bg-zinc-900 sm:rounded-lg p-2 border-2 border-gray-300 dark:border-gray-700 overflow-y-auto scrollbar mb-16 sm:my-2 h-[95vh] sm:h-fit w-full sm:w-1/2 md:w-1/3">
         {children}
       </div>
     </main>
@@ -44,9 +45,11 @@ interface HeaderProps extends BaseProps, VariantProps<typeof headerStyles> {
 function Header({ children, handleClose, ...props }: HeaderProps) {
   return (
     <div className={headerStyles()} {...props}>
-      <div>{children}</div>
+      <Typography as="div" decoration="smooth">
+        {children}
+      </Typography>
       <button onClick={handleClose}>
-        <IoIosClose className="text-2xl" />
+        <IoCloseSharp className="text-3xl text-indigo-500 dark:text-lime-500" />
       </button>
     </div>
   );

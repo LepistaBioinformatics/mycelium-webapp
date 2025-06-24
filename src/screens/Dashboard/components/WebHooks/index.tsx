@@ -20,9 +20,11 @@ import DetailsBox from "@/components/ui/DetailsBox";
 import useSuspenseError from "@/hooks/use-suspense-error";
 import { MdWebhook } from "react-icons/md";
 import { useTranslation } from "react-i18next";
-import { FaPlus } from "react-icons/fa";
+import { FaEdit, FaPlus, FaTrash } from "react-icons/fa";
 import IntroSection from "@/components/ui/IntroSection";
 import WebhookModal from "./WebhookModal";
+import EditWebhookModal from "./EditWebhookModal";
+import DeleteWebHook from "./DeleteWebHook";
 
 type WebHook = components["schemas"]["WebHook"];
 
@@ -32,6 +34,8 @@ export default function Webhooks() {
   const { parseHttpError } = useSuspenseError();
 
   const [isNewModalOpen, setIsNewModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [currentWebhook, setCurrentWebhook] = useState<WebHook | null>(null);
 
   const {
@@ -94,6 +98,8 @@ export default function Webhooks() {
 
   const handleCloseModal = () => {
     setIsNewModalOpen(false);
+    setIsEditModalOpen(false);
+    setIsDeleteModalOpen(false);
     setCurrentWebhook(null);
     mutateWebhooks(webhooks, { rollbackOnError: true });
   };
@@ -109,6 +115,16 @@ export default function Webhooks() {
     if (term !== undefined) setSearchTerm(term);
 
     mutateWebhooks(webhooks, { rollbackOnError: true });
+  };
+
+  const handleEditWebhookClick = (webhook: WebHook) => {
+    setCurrentWebhook(webhook);
+    setIsEditModalOpen(true);
+  };
+
+  const handleDeleteWebhookClick = (webhook: WebHook) => {
+    setCurrentWebhook(webhook);
+    setIsDeleteModalOpen(true);
   };
 
   return (
@@ -154,14 +170,19 @@ export default function Webhooks() {
           {webhooks?.records?.map((webhook) => (
             <ListItem key={webhook?.id}>
               <div className="flex justify-between gap-3">
-                <Typography as="h3">
-                  <button
-                    className="hover:underline text-indigo-500 dark:text-lime-400"
-                    onClick={() => console.log(webhook)}
-                  >
-                    {webhook?.name}
-                  </button>
-                </Typography>
+                <Typography as="h3">{webhook?.name}</Typography>
+
+                <div className="flex gap-5">
+                  <FaEdit
+                    className="cursor-pointer hover:text-indigo-500 dark:group-hover:text-lime-400 text-gray-500"
+                    onClick={() => handleEditWebhookClick(webhook)}
+                  />
+
+                  <FaTrash
+                    className="cursor-pointer hover:text-indigo-500 dark:group-hover:text-lime-400 text-gray-500"
+                    onClick={() => handleDeleteWebhookClick(webhook)}
+                  />
+                </div>
               </div>
 
               <IntroSection.Item
@@ -230,6 +251,23 @@ export default function Webhooks() {
         onClose={handleCloseModal}
         onSuccess={handleSuccess}
       />
+
+      {isEditModalOpen && currentWebhook && (
+        <EditWebhookModal
+          isOpen={isEditModalOpen}
+          webhook={currentWebhook}
+          onClose={handleCloseModal}
+          onSuccess={handleSuccess}
+        />
+      )}
+
+      {isDeleteModalOpen && currentWebhook && (
+        <DeleteWebHook
+          isOpen={isDeleteModalOpen}
+          webhook={currentWebhook}
+          onClose={handleCloseModal}
+        />
+      )}
     </DashBoardBody>
   );
 }
