@@ -3,7 +3,7 @@
     "HomePage": {
       "title": "Welcome Back",
       "AnonymousUser": {
-        "title": "To start, authenticate",
+        "title": "Authenticate to start",
         "button": "Click here",
         "processing": "We are checking your email address"
       },
@@ -160,7 +160,7 @@
         },
         "role": {
           "title": "Function attributed to you",
-          "prefix": "With paper"
+          "prefix": "With role"
         },
         "permission": {
           "title": "Permission attributed to you",
@@ -297,12 +297,12 @@
                 "prefix": "Public name"
               },
               "federalRevenueRegister": {
-                "title": "CNPJ",
+                "title": "IRS Registration",
                 "prefix": "IRS REGISTRATION"
               },
               "federalRevenueRegisterType": {
                 "title": "Type of federal revenue registration",
-                "prefix": "CNPJ or CPF"
+                "prefix": "IRS Type"
               },
               "country": {
                 "title": "Country",
