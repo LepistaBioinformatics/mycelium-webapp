@@ -140,7 +140,7 @@
           "abountContent": "The Tenant Manager is a function that encompasses all tenants and allows us to manage a single tenant.\n\n"
         },
         "customRoles": {
-          "title": "Personalized Papers",
+          "title": "Personalized Roles",
           "subtitle": "High level permissions",
           "headerTitle": "Super Users Group",
           "abountContent": "Personalized roles are used in Downstream Services Management. "
@@ -590,7 +590,7 @@
           }
         },
         "GuestRoleDetails": {
-          "title": "Paper Details",
+          "title": "Role Details",
           "details": "Details",
           "advancedActions": "Advanced actions",
           "name": {
@@ -598,7 +598,7 @@
             "prefix": "You see"
           },
           "slug": {
-            "title": "Invited paper key",
+            "title": "Invited role key",
             "prefix": "Single Identifier (Slug)"
           },
           "system": {
@@ -629,7 +629,7 @@
             "button": "Edit"
           },
           "registerChildRole": {
-            "title": "Register Filho Paper",
+            "title": "Register Filho Role",
             "description": "Record a child role for the guest role.",
             "button": "Register"
           },
@@ -674,14 +674,14 @@
           "deleting": "Deleting ..."
         },
         "RegisterGuestRoleChild": {
-          "title": "Register Filho Paper",
-          "label": "Child paper",
+          "title": "Register Filho Role",
+          "label": "Child role",
           "button": "Register"
         },
         "GuestRoleSelector": {
-          "label": "Child paper",
-          "title": "Select a child paper",
-          "placeholder": "Select a child paper",
+          "label": "Child role",
+          "title": "Select a child role",
+          "placeholder": "Select a child role",
           "loading": "Loading...",
           "button": "Click to Select"
         }

@@ -98,6 +98,11 @@ export default function AdvancedManagement() {
         <PageBody.Breadcrumb.Item>
           {t("screens.Dashboard.Tenants.AdvancedManagement.title")}
         </PageBody.Breadcrumb.Item>
+        {activeTenant && (
+          <PageBody.Breadcrumb.Item>
+            {activeTenant.name}
+          </PageBody.Breadcrumb.Item>
+        )}
       </PageBody.Breadcrumb>
 
       <PageBody.Content padding="md" container flex="col" gap={12}>
@@ -234,33 +239,31 @@ export default function AdvancedManagement() {
         </CardsSection.Body>
       </CardsSection>
 
-      <CardsSection>
-        <CardsSection.Header>
-          <Typography as="h3" decoration="smooth">
-            {t(
-              "screens.Dashboard.Tenants.AdvancedManagement.legalSettingsAndPeople.title"
-            )}
-          </Typography>
-        </CardsSection.Header>
+      {activeTenant && (
+        <CardsSection>
+          <CardsSection.Header>
+            <Typography as="h3" decoration="smooth">
+              {t(
+                "screens.Dashboard.Tenants.AdvancedManagement.legalSettingsAndPeople.title"
+              )}
+            </Typography>
+          </CardsSection.Header>
 
-        <CardsSection.Body>
-          <div className="flex flex-col md:flex-row md:flex-wrap gap-3 w-full">
-            {activeTenant && (
-              <>
-                <OwnersCard
-                  tenant={activeTenant}
-                  mutateTenantStatus={mutateTenantStatus}
-                />
+          <CardsSection.Body>
+            <div className="flex flex-col md:flex-row md:flex-wrap gap-3 w-full">
+              <OwnersCard
+                tenant={activeTenant}
+                mutateTenantStatus={mutateTenantStatus}
+              />
 
-                <LegalSettings
-                  tenant={activeTenant}
-                  mutateTenantStatus={mutateTenantStatus}
-                />
-              </>
-            )}
-          </div>
-        </CardsSection.Body>
-      </CardsSection>
+              <LegalSettings
+                tenant={activeTenant}
+                mutateTenantStatus={mutateTenantStatus}
+              />
+            </div>
+          </CardsSection.Body>
+        </CardsSection>
+      )}
 
       <CardsSection>
         <CardsSection.Header>

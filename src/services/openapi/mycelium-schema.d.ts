@@ -1633,12 +1633,14 @@ export interface components {
              * Format: date-time
              * @description The Account Created Date
              */
-            created: string;
+            createdAt: string;
+            createdBy?: null | components["schemas"]["Modifier"];
             /**
              * Format: date-time
              * @description The Account Updated Date
              */
-            updated?: string | null;
+            updatedAt?: string | null;
+            updatedBy?: null | components["schemas"]["Modifier"];
             /** @description The Account Meta
              *
              *     Store metadata about the account.
@@ -1762,12 +1764,14 @@ export interface components {
                  * Format: date-time
                  * @description The Account Created Date
                  */
-                created: string;
+                createdAt: string;
+                createdBy?: null | components["schemas"]["Modifier"];
                 /**
                  * Format: date-time
                  * @description The Account Updated Date
                  */
-                updated?: string | null;
+                updatedAt?: string | null;
+                updatedBy?: null | components["schemas"]["Modifier"];
                 /** @description The Account Meta
                  *
                  *     Store metadata about the account.
@@ -2240,6 +2244,8 @@ export interface components {
                 token: string;
             };
         };
+        /** @enum {string} */
+        IDSource: "user" | "account";
         LicensedResource: {
             /**
              * Format: uuid
@@ -2381,6 +2387,15 @@ export interface components {
         ListWebHooksParams: {
             name?: string | null;
             trigger?: null | components["schemas"]["WebHookTrigger"];
+        };
+        Modifier: {
+            /**
+             * Format: uuid
+             * @description The ID of the user who created the account
+             */
+            id: string;
+            /** @description The ID source */
+            from: components["schemas"]["IDSource"];
         };
         MultiFactorAuthentication: {
             /** @description The TOTP
@@ -2524,12 +2539,14 @@ export interface components {
                  * Format: date-time
                  * @description The Account Created Date
                  */
-                created: string;
+                createdAt: string;
+                createdBy?: null | components["schemas"]["Modifier"];
                 /**
                  * Format: date-time
                  * @description The Account Updated Date
                  */
-                updated?: string | null;
+                updatedAt?: string | null;
+                updatedBy?: null | components["schemas"]["Modifier"];
                 /** @description The Account Meta
                  *
                  *     Store metadata about the account.

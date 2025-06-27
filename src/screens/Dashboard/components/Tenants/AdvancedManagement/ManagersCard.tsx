@@ -13,6 +13,7 @@ import useProfile from "@/hooks/use-profile";
 import { MycRole } from "@/types/MyceliumRole";
 import { MycPermission } from "@/types/MyceliumPermission";
 import { useTranslation } from "react-i18next";
+import { IoReload } from "react-icons/io5";
 
 type Tenant = components["schemas"]["Tenant"];
 type Parent_Account_String = components["schemas"]["Parent_Account_String"];
@@ -37,9 +38,13 @@ export default function ManagersCard({ tenant, mutateTenantStatus }: Props) {
     setIsCreateManagementAccountModalOpen,
   ] = useState(false);
 
+  const [isReloading, setIsReloading] = useState(false);
+
   const { hasEnoughPermissions } = useProfile({
     roles: [MycRole.TenantManager],
-    permissions: [MycPermission.Write],
+    permissions: [MycPermission.Read],
+    tenantOwnerNeeded: [tenant.id ?? ""],
+    restrictSystemAccount: true,
   });
 
   const handleOpenUnInviteModal = (guestUser: GuestUser) => {
@@ -48,17 +53,28 @@ export default function ManagersCard({ tenant, mutateTenantStatus }: Props) {
   };
 
   const handleCloseGuestToAccountModal = () => {
+    mutateTenantStatus();
     setIsGuestToAccountModalOpen(false);
   };
 
   const handleCloseUnInviteModal = () => {
+    mutateTenantStatus();
     setIsUnInviteModalOpen(false);
     setCurrentGuestUser(null);
   };
 
   const handleCreateManagementAccountModalClose = () => {
-    setIsCreateManagementAccountModalOpen(false);
     mutateTenantStatus();
+    setIsCreateManagementAccountModalOpen(false);
+  };
+
+  const handleReload = () => {
+    setIsReloading(true);
+
+    setTimeout(() => {
+      mutateTenantStatus();
+      setIsReloading(false);
+    }, 5000);
   };
 
   const manager = useMemo(() => {
@@ -73,7 +89,7 @@ export default function ManagersCard({ tenant, mutateTenantStatus }: Props) {
     }
 
     return null;
-  }, [tenant]);
+  }, [tenant?.manager]);
 
   if (!hasEnoughPermissions) {
     return null;
@@ -85,16 +101,26 @@ export default function ManagersCard({ tenant, mutateTenantStatus }: Props) {
         <Card.Header>
           <div className="flex flex-col gap-2">
             <Typography as="h6">
-              <div className="flex items-center gap-2">
-                <span>
-                  {t(
-                    "screens.Dashboard.Tenants.AdvancedManagement.customization.managers.title"
-                  )}
-                </span>
-                <GoGear
-                  title="Register tenant owner"
-                  className="cursor-pointer opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300 text-indigo-500 dark:text-lime-400"
-                  onClick={() => setIsGuestToAccountModalOpen(true)}
+              <div className="flex items-center justify-between gap-2">
+                <div className="flex items-center gap-2">
+                  <span>
+                    {t(
+                      "screens.Dashboard.Tenants.AdvancedManagement.customization.managers.title"
+                    )}
+                  </span>
+                  <GoGear
+                    title="Register tenant owner"
+                    className="cursor-pointer opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300 text-indigo-500 dark:text-lime-400"
+                    onClick={() => setIsGuestToAccountModalOpen(true)}
+                  />
+                </div>
+
+                <IoReload
+                  className="hidden group-hover:block text-indigo-500 dark:text-lime-400 cursor-pointer"
+                  style={{
+                    animation: isReloading ? "spin 1s linear infinite" : "none",
+                  }}
+                  onClick={handleReload}
                 />
               </div>
             </Typography>

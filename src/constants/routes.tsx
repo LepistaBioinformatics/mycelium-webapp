@@ -6,7 +6,6 @@ import { MdManageAccounts } from "react-icons/md";
 import { FaUserCheck } from "react-icons/fa";
 import { MdNearbyError } from "react-icons/md";
 import { MdWebhook } from "react-icons/md";
-//import { TbApi } from "react-icons/tb";
 import { components } from "@/services/openapi/mycelium-schema";
 import AdvancedManagement from "@/screens/Dashboard/components/Tenants/AdvancedManagement";
 import React, { lazy } from "react";
@@ -128,14 +127,6 @@ const ROUTES = {
     icon: <MdWebhook />,
     position: 8,
   } as AppRoute,
-  /* SERVICES: {
-    name: "Services",
-    path: "/dashboard/services",
-    element: <Services />,
-    errorElement: <ErrorBoundary />,
-    icon: <TbApi />,
-    position: 9,
-  } as AppRoute, */
   DISCOVERY: {
     name: "Discovery",
     path: "/dashboard/discovery",

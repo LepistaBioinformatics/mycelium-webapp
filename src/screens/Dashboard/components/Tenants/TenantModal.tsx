@@ -36,9 +36,7 @@ export default function TenantModal({
 }: TenantModalProps) {
   const { t } = useTranslation();
 
-  const { hasEnoughPermissions, profile, getAccessTokenSilently } = useProfile({
-    shouldBeManager: true,
-  });
+  const { hasAdminPrivileges, profile, getAccessTokenSilently } = useProfile();
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -110,7 +108,7 @@ export default function TenantModal({
     setIsLoading(false);
   };
 
-  if (!hasEnoughPermissions) {
+  if (!hasAdminPrivileges) {
     return null;
   }
 

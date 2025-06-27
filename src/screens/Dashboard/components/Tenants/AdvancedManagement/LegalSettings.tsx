@@ -7,6 +7,8 @@ import { useMemo, useState } from "react";
 import { MdEdit } from "react-icons/md";
 import EditMetadataModal from "./EditMetadataModal";
 import { useTranslation } from "react-i18next";
+import { MycRole } from "@/types/MyceliumRole";
+import { MycPermission } from "@/types/MyceliumPermission";
 
 type Tenant = components["schemas"]["Tenant"];
 type TenantMetaKey = components["schemas"]["TenantMetaKey"];
@@ -29,6 +31,9 @@ export default function LegalSettings({ tenant, mutateTenantStatus }: Props) {
 
   const { hasEnoughPermissions } = useProfile({
     tenantOwnerNeeded: [tenant.id ?? ""],
+    roles: [MycRole.TenantManager],
+    permissions: [MycPermission.Read],
+    restrictSystemAccount: true,
   });
 
   const handleEditMetadata = (key: TenantMetaKey, value: string) => {

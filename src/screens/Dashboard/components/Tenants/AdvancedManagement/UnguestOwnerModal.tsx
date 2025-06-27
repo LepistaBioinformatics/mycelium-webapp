@@ -31,8 +31,7 @@ export default function UnguestOwner({
 }: Props) {
   const { t } = useTranslation();
 
-  const { hasEnoughPermissions, getAccessTokenSilently } = useProfile({
-    restrictSystemAccount: true,
+  const { getAccessTokenSilently } = useProfile({
     tenantOwnerNeeded: [tenant?.id ?? ""],
   });
 
@@ -68,10 +67,6 @@ export default function UnguestOwner({
         onSuccess();
       });
   };
-
-  if (!hasEnoughPermissions) {
-    return null;
-  }
 
   return (
     <Modal open={isOpen}>

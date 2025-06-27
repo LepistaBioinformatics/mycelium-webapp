@@ -8,8 +8,6 @@ import AccountModal from "./AccountModal";
 import AccountDetails from "./AccountDetails";
 import PaginatedAccounts from "./PaginatedAccounts";
 import useProfile from "@/hooks/use-profile";
-import { MycRole } from "@/types/MyceliumRole";
-import { MycPermission } from "@/types/MyceliumPermission";
 import { useSearchParams } from "react-router";
 import { MdManageAccounts } from "react-icons/md";
 import { useTranslation } from "react-i18next";
@@ -28,13 +26,9 @@ export default function Accounts() {
 
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const { hasAdminPrivileges } = useProfile({
-    roles: [MycRole.SubscriptionsManager],
-    permissions: [MycPermission.Write],
-    restrictSystemAccount: true,
-  });
-
   const { tenantInfo } = useSelector((state: RootState) => state.tenant);
+
+  const { hasAdminPrivileges } = useProfile();
 
   useEffect(() => {
     const accountId = searchParams.get("accountId");

@@ -30,8 +30,10 @@ export default function OwnersCard({ tenant, mutateTenantStatus }: Props) {
   const [selectedOwner, setSelectedOwner] = useState<TenantOwner | null>(null);
 
   const { hasEnoughPermissions } = useProfile({
+    tenantOwnerNeeded: [tenant.id ?? ""],
     roles: [MycRole.TenantManager],
-    permissions: [MycPermission.Write],
+    permissions: [MycPermission.Read],
+    restrictSystemAccount: true,
   });
 
   const handleGuestOwnerModalClose = () => {
@@ -49,8 +51,8 @@ export default function OwnersCard({ tenant, mutateTenantStatus }: Props) {
   };
 
   const handleUnguestOwnerModalOpen = (owner: TenantOwner) => {
-    setIsUnguestOwnerModalOpen(true);
     setSelectedOwner(owner);
+    setIsUnguestOwnerModalOpen(true);
   };
 
   const handleUnguestOwnerModalClose = () => {

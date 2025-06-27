@@ -159,8 +159,9 @@ export default function PaginatedAccounts({
     getAccessTokenSilently,
     hasEnoughPermissions,
   } = useProfile({
-    roles: [MycRole.SubscriptionsManager],
-    permissions: [MycPermission.Read, MycPermission.Write],
+    tenantOwnerNeeded: [tenantInfo?.id ?? ""],
+    roles: [MycRole.TenantManager, MycRole.SubscriptionsManager],
+    permissions: [MycPermission.Read],
     restrictSystemAccount: true,
   });
 
@@ -174,7 +175,7 @@ export default function PaginatedAccounts({
     if (!isAuthenticated) return null;
     if (!hasEnoughPermissions) return null;
 
-    let searchParams: Record<string, string> = {};
+    const searchParams: Record<string, string> = {};
 
     if (skip) searchParams.skip = skip.toString();
     if (pageSize) searchParams.pageSize = pageSize.toString();
@@ -300,7 +301,6 @@ export default function PaginatedAccounts({
     isAuthenticated,
     restrictAccountTypeTo,
     hasEnoughPermissions,
-    tenantId,
   ]);
 
   const {
@@ -337,8 +337,8 @@ export default function PaginatedAccounts({
    * Mutate accounts when tenantId changes.
    */
   useEffect(() => {
-    if (tenantId) mutateAccounts(accounts, { rollbackOnError: true });
-  }, [tenantId]);
+    if (tenantId) mutateAccounts(accounts, { rollbackOnError: false });
+  }, [accounts, mutateAccounts, tenantId]);
 
   /**
    * Mutate accounts when forceMutate changes.
@@ -512,7 +512,7 @@ export default function PaginatedAccounts({
                 )}
               >
                 <Typography decoration="light">
-                  {formatDDMMYY(new Date(account.created), true)}
+                  {formatDDMMYY(new Date(account.createdAt), true)}
                 </Typography>
               </IntroSection.Item>
             </ListItem>

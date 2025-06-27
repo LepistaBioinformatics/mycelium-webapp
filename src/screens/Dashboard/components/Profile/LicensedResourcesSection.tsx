@@ -9,6 +9,8 @@ import MiniBox from "@/components/ui/MiniBox";
 import IntroSection from "@/components/ui/IntroSection";
 import { useTranslation } from "react-i18next";
 import CopyToClipboard from "@/components/ui/CopyToClipboard";
+import { MycRole } from "@/types/MyceliumRole";
+import { Link } from "react-router";
 
 type LicensedResource = components["schemas"]["LicensedResource"];
 
@@ -82,7 +84,16 @@ export default function LicensedResourcesSection({ licensedResources }: Props) {
                             }
                           )}
                         >
-                          {resource.accName}
+                          {resource.role === MycRole.TenantManager ? (
+                            <Link
+                              to={`/dashboard/tenants/${resource.tenantId}`}
+                              className="text-indigo-500 dark:text-lime-500 hover:underline"
+                            >
+                              {resource.accName}
+                            </Link>
+                          ) : (
+                            <>{resource.accName}</>
+                          )}
                         </Typography>
                       </div>
                     }

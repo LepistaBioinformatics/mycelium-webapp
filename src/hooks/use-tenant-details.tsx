@@ -12,7 +12,7 @@ interface Props {
 
 /**
  * This hook is used to get the public details of a tenant.
- * 
+ *
  * It will return the tenant status (active, deleted, unknown) and the
  * tenant details.
  */
@@ -33,16 +33,20 @@ export default function useTenantDetails({ tenantId, customUrl }: Props) {
     if (customUrl) return customUrl;
 
     if (tenantId) {
-      return buildPath(
-        "/adm/rs/beginners/tenants/{tenant_id}",
-        { path: { tenant_id: tenantId } }
-      );
+      return buildPath("/adm/rs/beginners/tenants/{tenant_id}", {
+        path: { tenant_id: tenantId },
+      });
     }
 
     return null;
   }, [tenantId, customUrl]);
 
-  const { data: tenantStatus, isLoading, error, mutate } = useSWR<TenantStatus>(
+  const {
+    data: tenantStatus,
+    isLoading,
+    error,
+    mutate,
+  } = useSWR<TenantStatus>(
     memoizedUrl,
     async (url: string) => {
       const token = await getAccessTokenSilently();
@@ -60,7 +64,7 @@ export default function useTenantDetails({ tenantId, customUrl }: Props) {
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
       revalidateOnMount: true,
-      refreshInterval: 1000 * 60 * 2, // 2 minutes
+      revalidateIfStale: true,
     }
   );
 

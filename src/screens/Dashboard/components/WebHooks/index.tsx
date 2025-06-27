@@ -58,7 +58,7 @@ export default function Webhooks() {
     if (!isAuthenticated) return null;
     if (!hasEnoughPermissions) return null;
 
-    let searchParams: Record<string, string> = {};
+    const searchParams: Record<string, string> = {};
 
     if (skip) searchParams.skip = skip.toString();
     if (searchTerm && searchTerm !== "") searchParams.name = searchTerm;

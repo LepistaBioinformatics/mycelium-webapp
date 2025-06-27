@@ -25,7 +25,7 @@ const cardContainerStyles = cva(
       },
       width: {
         ...width,
-        full: "w-full lg:w-1/3 2xl:w-1/4",
+        full: "w-fit lg:min-w-2/4 2xl:w-1/4",
       },
       dashed: {
         true: "border-dashed",

@@ -244,7 +244,7 @@ export default function AccountDetails({ isOpen, onClose, accountId }: Props) {
                 "screens.Dashboard.Accounts.AccountDetails.created.title"
               )}
             >
-              {formatDDMMYY(new Date(account?.created ?? ""), true)}
+              {formatDDMMYY(new Date(account?.createdAt ?? ""), true)}
             </IntroSection.Item>
 
             <IntroSection.Item
@@ -255,7 +255,7 @@ export default function AccountDetails({ isOpen, onClose, accountId }: Props) {
                 "screens.Dashboard.Accounts.AccountDetails.updated.title"
               )}
             >
-              {formatDDMMYY(new Date(account?.updated ?? ""), true)}
+              {formatDDMMYY(new Date(account?.updatedAt ?? ""), true)}
             </IntroSection.Item>
 
             <IntroSection.Item

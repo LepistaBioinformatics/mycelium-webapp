@@ -16,6 +16,9 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import useSWR from "swr";
 import { camelCaseToKebabCase } from "@/functions/camel-to-kebab-text";
 import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
+import { RootState } from "@/states/store";
+import { TENANT_ID_HEADER } from "@/constants/http-headers";
 
 type GuestRole = components["schemas"]["GuestRole"];
 type SystemActor = components["schemas"]["SystemActor"];
@@ -58,8 +61,11 @@ export default function GuestRoleSelector({
 
   const { parseHttpError } = useSuspenseError();
 
+  const { tenantInfo } = useSelector((state: RootState) => state.tenant);
+
   const { isAuthenticated, hasEnoughPermissions, getAccessTokenSilently } =
     useProfile({
+      tenantOwnerNeeded: [tenantInfo?.id || ""],
       roles: [MycRole.SubscriptionsManager],
       permissions: [MycPermission.Read],
     });
@@ -83,7 +89,7 @@ export default function GuestRoleSelector({
     if (!isAuthenticated) return null;
     if (!hasEnoughPermissions) return null;
 
-    let searchParams: Record<string, string> = {
+    const searchParams: Record<string, string> = {
       pageSize: pageSize.toString(),
     };
 
@@ -105,11 +111,12 @@ export default function GuestRoleSelector({
       query: searchParams,
     });
   }, [
-    searchTerm,
     isAuthenticated,
     hasEnoughPermissions,
+    pageSize,
+    searchTerm,
     restrictRoleToSlug,
-    shouldBeSystemRole,
+      shouldBeSystemRole
   ]);
 
   const {
@@ -125,6 +132,7 @@ export default function GuestRoleSelector({
       return await fetch(url, {
         headers: {
           Authorization: `Bearer ${token}`,
+          [TENANT_ID_HEADER]: tenantInfo?.id ?? "",
           "Content-Type": "application/json",
         },
       })

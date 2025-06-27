@@ -43,8 +43,10 @@ export default function BrandCard({ tenant, mutateTenantStatus }: Props) {
   });
 
   const { hasEnoughPermissions, getAccessTokenSilently } = useProfile({
+    tenantOwnerNeeded: [tenant.id ?? ""],
     roles: [MycRole.TenantManager],
-    permissions: [MycPermission.Write],
+    permissions: [MycPermission.Read],
+    restrictSystemAccount: true,
   });
 
   const { parseHttpError } = useSuspenseError();
@@ -189,14 +191,14 @@ export default function BrandCard({ tenant, mutateTenantStatus }: Props) {
     setUpdatingBrand(false);
     mutateTenantStatus();
   }, [
-    preview,
-    tenant.id,
-    brandTag,
-    updatingBrand,
-    getAccessTokenSilently,
-    method,
-    url,
-    mutateTenantStatus,
+    preview, 
+    tenant.id, 
+    getAccessTokenSilently, 
+    url, 
+    method, 
+    convertPreviewToBase64, 
+    mutateTenantStatus, 
+    parseHttpError
   ]);
 
   if (!hasEnoughPermissions) {
@@ -204,7 +206,7 @@ export default function BrandCard({ tenant, mutateTenantStatus }: Props) {
   }
 
   return (
-    <Card padding="sm" group width="full">
+    <Card padding="sm" width="full" group>
       <Card.Header>
         <div className="flex flex-col gap-2">
           <Typography as="h6">
@@ -238,7 +240,7 @@ export default function BrandCard({ tenant, mutateTenantStatus }: Props) {
               />
 
               <MdEdit
-                className="cursor-pointer text-indigo-500 text-2xl dark:text-lime-400 hover:scale-150 transition-all duration-200 -ml-5 bg-white dark:bg-gray-800 rounded-full p-1 border border-indigo-300 dark:border-lime-700"
+                className="cursor-pointer h-8 w-8 text-indigo-500 text-2xl dark:text-lime-400 hover:scale-150 transition-all duration-200 -ml-10 bg-white dark:bg-gray-800 rounded-full p-1 border border-indigo-300 dark:border-lime-700"
                 onClick={() => setUpdatingBrand(true)}
               />
             </div>

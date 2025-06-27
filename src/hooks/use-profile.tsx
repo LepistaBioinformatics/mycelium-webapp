@@ -56,7 +56,7 @@ interface Props {
 
 /**
  * Hook to fetch the profile from the API.
- * 
+ *
  * @param args - Optional arguments.
  * @param args.withUrl - Whether to include the URL in the profile. Otherwise,
  * the profile will return licensed resources and tenant ownership as JSON
@@ -85,87 +85,82 @@ export default function useProfile(args?: Props) {
   /**
    * Filter the licensed resources based on specific roles or permissions
    */
-  const hasEnoughPermissions = useMemo(
-    () => {
-      if (
-        (profile?.isStaff && !args?.denyStaff) ||
-        (args?.shouldBeStaff && profile?.isStaff && !args?.denyStaff)
-      ) {
-        return true;
-      }
+  const hasEnoughPermissions = useMemo(() => {
+    if (
+      (profile?.isStaff && !args?.denyStaff) ||
+      (args?.shouldBeStaff && profile?.isStaff && !args?.denyStaff)
+    ) {
+      return true;
+    }
 
-      if (
-        (profile?.isManager && !args?.denyManager) ||
-        (args?.shouldBeManager && profile?.isManager && !args?.denyManager)
-      ) {
-        return true;
-      }
+    if (
+      (profile?.isManager && !args?.denyManager) ||
+      (args?.shouldBeManager && profile?.isManager && !args?.denyManager)
+    ) {
+      return true;
+    }
 
-      if (args?.tenantOwnerNeeded) {
-        const tenantsOwnership = profile?.tenantsOwnership;
+    if (args?.tenantOwnerNeeded) {
+      const tenantsOwnership = profile?.tenantsOwnership;
 
-        if (!tenantsOwnership) {
-          return false;
+      if (tenantsOwnership && "records" in tenantsOwnership) {
+        if (
+          tenantsOwnership.records.some((tenant) =>
+            args?.tenantOwnerNeeded?.includes(tenant.tenant)
+          )
+        ) {
+          return true;
         }
+      }
+    }
 
-        if ("records" in tenantsOwnership) {
-          if (tenantsOwnership.records.some((tenant) => args?.tenantOwnerNeeded?.includes(tenant.tenant))) {
-            return true;
+    if (profile?.licensedResources && "records" in profile?.licensedResources) {
+      const roles = args?.roles ?? [];
+      const permissions = args?.permissions ?? [];
+      const restrictSystemAccount = args?.restrictSystemAccount ?? false;
+
+      const filteredResources = profile?.licensedResources?.records
+        ?.filter((resource) => {
+          if (roles.length > 0 && permissions.length > 0) {
+            return (
+              roles.some((role) => resource.role.includes(role)) &&
+              permissions.some((permission) =>
+                resource.perm.includes(permission)
+              )
+            );
           }
-        }
 
-        return false;
-      }
+          if (roles.length > 0) {
+            return roles.some((role) => resource.role.includes(role));
+          }
 
-      if (!profile?.licensedResources) {
-        return false;
-      }
+          if (permissions.length > 0) {
+            return permissions.some((permission) =>
+              resource.perm.includes(permission)
+            );
+          }
 
-      if ("records" in profile?.licensedResources) {
-        const roles = args?.roles ?? [];
-        const permissions = args?.permissions ?? [];
-        const restrictSystemAccount = args?.restrictSystemAccount ?? false;
-
-        const filteredResources = profile?.licensedResources?.records
-          ?.filter((resource) => {
-            if (roles.length > 0 && permissions.length > 0) {
-              return (
-                roles.some((role) => resource.role.includes(role)) &&
-                permissions.some((permission) => resource.perm.includes(permission))
-              );
-            }
-
-            if (roles.length > 0) {
-              return roles.some((role) => resource.role.includes(role));
-            }
-
-            if (permissions.length > 0) {
-              return permissions.some((permission) => resource.perm.includes(permission));
-            }
-
+          return false;
+        })
+        ?.filter((resource) => {
+          if (restrictSystemAccount && !resource.sysAcc) {
             return false;
-          })
-          ?.filter((resource) => {
-            if (restrictSystemAccount && !resource.sysAcc) {
-              return false;
-            }
+          }
 
-            return true;
-          });
+          return true;
+        });
 
-        return filteredResources.length > 0;
-      }
+      return filteredResources.length > 0;
+    }
 
-      return false;
-    },
-    [
-      profile?.licensedResources,
-      args?.roles,
-      args?.permissions,
-      args?.denyManager,
-      args?.denyStaff
-    ]
-  );
+    return false;
+  }, [
+    profile?.licensedResources,
+    args?.roles,
+    args?.permissions,
+    args?.denyManager,
+    args?.denyStaff,
+  ]);
 
   /**
    * Try to fetch profile from the session storage. Case it not exists, fetch
@@ -184,7 +179,11 @@ export default function useProfile(args?: Props) {
       try {
         parsedProfile = JSON.parse(profile);
 
-        if (!parsedProfile?.owners.map((owner) => owner.email).includes(user.email)) {
+        if (
+          !parsedProfile?.owners
+            .map((owner) => owner.email)
+            .includes(user.email)
+        ) {
           sessionStorage.removeItem(PROFILE_KEY);
           return null;
         }
@@ -237,7 +236,7 @@ export default function useProfile(args?: Props) {
       return null;
     }
 
-    const profile = await response.json() as Profile;
+    const profile = (await response.json()) as Profile;
 
     if (!profile.owners.map((owner) => owner.email).includes(user.email)) {
       return null;
@@ -258,9 +257,7 @@ export default function useProfile(args?: Props) {
    * the localProfile response is null.
    */
   useEffect(() => {
-    fetchProfile()
-      .then(setProfile)
-      .catch(console.error);
+    fetchProfile().then(setProfile).catch(console.error);
   }, [fetchProfile]);
 
   return {

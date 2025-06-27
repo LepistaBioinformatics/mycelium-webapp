@@ -6,6 +6,5 @@ export enum MycRole {
     SubscriptionsManager = "subscriptions-manager",
     SystemManager = "system-manager",
     TenantManager = "tenant-manager",
-    TenantOwner = "tenant-owner",
     UsersManager = "users-manager",
 }

@@ -16,8 +16,6 @@ import DashBoardBody from "../DashBoardBody";
 import useSearchBarParams from "@/hooks/use-search-bar-params";
 import PaginatedContent from "../PaginatedContent";
 import ListItem from "@/components/ui/ListItem";
-import { MycRole } from "@/types/MyceliumRole";
-import { MycPermission } from "@/types/MyceliumPermission";
 import useSuspenseError from "@/hooks/use-suspense-error";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/states/store";
@@ -26,6 +24,8 @@ import { setTenantInfo, setTenantIsLoading } from "@/states/tenant.state";
 import { SlOrganization } from "react-icons/sl";
 import { Link } from "react-router";
 import { useTranslation } from "react-i18next";
+import { MycRole } from "@/types/MyceliumRole";
+import { MycPermission } from "@/types/MyceliumPermission";
 
 type Tenant = components["schemas"]["Tenant"];
 
@@ -53,6 +53,9 @@ export default function Tenants() {
   } = useProfile({
     roles: [MycRole.TenantManager],
     permissions: [MycPermission.Read, MycPermission.Write],
+    restrictSystemAccount: true,
+    shouldBeManager: true,
+    shouldBeStaff: true,
   });
 
   const { skip, pageSize, setSkip, setPageSize, searchTerm, setSearchTerm } =
@@ -65,7 +68,7 @@ export default function Tenants() {
     if (!isAuthenticated) return null;
     if (!hasEnoughPermissions) return null;
 
-    let searchParams: Record<string, string> = {};
+    const searchParams: Record<string, string> = {};
 
     if (skip) searchParams.skip = skip.toString();
     if (searchTerm && searchTerm !== "") searchParams.name = searchTerm;
@@ -129,10 +132,10 @@ export default function Tenants() {
         .catch((err) => console.error(err))
         .finally(() => dispatch(setTenantIsLoading(false)));
     },
-    [tenantInfo, getAccessTokenSilently, isLoadingTenantInfo]
+    [isLoadingTenantInfo, tenantInfo?.id, dispatch, getAccessTokenSilently]
   );
 
-  const onSubmit = (term?: string, _?: string) => {
+  const onSubmit = (term?: string) => {
     setSkip(0);
 
     if (term !== undefined) setSearchTerm(term);
@@ -259,7 +262,7 @@ export default function Tenants() {
 
       <TenantModal
         isOpen={isNewModalOpen}
-        tenant={currentTenant}
+        tenant={null}
         onClose={handleCloseModal}
         onSuccess={handleSuccess}
       />
