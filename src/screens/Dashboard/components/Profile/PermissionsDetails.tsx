@@ -6,7 +6,7 @@ import Typography from "@/components/ui/Typography";
 import { components } from "@/services/openapi/mycelium-schema";
 import { useCallback, useMemo, useState } from "react";
 import PermissionIcon from "@/components/ui/PermissionIcon";
-import CardsSection from "../../../../components/ui/CardsSection";
+import CardsSection from "@/components/ui/CardsSection";
 import { GiWizardStaff } from "react-icons/gi";
 import AboutCard from "./AboutCard";
 import { MycRole } from "@/types/MyceliumRole";
@@ -386,7 +386,7 @@ function SearchableNonSystemRolesList({
               a.perm.localeCompare(b.perm)
           )
           ?.map((resource, index) => (
-            <MiniBox key={index}>
+            <MiniBox key={index} width="full">
               <IntroSection title="Role" content={resource.role} as="h5">
                 <IntroSection.Item
                   prefix="on"
@@ -415,7 +415,7 @@ function AboutContent({
   children,
 }: { t: TFunction; tKey: string } & BaseProps) {
   return (
-    <Typography as="div">
+    <Typography as="div" width="xs">
       <Typography as="span" decoration="faded">
         <MarkdownViewer markdown={t(tKey)} />
       </Typography>

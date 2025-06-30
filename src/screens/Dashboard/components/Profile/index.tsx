@@ -4,7 +4,7 @@ import useProfile from "@/hooks/use-profile";
 import { components } from "@/services/openapi/mycelium-schema";
 import { useMemo } from "react";
 import { RiDashboardFill } from "react-icons/ri";
-import CardsSection from "../../../../components/ui/CardsSection";
+import CardsSection from "@/components/ui/CardsSection";
 import getTenantsOwnershipOrNull from "@/functions/get-tenant-ownership-or-null";
 import getLicensedResourcesOrNull from "@/functions/get-licensed-resources-or-null";
 import PermissionsDetails from "./PermissionsDetails";
@@ -57,24 +57,27 @@ export default function Profile() {
                     as="h1"
                     title={t("screens.Dashboard.Profile.loggedInAs.title")}
                   >
-                    <div className="flex items-center gap-3">
-                      <span>{user?.name}</span>
-                      {profile?.isStaff && (
-                        <GiWizardStaff
-                          className="inline text-indigo-500 dark:text-lime-500 hover:cursor-help p-0.5"
-                          title={t(
-                            "screens.Dashboard.Profile.loggedInAs.staff"
-                          )}
-                        />
-                      )}
-                      {profile?.isManager && (
-                        <GrUserAdmin
-                          className="inline text-indigo-500 dark:text-lime-500 hover:cursor-help p-0.5"
-                          title={t(
-                            "screens.Dashboard.Profile.loggedInAs.manager"
-                          )}
-                        />
-                      )}
+                    <div className="flex items-start sm:items-center flex-col sm:flex-row gap-3">
+                      <Typography truncate>{user?.name}</Typography>
+
+                      <div className="flex items-center gap-3">
+                        {profile?.isStaff && (
+                          <GiWizardStaff
+                            className="inline text-indigo-500 dark:text-lime-500 hover:cursor-help p-0.5"
+                            title={t(
+                              "screens.Dashboard.Profile.loggedInAs.staff"
+                            )}
+                          />
+                        )}
+                        {profile?.isManager && (
+                          <GrUserAdmin
+                            className="inline text-indigo-500 dark:text-lime-500 hover:cursor-help p-0.5"
+                            title={t(
+                              "screens.Dashboard.Profile.loggedInAs.manager"
+                            )}
+                          />
+                        )}
+                      </div>
                     </div>
                   </Typography>
                 }
@@ -94,7 +97,7 @@ export default function Profile() {
           </CardsSection.Header>
 
           <CardsSection.Body>
-            <div className="flex flex-col gap-3 w-full mt-12">
+            <div className="flex flex-col gap-3 w-full mt-12 h-full">
               <div>
                 <Typography decoration="smooth" as="h3">
                   {t("screens.Dashboard.Profile.relationship")}
@@ -110,7 +113,7 @@ export default function Profile() {
                 </Typography>
               </div>
 
-              <div className="flex flex-wrap gap-8 sm:gap-3 w-full">
+              <div className="flex flex-col sm:flex-row sm:flex-wrap gap-8 sm:gap-3 w-full h-full">
                 <TenantOwnershipSection tenantsOwnership={tenantsOwnership} />
                 <LicensedResourcesSection
                   licensedResources={licensedResources}

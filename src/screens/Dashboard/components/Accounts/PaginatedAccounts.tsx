@@ -23,13 +23,13 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/states/store";
 import { useTranslation } from "react-i18next";
 import IntroSection from "@/components/ui/IntroSection";
-import { Link } from "react-router";
+import { Link, useLocation } from "react-router";
 
 const { padding } = projectVariants;
 
 type Account = components["schemas"]["Account"];
 
-interface Props {
+export interface PaginatedAccountsProps {
   tenantId?: string;
   toolbar?: React.ReactNode;
   breadcrumb?: React.ReactNode;
@@ -39,9 +39,11 @@ interface Props {
   forceMutate?: Date | null;
   restrictAccountTypeTo?: (
     | "subscription"
-    | "roleAssociated"
     | "actorAssociated"
     | "tenantManager"
+    | "user"
+    | "manager"
+    | "staff"
   )[];
 }
 
@@ -75,14 +77,6 @@ const COMMANDS = {
       description: "Action restricted to manager or staff users",
       adminOnly: true,
       tenantNeeded: false,
-    },
-    roleAssociated: {
-      brief: "Select Role Associated accounts",
-      command: "/roleAssociated",
-      description:
-        "Action restricted to subscriptions-manager users. Disabled if tenant is not selected",
-      adminOnly: false,
-      tenantNeeded: true,
     },
     actorAssociated: {
       brief: "Select Actor Associated accounts",
@@ -145,8 +139,10 @@ export default function PaginatedAccounts({
   initialPageSize,
   forceMutate,
   restrictAccountTypeTo,
-}: Props) {
+}: PaginatedAccountsProps) {
   const { t } = useTranslation();
+
+  const location = useLocation();
 
   const { tenantInfo } = useSelector((state: RootState) => state.tenant);
 
@@ -230,10 +226,10 @@ export default function PaginatedAccounts({
       //
       // The account type should be optional and the default should be user.
       //
-      // Match /staff, /manager, /user, /subscription, /roleAssociated, /actorAssociated, /tenantManager
+      // Match /staff, /manager, /user, /subscription, /actorAssociated, /tenantManager
       //
       const typePattern =
-        /(\/staff|\/manager|\/user|\/subscription|\/roleAssociated|\/actorAssociated|\/tenantManager)/;
+        /(\/staff|\/manager|\/user|\/subscription|\/actorAssociated|\/tenantManager)/;
 
       if (typePattern.test(searchTerm)) {
         const typeValue = typePattern.exec(searchTerm)?.[1];
@@ -461,9 +457,11 @@ export default function PaginatedAccounts({
                 <Typography as="h4" truncate>
                   <Link
                     className="hover:underline text-indigo-500 dark:text-lime-400 flex items-center gap-2"
-                    to={`/dashboard/accounts/?accountId=${account?.id}`}
+                    to={`${location.pathname}/?accountId=${account?.id}`}
                   >
-                    <div className="flex items-center gap-2">{account?.name}</div>
+                    <div className="flex items-center gap-2">
+                      {account?.name}
+                    </div>
                     {account.isDefault && (
                       <span className="text-xs text-gray-500 dark:text-gray-400">
                         (Default)

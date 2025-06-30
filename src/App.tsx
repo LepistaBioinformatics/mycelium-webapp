@@ -1,6 +1,5 @@
 import "./i18n/config";
 import { BrowserRouter, Routes, Route } from "react-router";
-import ErrorBoundary from "./components/ErrorBoundary";
 import NotFound from "./components/NotFound";
 import useProfile from "./hooks/use-profile";
 import buildRoutes, { HOME_ROUTE, DASHBOARD_ROUTE } from "./constants/routes";
@@ -23,51 +22,37 @@ export default function App() {
     <div id="App" className="bg-zinc-50 dark:bg-zinc-900">
       <BrowserRouter>
         <Routes>
-          <Route
-            index
-            path={HOME_ROUTE.path}
-            element={HOME_ROUTE.element}
-            errorElement={HOME_ROUTE.errorElement}
-          />
-
-          <Route
-            path={DASHBOARD_ROUTE.path}
-            element={DASHBOARD_ROUTE.element}
-            errorElement={DASHBOARD_ROUTE.errorElement}
-          >
-            <Route
-              index
-              element={<Profile />}
-              errorElement={<ErrorBoundary />}
-            />
+          <Route path="*" element={<NotFound />} />
+          <Route path={HOME_ROUTE.path} element={HOME_ROUTE.element} />
+          <Route path={DASHBOARD_ROUTE.path} element={DASHBOARD_ROUTE.element}>
+            <Route index element={<Profile />} />
 
             {ROUTES.sort((a, b) => a.position - b.position).map((route) => (
               <Fragment key={route.path}>
-                <Route
-                  path={route.path}
-                  element={route.element}
-                  errorElement={route.errorElement}
-                />
+                <Route path={route.path} element={route.element} />
 
                 {route?.children?.map((child) => (
-                  <Route
-                    key={child.path}
-                    path={child.path}
-                    element={child.element}
-                    errorElement={child.errorElement}
-                    hasErrorBoundary
-                  />
+                  <Fragment key={child.path}>
+                    <Route
+                      key={child.path}
+                      path={child.path}
+                      element={child.element}
+                    />
+
+                    {child?.children?.map((child) => (
+                      <Fragment key={child.path}>
+                        <Route
+                          key={child.path}
+                          path={child.path}
+                          element={child.element}
+                        />
+                      </Fragment>
+                    ))}
+                  </Fragment>
                 ))}
               </Fragment>
             ))}
           </Route>
-
-          <Route
-            caseSensitive
-            path="*"
-            element={<NotFound />}
-            errorElement={<ErrorBoundary />}
-          />
         </Routes>
       </BrowserRouter>
     </div>

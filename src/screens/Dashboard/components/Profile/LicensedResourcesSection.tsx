@@ -22,31 +22,31 @@ export default function LicensedResourcesSection({ licensedResources }: Props) {
   const { t } = useTranslation();
 
   return (
-    <Card padding="sm" width="full" dashed={!licensedResources}>
-      <Card.Header>
-        <Typography as="h6" decoration="smooth">
-          {t("screens.Dashboard.LicensedResourcesSection.title")}
-        </Typography>
-      </Card.Header>
+    licensedResources?.length && (
+      <Card padding="sm" width="full" height="adaptive">
+        <Card.Header>
+          <Typography as="h6" decoration="smooth">
+            {t("screens.Dashboard.LicensedResourcesSection.title")}
+          </Typography>
+        </Card.Header>
 
-      <Card.Body>
-        <div className="flex flex-col sm:flex-row flex-wrap gap-2 scrollbar w-full">
-          {!licensedResources && (
-            <div className="flex flex-col gap-2">
-              <Typography decoration="smooth">
-                {t("screens.Dashboard.LicensedResourcesSection.noResources")}
-              </Typography>
-              <Typography as="small" decoration="smooth" width="xs">
-                {t(
-                  "screens.Dashboard.LicensedResourcesSection.noResourcesDescription"
-                )}
-              </Typography>
-            </div>
-          )}
-        </div>
+        <Card.Body width="fit">
+          <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3 scrollbar w-full">
+            {!licensedResources && (
+              <div className="flex flex-col gap-2">
+                <Typography decoration="smooth">
+                  {t("screens.Dashboard.LicensedResourcesSection.noResources")}
+                </Typography>
+                <Typography as="small" decoration="smooth" width="xs">
+                  {t(
+                    "screens.Dashboard.LicensedResourcesSection.noResourcesDescription"
+                  )}
+                </Typography>
+              </div>
+            )}
+          </div>
 
-        {licensedResources && (
-          <div className="flex flex-col gap-2 scrollbar">
+          <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3 scrollbar w-full">
             {licensedResources
               ?.sort(
                 (a, b) =>
@@ -150,8 +150,8 @@ export default function LicensedResourcesSection({ licensedResources }: Props) {
                 </MiniBox>
               ))}
           </div>
-        )}
-      </Card.Body>
-    </Card>
+        </Card.Body>
+      </Card>
+    )
   );
 }

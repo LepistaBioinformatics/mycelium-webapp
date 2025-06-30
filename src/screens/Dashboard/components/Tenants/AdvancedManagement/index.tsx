@@ -168,7 +168,7 @@ export default function AdvancedManagement() {
 
   return (
     <BasePage>
-      <CardsSection>
+      <CardsSection gap="fixed">
         <CardsSection.Header>
           <IntroSection
             prefix={t(
@@ -216,7 +216,7 @@ export default function AdvancedManagement() {
             )}
 
             <Link
-              to={`/dashboard/accounts`}
+              to={`/dashboard/tenants/${tenantId}/accounts`}
               className="flex gap-2 items-center align-center hover:underline text-lg text-indigo-500 dark:text-lime-500 mt-2"
               title={t(
                 "screens.Dashboard.Tenants.AdvancedManagement.manageAccountsDescription"
@@ -252,7 +252,7 @@ export default function AdvancedManagement() {
           </CardsSection.Header>
 
           <CardsSection.Body>
-            <div className="flex flex-col md:flex-row md:flex-wrap gap-3 w-full">
+            <div className="flex flex-col md:flex-row md:flex-wrap gap-12 sm:gap-3 w-full">
               <OwnersCard
                 tenant={activeTenant}
                 mutateTenantStatus={mutateTenantStatus}
@@ -279,7 +279,7 @@ export default function AdvancedManagement() {
         </CardsSection.Header>
 
         <CardsSection.Body>
-          <div className="flex flex-col sm:flex-row gap-3 w-full">
+          <div className="flex flex-col md:flex-row md:flex-wrap gap-12 sm:gap-3 w-full">
             {activeTenant && (
               <>
                 <ManagersCard

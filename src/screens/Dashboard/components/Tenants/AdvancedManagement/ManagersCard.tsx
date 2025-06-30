@@ -125,7 +125,7 @@ export default function ManagersCard({ tenant, mutateTenantStatus }: Props) {
               </div>
             </Typography>
 
-            <Typography as="small" decoration="smooth" width="sm">
+            <Typography as="small" decoration="smooth" width="xs">
               {t(
                 "screens.Dashboard.Tenants.AdvancedManagement.customization.managers.description"
               )}

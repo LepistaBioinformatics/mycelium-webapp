@@ -140,7 +140,7 @@ export default function LegalSettings({ tenant, mutateTenantStatus }: Props) {
 
   return (
     <>
-      <Card padding="sm" width="full">
+      <Card padding="sm" width="full" height="adaptive" group>
         <Card.Header>
           <div className="flex flex-col gap-2">
             <Typography as="h6">

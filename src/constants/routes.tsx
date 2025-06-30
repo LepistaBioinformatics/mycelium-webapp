@@ -88,6 +88,18 @@ const ROUTES = {
         path: "/dashboard/tenants/:tenantId",
         element: <AdvancedManagement />,
         errorElement: <ErrorBoundary />,
+        children: [
+          {
+            name: "Tenant",
+            path: "/dashboard/tenants/:tenantId/accounts",
+            element: (
+              <Accounts
+                restrictAccountTypeTo={["subscription", "tenantManager"]}
+              />
+            ),
+            errorElement: <ErrorBoundary />,
+          },
+        ],
       },
     ],
   } as AppRoute,
@@ -95,7 +107,11 @@ const ROUTES = {
     name: "Accounts",
     path: "/dashboard/accounts",
     translationKey: "accounts",
-    element: <Accounts />,
+    element: (
+      <Accounts
+        restrictAccountTypeTo={["user", "manager", "staff", "actorAssociated"]}
+      />
+    ),
     errorElement: <ErrorBoundary />,
     icon: <MdManageAccounts />,
     position: 5,

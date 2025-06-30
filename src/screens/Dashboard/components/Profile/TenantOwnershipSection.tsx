@@ -21,15 +21,15 @@ export default function TenantOwnershipSection({ tenantsOwnership }: Props) {
   if (!tenantsOwnership) return null;
 
   return (
-    <Card padding="sm" width="full">
+    <Card padding="sm" width="full" height="adaptive">
       <Card.Header>
         <Typography as="h6" decoration="smooth">
           {t("screens.Dashboard.TenantOwnershipSection.title")}
         </Typography>
       </Card.Header>
 
-      <Card.Body>
-        <div className="flex flex-col sm:flex-row flex-wrap gap-2 scrollbar w-full">
+      <Card.Body width="fit">
+        <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3 scrollbar w-full">
           {tenantsOwnership
             ?.sort((a, b) => b.since.localeCompare(a.since))
             ?.slice(0, loadingSize)

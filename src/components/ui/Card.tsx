@@ -12,7 +12,7 @@ const { width, height, padding, margin } = projectVariants;
 // ? ---------------------------------------------------------------------------
 
 const cardContainerStyles = cva(
-  "p-2 border border-gray-300 dark:border-gray-800 shadow rounded-lg text-gray-500 bg-white dark:bg-zinc-800 dark:bg-opacity-50 overflow-auto scrollbar max-h-[70vh]",
+  "p-2 border border-gray-300 dark:border-gray-800 shadow rounded-lg text-gray-500 bg-white dark:bg-zinc-800 dark:bg-opacity-50 overflow-auto scrollbar max-h-fit lg:max-h-[80vh]",
   {
     variants: {
       height,
@@ -25,7 +25,7 @@ const cardContainerStyles = cva(
       },
       width: {
         ...width,
-        full: "w-fit lg:min-w-2/4 2xl:w-1/4",
+        full: "w-full md:w-fit lg:min-w-2/4 2xl:min-w-1/4",
       },
       dashed: {
         true: "border-dashed",
@@ -143,6 +143,7 @@ const bodyStyles = cva("py-2 text-gray-700 dark:text-gray-300 scrollbar", {
       full: "w-full",
       min: "w-min",
       max: "w-max",
+      fit: "w-fit",
     },
   },
   defaultVariants: {

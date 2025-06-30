@@ -78,7 +78,7 @@ export default function OwnersCard({ tenant, mutateTenantStatus }: Props) {
 
   return (
     <>
-      <Card padding="sm" width="full" group>
+      <Card padding="sm" width="full" height="adaptive" group>
         <Card.Header>
           <div className="flex flex-col gap-2">
             <Typography as="h6">
@@ -96,7 +96,7 @@ export default function OwnersCard({ tenant, mutateTenantStatus }: Props) {
               </div>
             </Typography>
 
-            <Typography as="small" decoration="smooth" width="sm">
+            <Typography as="small" decoration="smooth" width="xs">
               {t(
                 "screens.Dashboard.Tenants.AdvancedManagement.legalSettingsAndPeople.owners.description"
               )}

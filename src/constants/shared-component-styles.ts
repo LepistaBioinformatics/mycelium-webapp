@@ -17,6 +17,7 @@ const sharedComponentStylesVariants: Config["variants"] = {
         screen: "h-screen",
         half: "h-1/2",
         third: "h-1/3",
+        adaptive: "h-fit sm:h-full",
     },
     padding: {
         none: "p-0",
