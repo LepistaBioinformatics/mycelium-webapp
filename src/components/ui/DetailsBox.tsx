@@ -1,14 +1,19 @@
 import { cva, VariantProps } from "class-variance-authority";
 
-const containerStyles = cva("w-full xl:max-w-4xl mx-auto", {
+const containerStyles = cva("", {
   variants: {
     open: {
       true: "open",
       false: "closed",
     },
+    centralized: {
+      true: "w-full xl:max-w-4xl mx-auto",
+      false: "",
+    },
   },
   defaultVariants: {
     open: false,
+    centralized: true,
   },
 });
 
@@ -20,12 +25,18 @@ interface ContainerProps
   onToggle?: (state: State) => void;
 }
 
-function Container({ children, open, onToggle, ...props }: ContainerProps) {
+function Container({
+  children,
+  open,
+  onToggle,
+  centralized,
+  ...props
+}: ContainerProps) {
   return (
     <details
       open={open ?? false}
       onToggle={(e) => onToggle?.(e.nativeEvent.newState as State)}
-      className={containerStyles({ open })}
+      className={containerStyles({ open, centralized })}
       {...props}
     >
       {children}

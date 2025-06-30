@@ -3,7 +3,7 @@ import PageBody from "@/components/ui/PageBody";
 import useProfile from "@/hooks/use-profile";
 import { MycPermission } from "@/types/MyceliumPermission";
 import { MycRole } from "@/types/MyceliumRole";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router";
 import ControlPanelBreadcrumbItem from "../../ControlPanelBreadcrumbItem";
 import { SlOrganization } from "react-icons/sl";
@@ -23,6 +23,10 @@ import ColorsCard from "./ColorsCard";
 import LegalSettings from "./LegalSettings";
 import { useTranslation } from "react-i18next";
 import { MdManageAccounts } from "react-icons/md";
+import CreateConnectionStringModal from "../../Profile/CreateConnectionStringModal";
+import DetailsBox from "@/components/ui/DetailsBox";
+import Banner from "@/components/ui/Banner";
+import Button from "@/components/ui/Button";
 
 export default function AdvancedManagement() {
   const { t } = useTranslation();
@@ -36,6 +40,23 @@ export default function AdvancedManagement() {
 
     return params.tenantId as string;
   }, [params.tenantId]);
+
+  const [
+    isCreateConnectionStringModalOpen,
+    setIsCreateConnectionStringModalOpen,
+  ] = useState(false);
+
+  const handleCreateConnectionStringModalOpen = () => {
+    setIsCreateConnectionStringModalOpen(true);
+  };
+
+  const handleCreateConnectionStringModalClose = () => {
+    setIsCreateConnectionStringModalOpen(false);
+  };
+
+  const handleCreateConnectionStringModalSuccess = () => {
+    setIsCreateConnectionStringModalOpen(false);
+  };
 
   const { hasEnoughPermissions, isLoadingUser, isLoadingProfile } = useProfile({
     roles: [MycRole.TenantManager],
@@ -167,140 +188,196 @@ export default function AdvancedManagement() {
   }
 
   return (
-    <BasePage>
-      <CardsSection gap="fixed">
-        <CardsSection.Header>
-          <IntroSection
-            prefix={t(
-              "screens.Dashboard.Tenants.AdvancedManagement.name.prefix"
-            )}
-            content={activeTenant?.name}
-            title={t("screens.Dashboard.Tenants.AdvancedManagement.name.title")}
-            as="h1"
-          >
-            <IntroSection.Item
+    <>
+      <BasePage>
+        <CardsSection gap="fixed">
+          <CardsSection.Header>
+            <IntroSection
               prefix={t(
-                "screens.Dashboard.Tenants.AdvancedManagement.description.prefix"
+                "screens.Dashboard.Tenants.AdvancedManagement.name.prefix"
               )}
+              content={activeTenant?.name}
               title={t(
-                "screens.Dashboard.Tenants.AdvancedManagement.description.title"
+                "screens.Dashboard.Tenants.AdvancedManagement.name.title"
               )}
+              as="h1"
             >
-              {activeTenant?.description}
-            </IntroSection.Item>
-
-            {activeTenant?.created && (
               <IntroSection.Item
                 prefix={t(
-                  "screens.Dashboard.Tenants.AdvancedManagement.created.prefix"
+                  "screens.Dashboard.Tenants.AdvancedManagement.description.prefix"
                 )}
                 title={t(
-                  "screens.Dashboard.Tenants.AdvancedManagement.created.title"
+                  "screens.Dashboard.Tenants.AdvancedManagement.description.title"
                 )}
               >
-                {formatDDMMYY(new Date(activeTenant?.created), true)}
+                {activeTenant?.description}
               </IntroSection.Item>
-            )}
 
-            {activeTenant?.updated && (
-              <IntroSection.Item
-                prefix={t(
-                  "screens.Dashboard.Tenants.AdvancedManagement.updated.prefix"
-                )}
-                title={t(
-                  "screens.Dashboard.Tenants.AdvancedManagement.updated.title"
-                )}
-              >
-                {formatDDMMYY(new Date(activeTenant?.updated), true)}
-              </IntroSection.Item>
-            )}
-
-            <Link
-              to={`/dashboard/tenants/${tenantId}/accounts`}
-              className="flex gap-2 items-center align-center hover:underline text-lg text-indigo-500 dark:text-lime-500 mt-2"
-              title={t(
-                "screens.Dashboard.Tenants.AdvancedManagement.manageAccountsDescription"
+              {activeTenant?.created && (
+                <IntroSection.Item
+                  prefix={t(
+                    "screens.Dashboard.Tenants.AdvancedManagement.created.prefix"
+                  )}
+                  title={t(
+                    "screens.Dashboard.Tenants.AdvancedManagement.created.title"
+                  )}
+                >
+                  {formatDDMMYY(new Date(activeTenant?.created), true)}
+                </IntroSection.Item>
               )}
-            >
-              <MdManageAccounts
-                size={24}
-                className="inline text-indigo-500 dark:text-lime-500"
-              />
-              {t("screens.Dashboard.Tenants.AdvancedManagement.manageAccounts")}
-            </Link>
-          </IntroSection>
-        </CardsSection.Header>
 
-        <CardsSection.Body>
-          <SeeMoreText
-            text={t(
-              "screens.Dashboard.Tenants.AdvancedManagement.longDescription"
-            )}
-            maxLength={100}
-          />
-        </CardsSection.Body>
-      </CardsSection>
+              {activeTenant?.updated && (
+                <IntroSection.Item
+                  prefix={t(
+                    "screens.Dashboard.Tenants.AdvancedManagement.updated.prefix"
+                  )}
+                  title={t(
+                    "screens.Dashboard.Tenants.AdvancedManagement.updated.title"
+                  )}
+                >
+                  {formatDDMMYY(new Date(activeTenant?.updated), true)}
+                </IntroSection.Item>
+              )}
 
-      {activeTenant && (
+              <Link
+                to={`/dashboard/tenants/${tenantId}/accounts`}
+                className="flex gap-2 items-center align-center hover:underline text-lg text-indigo-500 dark:text-lime-500 mt-2"
+                title={t(
+                  "screens.Dashboard.Tenants.AdvancedManagement.manageAccountsDescription"
+                )}
+              >
+                <MdManageAccounts
+                  size={24}
+                  className="inline text-indigo-500 dark:text-lime-500"
+                />
+                {t(
+                  "screens.Dashboard.Tenants.AdvancedManagement.manageAccounts"
+                )}
+              </Link>
+            </IntroSection>
+          </CardsSection.Header>
+
+          <CardsSection.Body>
+            <SeeMoreText
+              text={t(
+                "screens.Dashboard.Tenants.AdvancedManagement.longDescription"
+              )}
+              maxLength={100}
+            />
+          </CardsSection.Body>
+
+          <CardsSection.Body>
+            <DetailsBox centralized={false}>
+              <DetailsBox.Summary>
+                <Typography decoration="faded" as="small" width="xxs">
+                  {t(
+                    "screens.Dashboard.Tenants.AdvancedManagement.createConnectionString.cta"
+                  )}
+                </Typography>
+              </DetailsBox.Summary>
+
+              <DetailsBox.Content>
+                <Banner intent="warning">
+                  <div className="flex justify-between gap-2 my-5">
+                    <div className="flex flex-col gap-2">
+                      <Typography as="small" decoration="bold">
+                        {t(
+                          "screens.Dashboard.Tenants.AdvancedManagement.createConnectionString.title"
+                        )}
+                      </Typography>
+
+                      <Typography decoration="smooth" width="xxs" as="small">
+                        {t(
+                          "screens.Dashboard.Tenants.AdvancedManagement.createConnectionString.description"
+                        )}
+                      </Typography>
+                    </div>
+
+                    <div>
+                      <Button
+                        onClick={handleCreateConnectionStringModalOpen}
+                        rounded
+                      >
+                        {t(
+                          "screens.Dashboard.Tenants.AdvancedManagement.createConnectionString.button"
+                        )}
+                      </Button>
+                    </div>
+                  </div>
+                </Banner>
+              </DetailsBox.Content>
+            </DetailsBox>
+          </CardsSection.Body>
+        </CardsSection>
+
+        {activeTenant && (
+          <CardsSection>
+            <CardsSection.Header>
+              <Typography as="h3" decoration="smooth">
+                {t(
+                  "screens.Dashboard.Tenants.AdvancedManagement.legalSettingsAndPeople.title"
+                )}
+              </Typography>
+            </CardsSection.Header>
+
+            <CardsSection.Body>
+              <div className="flex flex-col md:flex-row md:flex-wrap gap-12 sm:gap-3 w-full">
+                <OwnersCard
+                  tenant={activeTenant}
+                  mutateTenantStatus={mutateTenantStatus}
+                />
+
+                <LegalSettings
+                  tenant={activeTenant}
+                  mutateTenantStatus={mutateTenantStatus}
+                />
+              </div>
+            </CardsSection.Body>
+          </CardsSection>
+        )}
+
         <CardsSection>
           <CardsSection.Header>
             <Typography as="h3" decoration="smooth">
-              {t(
-                "screens.Dashboard.Tenants.AdvancedManagement.legalSettingsAndPeople.title"
-              )}
+              <span>
+                {t(
+                  "screens.Dashboard.Tenants.AdvancedManagement.customization.title"
+                )}
+              </span>
             </Typography>
           </CardsSection.Header>
 
           <CardsSection.Body>
             <div className="flex flex-col md:flex-row md:flex-wrap gap-12 sm:gap-3 w-full">
-              <OwnersCard
-                tenant={activeTenant}
-                mutateTenantStatus={mutateTenantStatus}
-              />
+              {activeTenant && (
+                <>
+                  <ManagersCard
+                    tenant={activeTenant}
+                    mutateTenantStatus={mutateTenantStatus}
+                  />
 
-              <LegalSettings
-                tenant={activeTenant}
-                mutateTenantStatus={mutateTenantStatus}
-              />
+                  <BrandCard
+                    tenant={activeTenant}
+                    mutateTenantStatus={mutateTenantStatus}
+                  />
+
+                  <ColorsCard
+                    tenant={activeTenant}
+                    mutateTenantStatus={mutateTenantStatus}
+                  />
+                </>
+              )}
             </div>
           </CardsSection.Body>
         </CardsSection>
-      )}
+      </BasePage>
 
-      <CardsSection>
-        <CardsSection.Header>
-          <Typography as="h3" decoration="smooth">
-            <span>
-              {t(
-                "screens.Dashboard.Tenants.AdvancedManagement.customization.title"
-              )}
-            </span>
-          </Typography>
-        </CardsSection.Header>
-
-        <CardsSection.Body>
-          <div className="flex flex-col md:flex-row md:flex-wrap gap-12 sm:gap-3 w-full">
-            {activeTenant && (
-              <>
-                <ManagersCard
-                  tenant={activeTenant}
-                  mutateTenantStatus={mutateTenantStatus}
-                />
-
-                <BrandCard
-                  tenant={activeTenant}
-                  mutateTenantStatus={mutateTenantStatus}
-                />
-
-                <ColorsCard
-                  tenant={activeTenant}
-                  mutateTenantStatus={mutateTenantStatus}
-                />
-              </>
-            )}
-          </div>
-        </CardsSection.Body>
-      </CardsSection>
-    </BasePage>
+      <CreateConnectionStringModal
+        isOpen={isCreateConnectionStringModalOpen}
+        onClose={handleCreateConnectionStringModalClose}
+        onSuccess={handleCreateConnectionStringModalSuccess}
+        tenantId={tenantId}
+      />
+    </>
   );
 }

@@ -75,9 +75,42 @@
           "staff": "Usuário da equipe",
           "manager": "Usuário gerente"
         },
+        "createConnectionString": {
+          "cta": "Opções avançadas",
+          "title": "Criar string de conexão global",
+          "description": "As strings de conexão globais fornecem acesso total à sua conta. Essa string de conexão será usada para autenticar sua conta programaticamente.",
+          "button": "Criar"
+        },
         "email": {
           "prefix": "E-mail",
           "title": "Seu e-mail"
+        }
+      },
+      "CreateConnectionStringModal": {
+        "title": "Criar string de conexão",
+        "form": {
+          "expiration": {
+            "label": "Selecionar expiração",
+            "title": "Expiração",
+            "options": {
+              "oneHour": "1 hora (60 minutos)",
+              "oneDay": "1 dia (24 horas)",
+              "oneWeek": "1 semana (7 dias)",
+              "oneMonth": "1 mês (30 dias)",
+              "sixMonths": "6 meses (180 dias)",
+              "oneYear": "1 ano (365 dias)"
+            }
+          },
+          "create": {
+            "label": "Criar",
+            "creating": "Criando...",
+            "success": "String de conexão criada com sucesso",
+            "error": "Erro inesperado ao criar string de conexão"
+          },
+          "copy": {
+            "label": "Copiar",
+            "success": "String de conexão copiada para a área de transferência"
+          }
         }
       },
       "AboutCard": {
@@ -271,6 +304,12 @@
           "breadcrumb": "Namespaces",
           "manageAccounts": "Ver contas",
           "manageAccountsDescription": "Clique aqui para ver as contas registradas no namespace.",
+          "createConnectionString": {
+            "cta": "Opções avançadas",
+            "title": "Criar string de conexão para o namespace",
+            "description": "Crie uma string de conexão para o namespace. Essa string de conexão será usada para autenticar sua conta programaticamente.",
+            "button": "Criar"
+          },
           "name": {
             "title": "Nome do namespace",
             "prefix": "Você vê"

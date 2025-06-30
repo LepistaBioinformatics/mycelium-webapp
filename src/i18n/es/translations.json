@@ -75,9 +75,42 @@
           "staff": "Usuario del equipo",
           "manager": "Gerente"
         },
+        "createConnectionString": {
+          "cta": "Opciones avanzadas",
+          "title": "Crear cadena de conexión global",
+          "description": "Las cadenas de conexión globales proporcionan acceso completo a su cuenta. Esta cadena de conexión se utilizará para autenticar su cuenta mediante programación.",
+          "button": "Crear"
+        },
         "email": {
           "prefix": "Correo electrónico",
           "title": "Tu correo electrónico"
+        }
+      },
+      "CreateConnectionStringModal": {
+        "title": "Crear cadena de conexión",
+        "form": {
+          "expiration": {
+            "label": "Seleccionar expiración",
+            "title": "Expiración",
+            "options": {
+              "oneHour": "1 hora (60 minutos)",
+              "oneDay": "1 día (24 horas)",
+              "oneWeek": "1 semana (7 días)",
+              "oneMonth": "1 mes (30 días)",
+              "sixMonths": "6 meses (180 días)",
+              "oneYear": "1 año (365 días)"
+            }
+          },
+          "create": {
+            "label": "Crear",
+            "creating": "Creando...",
+            "success": "Cadena de conexión creada con éxito",
+            "error": "Error inesperado al crear la cadena de conexión"
+          },
+          "copy": {
+            "label": "Copiar",
+            "success": "Cadena de conexión copiada para el portapapeles"
+          }
         }
       },
       "AboutCard": {
@@ -175,6 +208,8 @@
         }
       },
       "TenantOwnershipInfo": {
+        "manageTenant": "Administrar espacio de nombres",
+        "manageAccounts": "Administrar cuentas del espacio de nombres",
         "title": "El namepace al que pertenece la cuenta: {{tenantId}}",
         "since": {
           "title": "Desde Namepace: {{tenantId}}",
@@ -271,6 +306,12 @@
           "breadcrumb": "Espacios de nombres",
           "manageAccounts": "Ver Cuentas",
           "manageAccountsDescription": "Haga clic aquí para ver las cuentas registradas en el espacio de nombres.",
+          "createConnectionString": {
+            "cta": "Opciones avanzadas",
+            "title": "Crear cadena de conexión para el espacio de nombres",
+            "description": "Cree una cadena de conexión para el espacio de nombres. Esta cadena de conexión se utilizará para autenticar su cuenta mediante programación.",
+            "button": "Para crear"
+          },
           "name": {
             "title": "Nombre del espacio de nombres",
             "prefix": "Verás"

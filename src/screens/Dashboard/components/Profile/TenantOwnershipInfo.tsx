@@ -1,4 +1,4 @@
-import { MdLogout } from "react-icons/md";
+import { MdManageAccounts } from "react-icons/md";
 import Typography from "@/components/ui/Typography";
 import { formatDDMMYY } from "@/functions/format-dd-mm-yy";
 import { useCallback } from "react";
@@ -8,6 +8,8 @@ import IntroSection from "@/components/ui/IntroSection";
 import { Link } from "react-router";
 import { TenantTagTypes } from "@/types/TenantTagTypes";
 import { useTranslation } from "react-i18next";
+import { IoMdMore } from "react-icons/io";
+import { FaGear } from "react-icons/fa6";
 
 interface Props extends TenantResolverChildProps {
   since: string;
@@ -126,11 +128,35 @@ export default function TenantOwnershipInfo({
 
   return (
     <MiniBox>
-      <div className="flex items-center justify-between gap-3">
+      <div className="flex items-center justify-between gap-3 group">
         <TenantData />
-        <Link to={`/dashboard/tenants/${tenantId}`}>
-          <MdLogout className="text-indigo-500 dark:text-lime-500" />
-        </Link>
+        <div className="h-full flex items-center justify-center">
+          <IoMdMore className="text-3xl hidden sm:block group-hover:hidden transition-all duration-500" />
+
+          <div className="min-h-full sm:hidden sm:group-hover:block transition-all duration-500">
+            <div className="flex flex-col items-center gap-12 sm:gap-4">
+              <Link
+                to={`/dashboard/tenants/${tenantId}`}
+                className="flex flex-col items-center gap-2 p-1 rounded-lg bg-indigo-500 dark:bg-lime-500"
+                title={t("screens.Dashboard.TenantOwnershipInfo.manageTenant")}
+              >
+                <FaGear size={24} className="text-zinc-50 dark:text-zinc-900" />
+              </Link>
+              <Link
+                to={`/dashboard/tenants/${tenantId}/accounts`}
+                className="flex flex-col items-center gap-2 p-1 rounded-lg bg-indigo-500 dark:bg-lime-500"
+                title={t(
+                  "screens.Dashboard.TenantOwnershipInfo.manageAccounts"
+                )}
+              >
+                <MdManageAccounts
+                  size={24}
+                  className="text-zinc-50 dark:text-zinc-900"
+                />
+              </Link>
+            </div>
+          </div>
+        </div>
       </div>
 
       {error && (

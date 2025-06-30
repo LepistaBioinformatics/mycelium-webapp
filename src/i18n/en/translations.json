@@ -75,9 +75,42 @@
           "staff": "Team user",
           "manager": "Manager"
         },
+        "createConnectionString": {
+          "cta": "Advanced options",
+          "title": "Create global connection string",
+          "description": "Global connection strings provide full access to your account. This connection string will be used to authenticate your account programmatically.",
+          "button": "To create"
+        },
         "email": {
           "prefix": "E-mail",
           "title": "Your email"
+        }
+      },
+      "CreateConnectionStringModal": {
+        "title": "Create Connection String",
+        "form": {
+          "expiration": {
+            "label": "Select expiration",
+            "title": "Expiration",
+            "options": {
+              "oneHour": "1 hour (60 minutes)",
+              "oneDay": "1 day (24 hours)",
+              "oneWeek": "1 week (7 days)",
+              "oneMonth": "1 month (30 days)",
+              "sixMonths": "6 months (180 days)",
+              "oneYear": "1 year (365 days)"
+            }
+          },
+          "create": {
+            "label": "Create",
+            "creating": "Creating ...",
+            "success": "Successful created connection string",
+            "error": "Unexpected error when creating connection string"
+          },
+          "copy": {
+            "label": "Copy",
+            "success": "Connection string copied to clipboard"
+          }
         }
       },
       "AboutCard": {
@@ -271,6 +304,12 @@
           "breadcrumb": "Namespaces",
           "manageAccounts": "See accounts",
           "manageAccountsDescription": "Click here to see the accounts recorded in Namespace.",
+          "createConnectionString": {
+            "cta": "Advanced options",
+            "title": "Create connection string for Namespace",
+            "description": "Create a connection string for Namespace. This connection string will be used to authenticate your account programmatically.",
+            "button": "Create"
+          },
           "name": {
             "title": "Namespace name",
             "prefix": "You see"

@@ -92,7 +92,12 @@ export default function LicensedResourcesSection({ licensedResources }: Props) {
                               {resource.accName}
                             </Link>
                           ) : (
-                            <>{resource.accName}</>
+                            <Link
+                              to={`/dashboard/tenants/${resource.tenantId}/accounts/?accountId=${resource.accId}`}
+                              className="text-indigo-500 dark:text-lime-500 hover:underline"
+                            >
+                              {resource.accName}
+                            </Link>
                           )}
                         </Typography>
                       </div>
