@@ -545,10 +545,6 @@ export default function AccountDetails({ onClose }: Props) {
         </DetailsBox.Content>
       </DetailsBox>
 
-      <div>
-        <pre>{JSON.stringify(profile, null, 2)}</pre>
-      </div>
-
       {tenantInfo?.id && account && (
         <DeleteAccount
           account={account}
