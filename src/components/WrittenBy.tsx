@@ -4,7 +4,7 @@ import { Link } from "react-router";
 import { useTranslation } from "react-i18next";
 import { FaExternalLinkAlt } from "react-icons/fa";
 
-type WrittenByType = components["schemas"]["Modifier"];
+type WrittenByType = components["schemas"]["WrittenBy"];
 
 interface Props {
   writtenBy?: WrittenByType | null;
@@ -18,10 +18,7 @@ export default function WrittenBy({ writtenBy, action }: Props) {
 
   if (writtenBy?.from === "account") {
     return (
-      <IntroSection.Item
-        prefix={t(`${key}.prefix`)}
-        title={t(`${key}.title`)}
-      >
+      <IntroSection.Item prefix={t(`${key}.prefix`)} title={t(`${key}.title`)}>
         <Link
           to={`/dashboard/accounts/?accountId=${writtenBy?.id}`}
           className="text-blue-500 hover:underline"

@@ -208,6 +208,8 @@
         }
       },
       "TenantOwnershipInfo": {
+        "manageTenant": "Manage tenant",
+        "manageAccounts": "Manage accounts",
         "title": "The namepace to which the account belongs: {{tenantId}}",
         "since": {
           "title": "Since Namepace: {{tenantId}}",
@@ -530,6 +532,10 @@
             "title": "Update Account Status",
             "description": "Update account status for a different status. ",
             "button": "Update"
+          },
+          "yourPermissions": {
+            "title": "Your permissions",
+            "prefix": "Your permissions"
           }
         },
         "AccountModal": {

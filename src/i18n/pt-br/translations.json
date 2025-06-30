@@ -208,6 +208,8 @@
         }
       },
       "TenantOwnershipInfo": {
+        "manageTenant": "Gerenciar namespace",
+        "manageAccounts": "Gerenciar contas do namespace",
         "title": "O namespace ao qual a conta pertence: {{tenantId}}",
         "since": {
           "title": "Desde no namespace: {{tenantId}}",

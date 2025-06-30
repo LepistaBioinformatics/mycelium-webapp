@@ -47,7 +47,7 @@ export default function GuestToAccountModal({
   const [selectedRole, setSelectedRole] = useState<GuestRole | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const { parseHttpError, dispatchError } = useSuspenseError();
+  const { parseHttpError } = useSuspenseError();
 
   const { getAccessTokenSilently } = useProfile({
     roles: [MycRole.SubscriptionsManager],
@@ -60,8 +60,6 @@ export default function GuestToAccountModal({
   const tenantId = useMemo(() => {
     if (tenantIdProp) return tenantIdProp;
     if (tenantInfo?.id) return tenantInfo.id;
-
-    dispatchError("Tenant ID is required");
 
     return null;
   }, [tenantIdProp, tenantInfo?.id]);

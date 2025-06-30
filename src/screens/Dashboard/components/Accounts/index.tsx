@@ -1,5 +1,5 @@
 import PageBody from "@/components/ui/PageBody";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Button from "@/components/ui/Button";
 import AccountModal from "./AccountModal";
 import AccountDetails from "./AccountDetails";
@@ -11,6 +11,9 @@ import { useTranslation } from "react-i18next";
 import { FaPlus } from "react-icons/fa";
 import { MycRole } from "@/types/MyceliumRole";
 import { MycPermission } from "@/types/MyceliumPermission";
+import useTenantDetails from "@/hooks/use-tenant-details";
+import { useDispatch } from "react-redux";
+import { setTenantInfo } from "@/states/tenant.state";
 
 interface Props extends Pick<PaginatedAccountsProps, "restrictAccountTypeTo"> {}
 
@@ -24,6 +27,22 @@ export default function Accounts({ restrictAccountTypeTo }: Props) {
 
     return params.tenantId as string;
   }, [params.tenantId]);
+
+  const dispatch = useDispatch();
+
+  const { tenantStatus } = useTenantDetails({ tenantId });
+
+  useEffect(() => {
+    if (
+      tenantStatus &&
+      typeof tenantStatus === "object" &&
+      "active" in tenantStatus
+    ) {
+      dispatch(setTenantInfo(tenantStatus.active));
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tenantStatus]);
 
   const [isNewModalOpen, setIsNewModalOpen] = useState(false);
   const [forceMutate, setForceMutate] = useState<Date | null>(null);

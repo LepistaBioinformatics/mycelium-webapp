@@ -26,6 +26,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useSearchParams } from "react-router";
 import WrittenBy from "@/components/WrittenBy";
 import { IoReturnDownBack } from "react-icons/io5";
+import PermissionsOnAccount from "./PermissionsOnAccount";
 
 type Account = components["schemas"]["Account"];
 type GuestUser = components["schemas"]["GuestUser"];
@@ -374,6 +375,20 @@ export default function AccountDetails({ onClose }: Props) {
                 </span>
               </span>
             </IntroSection.Item>
+
+            <IntroSection.Item
+              prefix={t(
+                "screens.Dashboard.Accounts.AccountDetails.yourPermissions.prefix"
+              )}
+              title={t(
+                "screens.Dashboard.Accounts.AccountDetails.yourPermissions.title"
+              )}
+            >
+              <PermissionsOnAccount
+                accountId={account?.id}
+                tenantId={tenantInfo?.id}
+              />
+            </IntroSection.Item>
           </div>
         </DetailsBox.Content>
       </DetailsBox>
@@ -529,6 +544,10 @@ export default function AccountDetails({ onClose }: Props) {
           )}
         </DetailsBox.Content>
       </DetailsBox>
+
+      <div>
+        <pre>{JSON.stringify(profile, null, 2)}</pre>
+      </div>
 
       {tenantInfo?.id && account && (
         <DeleteAccount
