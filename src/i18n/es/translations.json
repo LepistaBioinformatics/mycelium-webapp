@@ -365,7 +365,7 @@
             "title": "Actividades de gestión",
             "description": "Personalice el espacio de nombres con etiquetas, marcas y cuentas de suscripción.",
             "managers": {
-              "title": "Gerentes",
+              "title": "Gerentes del espacio de nombres",
               "description": "Los gerentes administrarán etiquetas, marcas y cuentas de suscripción del espacio de nombres. Use el botón de registro para agregar gerentes.",
               "createManagementAccount": "Crear cuenta de gestión",
               "createManagementAccountDescription": "Debe completar esta acción antes de invitar a los gerentes a NamePace.",

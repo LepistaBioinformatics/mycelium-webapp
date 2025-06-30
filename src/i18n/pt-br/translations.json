@@ -365,7 +365,7 @@
             "title": "Atividades gerenciais",
             "description": "Personalize o namespace com tags, marca e configurações de contas de subscrição.",
             "managers": {
-              "title": "Gerentes",
+              "title": "Gerentes do namespace",
               "description": "Gerentes administrarão tags, marca e configurações de contas de subscrição do namespace. Use o botão de registro para adicionar gerentes.",
               "createManagementAccount": "Criar conta de gerenciamento",
               "createManagementAccountDescription": "Você deve completar essa ação antes de convidar gerentes para o namespace.",

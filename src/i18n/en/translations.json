@@ -365,7 +365,7 @@
             "title": "Management activities",
             "description": "Customize Namespace with tags, brand and subscription accounts.",
             "managers": {
-              "title": "Managers",
+              "title": "Namespace Managers",
               "description": "Managers will administer tags, brand and subscription accounts of Namespace. ",
               "createManagementAccount": "Create management account",
               "createManagementAccountDescription": "You should complete this action before inviting managers to namepace.",

@@ -4,72 +4,6 @@
  */
 
 export interface paths {
-    "/adm/auth/azure/login": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Generate the Azure OAuth authorize URL
-         * @description Users should access this URL to start the OAuth2 flow.
-         *
-         *
-         */
-        get: operations["login_url"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/adm/auth/azure/token": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Callback URL for Azure OAuth2
-         * @description This endpoint is called by Azure after the user authorizes the application.
-         *
-         *
-         */
-        get: operations["token_url"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/adm/auth/google/callback": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Callback URL for Google Oauth2
-         * @description This endpoint is called by Google after the user authorizes the application.
-         *
-         *
-         */
-        get: operations["google_callback_url"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/adm/rs/accounts-manager/guests/accounts/{account_id}/roles/{role_id}": {
         parameters: {
             query?: never;
@@ -209,6 +143,29 @@ export interface paths {
         get: operations["fetch_tenant_public_info_url"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/adm/rs/beginners/tokens": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create Connection String
+         * @description This action creates a connection string that is associated with the user
+         *     account. The connection string has the same permissions of the user account.
+         *
+         *
+         */
+        post: operations["create_connection_string_url"];
         delete?: never;
         options?: never;
         head?: never;
@@ -578,54 +535,6 @@ export interface paths {
         patch: operations["update_guest_role_permissions_url"];
         trace?: never;
     };
-    "/adm/rs/guests-manager/tokens/accounts/{account_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Create Account Associated Token
-         * @description This action creates a token that is associated with the account specified
-         *     in the `account_id` argument. The token is scoped to the roles specified
-         *     in the `permissioned_roles` argument.
-         *
-         *
-         */
-        post: operations["create_default_account_associated_connection_string_url"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/adm/rs/guests-manager/tokens/roles/{role_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Create Role Associated Token
-         * @description This action creates a token that is associated with the role specified
-         *     in the `role_id` argument. The token is scoped to the roles specified
-         *     in the `permissioned_roles` argument.
-         *
-         *
-         */
-        post: operations["create_role_associated_connection_string_url"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/adm/rs/subscriptions-manager/accounts": {
         parameters: {
             query?: never;
@@ -928,6 +837,29 @@ export interface paths {
         patch: operations["update_webhook_url"];
         trace?: never;
     };
+    "/adm/rs/tenant-manager/accounts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create a subscription manager account
+         * @description This action is restricted to tenant managers. This action will create a
+         *     tenant-related subscription manager account.
+         *
+         *
+         */
+        post: operations["create_subscription_manager_account_url"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/adm/rs/tenant-manager/accounts/{account_id}": {
         parameters: {
             query?: never;
@@ -938,8 +870,52 @@ export interface paths {
         get?: never;
         put?: never;
         post?: never;
-        /** Delete a subscription account. */
+        /**
+         * Delete a subscription account
+         * @description This action is restricted to tenant managers.
+         *
+         *
+         */
         delete: operations["delete_subscription_account_url"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/adm/rs/tenant-manager/guests/accounts/{account_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Guest a user to work on account.
+         * @description This action gives the ability of the target account (specified through
+         *     the `account` argument) to perform actions specified in the `role`
+         *     path argument.
+         */
+        post: operations["guest_user_to_subscription_manager_account_url"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/adm/rs/tenant-manager/guests/accounts/{account_id}/roles/{role_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Uninvite user to perform a role to account */
+        delete: operations["revoke_user_guest_to_subscription_manager_account_url"];
         options?: never;
         head?: never;
         patch?: never;
@@ -991,23 +967,6 @@ export interface paths {
         get: operations["get_tenant_details_url"];
         put?: never;
         post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/adm/rs/tenant-manager/tokens/tenants/{tenant_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Create Tenant Associated Token */
-        post: operations["create_tenant_associated_connection_string_url"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1440,69 +1399,6 @@ export interface paths {
         patch: operations["upgrade_account_privileges_url"];
         trace?: never;
     };
-    "/adm/svc/accounts": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Create Subscription Account
-         * @description Subscription accounts represents shared entities, like institutions,
-         *     groups, but not real persons.
-         */
-        post: operations["create_subscription_account_from_service_url"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/adm/svc/auxiliary/actors": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Provide a datetime with the server's timezone.
-         * @description This is usual during system checks.
-         */
-        get: operations["list_actors_url"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/adm/svc/guests/roles/{role_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Guest a user to work on account.
-         * @description This action gives the ability of the target account (specified through
-         *     the `account` argument) to perform actions specified in the `role`
-         *     path argument.
-         */
-        post: operations["guest_to_default_account_url"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/adm/svc/tools": {
         parameters: {
             query?: never;
@@ -1572,7 +1468,7 @@ export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
         /** @enum {string} */
-        APIAccountType: "staff" | "manager" | "user" | "subscription" | "roleAssociated" | "actorAssociated" | "tenantManager";
+        APIAccountType: "staff" | "manager" | "user" | "subscription" | "actorAssociated" | "tenantManager";
         Account: {
             /**
              * Format: uuid
@@ -1634,13 +1530,13 @@ export interface components {
              * @description The Account Created Date
              */
             createdAt: string;
-            createdBy?: null | components["schemas"]["Modifier"];
+            createdBy?: null | components["schemas"]["WrittenBy"];
             /**
              * Format: date-time
              * @description The Account Updated Date
              */
             updatedAt?: string | null;
-            updatedBy?: null | components["schemas"]["Modifier"];
+            updatedBy?: null | components["schemas"]["WrittenBy"];
             /** @description The Account Meta
              *
              *     Store metadata about the account.
@@ -1664,11 +1560,34 @@ export interface components {
              *     Role associated account type is an special type of account, created to
              *     connect users to a specific standard role in the application. */
             roleAssociated: {
-                /** Format: uuid */
+                /**
+                 * Format: uuid
+                 * @description The tenant ID
+                 */
                 tenantId: string;
+                /** @description The role name
+                 *
+                 *     The role name should be the same for the read and write roles.
+                 *      */
                 roleName: string;
-                /** Format: uuid */
-                roleId: string;
+                /**
+                 * Format: uuid
+                 * @description The read role ID
+                 *
+                 *     The read role ID is the ID of the role that will be used to read the
+                 *     data from the account.
+                 *
+                 */
+                readRoleId: string;
+                /**
+                 * Format: uuid
+                 * @description The write role ID
+                 *
+                 *     The write role ID is the ID of the role that will be used to write
+                 *     the data to the account.
+                 *
+                 */
+                writeRoleId: string;
             };
         } | {
             /** @description Actor associated account type */
@@ -1684,13 +1603,6 @@ export interface components {
         };
         /** @enum {string} */
         ApiSystemActor: "gatewayManager" | "guestsManager" | "systemManager";
-        AzureLoginResponse: {
-            authorizeUrl: string;
-        };
-        CallbackResponse: {
-            accessToken: string;
-            tokenType: string;
-        };
         CheckTokenBody: {
             token: string;
             email: string;
@@ -1765,13 +1677,13 @@ export interface components {
                  * @description The Account Created Date
                  */
                 createdAt: string;
-                createdBy?: null | components["schemas"]["Modifier"];
+                createdBy?: null | components["schemas"]["WrittenBy"];
                 /**
                  * Format: date-time
                  * @description The Account Updated Date
                  */
                 updatedAt?: string | null;
-                updatedBy?: null | components["schemas"]["Modifier"];
+                updatedBy?: null | components["schemas"]["WrittenBy"];
                 /** @description The Account Meta
                  *
                  *     Store metadata about the account.
@@ -1984,23 +1896,42 @@ export interface components {
             key: string;
             value: string;
         };
-        CreateTenantScopedTokenBody: {
-            permissionedRoles: [
-                string,
-                "read" | "write"
-            ][];
-            /** Format: int64 */
-            expiration: number;
-        };
         CreateTokenBody: {
-            /** Format: uuid */
-            tenantId: string;
-            permissionedRoles: [
+            /**
+             * Format: int64
+             * @description The expiration time of the token
+             *
+             *     The expiration time of the token in seconds.
+             *
+             */
+            expiration: number;
+            /**
+             * Format: uuid
+             * @description A single tenant ID
+             *
+             *     If specified, the actions allowed by the token will be scoped to the
+             *     tenant. If not specified, the actions allowed by the token will be
+             *     scoped to the user profile.
+             *
+             */
+            tenantId?: string | null;
+            /** @description A single role
+             *
+             *     If specified, the actions allowed by the token will be scoped to the
+             *     role. If not specified, the actions allowed by the token will be
+             *     scoped to the user profile.
+             *      */
+            role?: string | null;
+            /** @description The permissioned roles
+             *
+             *     If specified, the actions allowed by the token will be scoped to the
+             *     roles and permissions. Otherwise, the complete set of roles and
+             *     permissions present in the user profile will be used.
+             *      */
+            permissionedRoles?: [
                 string,
                 "read" | "write"
-            ][];
-            /** Format: int64 */
-            expiration: number;
+            ][] | null;
         };
         CreateTokenResponse: {
             connectionString: string;
@@ -2133,6 +2064,10 @@ export interface components {
              *     The child role id should be passed as the `role_id` path argument.
              */
             parentRoleId: string;
+        };
+        GuestUserToSubscriptionManagerAccountBody: {
+            email: string;
+            permission: components["schemas"]["Permission"];
         };
         HashMap: {
             [key: string]: string;
@@ -2364,9 +2299,6 @@ export interface components {
             accountType?: null | components["schemas"]["APIAccountType"];
             isOwnerActive?: boolean | null;
             status?: null | components["schemas"]["VerboseStatus"];
-            roleName?: string | null;
-            /** Format: uuid */
-            roleId?: string | null;
             actor?: null | components["schemas"]["SystemActor"];
         };
         ListTenantParams: {
@@ -2387,15 +2319,6 @@ export interface components {
         ListWebHooksParams: {
             name?: string | null;
             trigger?: null | components["schemas"]["WebHookTrigger"];
-        };
-        Modifier: {
-            /**
-             * Format: uuid
-             * @description The ID of the user who created the account
-             */
-            id: string;
-            /** @description The ID source */
-            from: components["schemas"]["IDSource"];
         };
         MultiFactorAuthentication: {
             /** @description The TOTP
@@ -2540,13 +2463,13 @@ export interface components {
                  * @description The Account Created Date
                  */
                 createdAt: string;
-                createdBy?: null | components["schemas"]["Modifier"];
+                createdBy?: null | components["schemas"]["WrittenBy"];
                 /**
                  * Format: date-time
                  * @description The Account Updated Date
                  */
                 updatedAt?: string | null;
-                updatedBy?: null | components["schemas"]["Modifier"];
+                updatedBy?: null | components["schemas"]["WrittenBy"];
                 /** @description The Account Meta
                  *
                  *     Store metadata about the account.
@@ -2823,6 +2746,9 @@ export interface components {
             email: string;
             newPassword: string;
         };
+        RevokeUserGuestToSubscriptionManagerAccountParams: {
+            email: string;
+        };
         Route: {
             /**
              * Format: uuid
@@ -3082,7 +3008,6 @@ export interface components {
              *      */
             proxyAddress?: string | null;
         };
-        ServiceGuestUserBody: components["schemas"]["Account"];
         ServiceHost: string | string[];
         ServiceSecret: components["schemas"]["SecretResolver_HttpSecret"] & {
             name: string;
@@ -3333,6 +3258,7 @@ export interface components {
             name?: string | null;
             description?: string | null;
             secret?: null | components["schemas"]["HttpSecret"];
+            isActive?: boolean | null;
         };
         UpgradeAccountPrivilegesBody: {
             to: components["schemas"]["UpgradeTargetAccountType"];
@@ -3392,38 +3318,28 @@ export interface components {
              * @description The webhook created date
              */
             created: string;
+            createdBy?: null | components["schemas"]["WrittenBy"];
             /**
              * Format: date-time
              * @description The webhook updated date
              */
             updated?: string | null;
+            updatedBy?: null | components["schemas"]["WrittenBy"];
             secret?: null | components["schemas"]["HttpSecret"];
         };
         /** @enum {string} */
         WebHookTrigger: "subscriptionAccount.created" | "subscriptionAccount.updated" | "subscriptionAccount.deleted" | "userAccount.created" | "userAccount.updated" | "userAccount.deleted";
+        WrittenBy: {
+            /**
+             * Format: uuid
+             * @description The ID of the user who created the account
+             */
+            id: string;
+            /** @description The ID source */
+            from: components["schemas"]["IDSource"];
+        };
     };
     responses: {
-        AzureLoginResponse: {
-            headers: {
-                [name: string]: unknown;
-            };
-            content: {
-                "application/json": {
-                    authorizeUrl: string;
-                };
-            };
-        };
-        CallbackResponse: {
-            headers: {
-                [name: string]: unknown;
-            };
-            content: {
-                "application/json": {
-                    accessToken: string;
-                    tokenType: string;
-                };
-            };
-        };
         CheckEmailStatusResponse: {
             headers: {
                 [name: string]: unknown;
@@ -3533,102 +3449,6 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
-    login_url: {
-        parameters: {
-            query?: {
-                jsonReturn?: boolean | null;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Returns the Azure OAuth authorize URL. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AzureLoginResponse"];
-                };
-            };
-            /** @description Azure OAuth is disabled. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HttpJsonResponse"];
-                };
-            };
-        };
-    };
-    token_url: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Returns the Azure OAuth authorize URL. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CallbackResponse"];
-                };
-            };
-            /** @description Code not found. */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HttpJsonResponse"];
-                };
-            };
-            /** @description CSRF Token expired. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HttpJsonResponse"];
-                };
-            };
-            /** @description Error on token exchange. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HttpJsonResponse"];
-                };
-            };
-        };
-    };
-    google_callback_url: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Redirect user to auth url */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
     guest_to_children_account_url: {
         parameters: {
             query?: never;
@@ -4180,6 +4000,57 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Unauthorized. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Forbidden. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Unknown internal server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+        };
+    };
+    create_connection_string_url: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateTokenBody"];
+            };
+        };
+        responses: {
+            /** @description Token created. */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CreateTokenResponse"];
                 };
             };
             /** @description Unauthorized. */
@@ -5239,114 +5110,6 @@ export interface operations {
             };
         };
     };
-    create_default_account_associated_connection_string_url: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The account unique id. */
-                account_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CreateTokenBody"];
-            };
-        };
-        responses: {
-            /** @description Token created. */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CreateTokenResponse"];
-                };
-            };
-            /** @description Unauthorized. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HttpJsonResponse"];
-                };
-            };
-            /** @description Forbidden. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HttpJsonResponse"];
-                };
-            };
-            /** @description Unknown internal server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HttpJsonResponse"];
-                };
-            };
-        };
-    };
-    create_role_associated_connection_string_url: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The role unique id. */
-                role_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CreateTokenBody"];
-            };
-        };
-        responses: {
-            /** @description Token created. */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CreateTokenResponse"];
-                };
-            };
-            /** @description Unauthorized. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HttpJsonResponse"];
-                };
-            };
-            /** @description Forbidden. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HttpJsonResponse"];
-                };
-            };
-            /** @description Unknown internal server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HttpJsonResponse"];
-                };
-            };
-        };
-    };
     list_accounts_by_type_url: {
         parameters: {
             query?: {
@@ -5355,8 +5118,6 @@ export interface operations {
                 accountType?: null | components["schemas"]["APIAccountType"];
                 isOwnerActive?: boolean | null;
                 status?: null | components["schemas"]["VerboseStatus"];
-                roleName?: string | null;
-                roleId?: string | null;
                 actor?: null | components["schemas"]["SystemActor"];
                 skip?: number | null;
                 pageSize?: number | null;
@@ -5674,7 +5435,10 @@ export interface operations {
                 /** @description If it is a system role. */
                 system?: boolean | null;
             };
-            header?: never;
+            header: {
+                /** @description The tenant unique id. */
+                "x-mycelium-tenant-id": string;
+            };
             path?: never;
             cookie?: never;
         };
@@ -5728,7 +5492,10 @@ export interface operations {
     fetch_guest_role_details_url: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description The tenant unique id. */
+                "x-mycelium-tenant-id": string;
+            };
             path: {
                 /** @description The guest role primary key. */
                 id: string;
@@ -6777,6 +6544,56 @@ export interface operations {
             };
         };
     };
+    create_subscription_manager_account_url: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description The tenant unique id. */
+                "x-mycelium-tenant-id": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Account created. */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Account"];
+                };
+            };
+            /** @description Unauthorized. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Forbidden. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Unknown internal server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+        };
+    };
     delete_subscription_account_url: {
         parameters: {
             query?: never;
@@ -6800,6 +6617,145 @@ export interface operations {
                 content?: never;
             };
             /** @description Account deleted. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Unauthorized. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Forbidden. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Unknown internal server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+        };
+    };
+    guest_user_to_subscription_manager_account_url: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description The tenant unique id. */
+                "x-mycelium-tenant-id": string;
+            };
+            path: {
+                /** @description The account primary key. */
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["GuestUserToSubscriptionManagerAccountBody"];
+            };
+        };
+        responses: {
+            /** @description Guest already exist. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GuestUser"];
+                };
+            };
+            /** @description Guesting done. */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GuestUser"];
+                };
+            };
+            /** @description Bad request. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Unauthorized. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Forbidden. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Unknown internal server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+        };
+    };
+    revoke_user_guest_to_subscription_manager_account_url: {
+        parameters: {
+            query: {
+                email: string;
+            };
+            header: {
+                /** @description The tenant unique id. */
+                "x-mycelium-tenant-id": string;
+            };
+            path: {
+                /** @description The account primary key. */
+                account_id: string;
+                /** @description The guest-role unique id. */
+                role_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Guest User uninvited. */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Guest User not uninvited. */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -7062,60 +7018,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HttpJsonResponse"];
-                };
-            };
-            /** @description Unauthorized. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HttpJsonResponse"];
-                };
-            };
-            /** @description Forbidden. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HttpJsonResponse"];
-                };
-            };
-            /** @description Unknown internal server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HttpJsonResponse"];
-                };
-            };
-        };
-    };
-    create_tenant_associated_connection_string_url: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The tenant unique id. */
-                tenant_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CreateTenantScopedTokenBody"];
-            };
-        };
-        responses: {
-            /** @description Token created. */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CreateTokenResponse"];
                 };
             };
             /** @description Unauthorized. */
@@ -8565,164 +8467,6 @@ export interface operations {
                 };
             };
             /** @description Account not upgraded. */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HttpJsonResponse"];
-                };
-            };
-            /** @description Unauthorized. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HttpJsonResponse"];
-                };
-            };
-            /** @description Forbidden. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HttpJsonResponse"];
-                };
-            };
-            /** @description Unknown internal server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HttpJsonResponse"];
-                };
-            };
-        };
-    };
-    create_subscription_account_from_service_url: {
-        parameters: {
-            query?: never;
-            header: {
-                /** @description The connection string to the role-scoped database. */
-                "x-mycelium-connection-string": string;
-            };
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CreateSubscriptionAccountBody"];
-            };
-        };
-        responses: {
-            /** @description Account created. */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Account"];
-                };
-            };
-            /** @description Account already exists. */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HttpJsonResponse"];
-                };
-            };
-            /** @description Unauthorized. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HttpJsonResponse"];
-                };
-            };
-            /** @description Forbidden. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HttpJsonResponse"];
-                };
-            };
-            /** @description Unknown internal server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HttpJsonResponse"];
-                };
-            };
-        };
-    };
-    list_actors_url: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description The current datetime with timezone. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "text/plain": string;
-                };
-            };
-        };
-    };
-    guest_to_default_account_url: {
-        parameters: {
-            query?: never;
-            header: {
-                /** @description The connection string to the role-scoped database. */
-                "x-mycelium-connection-string": string;
-            };
-            path: {
-                /** @description The guest-role unique id. */
-                role_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["ServiceGuestUserBody"];
-            };
-        };
-        responses: {
-            /** @description Guest already exist. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Account"];
-                };
-            };
-            /** @description Guesting done. */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Account"];
-                };
-            };
-            /** @description Bad request. */
             400: {
                 headers: {
                     [name: string]: unknown;
