@@ -80,7 +80,7 @@ export default function useProfile(args?: Props) {
 
   useEffect(() => {
     if (error) parseAuth0Error(error);
-  }, [error]);
+  }, [error, parseAuth0Error]);
 
   /**
    * Filter the licensed resources based on specific roles or permissions
@@ -114,7 +114,8 @@ export default function useProfile(args?: Props) {
       }
     }
 
-    if (profile?.licensedResources && "records" in profile?.licensedResources) {
+    // eslint-disable-next-line no-unsafe-optional-chaining
+    if (profile?.licensedResources && ("records" in profile?.licensedResources)) {
       const roles = args?.roles ?? [];
       const permissions = args?.permissions ?? [];
       const restrictSystemAccount = args?.restrictSystemAccount ?? false;
@@ -125,7 +126,7 @@ export default function useProfile(args?: Props) {
             return (
               roles.some((role) => resource.role.includes(role)) &&
               permissions.some((permission) =>
-                resource.perm.includes(permission)
+                getNumericPermission(resource.perm) >= getNumericPermission(permission)
               )
             );
           }
@@ -155,11 +156,18 @@ export default function useProfile(args?: Props) {
 
     return false;
   }, [
+    profile?.isStaff,
+    profile?.isManager,
     profile?.licensedResources,
+    profile?.tenantsOwnership,
+    args?.denyStaff,
+    args?.shouldBeStaff,
+    args?.denyManager,
+    args?.shouldBeManager,
+    args?.tenantOwnerNeeded,
     args?.roles,
     args?.permissions,
-    args?.denyManager,
-    args?.denyStaff,
+    args?.restrictSystemAccount
   ]);
 
   /**
@@ -188,6 +196,8 @@ export default function useProfile(args?: Props) {
           return null;
         }
       } catch (error) {
+        console.error("Failed to parse profile from session storage", error);
+
         return null;
       }
 
@@ -250,6 +260,8 @@ export default function useProfile(args?: Props) {
     sessionStorage.setItem(PROFILE_KEY, JSON.stringify(profileWithTtl));
 
     return profile;
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, localProfile]);
 
   /**
@@ -272,4 +284,17 @@ export default function useProfile(args?: Props) {
     getIdTokenClaims,
     hasEnoughPermissions,
   };
+}
+
+function getNumericPermission(
+  permission: MycPermission | string
+): number {
+  switch (permission) {
+    case MycPermission.Read:
+      return 0;
+    case MycPermission.Write:
+      return 1;
+    default:
+      return 0;
+  }
 }

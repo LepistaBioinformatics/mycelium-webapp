@@ -362,7 +362,7 @@
             }
           },
           "customization": {
-            "title": "Personalización",
+            "title": "Actividades de gestión",
             "description": "Personalice el espacio de nombres con etiquetas, marcas y cuentas de suscripción.",
             "managers": {
               "title": "Gerentes",
@@ -433,6 +433,9 @@
           "details": "Detalles",
           "invitations": "Acciones",
           "advancedActions": "Acciones avanzadas",
+          "noAccess": {
+            "title": "No tiene acceso a esta cuenta"
+          },
           "name": {
             "title": "Nombre de cuenta",
             "prefix": "Verás"
@@ -822,6 +825,16 @@
       "records": "{{number}} resultados",
       "prev": "Anterior",
       "next": "Próximo"
+    },
+    "WrittenBy": {
+      "created_by": {
+        "title": "Creado por",
+        "prefix": "Creado por"
+      },
+      "updated_by": {
+        "title": "Actualizado por",
+        "prefix": "Actualizado por"
+      }
     }
   },
   "Menu": {

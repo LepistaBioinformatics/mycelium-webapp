@@ -2,7 +2,7 @@ import useProfile from "@/hooks/use-profile";
 import useSearchBarParams from "@/hooks/use-search-bar-params";
 import { buildPath } from "@/services/openapi/mycelium-api";
 import { components } from "@/services/openapi/mycelium-schema";
-import { useCallback, useEffect, useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import useSWR from "swr";
 import DashBoardBody from "../DashBoardBody";
 import PaginatedRecords from "@/types/PaginatedRecords";
@@ -23,6 +23,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/states/store";
 import { useTranslation } from "react-i18next";
 import IntroSection from "@/components/ui/IntroSection";
+import { Link } from "react-router";
 
 const { padding } = projectVariants;
 
@@ -34,7 +35,6 @@ interface Props {
   breadcrumb?: React.ReactNode;
   initialSkip?: number;
   initialPageSize?: number;
-  handleClickOnAccount?: (account: Account) => void;
   padding?: keyof typeof padding;
   forceMutate?: Date | null;
   restrictAccountTypeTo?: (
@@ -141,7 +141,6 @@ export default function PaginatedAccounts({
   tenantId,
   toolbar,
   breadcrumb,
-  handleClickOnAccount,
   initialSkip,
   initialPageSize,
   forceMutate,
@@ -192,6 +191,7 @@ export default function PaginatedAccounts({
       const tagValuePatternTest = tagValuePattern.test(searchTerm);
 
       if (tagValuePatternTest && !restrictAccountTypeTo) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const [_, tagValue] = searchTerm.split("=");
         if (tagValue) searchParams.tagValue = tagValue;
       }
@@ -347,6 +347,7 @@ export default function PaginatedAccounts({
     if (forceMutate) mutateAccounts(accounts, { rollbackOnError: true });
   }, [forceMutate, mutateAccounts, accounts]);
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const onSubmit = (term?: string, _?: string) => {
     setSkip(0);
 
@@ -354,38 +355,6 @@ export default function PaginatedAccounts({
 
     mutateAccounts(accounts, { rollbackOnError: true });
   };
-
-  const AccountHeader = useCallback(
-    ({ account }: { account: Account }) => {
-      if (handleClickOnAccount) {
-        return (
-          <button
-            className="hover:underline text-indigo-500 dark:text-lime-400 flex items-center gap-2"
-            onClick={() => handleClickOnAccount(account)}
-          >
-            <div className="flex items-center gap-2">{account?.name}</div>
-            {account.isDefault && (
-              <span className="text-xs text-gray-500 dark:text-gray-400">
-                (Default)
-              </span>
-            )}
-          </button>
-        );
-      }
-
-      return (
-        <>
-          <div className="flex items-center gap-2">{account?.name}</div>
-          {account.isDefault && (
-            <span className="text-xs text-gray-500 dark:text-gray-400">
-              (Default)
-            </span>
-          )}
-        </>
-      );
-    },
-    [handleClickOnAccount]
-  );
 
   return (
     <DashBoardBody
@@ -410,6 +379,7 @@ export default function PaginatedAccounts({
             </Typography>
             {Object.entries(COMMANDS.accountType)
               ?.filter(
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 ([_, value]) =>
                   !restrictAccountTypeTo ||
                   restrictAccountTypeTo.includes(
@@ -489,7 +459,17 @@ export default function PaginatedAccounts({
             <ListItem key={account?.id}>
               <div className="flex justify-between gap-3">
                 <Typography as="h4" truncate>
-                  <AccountHeader account={account} />
+                  <Link
+                    className="hover:underline text-indigo-500 dark:text-lime-400 flex items-center gap-2"
+                    to={`/dashboard/accounts/?accountId=${account?.id}`}
+                  >
+                    <div className="flex items-center gap-2">{account?.name}</div>
+                    {account.isDefault && (
+                      <span className="text-xs text-gray-500 dark:text-gray-400">
+                        (Default)
+                      </span>
+                    )}
+                  </Link>
                 </Typography>
                 <div className="flex gap-5">
                   <CopyToClipboard text={account?.id ?? ""} />

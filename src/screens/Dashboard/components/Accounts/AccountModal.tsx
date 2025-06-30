@@ -1,5 +1,3 @@
-"use client";
-
 import Banner from "@/components/ui/Banner";
 import Button from "@/components/ui/Button";
 import Divider from "@/components/ui/Divider";
@@ -37,8 +35,8 @@ export interface AccountModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSuccess: () => void;
-  account: Account | null;
-  accountId: string | null;
+  account?: Account | null;
+  accountId?: string | null;
 }
 
 export default function AccountModal({
@@ -107,7 +105,7 @@ export default function AccountModal({
       baseUrl: buildPath("/adm/rs/subscriptions-manager/accounts"),
       method: "POST",
     };
-  }, [systemAccountType, account]);
+  }, [systemAccountType, account, accountId]);
 
   const onSubmit: SubmitHandler<Inputs> = async ({ name }) => {
     setIsLoading(true);
@@ -196,8 +194,8 @@ export default function AccountModal({
                 ? t("screens.Dashboard.Accounts.AccountModal.updating")
                 : t("screens.Dashboard.Accounts.AccountModal.update")
               : isLoading
-              ? t("screens.Dashboard.Accounts.AccountModal.creating")
-              : t("screens.Dashboard.Accounts.AccountModal.create")}
+                ? t("screens.Dashboard.Accounts.AccountModal.creating")
+                : t("screens.Dashboard.Accounts.AccountModal.create")}
           </Button>
 
           {hasAdminPrivileges && !account && (

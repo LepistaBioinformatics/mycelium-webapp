@@ -1,6 +1,7 @@
 import { cva, VariantProps } from "class-variance-authority";
 import Typography from "./Typography";
 import { IoCloseSharp } from "react-icons/io5";
+import { useNavigate } from "react-router";
 
 const containerStyles = cva(
   "text-gray-500 dark:text-gray-50 fixed inset-0 z-[999] flex flex-col justify-center items-center bg-opacity-10 sm:bg-opacity-60 bg-black h-full sm:pt-1 sm:px-1",
@@ -19,7 +20,7 @@ const containerStyles = cva(
 
 interface ContainerProps
   extends BaseProps,
-    VariantProps<typeof containerStyles> {}
+  VariantProps<typeof containerStyles> { }
 
 function Container({ children, open, ...props }: ContainerProps) {
   return (
@@ -39,16 +40,22 @@ const headerStyles = cva(
 );
 
 interface HeaderProps extends BaseProps, VariantProps<typeof headerStyles> {
-  handleClose: () => void;
+  handleClose?: () => void;
 }
 
 function Header({ children, handleClose, ...props }: HeaderProps) {
+  const navigate = useNavigate();
+
+  const defaultHandleClose = () => {
+    navigate(-1);
+  };
+
   return (
     <div className={headerStyles()} {...props}>
       <Typography as="div" decoration="smooth">
         {children}
       </Typography>
-      <button onClick={handleClose}>
+      <button onClick={handleClose || defaultHandleClose}>
         <IoCloseSharp className="text-3xl text-indigo-500 dark:text-lime-500" />
       </button>
     </div>
@@ -62,7 +69,7 @@ const bodyStyles = cva(
   }
 );
 
-interface BodyProps extends BaseProps, VariantProps<typeof bodyStyles> {}
+interface BodyProps extends BaseProps, VariantProps<typeof bodyStyles> { }
 
 function Body({ children, ...props }: BodyProps) {
   return (

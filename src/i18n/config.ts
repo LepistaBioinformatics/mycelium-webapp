@@ -11,7 +11,7 @@ export enum Language {
 }
 
 i18next.use(initReactI18next).init({
-    debug: import.meta.env.NODE_ENV !== "production",
+    debug: import.meta.env.PROD ? false : true,
     resources: {
         [Language.EN]: {
             translation: enTranslation,

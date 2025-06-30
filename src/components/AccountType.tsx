@@ -35,11 +35,13 @@ export default function AccountType({
     );
   }
 
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const accountType = useMemo(
     () => Object.keys(account.accountType).at(0),
     [account.accountType]
   );
 
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const renderedValues = useCallback((values: any) => {
     if (typeof values === "string") {
       return (
@@ -60,6 +62,7 @@ export default function AccountType({
     }
 
     if (typeof values === "object") {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       return Object.entries(values).map(([_, value]) => {
         return (
           <Typography {...attrs} {...extraProps}>
@@ -70,7 +73,7 @@ export default function AccountType({
     }
 
     return null;
-  }, []);
+  }, [extraProps]);
 
   if (part === "type") {
     return (

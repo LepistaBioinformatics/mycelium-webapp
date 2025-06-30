@@ -105,12 +105,13 @@ export default function AccountInvitations({
 
   if (isLoading) return <div>Loading...</div>;
 
-  if (!invitations || invitations.count === 0)
+  if (!invitations || invitations.count === 0) {
     return (
-      <Typography as="span" decoration="thin">
+      <Typography as="span" decoration="smooth">
         {t("screens.Dashboard.Accounts.AccountInvitations.noInvitations")}
       </Typography>
     );
+  }
 
   return (
     <div className="flex flex-col gap-2">

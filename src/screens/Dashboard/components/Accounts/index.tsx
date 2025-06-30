@@ -1,6 +1,5 @@
 import PageBody from "@/components/ui/PageBody";
-import { components } from "@/services/openapi/mycelium-schema";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import Button from "@/components/ui/Button";
 import { useSelector } from "react-redux";
 import { RootState } from "@/states/store";
@@ -13,15 +12,10 @@ import { MdManageAccounts } from "react-icons/md";
 import { useTranslation } from "react-i18next";
 import { FaPlus } from "react-icons/fa";
 
-type Account = components["schemas"]["Account"];
-
 export default function Accounts() {
   const { t } = useTranslation();
 
   const [isNewModalOpen, setIsNewModalOpen] = useState(false);
-  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
-  const [currentAccountId, setCurrentAccountId] = useState<string | null>(null);
-  const [currentAccount, setCurrentAccount] = useState<Account | null>(null);
   const [forceMutate, setForceMutate] = useState<Date | null>(null);
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -30,22 +24,8 @@ export default function Accounts() {
 
   const { hasAdminPrivileges } = useProfile();
 
-  useEffect(() => {
-    const accountId = searchParams.get("accountId");
-    if (accountId) handleAccountIdChange(accountId);
-  }, []);
-
-  const handleAccountIdChange = (accountId: string | null) => {
-    if (accountId) {
-      setCurrentAccountId(accountId);
-      setIsViewModalOpen(true);
-    }
-  };
-
   const handleCloseModal = () => {
     setIsNewModalOpen(false);
-    setIsViewModalOpen(false);
-    setCurrentAccount(null);
     setForceMutate(new Date());
 
     // Remove accountId from search params
@@ -60,13 +40,6 @@ export default function Accounts() {
     setForceMutate(new Date());
   };
 
-  const handleClickOnAccount = (account: Account) => {
-    if (account.id) {
-      setSearchParams({ accountId: account.id });
-      handleAccountIdChange(account.id);
-    }
-  };
-
   const shouldCreateAccount = useMemo(() => {
     if (hasAdminPrivileges) return true;
 
@@ -79,7 +52,6 @@ export default function Accounts() {
     <div className="p-1 sm:p-5">
       <PaginatedAccounts
         tenantId={tenantInfo?.id ?? ""}
-        handleClickOnAccount={handleClickOnAccount}
         forceMutate={forceMutate}
         breadcrumb={
           <PageBody.Breadcrumb.Item icon={MdManageAccounts}>
@@ -104,18 +76,10 @@ export default function Accounts() {
         }
       />
 
-      {isViewModalOpen && currentAccountId && (
-        <AccountDetails
-          isOpen={isViewModalOpen}
-          onClose={handleCloseModal}
-          accountId={currentAccountId}
-        />
-      )}
+      <AccountDetails onClose={handleCloseModal} />
 
       <AccountModal
         isOpen={isNewModalOpen}
-        account={currentAccount}
-        accountId={currentAccountId}
         onClose={handleCloseModal}
         onSuccess={handleSuccess}
       />

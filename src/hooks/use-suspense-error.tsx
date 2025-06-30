@@ -23,6 +23,11 @@ export default function useSuspenseError() {
         return res;
       }
 
+      if (res.status === 204) {
+        // No content, return null
+        return null;
+      }
+
       return res.json();
     };
 

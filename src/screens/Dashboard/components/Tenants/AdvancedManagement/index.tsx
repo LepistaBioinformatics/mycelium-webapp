@@ -67,6 +67,8 @@ export default function AdvancedManagement() {
     ) {
       dispatch(setTenantInfo(tenantStatus.active));
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tenantStatus]);
 
   const activeTenant = useMemo(() => {

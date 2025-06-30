@@ -83,12 +83,12 @@ export default function RegisterGuestRoleChild({
       onSuccess();
     },
     [
-      getAccessTokenSilently,
       isAuthenticated,
       hasEnoughPermissions,
-      onSuccess,
       parentRole.id,
-      selectedRole?.id,
+      getAccessTokenSilently,
+      onSuccess,
+      parseHttpError
     ]
   );
 

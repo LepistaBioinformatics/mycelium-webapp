@@ -362,7 +362,7 @@
             }
           },
           "customization": {
-            "title": "Personalization",
+            "title": "Management activities",
             "description": "Customize Namespace with tags, brand and subscription accounts.",
             "managers": {
               "title": "Managers",
@@ -433,6 +433,9 @@
           "details": "Details",
           "invitations": "Shares",
           "advancedActions": "Advanced actions",
+          "noAccess": {
+            "title": "You do not have access to this account"
+          },
           "name": {
             "title": "Account name",
             "prefix": "You see"
@@ -629,7 +632,7 @@
             "button": "Edit"
           },
           "registerChildRole": {
-            "title": "Register Filho Role",
+            "title": "Register child role",
             "description": "Record a child role for the guest role.",
             "button": "Register"
           },
@@ -674,7 +677,7 @@
           "deleting": "Deleting ..."
         },
         "RegisterGuestRoleChild": {
-          "title": "Register Filho Role",
+          "title": "Register child role",
           "label": "Child role",
           "button": "Register"
         },
@@ -822,6 +825,16 @@
       "records": "{{number}} results",
       "prev": "Previous",
       "next": "Next"
+    },
+    "WrittenBy": {
+      "created_by": {
+        "title": "Created by",
+        "prefix": "Created by"
+      },
+      "updated_by": {
+        "title": "Updated by",
+        "prefix": "Updated by"
+      }
     }
   },
   "Menu": {

@@ -116,7 +116,7 @@ export default function GuestRoleSelector({
     pageSize,
     searchTerm,
     restrictRoleToSlug,
-      shouldBeSystemRole
+    shouldBeSystemRole
   ]);
 
   const {
@@ -226,7 +226,7 @@ export default function GuestRoleSelector({
                   (a, b) =>
                     a.name.localeCompare(b.name) ||
                     getNumericPermission(a.permission as MycPermission) -
-                      getNumericPermission(b.permission as MycPermission)
+                    getNumericPermission(b.permission as MycPermission)
                 )
                 ?.map((role) => (
                   <SelectionItem
@@ -262,7 +262,7 @@ const selectionItemStyles = cva(
 
 interface SelectionItemProps
   extends BaseProps,
-    VariantProps<typeof selectionItemStyles> {
+  VariantProps<typeof selectionItemStyles> {
   desiredRole: GuestRole;
   parentRole?: GuestRole | null;
   onClick: (role: GuestRole) => void;

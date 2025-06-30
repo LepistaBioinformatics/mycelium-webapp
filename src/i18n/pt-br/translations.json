@@ -362,7 +362,7 @@
             }
           },
           "customization": {
-            "title": "Personalização",
+            "title": "Atividades gerenciais",
             "description": "Personalize o namespace com tags, marca e configurações de contas de subscrição.",
             "managers": {
               "title": "Gerentes",
@@ -433,6 +433,9 @@
           "details": "Detalhes",
           "invitations": "Compartilhamentos",
           "advancedActions": "Ações avançadas",
+          "noAccess": {
+            "title": "Você não tem acesso a essa conta"
+          },
           "name": {
             "title": "Nome da conta",
             "prefix": "Você vê"
@@ -822,6 +825,16 @@
       "records": "{{number}} resultados",
       "prev": "Anterior",
       "next": "Próximo"
+    },
+    "WrittenBy": {
+      "created_by": {
+        "title": "Criado por",
+        "prefix": "Criado por"
+      },
+      "updated_by": {
+        "title": "Atualizado por",
+        "prefix": "Atualizado por"
+      }
     }
   },
   "Menu": {

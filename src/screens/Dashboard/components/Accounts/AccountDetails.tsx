@@ -23,13 +23,14 @@ import IntroSection from "@/components/ui/IntroSection";
 import AccountInvitations from "./AccountInvitations";
 import UnInviteGuestModal from "./UnInviteGuestModal";
 import { useTranslation } from "react-i18next";
+import { useNavigate, useSearchParams } from "react-router";
+import WrittenBy from "@/components/WrittenBy";
+import { IoReturnDownBack } from "react-icons/io5";
 
 type Account = components["schemas"]["Account"];
 type GuestUser = components["schemas"]["GuestUser"];
 
 interface Props {
-  accountId: string;
-  isOpen: boolean;
   onClose: () => void;
 }
 
@@ -39,8 +40,27 @@ enum OpenedSection {
   AdvancedActions,
 }
 
-export default function AccountDetails({ isOpen, onClose, accountId }: Props) {
+export default function AccountDetails({ onClose }: Props) {
   const { t } = useTranslation();
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [searchParams, _] = useSearchParams();
+
+  const navigate = useNavigate();
+
+  const accountId = useMemo(() => {
+    if (!searchParams) return null;
+
+    const id = searchParams.get("accountId");
+
+    if (!id) return null;
+
+    return id;
+  }, [searchParams]);
+
+  const isOpen = useMemo(() => {
+    return accountId !== null;
+  }, [accountId]);
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isGuestToAccountModalOpen, setIsGuestToAccountModalOpen] =
@@ -100,10 +120,16 @@ export default function AccountDetails({ isOpen, onClose, accountId }: Props) {
     setCurrentGuestUser(guestUser);
   };
 
-  const { data: account, mutate: mutateAccount } = useSWR<Account>(
-    buildPath("/adm/rs/subscriptions-manager/accounts/{account_id}", {
-      path: { account_id: accountId },
-    }),
+  const {
+    data: account,
+    isLoading,
+    mutate: mutateAccount,
+  } = useSWR<Account>(
+    accountId
+      ? buildPath("/adm/rs/subscriptions-manager/accounts/{account_id}", {
+        path: { account_id: accountId },
+      })
+      : null,
     async (url: string) => {
       const token = await getAccessTokenSilently();
 
@@ -176,6 +202,44 @@ export default function AccountDetails({ isOpen, onClose, accountId }: Props) {
     return true;
   }, [account]);
 
+  const Container = ({ children }: BaseProps) => (
+    <SideCurtain
+      open={isOpen}
+      title={t("screens.Dashboard.Accounts.AccountDetails.title")}
+      handleClose={onClose}
+    >
+      {children}
+    </SideCurtain>
+  );
+
+  if (!account && !isLoading) {
+    return (
+      <Container>
+        <div className="flex flex-col gap-8 items-center justify-center h-full">
+          <img
+            src="/undraw.co/undraw_void_wez2.svg"
+            alt="No access"
+            width={200}
+            height={200}
+          />
+
+          <div className="flex flex-col gap-2 items-center justify-center">
+            <Typography as="h3">
+              {t("screens.Dashboard.Accounts.AccountDetails.noAccess.title")}
+            </Typography>
+
+            <IoReturnDownBack
+              size={32}
+              title="Go back"
+              className="cursor-pointer text-indigo-500 dark:text-lime-400"
+              onClick={() => navigate(-1)}
+            />
+          </div>
+        </div>
+      </Container>
+    );
+  }
+
   return (
     <SideCurtain
       open={isOpen}
@@ -247,6 +311,8 @@ export default function AccountDetails({ isOpen, onClose, accountId }: Props) {
               {formatDDMMYY(new Date(account?.createdAt ?? ""), true)}
             </IntroSection.Item>
 
+            <WrittenBy writtenBy={account?.createdBy} action="created" />
+
             <IntroSection.Item
               prefix={t(
                 "screens.Dashboard.Accounts.AccountDetails.updated.prefix"
@@ -257,6 +323,8 @@ export default function AccountDetails({ isOpen, onClose, accountId }: Props) {
             >
               {formatDDMMYY(new Date(account?.updatedAt ?? ""), true)}
             </IntroSection.Item>
+
+            <WrittenBy writtenBy={account?.updatedBy} action="updated" />
 
             <IntroSection.Item
               prefix={t(
@@ -316,6 +384,17 @@ export default function AccountDetails({ isOpen, onClose, accountId }: Props) {
 
           {openedSection === OpenedSection.Invitations && (
             <DetailsBox.Content minHeight="50">
+              {includeInvitationsFeature && (
+                <div className="flex justify-end">
+                  <Button
+                    rounded
+                    onClick={() => setIsGuestToAccountModalOpen(true)}
+                  >
+                    {t("screens.Dashboard.Accounts.AccountDetails.invite.button")}
+                  </Button>
+                </div>
+              )}
+
               {tenantInfo?.id && account && (
                 <div className="flex flex-col gap-1">
                   <AccountInvitations
@@ -343,37 +422,6 @@ export default function AccountDetails({ isOpen, onClose, accountId }: Props) {
         </DetailsBox.Summary>
 
         <DetailsBox.Content minHeight="50">
-          {includeInvitationsFeature && (
-            <Banner intent="info">
-              <div className="flex justify-between gap-2 my-5">
-                <div className="flex flex-col gap-2">
-                  <Typography as="span">
-                    {t(
-                      "screens.Dashboard.Accounts.AccountDetails.invite.title"
-                    )}
-                  </Typography>
-
-                  <Typography as="small" decoration="smooth" width="sm">
-                    {t(
-                      "screens.Dashboard.Accounts.AccountDetails.invite.description"
-                    )}
-                  </Typography>
-                </div>
-
-                <div>
-                  <Button
-                    rounded
-                    onClick={() => setIsGuestToAccountModalOpen(true)}
-                  >
-                    {t(
-                      "screens.Dashboard.Accounts.AccountDetails.invite.button"
-                    )}
-                  </Button>
-                </div>
-              </div>
-            </Banner>
-          )}
-
           <Banner intent="info">
             <div className="flex justify-between gap-2 my-5">
               <div className="flex flex-col gap-2">
@@ -434,36 +482,40 @@ export default function AccountDetails({ isOpen, onClose, accountId }: Props) {
             </Banner>
           )}
 
-          {(
-            (typeof account?.accountType !== "string") || 
-            (!["user", "staff", "manager"].includes(account?.accountType ?? ""))
-          ) && (
-            <Banner intent="error">
-            <div className="flex justify-between gap-2 my-5">
-              <div className="flex flex-col gap-2">
-                <Typography as="span">
-                  {t("screens.Dashboard.Accounts.AccountDetails.delete.title")}
-                </Typography>
+          {(typeof account?.accountType !== "string" ||
+            !["user", "staff", "manager"].includes(
+              account?.accountType ?? ""
+            )) && (
+              <Banner intent="error">
+                <div className="flex justify-between gap-2 my-5">
+                  <div className="flex flex-col gap-2">
+                    <Typography as="span">
+                      {t(
+                        "screens.Dashboard.Accounts.AccountDetails.delete.title"
+                      )}
+                    </Typography>
 
-                <Typography as="small" decoration="smooth" width="sm">
-                  {t(
-                    "screens.Dashboard.Accounts.AccountDetails.delete.description"
-                  )}
-                </Typography>
-              </div>
+                    <Typography as="small" decoration="smooth" width="sm">
+                      {t(
+                        "screens.Dashboard.Accounts.AccountDetails.delete.description"
+                      )}
+                    </Typography>
+                  </div>
 
-              <div>
-                <Button
-                  rounded
-                  intent="danger"
-                  onClick={() => setIsDeleteModalOpen(true)}
-                >
-                  {t("screens.Dashboard.Accounts.AccountDetails.delete.button")}
-                </Button>
-              </div>
-            </div>
-          </Banner>
-          )}
+                  <div>
+                    <Button
+                      rounded
+                      intent="danger"
+                      onClick={() => setIsDeleteModalOpen(true)}
+                    >
+                      {t(
+                        "screens.Dashboard.Accounts.AccountDetails.delete.button"
+                      )}
+                    </Button>
+                  </div>
+                </div>
+              </Banner>
+            )}
         </DetailsBox.Content>
       </DetailsBox>
 

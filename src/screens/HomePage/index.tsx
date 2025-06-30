@@ -29,7 +29,7 @@ export default function HomePage() {
 
         <PageBody.Content gap={3} padding="none">
           <div className="flex sm:flex-row flex-col gap-4 items-center justify-around w-full">
-            <div className="flex flex-col items-center justify-center hidden sm:block bg-[url(/custom/mag.png)] bg-repeat-y bg-center bg-no-repeat bg-cover w-1/2 h-[95vh] z-40 group">
+            <div className="flex flex-col items-center justify-center hidden sm:block bg-[url(/custom/mag.png)] bg-center bg-no-repeat bg-cover w-1/2 h-[95vh] z-40 group">
               <div className="h-full w-full flex flex-col items-center justify-center backdrop-blur-lg hover:backdrop-blur-none bg-indigo-700/50 group-hover:bg-transparent dark:bg-zinc-900/50 transition-all transition-discrete duration-[500ms]">
                 <div className="flex flex-col gap-4 items-center justify-center h-fit w-fit bg-lime-100 rounded-full group-hover:-translate-y-[60%] group-hover:scale-50 transition-all transition-discrete duration-[500ms]">
                   <img
