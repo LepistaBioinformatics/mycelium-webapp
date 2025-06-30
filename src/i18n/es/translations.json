@@ -532,6 +532,10 @@
             "title": "Actualizar el estado de la cuenta",
             "description": "Actualizar el estado de la cuenta para un estado diferente. Use el botón Actualizar para cambiar el estado de la cuenta.",
             "button": "Para actualizar"
+          },
+          "yourPermissions": {
+            "title": "Sus permisos",
+            "prefix": "Sus permisos"
           }
         },
         "AccountModal": {

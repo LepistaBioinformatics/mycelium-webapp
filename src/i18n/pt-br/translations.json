@@ -532,6 +532,10 @@
             "title": "Atualizar status da conta",
             "description": "Atualize o status da conta para um status diferente. Use o botão de atualização para alterar o status da conta.",
             "button": "Atualizar"
+          },
+          "yourPermissions": {
+            "title": "Seus permissões",
+            "prefix": "Seus permissões"
           }
         },
         "AccountModal": {
