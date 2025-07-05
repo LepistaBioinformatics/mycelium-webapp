@@ -1,50 +1,59 @@
-# React + TypeScript + Vite
+# MyWAPP - Mycelium WebAPP
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+It is the official webapp for the Mycelium API Gateway project.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+[MAG (Mycelium API Gateway)](https://github.com/LepistaBioinformatics/mycelium) is a
+ready-to-use API Gateway for your microservices. MyWAPP is a webapp that allows
+you to manage your API Gateway.
 
-## Expanding the ESLint configuration
+### Authentication
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+MAG should support any identity provider that implements [OAuth
+2.0](https://oauth.net/2/) protocol. Then MyWAPP implements the authentication
+based on Auth0 identity provider, but feel free to use any other provider.
 
-- Configure the top-level `parserOptions` property like this:
+![MyWAPP Login Page](./docs/screenshots/01-login-page.png "MyWAPP Login Page")
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+### Dashboard
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+You should manage your API Gateway resources in the Dashboard page.
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+![MyWAPP Dashboard](./docs/screenshots/02-profile-page-02.png "MyWAPP Dashboard")
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+### Tenant Management
+
+![MyWAPP Tenant Management](./docs/screenshots/03-tenant-management.png "MyWAPP Tenant Management")
+
+### Account Details Page
+
+![MyWAPP Account Details Page](./docs/screenshots/04-account-details-page.png "MyWAPP Account Details Page")
+
+### Account Sharing
+
+![MyWAPP Account Sharing](./docs/screenshots/05-account-sharing.png "MyWAPP Account Sharing")
+
+### Fine Grant Connection String Management
+
+![MyWAPP Fine Grant Connection String Management](./docs/screenshots/06-fine-grant-connection-string-management.png "MyWAPP Fine Grant Connection String Management")
+
+### Roles System Page
+
+![MyWAPP Roles System Page](./docs/screenshots/07-roles-system-page.png "MyWAPP Roles System Page")
+
+### Webhooks Page
+
+![MyWAPP Webhooks Page](./docs/screenshots/08-webhooks-page.png "MyWAPP Webhooks Page")
+
+### Operations Page
+
+![MyWAPP Operations Page](./docs/screenshots/09-operations-page.png "MyWAPP Operations Page")
+
+### Mobile App
+
+![MyWAPP Mobile App](./docs/screenshots/10-mobile-profile.png "MyWAPP Mobile App")
+
+### Multi-language support
+
+![MyWAPP Multi-language support](./docs/screenshots/11-mobile-multilang.png "MyWAPP Multi-language support")
