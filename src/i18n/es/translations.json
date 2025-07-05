@@ -88,6 +88,14 @@
       },
       "CreateConnectionStringModal": {
         "title": "Crear cadena de conexión",
+        "accountId": "Restringido a cuenta",
+        "accountIdDescription": "La cadena de conexión se restringirá a la cuenta con el ID.",
+        "tenantId": "Restringido a inquilino",
+        "tenantIdDescription": "La cadena de conexión se restringirá al inquilino con el ID.",
+        "permissionedRoles": "Roles y permisos",
+        "permissionedRolesDescription": "La cadena de conexión se restringirá a los roles y permisos seleccionados.",
+        "removeRole": "No incluir este rol en el filtro",
+        "explain": "La cadena de conexión se restringirá a cuenta, inquilino, roles y permisos seleccionados en esta etapa. Para verificar si el token generado tiene el ámbito adecuado, utilice herramientas como base64decode.org",
         "form": {
           "expiration": {
             "label": "Seleccionar expiración",
@@ -199,7 +207,7 @@
           "title": "Permiso atribuido a usted",
           "prefix": "Puede"
         },
-        "unverified": "No cualificado"
+        "verified": "Verificado"
       },
       "TenantBasicInfo": {
         "from": {
@@ -572,6 +580,12 @@
               "description": "System Manager es una cuenta de sistema diseñada para administrar funciones de sistemas y tokens relacionados con el sistema.",
               "button": "Para crear"
             }
+          }
+        },
+        "PermissionsOnAccount": {
+          "inherited": {
+            "title": "Vista heredada de permisos de lectura/escritura de tenant",
+            "value": "Propietario de tenant"
           }
         },
         "GuestToAccountModal": {

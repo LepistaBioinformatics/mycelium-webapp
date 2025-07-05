@@ -88,6 +88,14 @@
       },
       "CreateConnectionStringModal": {
         "title": "Criar string de conexão",
+        "accountId": "Restrito a conta",
+        "accountIdDescription": "A string de conexão será restrita à conta com o ID.",
+        "tenantId": "Restrito ao inquilino",
+        "tenantIdDescription": "A string de conexão será restrita ao inquilino com o ID.",
+        "permissionedRoles": "Papéis e permissões",
+        "permissionedRolesDescription": "A string de conexão será restrita aos papéis e permissões selecionados.",
+        "removeRole": "Não incluir esse papel no filtro",
+        "explain": "A string de conexão será restrita a conta, tenant, papéis e permissões selecionados nessa etapa. Para verificar se o token gerado possui o escopo adequado, utilize ferramentas como base64decode.org",
         "form": {
           "expiration": {
             "label": "Selecionar expiração",
@@ -199,7 +207,7 @@
           "title": "Permissão atribuída a você",
           "prefix": "Você pode"
         },
-        "unverified": "Não verificado"
+        "verified": "Verificado"
       },
       "TenantBasicInfo": {
         "from": {
@@ -534,8 +542,14 @@
             "button": "Atualizar"
           },
           "yourPermissions": {
-            "title": "Seus permissões",
-            "prefix": "Seus permissões"
+            "title": "Suas permissões",
+            "prefix": "Suas permissões"
+          }
+        },
+        "PermissionsOnAccount": {
+          "inherited": {
+            "title": "Visualização herdada de permissões de leitura/escrita do tenant",
+            "value": "Proprietário do tenant"
           }
         },
         "AccountModal": {

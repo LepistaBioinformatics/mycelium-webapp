@@ -457,7 +457,7 @@ export default function PaginatedAccounts({
                 <Typography as="h4" truncate>
                   <Link
                     className="hover:underline text-indigo-500 dark:text-lime-400 flex items-center gap-2"
-                    to={`${location.pathname}/?accountId=${account?.id}`}
+                    to={`${location.pathname}?accountId=${account?.id}`}
                   >
                     <div className="flex items-center gap-2">
                       {account?.name}

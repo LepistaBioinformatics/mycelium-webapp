@@ -27,6 +27,9 @@ import { useNavigate, useSearchParams } from "react-router";
 import WrittenBy from "@/components/WrittenBy";
 import { IoReturnDownBack } from "react-icons/io5";
 import PermissionsOnAccount from "./PermissionsOnAccount";
+import CreateConnectionStringModal from "../CreateConnectionStringModal";
+import getLicensedResourcesOrNull from "@/functions/get-licensed-resources-or-null";
+import { MycPermission } from "@/types/MyceliumPermission";
 
 type Account = components["schemas"]["Account"];
 type GuestUser = components["schemas"]["GuestUser"];
@@ -73,6 +76,10 @@ export default function AccountDetails({ onClose }: Props) {
     null
   );
   const [isUnInviteModalOpen, setIsUnInviteModalOpen] = useState(false);
+  const [
+    isCreateConnectionStringModalOpen,
+    setIsCreateConnectionStringModalOpen,
+  ] = useState(false);
 
   const { profile, getAccessTokenSilently } = useProfile();
 
@@ -83,6 +90,35 @@ export default function AccountDetails({ onClose }: Props) {
   );
 
   const { tenantInfo } = useSelector((state: RootState) => state.tenant);
+
+  const filteredLicensedResources = useMemo(() => {
+    const licensedResources = getLicensedResourcesOrNull(
+      profile?.licensedResources
+    );
+
+    if (!licensedResources) return null;
+
+    const filtered = licensedResources.filter(
+      (resource) =>
+        resource.accId === accountId && resource.tenantId === tenantInfo?.id
+    );
+
+    if (filtered.length === 0) return null;
+
+    return filtered
+      .map((resource) => ({
+        role: resource.role,
+        permission: resource.perm as MycPermission,
+      }))
+      .filter(
+        (resource, index, self) =>
+          index ===
+          self.findIndex(
+            (t) =>
+              t.role === resource.role && t.permission === resource.permission
+          )
+      );
+  }, [profile?.licensedResources, accountId, tenantInfo?.id]);
 
   const handleClose = () => {
     if (onClose) {
@@ -104,6 +140,10 @@ export default function AccountDetails({ onClose }: Props) {
     setIsGuestToAccountModalOpen(false);
   };
 
+  const handleCloseCreateConnectionStringModal = () => {
+    setIsCreateConnectionStringModalOpen(false);
+  };
+
   const handleCloseDeleteModal = () => {
     setIsDeleteModalOpen(false);
   };
@@ -117,8 +157,12 @@ export default function AccountDetails({ onClose }: Props) {
     mutateAccount(account, { rollbackOnError: true });
   };
 
-  const handleSuccess = () => {
+  const handleSuccessAccountWritting = () => {
     handleCloseEditModal();
+  };
+
+  const handleSuccessCreateConnectionString = () => {
+    setIsCreateConnectionStringModalOpen(false);
   };
 
   const handleCloseUpgradeOrDowngradeModal = () => {
@@ -512,35 +556,66 @@ export default function AccountDetails({ onClose }: Props) {
             !["user", "staff", "manager"].includes(
               account?.accountType ?? ""
             )) && (
-            <Banner intent="error">
-              <div className="flex justify-between gap-2 my-5">
-                <div className="flex flex-col gap-2">
-                  <Typography as="span">
-                    {t(
-                      "screens.Dashboard.Accounts.AccountDetails.delete.title"
-                    )}
-                  </Typography>
+            <>
+              <Banner>
+                <div className="flex justify-between gap-2 my-5">
+                  <div className="flex flex-col gap-2">
+                    <Typography as="span">
+                      {t(
+                        "screens.Dashboard.Accounts.AccountDetails.createConnectionString.title"
+                      )}
+                    </Typography>
 
-                  <Typography as="small" decoration="smooth" width="sm">
-                    {t(
-                      "screens.Dashboard.Accounts.AccountDetails.delete.description"
-                    )}
-                  </Typography>
-                </div>
+                    <Typography as="small" decoration="smooth" width="sm">
+                      {t(
+                        "screens.Dashboard.Accounts.AccountDetails.createConnectionString.description"
+                      )}
+                    </Typography>
+                  </div>
 
-                <div>
-                  <Button
-                    rounded
-                    intent="danger"
-                    onClick={() => setIsDeleteModalOpen(true)}
-                  >
-                    {t(
-                      "screens.Dashboard.Accounts.AccountDetails.delete.button"
-                    )}
-                  </Button>
+                  <div>
+                    <Button
+                      rounded
+                      onClick={() => setIsCreateConnectionStringModalOpen(true)}
+                    >
+                      {t(
+                        "screens.Dashboard.Accounts.AccountDetails.createConnectionString.button"
+                      )}
+                    </Button>
+                  </div>
                 </div>
-              </div>
-            </Banner>
+              </Banner>
+
+              <Banner intent="error">
+                <div className="flex justify-between gap-2 my-5">
+                  <div className="flex flex-col gap-2">
+                    <Typography as="span">
+                      {t(
+                        "screens.Dashboard.Accounts.AccountDetails.delete.title"
+                      )}
+                    </Typography>
+
+                    <Typography as="small" decoration="smooth" width="sm">
+                      {t(
+                        "screens.Dashboard.Accounts.AccountDetails.delete.description"
+                      )}
+                    </Typography>
+                  </div>
+
+                  <div>
+                    <Button
+                      rounded
+                      intent="danger"
+                      onClick={() => setIsDeleteModalOpen(true)}
+                    >
+                      {t(
+                        "screens.Dashboard.Accounts.AccountDetails.delete.button"
+                      )}
+                    </Button>
+                  </div>
+                </div>
+              </Banner>
+            </>
           )}
         </DetailsBox.Content>
       </DetailsBox>
@@ -568,7 +643,7 @@ export default function AccountDetails({ onClose }: Props) {
           onClose={handleCloseEditModal}
           account={account}
           accountId={account.id}
-          onSuccess={handleSuccess}
+          onSuccess={handleSuccessAccountWritting}
         />
       )}
 
@@ -578,7 +653,7 @@ export default function AccountDetails({ onClose }: Props) {
           onClose={handleCloseUpgradeOrDowngradeModal}
           account={account}
           accountId={account.id}
-          onSuccess={handleSuccess}
+          onSuccess={handleSuccessAccountWritting}
         />
       )}
 
@@ -588,6 +663,17 @@ export default function AccountDetails({ onClose }: Props) {
           accountId={account.id}
           isOpen={isUnInviteModalOpen}
           onClose={handleCloseUnInviteModal}
+        />
+      )}
+
+      {isCreateConnectionStringModalOpen && account?.id && (
+        <CreateConnectionStringModal
+          isOpen={isCreateConnectionStringModalOpen}
+          onClose={handleCloseCreateConnectionStringModal}
+          onSuccess={handleSuccessCreateConnectionString}
+          accountId={account.id}
+          tenantId={tenantInfo?.id}
+          permissionedRoles={filteredLicensedResources}
         />
       )}
     </SideCurtain>

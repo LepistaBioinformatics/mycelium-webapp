@@ -8,9 +8,9 @@ import PermissionIcon from "@/components/ui/PermissionIcon";
 import MiniBox from "@/components/ui/MiniBox";
 import IntroSection from "@/components/ui/IntroSection";
 import { useTranslation } from "react-i18next";
-import CopyToClipboard from "@/components/ui/CopyToClipboard";
 import { MycRole } from "@/types/MyceliumRole";
 import { Link } from "react-router";
+import { useEffect, useMemo } from "react";
 
 type LicensedResource = components["schemas"]["LicensedResource"];
 
@@ -20,6 +20,39 @@ interface Props {
 
 export default function LicensedResourcesSection({ licensedResources }: Props) {
   const { t } = useTranslation();
+
+  const uniqueAccountIds = useMemo(() => {
+    return licensedResources
+      ?.map((resource) => {
+        return {
+          id: resource.accId,
+          name: resource.accName,
+          sysAcc: resource.sysAcc,
+          tenantId: resource.tenantId,
+          role: resource.role,
+          perm: resource.perm,
+          verified: resource.verified,
+          roles: licensedResources
+            ?.filter((r) => r.accId === resource.accId)
+            ?.map((r) => {
+              return {
+                role: r.role,
+                perm: r.perm,
+                verified: r.verified,
+              };
+            })
+            ?.filter((role, index, self) => self.indexOf(role) === index)
+            ?.sort((a, b) => a.role.localeCompare(b.role)),
+        };
+      })
+      ?.filter((accId, index, self) => {
+        return self.findIndex((t) => t.id === accId.id) === index;
+      });
+  }, [licensedResources]);
+
+  useEffect(() => {
+    console.log(uniqueAccountIds);
+  }, [uniqueAccountIds]);
 
   return (
     licensedResources?.length && (
@@ -47,13 +80,8 @@ export default function LicensedResourcesSection({ licensedResources }: Props) {
           </div>
 
           <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3 scrollbar w-full">
-            {licensedResources
-              ?.sort(
-                (a, b) =>
-                  (a.sysAcc ? -1 : 1) ||
-                  a.accName.localeCompare(b.accName) ||
-                  b.perm.localeCompare(a.perm)
-              )
+            {uniqueAccountIds
+              ?.sort((a, b) => a.name.localeCompare(b.name))
               ?.map((resource, index) => (
                 <MiniBox key={index}>
                   <IntroSection
@@ -80,7 +108,7 @@ export default function LicensedResourcesSection({ licensedResources }: Props) {
                           title={t(
                             "screens.Dashboard.LicensedResourcesSection.accountName.title",
                             {
-                              accName: resource.accName,
+                              accName: resource.name,
                             }
                           )}
                         >
@@ -89,14 +117,14 @@ export default function LicensedResourcesSection({ licensedResources }: Props) {
                               to={`/dashboard/tenants/${resource.tenantId}`}
                               className="text-indigo-500 dark:text-lime-500 hover:underline"
                             >
-                              {resource.accName}
+                              {resource.name}
                             </Link>
                           ) : (
                             <Link
-                              to={`/dashboard/tenants/${resource.tenantId}/accounts/?accountId=${resource.accId}`}
+                              to={`/dashboard/tenants/${resource.tenantId}/accounts/?accountId=${resource.id}`}
                               className="text-indigo-500 dark:text-lime-500 hover:underline"
                             >
-                              {resource.accName}
+                              {resource.name}
                             </Link>
                           )}
                         </Typography>
@@ -108,49 +136,41 @@ export default function LicensedResourcesSection({ licensedResources }: Props) {
                       <TenantBasicInfo tenantId={resource.tenantId} />
                     </TenantResolver>
 
-                    <IntroSection.Item
-                      prefix={t(
-                        "screens.Dashboard.LicensedResourcesSection.role.prefix"
-                      )}
-                      prefixProps={{ nowrap: true }}
-                      title={t(
-                        "screens.Dashboard.LicensedResourcesSection.role.title",
-                        {
-                          role: resource.role,
-                        }
-                      )}
-                    >
-                      <span className="whitespace-nowrap group/clip flex items-center gap-1">
-                        {resource.role}
-                        <CopyToClipboard text={resource.role} groupHidden />
-                      </span>
-                    </IntroSection.Item>
-
-                    <IntroSection.Item
-                      prefixProps={{ nowrap: true }}
-                      prefix={t(
-                        "screens.Dashboard.LicensedResourcesSection.permission.prefix"
-                      )}
-                      title={t(
-                        "screens.Dashboard.LicensedResourcesSection.permission.title",
-                        {
-                          perm: resource.perm,
-                        }
-                      )}
-                    >
-                      <PermissionIcon permission={resource.perm} inline />
-                    </IntroSection.Item>
-
-                    {!resource.verified && (
-                      <span
-                        className="w-fit text-red-500 dark:text-red-400 bg-red-100 dark:bg-red-500 bg-opacity-50 dark:bg-opacity-20 rounded-full px-1 py-0 mt-1 text-xs border border-red-500 dark:border-red-400 hover:cursor-help"
-                        title="You not confirmed the invitation to this account"
+                    {resource.roles.map((role) => (
+                      <div
+                        key={role.role}
+                        className="border-t-[0.5px] border-indigo-100 dark:border-lime-900 p-1"
                       >
-                        {t(
-                          "screens.Dashboard.LicensedResourcesSection.unverified"
+                        <IntroSection.Item
+                          prefix={t(
+                            "screens.Dashboard.LicensedResourcesSection.role.prefix"
+                          )}
+                          prefixProps={{ nowrap: true }}
+                          title={t(
+                            "screens.Dashboard.LicensedResourcesSection.role.title",
+                            {
+                              role: role.role,
+                            }
+                          )}
+                        >
+                          <span className="whitespace-nowrap group/clip flex items-center gap-1">
+                            {role.role}
+                            <PermissionIcon permission={role.perm} inline />
+                          </span>
+                        </IntroSection.Item>
+
+                        {role.verified && (
+                          <span
+                            className="w-fit text-green-500 dark:text-green-400 bg-green-100 dark:bg-green-500 bg-opacity-50 dark:bg-opacity-20 rounded-full px-2 py-1 mt-1 text-xs border border-green-500 dark:border-green-400 hover:cursor-help"
+                            title="You have confirmed the invitation to this account"
+                          >
+                            {t(
+                              "screens.Dashboard.LicensedResourcesSection.verified"
+                            )}
+                          </span>
                         )}
-                      </span>
-                    )}
+                      </div>
+                    ))}
                   </IntroSection>
                 </MiniBox>
               ))}

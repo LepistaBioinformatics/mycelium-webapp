@@ -88,6 +88,14 @@
       },
       "CreateConnectionStringModal": {
         "title": "Create Connection String",
+        "accountId": "Restricted to account",
+        "accountIdDescription": "The connection string will be restricted to the account with the ID.",
+        "tenantId": "Restricted to tenant",
+        "tenantIdDescription": "The connection string will be restricted to the tenant with the ID.",
+        "permissionedRoles": "Roles and permissions",
+        "permissionedRolesDescription": "The connection string will be restricted to the roles and permissions selected.",
+        "removeRole": "Do not include this role in the filter",
+        "explain": "The connection string will be restricted to account, tenant, roles and permissions selected in this step. To verify if the generated token has the appropriate scope, use tools like base64decode.org",
         "form": {
           "expiration": {
             "label": "Select expiration",
@@ -199,7 +207,7 @@
           "title": "Permission attributed to you",
           "prefix": "You can"
         },
-        "unverified": "Unqualified"
+        "verified": "Verified"
       },
       "TenantBasicInfo": {
         "from": {
@@ -536,6 +544,17 @@
           "yourPermissions": {
             "title": "Your permissions",
             "prefix": "Your permissions"
+          },
+          "createConnectionString": {
+            "title": "Create connection string with account scope",
+            "description": "Create a connection string for the account. This connection string will be used to authenticate your account programmatically.",
+            "button": "Create"
+          }
+        },
+        "PermissionsOnAccount": {
+          "inherited": {
+            "title": "Inherited view read/write permissions from tenant",
+            "value": "Tenant ownership"
           }
         },
         "AccountModal": {
