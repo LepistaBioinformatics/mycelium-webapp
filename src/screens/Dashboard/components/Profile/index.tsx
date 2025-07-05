@@ -17,7 +17,7 @@ import IntroSection from "@/components/ui/IntroSection";
 import { useTranslation } from "react-i18next";
 import SeeMoreText from "@/components/ui/SeeMoreText";
 import CopyToClipboard from "@/components/ui/CopyToClipboard";
-import CreateConnectionStringModal from "./CreateConnectionStringModal";
+import CreateConnectionStringModal from "../CreateConnectionStringModal";
 import Button from "@/components/ui/Button";
 import DetailsBox from "@/components/ui/DetailsBox";
 import Banner from "@/components/ui/Banner";

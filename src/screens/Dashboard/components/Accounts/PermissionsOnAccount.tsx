@@ -36,8 +36,6 @@ export default function PermissionsOnAccount({ accountId, tenantId }: Props) {
 
     if (!licensedResources) return null;
 
-    console.log(licensedResources);
-
     const filtered = licensedResources.filter(
       (resource) =>
         resource.accId === accountId && resource.tenantId === tenantId

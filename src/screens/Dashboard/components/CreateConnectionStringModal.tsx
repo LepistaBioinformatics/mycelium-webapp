@@ -5,7 +5,7 @@ import Typography from "@/components/ui/Typography";
 import useProfile from "@/hooks/use-profile";
 import useSuspenseError from "@/hooks/use-suspense-error";
 import { buildPath } from "@/services/openapi/mycelium-api";
-import { Select, TextInput } from "flowbite-react";
+import { Select, Spinner, TextInput } from "flowbite-react";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -38,7 +38,7 @@ export default function CreateConnectionStringModal({
 }: Props) {
   const { t } = useTranslation();
 
-  const { parseHttpError } = useSuspenseError();
+  const { parseHttpError, dispatchWarning } = useSuspenseError();
 
   const { getAccessTokenSilently } = useProfile();
 
@@ -69,6 +69,12 @@ export default function CreateConnectionStringModal({
   const onSubmit: SubmitHandler<Inputs> = async ({ expiration }) => {
     setIsSubmitting(true);
 
+    if (!expiration) {
+      dispatchWarning("Expiration is required");
+      setIsSubmitting(false);
+      return;
+    }
+
     try {
       const token = await getAccessTokenSilently();
 
@@ -84,7 +90,7 @@ export default function CreateConnectionStringModal({
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          expiration: Number(Expiration[expiration]),
+          expiration: Expiration[expiration],
           tenantId,
         }),
       });
@@ -100,6 +106,8 @@ export default function CreateConnectionStringModal({
       setConnectionString(data.connectionString);
     } catch (error) {
       console.error(error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -140,7 +148,7 @@ export default function CreateConnectionStringModal({
                   id="expiration"
                   sizing="lg"
                   {...register("expiration")}
-                  value={expirationWatcher}
+                  value={Expiration[expirationWatcher]}
                 >
                   {ExpirationOptions.map((expiration) => {
                     return (
@@ -168,8 +176,12 @@ export default function CreateConnectionStringModal({
                 errors.expiration !== undefined
               }
             >
-              {t(
-                "screens.Dashboard.CreateConnectionStringModal.form.create.label"
+              {isSubmitting ? (
+                <Spinner />
+              ) : (
+                t(
+                  "screens.Dashboard.CreateConnectionStringModal.form.create.label"
+                )
               )}
             </Button>
           </form>

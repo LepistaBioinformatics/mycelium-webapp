@@ -23,7 +23,7 @@ import ColorsCard from "./ColorsCard";
 import LegalSettings from "./LegalSettings";
 import { useTranslation } from "react-i18next";
 import { MdManageAccounts } from "react-icons/md";
-import CreateConnectionStringModal from "../../Profile/CreateConnectionStringModal";
+import CreateConnectionStringModal from "../../CreateConnectionStringModal";
 import DetailsBox from "@/components/ui/DetailsBox";
 import Banner from "@/components/ui/Banner";
 import Button from "@/components/ui/Button";
