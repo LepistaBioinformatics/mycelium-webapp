@@ -321,7 +321,8 @@ export default function AdvancedManagement() {
             </CardsSection.Header>
 
             <CardsSection.Body>
-              <div className="flex flex-col md:flex-row md:flex-wrap gap-12 sm:gap-3 w-full">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-12 sm:gap-3 w-full">
+                {/* flex flex-col md:flex-row md:flex-wrap */}
                 <OwnersCard
                   tenant={activeTenant}
                   mutateTenantStatus={mutateTenantStatus}
@@ -348,7 +349,7 @@ export default function AdvancedManagement() {
           </CardsSection.Header>
 
           <CardsSection.Body>
-            <div className="flex flex-col md:flex-row md:flex-wrap gap-12 sm:gap-3 w-full">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 sm:gap-3 w-full">
               {activeTenant && (
                 <>
                   <ManagersCard

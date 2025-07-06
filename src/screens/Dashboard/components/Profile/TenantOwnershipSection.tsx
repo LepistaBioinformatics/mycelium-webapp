@@ -21,9 +21,9 @@ export default function TenantOwnershipSection({ tenantsOwnership }: Props) {
   if (!tenantsOwnership) return null;
 
   return (
-    <Card padding="sm" width="full" height="adaptive">
+    <Card padding="sm" width="alwaysFull" height="adaptive">
       <Card.Header>
-        <Typography as="h6" decoration="smooth">
+        <Typography as="h5" decoration="faded">
           {t("screens.Dashboard.TenantOwnershipSection.title")}
         </Typography>
       </Card.Header>

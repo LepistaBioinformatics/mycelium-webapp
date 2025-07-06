@@ -182,7 +182,7 @@ const contentStyles = cva("", {
     margin,
     width,
     container: {
-      true: "",
+      true: "mx-auto w-full xl:max-w-4xl",
       false: "w-full",
     },
     flex: {

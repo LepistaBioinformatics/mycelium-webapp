@@ -56,9 +56,9 @@ export default function LicensedResourcesSection({ licensedResources }: Props) {
 
   return (
     licensedResources?.length && (
-      <Card padding="sm" width="full" height="adaptive">
+      <Card padding="sm" width="alwaysFull" height="adaptive">
         <Card.Header>
-          <Typography as="h6" decoration="smooth">
+          <Typography as="h5" decoration="faded">
             {t("screens.Dashboard.LicensedResourcesSection.title")}
           </Typography>
         </Card.Header>

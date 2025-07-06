@@ -191,14 +191,14 @@ export default function BrandCard({ tenant, mutateTenantStatus }: Props) {
     setUpdatingBrand(false);
     mutateTenantStatus();
   }, [
-    preview, 
-    tenant.id, 
-    getAccessTokenSilently, 
-    url, 
-    method, 
-    convertPreviewToBase64, 
-    mutateTenantStatus, 
-    parseHttpError
+    preview,
+    tenant.id,
+    getAccessTokenSilently,
+    url,
+    method,
+    convertPreviewToBase64,
+    mutateTenantStatus,
+    parseHttpError,
   ]);
 
   if (!hasEnoughPermissions) {
@@ -206,7 +206,7 @@ export default function BrandCard({ tenant, mutateTenantStatus }: Props) {
   }
 
   return (
-    <Card padding="sm" width="full" group>
+    <Card padding="sm" group>
       <Card.Header>
         <div className="flex flex-col gap-2">
           <Typography as="h6">

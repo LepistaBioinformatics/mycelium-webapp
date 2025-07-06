@@ -14,7 +14,7 @@ export default function ColorsCard({}: Props) {
   const { t } = useTranslation();
 
   return (
-    <Card padding="sm" group width="full">
+    <Card padding="sm" group>
       <Card.Header>
         <div className="flex flex-col gap-2">
           <Typography as="h6">

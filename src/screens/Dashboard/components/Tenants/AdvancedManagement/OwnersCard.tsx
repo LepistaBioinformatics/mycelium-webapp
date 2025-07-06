@@ -78,7 +78,7 @@ export default function OwnersCard({ tenant, mutateTenantStatus }: Props) {
 
   return (
     <>
-      <Card padding="sm" width="full" height="adaptive" group>
+      <Card padding="sm" height="adaptive" group>
         <Card.Header>
           <div className="flex flex-col gap-2">
             <Typography as="h6">
@@ -113,7 +113,7 @@ export default function OwnersCard({ tenant, mutateTenantStatus }: Props) {
                   : owner.username;
 
               return (
-                <MiniBox key={owner.id}>
+                <MiniBox key={owner.id} width="full">
                   <div className="flex items-center gap-2 justify-between group/item group/clip min-w-fit">
                     <IntroSection
                       content={ownerName}

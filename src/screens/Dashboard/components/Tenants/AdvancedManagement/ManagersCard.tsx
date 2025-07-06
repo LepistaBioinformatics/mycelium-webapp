@@ -97,7 +97,7 @@ export default function ManagersCard({ tenant, mutateTenantStatus }: Props) {
 
   return (
     <>
-      <Card padding="sm" width="full" group>
+      <Card padding="sm" group>
         <Card.Header>
           <div className="flex flex-col gap-2">
             <Typography as="h6">
