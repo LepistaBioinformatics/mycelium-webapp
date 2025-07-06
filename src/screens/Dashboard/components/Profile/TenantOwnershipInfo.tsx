@@ -140,7 +140,7 @@ export default function TenantOwnershipInfo({
                 className="flex flex-col items-center gap-2 p-1 rounded-lg bg-indigo-500 dark:bg-lime-500"
                 title={t("screens.Dashboard.TenantOwnershipInfo.manageTenant")}
               >
-                <FaGear size={24} className="text-zinc-50 dark:text-zinc-900" />
+                <FaGear size={18} className="text-zinc-50 dark:text-zinc-900" />
               </Link>
 
               <Link
@@ -151,7 +151,7 @@ export default function TenantOwnershipInfo({
                 )}
               >
                 <MdManageAccounts
-                  size={24}
+                  size={18}
                   className="text-zinc-50 dark:text-zinc-900"
                 />
               </Link>

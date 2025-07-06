@@ -103,7 +103,7 @@ function MenuModal({
   }, [profile]);
 
   return (
-    <Modal open={isOpen}>
+    <Modal open={isOpen} handleClose={onClose}>
       <Modal.Header handleClose={onClose}>
         <Typography>{t("Menu.title")}</Typography>
       </Modal.Header>
@@ -142,7 +142,7 @@ function SettingsModal({
   const { logout } = useAuth0();
 
   return (
-    <Modal open={isOpen}>
+    <Modal open={isOpen} handleClose={onClose}>
       <Modal.Header handleClose={onClose}>
         <Typography>{t("Menu.settings")}</Typography>
       </Modal.Header>

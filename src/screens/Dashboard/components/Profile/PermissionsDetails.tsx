@@ -294,7 +294,7 @@ export default function PermissionsDetails({ profile }: Props) {
             headerTitle={t(
               "screens.Dashboard.PermissionsDetails.tenantOwner.headerTitle"
             )}
-            links={[{ label: "/tenants", to: "/dashboard/tenants" }]}
+            links={[]}
             aboutContent={
               <AboutContent
                 t={t}
