@@ -124,7 +124,7 @@ export default function TenantOwnershipInfo({
         </IntroSection>
       </div>
     );
-  }, [tenantStatus]);
+  }, [Since, error, isLoading, t, tenantStatus, title]);
 
   return (
     <MiniBox>

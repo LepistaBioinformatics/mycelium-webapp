@@ -160,7 +160,7 @@ export default function PaginatedAccounts({
     restrictSystemAccount: true,
   });
 
-  const { skip, pageSize, setSkip, setPageSize, searchTerm, setSearchTerm } =
+  const { skip, pageSize, setSkip, searchTerm, setSearchTerm } =
     useSearchBarParams({
       initialSkip,
       initialPageSize,
@@ -357,8 +357,6 @@ export default function PaginatedAccounts({
       term={searchTerm ?? undefined}
       breadcrumb={breadcrumb}
       onSubmit={onSubmit}
-      setSkip={setSkip}
-      setPageSize={setPageSize}
       placeholder={t(
         "screens.Dashboard.Accounts.PaginatedAccounts.searchPlaceholder"
       )}

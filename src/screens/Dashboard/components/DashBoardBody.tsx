@@ -17,8 +17,6 @@ export default function DashBoardBody({
   padding = "md",
   term,
   onSubmit,
-  setSkip,
-  setPageSize,
   placeholder,
   commandPalette,
   authorized,
@@ -37,8 +35,6 @@ export default function DashBoardBody({
         <SearchBar
           term={term}
           onSubmit={onSubmit}
-          setSkip={setSkip}
-          setPageSize={setPageSize}
           placeholder={placeholder}
           commandPalette={commandPalette}
         />

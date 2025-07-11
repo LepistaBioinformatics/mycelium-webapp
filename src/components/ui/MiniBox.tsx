@@ -6,7 +6,7 @@ const styles = cva(
     variants: {
       width: {
         full: "w-full",
-        standard: "w-full sm:w-[calc(55vw-0.5rem)] lg:w-[calc(25vw-1rem)]",
+        standard: "w-full sm:w-[calc(55vw-0.5rem)] lg:w-[calc(22vw-1rem)]",
       },
     },
     defaultVariants: {
@@ -15,7 +15,7 @@ const styles = cva(
   }
 );
 
-interface Props extends BaseProps, VariantProps<typeof styles> {}
+interface Props extends BaseProps, VariantProps<typeof styles> { }
 
 export default function MiniBox({ children, ...props }: Props) {
   return <div className={styles(props)}>{children}</div>;

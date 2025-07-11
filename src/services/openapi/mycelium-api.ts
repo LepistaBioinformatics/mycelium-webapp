@@ -9,7 +9,7 @@ export const buildPath = (
         path?: Record<string, string>,
     }
 ) => {
-    let url = new URL(`${MYCELIUM_API_URL}${path}`);
+    const url = new URL(`${MYCELIUM_API_URL}${path}`);
 
     if (params?.path) {
         Object.entries(params.path).forEach(([key, value]) => {

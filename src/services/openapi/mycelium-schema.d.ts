@@ -446,6 +446,29 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/adm/rs/gateway-manager/tools": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List routes by service
+         * @description This function is restricted to the GatewayManager users. List routes by
+         *     service name or service id.
+         *
+         *
+         */
+        get: operations["list_operations_url"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/adm/rs/guests-manager/guest-roles": {
         parameters: {
             query?: never;
@@ -1833,6 +1856,56 @@ export interface components {
         } | {
             ids: string[];
         };
+        /** @description Content Schema
+         *
+         *     Should used to represent the content of the response.
+         *
+         *     Example:
+         *
+         *     ```json
+         *     {
+         *         "content": {
+         *             "application/json": {
+         *                 "schema": {
+         *                     "type": "object"
+         *                     "properties": {
+         *                         "name": {
+         *                             "type": "string"
+         *                         }
+         *                     }
+         *                 }
+         *             }
+         *         },
+         *         "description": "The response content",
+         *         "required": true
+         *     }
+         *     ```
+         *
+         *     or, using a reference to a schema:
+         *
+         *     ```json
+         *     {
+         *         "content": {
+         *             "application/json": {
+         *                 "schema": {
+         *                     "$ref": "#/components/schemas/HttpJsonResponse"
+         *                 }
+         *             }
+         *         },
+         *         "description": "The response content",
+         *         "required": true
+         *     }
+         *     ```
+         *
+         *     This struct refers to the value of the schema in response.
+         *      */
+        Content: {
+            content?: {
+                [key: string]: components["schemas"]["ValueSchema"];
+            } | null;
+            description?: string | null;
+            required?: boolean | null;
+        };
         CreateAccountMetaBody: {
             key: string;
             value: string;
@@ -1865,6 +1938,10 @@ export interface components {
             description: string;
             permission?: null | components["schemas"]["Permission"];
             system: boolean;
+        };
+        CreateRoleAssociatedAccountBody: {
+            roleName: string;
+            roleDescription: string;
         };
         CreateSubscriptionAccountBody: {
             name: string;
@@ -1915,13 +1992,24 @@ export interface components {
              *
              */
             tenantId?: string | null;
-            /** @description A single role
+            /**
+             * Format: uuid
+             * @description A single service account ID
              *
              *     If specified, the actions allowed by the token will be scoped to the
-             *     role. If not specified, the actions allowed by the token will be
+             *     service account. Service account should be a subscription account,
+             *     tenant management account, or role scoped account. If not specified, the
+             *     actions allowed by the token will be scoped to the user profile.
+             *
+             */
+            serviceAccountId?: string | null;
+            /** @description A list of roles
+             *
+             *     If specified, the actions allowed by the token will be scoped to the
+             *     roles. If not specified, the actions allowed by the token will be
              *     scoped to the user profile.
              *      */
-            role?: string | null;
+            roles?: string[] | null;
             /** @description The permissioned roles
              *
              *     If specified, the actions allowed by the token will be scoped to the
@@ -2181,6 +2269,7 @@ export interface components {
         };
         /** @enum {string} */
         IDSource: "user" | "account";
+        ItemsType: components["schemas"]["Schema"] | boolean;
         LicensedResource: {
             /**
              * Format: uuid
@@ -2320,6 +2409,8 @@ export interface components {
             name?: string | null;
             trigger?: null | components["schemas"]["WebHookTrigger"];
         };
+        /** @enum {string} */
+        Location: "query" | "path" | "header" | "cookie";
         MultiFactorAuthentication: {
             /** @description The TOTP
              *
@@ -2331,6 +2422,19 @@ export interface components {
             token: string;
             duration: string;
             totpRequired: boolean;
+        };
+        Operation: {
+            operationId?: string | null;
+            tags?: string[];
+            summary?: string | null;
+            description?: string | null;
+            parameters?: components["schemas"]["Parameter"][] | null;
+            requestBody?: null | components["schemas"]["Content"];
+            responses?: {
+                [key: string]: components["schemas"]["Content"];
+            } | null;
+            deprecated?: boolean | null;
+            security?: unknown;
         };
         Owner: {
             /** Format: uuid */
@@ -2396,6 +2500,17 @@ export interface components {
                  *      */
                 wasVerified: boolean;
             }[];
+        };
+        Parameter: {
+            name?: string;
+            in: components["schemas"]["Location"];
+            description?: string | null;
+            required?: boolean | null;
+            deprecated?: boolean | null;
+            allowEmptyValue?: boolean | null;
+            style?: string | null;
+            explode?: boolean | null;
+            schema: components["schemas"]["SchemaOrOneOf"];
         };
         /** @description A parent record
          *
@@ -2772,6 +2887,25 @@ export interface components {
              *      */
             acceptInsecureRouting?: boolean | null;
         };
+        Schema: {
+            $ref?: string | null;
+            type?: null | components["schemas"]["SchemaType"];
+            title?: string | null;
+            format?: string | null;
+            nullable?: boolean | null;
+            required?: string[] | null;
+            properties?: {
+                [key: string]: components["schemas"]["Schema"];
+            } | null;
+            items?: null | components["schemas"]["ItemsType"];
+            enumValues?: unknown[] | null;
+            description?: string | null;
+            default?: unknown;
+        };
+        SchemaOrOneOf: components["schemas"]["Schema"] & {
+            oneOf?: components["schemas"]["Schema"][] | null;
+        };
+        SchemaType: string | string[];
         /** @description A secret resolver
          *
          *     The secret resolver is a way to resolve a secret value from different
@@ -3014,6 +3148,29 @@ export interface components {
         };
         /** @enum {string} */
         ServiceType: "rest-api" | "unknown";
+        ServiceWrapper: {
+            /** @description The service name
+             *
+             *     The name of the service.
+             *      */
+            name: string;
+            /** @description The service health status
+             *
+             *     The health status of the service.
+             *      */
+            health_status: components["schemas"]["HealthStatus"];
+            /** @description The service capabilities
+             *
+             *     The capabilities of the service.
+             *      */
+            capabilities?: string[] | null;
+            /** @description The service description
+             *
+             *     The description of the service. The description should be used during
+             *     the service discovery by LLM agents.
+             *      */
+            description?: string | null;
+        };
         StartPasswordResetBody: {
             email: string;
         };
@@ -3174,6 +3331,29 @@ export interface components {
              *      */
             healthStatus: components["schemas"]["HealthStatus"];
         };
+        ToolOperation: components["schemas"]["Operation"] & {
+            /** @description The path
+             *
+             *     The openapi operation path. This should include the parent service
+             *     name.
+             *      */
+            path: string;
+            /** @description The method
+             *
+             *     The allowed method of the operation.
+             *      */
+            method: components["schemas"]["HttpMethod"];
+            /** @description The mycelium security group
+             *
+             *     The mycelium security group for the operation.
+             *      */
+            security_group: components["schemas"]["SecurityGroup"];
+            /** @description The related service
+             *
+             *     The related service of the operation.
+             *      */
+            service: components["schemas"]["ServiceWrapper"];
+        };
         Totp: "unknown" | "disabled" | {
             /** @description The TOTP when enabled
              *
@@ -3294,6 +3474,9 @@ export interface components {
              *     When enabled the user has verified the TOTP and the auth url is set.
              *      */
             mfa: components["schemas"]["MultiFactorAuthentication"];
+        };
+        ValueSchema: {
+            schema: components["schemas"]["Schema"];
         };
         /** @enum {string} */
         VerboseStatus: "unverified" | "verified" | "inactive" | "archived" | "deleted" | "unknown";
@@ -4638,6 +4821,64 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Service"][];
+                };
+            };
+            /** @description Not found. */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Forbidden. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Unknown internal server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+        };
+    };
+    list_operations_url: {
+        parameters: {
+            query?: {
+                query?: string | null;
+                method?: string | null;
+                scoreCutoff?: number | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Fetching success. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ToolOperation"][];
                 };
             };
             /** @description Not found. */

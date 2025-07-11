@@ -27,11 +27,9 @@ interface IFormInputs {
 
 export interface SearchProps
   extends BaseProps,
-    VariantProps<typeof containerStyles> {
+  VariantProps<typeof containerStyles> {
   term?: string;
   onSubmit: (term?: string) => void;
-  setSkip?: (skip: number) => void;
-  setPageSize?: (pageSize: number) => void;
   placeholder?: string;
   commandPalette?: any;
 }
@@ -40,8 +38,6 @@ function Container({
   fullWidth,
   term,
   onSubmit,
-  setSkip,
-  setPageSize,
   placeholder,
   commandPalette,
   ...props
@@ -65,7 +61,11 @@ function Container({
 
   const onSubmitHandler: SubmitHandler<IFormInputs> = async ({
     term,
-  }: IFormInputs) => onSubmit(term);
+  }: IFormInputs) => {
+    console.log("Search term submitted:", term);
+
+    onSubmit(term.trim())
+  };
 
   return (
     <div
