@@ -68,7 +68,7 @@ export default function AdvancedManagement() {
   const customUrl = useMemo(() => {
     if (!tenantId) return null;
 
-    return buildPath("/adm/rs/tenant-manager/tenants/{tenant_id}", {
+    return buildPath("/_adm/tenant-manager/tenants/{tenant_id}", {
       path: { tenant_id: tenantId },
     });
   }, [tenantId]);

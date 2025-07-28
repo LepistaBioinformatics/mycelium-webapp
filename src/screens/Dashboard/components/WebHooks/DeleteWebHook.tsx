@@ -35,7 +35,7 @@ export default function DeleteWebHook({ webhook, isOpen, onClose }: Props) {
     if (!webhook.id) return;
 
     await fetch(
-      buildPath("/adm/rs/system-manager/webhooks/{webhook_id}", {
+      buildPath("/_adm/system-manager/webhooks/{webhook_id}", {
         path: { webhook_id: webhook.id },
       }),
       {

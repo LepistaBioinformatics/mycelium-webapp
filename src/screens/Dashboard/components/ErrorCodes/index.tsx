@@ -89,7 +89,7 @@ export default function ErrorCodes() {
     if (skip) searchParams.skip = skip.toString();
     if (pageSize) searchParams.pageSize = pageSize.toString();
 
-    return buildPath("/adm/rs/system-manager/error-codes", {
+    return buildPath("/_adm/system-manager/error-codes", {
       query: searchParams,
     });
   }, [searchTerm, skip, pageSize, isAuthenticated, hasEnoughPermissions]);

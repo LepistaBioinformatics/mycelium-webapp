@@ -22,11 +22,11 @@ export default function GuestRolesInitializer({ onSuccess }: Props) {
 
     const token = await getAccessTokenSilently();
 
-    const response = await fetch(buildPath("/adm/su/managers/guest-roles"), {
+    const response = await fetch(buildPath("/_adm/managers/guest-roles"), {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
     });
 
@@ -62,11 +62,18 @@ export default function GuestRolesInitializer({ onSuccess }: Props) {
             <Card.Body>
               <div className="flex flex-col gap-4">
                 <Typography>
-                  Guest roles are not initialized. Click the button below to initialize them
+                  Guest roles are not initialized. Click the button below to
+                  initialize them
                 </Typography>
                 <div>
-                  <Button rounded onClick={handleInitialize} disabled={isLoading}>
-                    {isLoading ? "Initializing..." : "Click to initialize guest roles"}
+                  <Button
+                    rounded
+                    onClick={handleInitialize}
+                    disabled={isLoading}
+                  >
+                    {isLoading
+                      ? "Initializing..."
+                      : "Click to initialize guest roles"}
                   </Button>
                 </div>
               </div>

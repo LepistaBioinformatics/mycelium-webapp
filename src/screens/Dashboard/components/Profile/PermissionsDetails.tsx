@@ -1,11 +1,9 @@
 import { MdAltRoute } from "react-icons/md";
-import { LuListChecks } from "react-icons/lu";
 import { VscAccount, VscOrganization } from "react-icons/vsc";
 import { GrOrganization, GrUserAdmin } from "react-icons/gr";
 import Typography from "@/components/ui/Typography";
 import { components } from "@/services/openapi/mycelium-schema";
-import { useCallback, useMemo, useState } from "react";
-import PermissionIcon from "@/components/ui/PermissionIcon";
+import { useCallback, useMemo } from "react";
 import CardsSection from "@/components/ui/CardsSection";
 import { GiWizardStaff } from "react-icons/gi";
 import AboutCard from "./AboutCard";
@@ -13,11 +11,8 @@ import { MycRole } from "@/types/MyceliumRole";
 import { FaUserCheck } from "react-icons/fa6";
 import { MdNearbyError, MdWebhook } from "react-icons/md";
 import { SlOrganization } from "react-icons/sl";
-import { TextInput } from "flowbite-react";
 import getLicensedResourcesOrNull from "@/functions/get-licensed-resources-or-null";
 import getTenantsOwnershipOrNull from "@/functions/get-tenant-ownership-or-null";
-import MiniBox from "@/components/ui/MiniBox";
-import IntroSection from "@/components/ui/IntroSection";
 import { useTranslation } from "react-i18next";
 import { TFunction } from "i18next";
 import MarkdownViewer from "@/components/ui/MarkdownViewer";
@@ -101,8 +96,6 @@ export default function PermissionsDetails({ profile }: Props) {
     () => hasRole(MycRole.TenantManager, true),
     [hasRole]
   );
-
-  const hasNonSystemRole = useMemo(() => hasRole(undefined, false), [hasRole]);
 
   return (
     <CardsSection>
@@ -325,87 +318,8 @@ export default function PermissionsDetails({ profile }: Props) {
             }
           />
         )}
-
-        {hasNonSystemRole && (
-          <AboutCard
-            title={t("screens.Dashboard.PermissionsDetails.customRoles.title")}
-            subtitle={t(
-              "screens.Dashboard.PermissionsDetails.customRoles.subtitle"
-            )}
-            icon={LuListChecks}
-            headerTitle={t(
-              "screens.Dashboard.PermissionsDetails.customRoles.headerTitle"
-            )}
-            links={[]}
-            aboutContent={
-              <AboutContent
-                t={t}
-                tKey="screens.Dashboard.PermissionsDetails.customRoles.abountContent"
-              >
-                <div className="flex flex-col gap-2">
-                  <SearchableNonSystemRolesList roles={hasNonSystemRole} />
-                </div>
-              </AboutContent>
-            }
-          />
-        )}
       </CardsSection.Body>
     </CardsSection>
-  );
-}
-
-function SearchableNonSystemRolesList({
-  roles,
-}: {
-  roles: components["schemas"]["LicensedResource"][];
-}) {
-  const [search, setSearch] = useState("");
-
-  const filteredRoles = useMemo(() => {
-    return roles.filter((role) =>
-      role.role.toLowerCase().includes(search.toLowerCase())
-    );
-  }, [roles, search]);
-
-  return (
-    <div className="mb-24">
-      <TextInput
-        type="text"
-        sizing="sm"
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        placeholder="Filter roles"
-      />
-
-      <div className="flex flex-col gap-2 pt-2">
-        {filteredRoles
-          ?.sort(
-            (a, b) =>
-              a.accName.localeCompare(b.accName) ||
-              a.role.localeCompare(b.role) ||
-              a.perm.localeCompare(b.perm)
-          )
-          ?.map((resource, index) => (
-            <MiniBox key={index} width="full">
-              <IntroSection title="Role" content={resource.role} as="h5">
-                <IntroSection.Item
-                  prefix="on"
-                  title="The account that the role is assigned to"
-                >
-                  {resource.accName}
-                </IntroSection.Item>
-
-                <IntroSection.Item
-                  prefix="being able to"
-                  title="The permission of the role"
-                >
-                  <PermissionIcon permission={resource.perm} inline />
-                </IntroSection.Item>
-              </IntroSection>
-            </MiniBox>
-          ))}
-      </div>
-    </div>
   );
 }
 

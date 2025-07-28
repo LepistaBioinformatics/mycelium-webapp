@@ -138,7 +138,7 @@ export default function BrandCard({ tenant, mutateTenantStatus }: Props) {
     if (updatingBrand && brandTag?.id) {
       return {
         method: "PUT",
-        url: buildPath("/adm/rs/tenant-manager/tags/{tag_id}", {
+        url: buildPath("/_adm/tenant-manager/tags/{tag_id}", {
           path: { tag_id: brandTag.id },
         }),
       };
@@ -146,7 +146,7 @@ export default function BrandCard({ tenant, mutateTenantStatus }: Props) {
 
     return {
       method: "POST",
-      url: buildPath("/adm/rs/tenant-manager/tags"),
+      url: buildPath("/_adm/tenant-manager/tags"),
     };
   }, [updatingBrand, brandTag]);
 

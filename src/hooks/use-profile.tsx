@@ -115,7 +115,7 @@ export default function useProfile(args?: Props) {
     }
 
     // eslint-disable-next-line no-unsafe-optional-chaining
-    if (profile?.licensedResources && ("records" in profile?.licensedResources)) {
+    if (profile?.licensedResources && "records" in profile?.licensedResources) {
       const roles = args?.roles ?? [];
       const permissions = args?.permissions ?? [];
       const restrictSystemAccount = args?.restrictSystemAccount ?? false;
@@ -125,8 +125,10 @@ export default function useProfile(args?: Props) {
           if (roles.length > 0 && permissions.length > 0) {
             return (
               roles.some((role) => resource.role.includes(role)) &&
-              permissions.some((permission) =>
-                getNumericPermission(resource.perm) >= getNumericPermission(permission)
+              permissions.some(
+                (permission) =>
+                  getNumericPermission(resource.perm) >=
+                  getNumericPermission(permission)
               )
             );
           }
@@ -167,7 +169,7 @@ export default function useProfile(args?: Props) {
     args?.tenantOwnerNeeded,
     args?.roles,
     args?.permissions,
-    args?.restrictSystemAccount
+    args?.restrictSystemAccount,
   ]);
 
   /**
@@ -229,7 +231,7 @@ export default function useProfile(args?: Props) {
 
     setIsLoadingProfile(true);
 
-    const url = buildPath("/adm/rs/beginners/profile", {
+    const url = buildPath("/_adm/beginners/profile", {
       query: { withUrl: "false" },
     });
 
@@ -286,9 +288,7 @@ export default function useProfile(args?: Props) {
   };
 }
 
-function getNumericPermission(
-  permission: MycPermission | string
-): number {
+function getNumericPermission(permission: MycPermission | string): number {
   switch (permission) {
     case MycPermission.Read:
       return 0;

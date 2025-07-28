@@ -9,7 +9,7 @@ import { MycPermission } from "@/types/MyceliumPermission";
 import { MdInput, MdOutlineOutput, MdWebhook } from "react-icons/md";
 import { components } from "@/services/openapi/mycelium-schema";
 import useSWR from "swr";
-import { buildPath } from "@/services/openapi/mycelium-api";
+import { buildPath, MYCELIUM_API_URL } from "@/services/openapi/mycelium-api";
 import useSuspenseError from "@/hooks/use-suspense-error";
 import ListItem from "@/components/ui/ListItem";
 import Typography from "@/components/ui/Typography";
@@ -53,7 +53,7 @@ export default function Discovery() {
     if (searchTerm && searchTerm !== "") searchParams.name = searchTerm;
     if (pageSize) searchParams.pageSize = pageSize.toString();
 
-    return buildPath("/adm/rs/gateway-manager/tools", {
+    return buildPath("/_adm/gateway-manager/tools", {
       query: {
         skip: skip.toString() ?? "0",
         pageSize: pageSize.toString() ?? "20",
@@ -83,7 +83,7 @@ export default function Discovery() {
         });
     },
     {
-      //revalidateIfStale: true,
+      revalidateIfStale: true,
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
       revalidateOnMount: true,
@@ -125,8 +125,7 @@ export default function Discovery() {
           setSkip={setSkip}
           pageSize={pageSize}
         >
-          {operations
-            ?.records
+          {operations?.records
             ?.sort((a, b) => (b.score || 0) - (a.score || 0))
             ?.map((record) => (
               <ListItem key={record.operationId}>
@@ -158,7 +157,6 @@ export default function Discovery() {
                           {record.description && (
                             <MarkdownViewer markdown={record.description} />
                           )}
-
                         </Typography>
                       </div>
                     </div>
@@ -187,9 +185,7 @@ export default function Discovery() {
                     <DetailsBox.Summary>
                       <div className="flex items-center gap-3">
                         <MdInput className="text-blue-500 inline" />
-                        <Typography as="span">
-                          Parameters
-                        </Typography>
+                        <Typography as="span">Parameters</Typography>
                       </div>
                     </DetailsBox.Summary>
 
@@ -209,9 +205,7 @@ export default function Discovery() {
                     <DetailsBox.Summary>
                       <div className="flex items-center gap-3">
                         <MdInput className="text-green-500 inline" />
-                        <Typography as="span">
-                          Request Body
-                        </Typography>
+                        <Typography as="span">Request Body</Typography>
                       </div>
                     </DetailsBox.Summary>
 
@@ -231,9 +225,7 @@ export default function Discovery() {
                     <DetailsBox.Summary>
                       <div className="flex items-center gap-3">
                         <MdOutlineOutput className="text-yellow-500 inline" />
-                        <Typography as="span">
-                          Response
-                        </Typography>
+                        <Typography as="span">Response</Typography>
                       </div>
                     </DetailsBox.Summary>
 
@@ -313,14 +305,14 @@ const FormattedPath = ({
   path: string;
   parameters?: Parameter[] | null;
 }) => {
+  const url = useMemo(() => `${MYCELIUM_API_URL}${path}`, [path]);
+
   const formattedPath = useMemo(() => {
     const composedPathParts: {
       part: string;
       param?: Parameter;
       isService?: boolean;
     }[] = [];
-
-    console.log("FormattedPath", path, parameters);
 
     if (!path) return composedPathParts;
 
@@ -373,7 +365,7 @@ const FormattedPath = ({
           );
         })}
 
-        <CopyToClipboard text={path} groupHidden />
+        <CopyToClipboard text={url} groupHidden />
       </div>
     </Typography>
   );

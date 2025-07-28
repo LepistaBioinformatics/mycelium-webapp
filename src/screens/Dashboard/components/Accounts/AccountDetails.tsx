@@ -180,7 +180,7 @@ export default function AccountDetails({ onClose }: Props) {
     mutate: mutateAccount,
   } = useSWR<Account>(
     accountId
-      ? buildPath("/adm/rs/subscriptions-manager/accounts/{account_id}", {
+      ? buildPath("/_adm/subscriptions-manager/accounts/{account_id}", {
           path: { account_id: accountId },
         })
       : null,

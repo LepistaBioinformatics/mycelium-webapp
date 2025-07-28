@@ -48,7 +48,7 @@ export default function DeleteAccount({
     if (!account.id) return;
 
     await fetch(
-      buildPath("/adm/rs/tenant-manager/accounts/{account_id}", {
+      buildPath("/_adm/tenant-manager/accounts/{account_id}", {
         path: { account_id: account.id },
       }),
       {

@@ -73,7 +73,7 @@ export default function TenantDetails({ isOpen, onClose, tenant }: Props) {
       const token = await getAccessTokenSilently();
 
       await fetch(
-        buildPath("/adm/rs/beginners/tenants/{tenant_id}", {
+        buildPath("/_adm/beginners/tenants/{tenant_id}", {
           path: { tenant_id: tenantId },
         }),
         { headers: { Authorization: `Bearer ${token}` } }

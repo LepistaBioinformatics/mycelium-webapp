@@ -91,7 +91,7 @@ export default function TenantModal({
 
     const token = await getAccessTokenSilently();
 
-    const response = await fetch(buildPath("/adm/su/managers/tenants"), {
+    const response = await fetch(buildPath("/_adm/managers/tenants"), {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,

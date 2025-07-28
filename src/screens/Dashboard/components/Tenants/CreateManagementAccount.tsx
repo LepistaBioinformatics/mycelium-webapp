@@ -15,12 +15,16 @@ interface Props {
 
 /**
  * Renders the create management account modal
- * 
+ *
  * @param isOpen - Whether the modal is open
  * @param onClose - The function to call when the modal is closed
  * @returns The create management account modal
  */
-export default function CreateManagementAccount({ isOpen, onClose, tenantId }: Props) {
+export default function CreateManagementAccount({
+  isOpen,
+  onClose,
+  tenantId,
+}: Props) {
   const { getAccessTokenSilently } = useAuth0();
 
   const { parseHttpError } = useSuspenseError();
@@ -34,8 +38,7 @@ export default function CreateManagementAccount({ isOpen, onClose, tenantId }: P
 
     if (!tenantId) return;
 
-    await fetch(
-      buildPath("/adm/rs/tenant-owner/accounts"), {
+    await fetch(buildPath("/_adm/tenant-owner/accounts"), {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -66,8 +69,16 @@ export default function CreateManagementAccount({ isOpen, onClose, tenantId }: P
           </Typography>
 
           <div className="flex justify-end">
-            <Button rounded fullWidth intent="info" onClick={handleCreateManagementAccount} disabled={isCreating}>
-              {isCreating ? "Setting up..." : "Click to set up management account"}
+            <Button
+              rounded
+              fullWidth
+              intent="info"
+              onClick={handleCreateManagementAccount}
+              disabled={isCreating}
+            >
+              {isCreating
+                ? "Setting up..."
+                : "Click to set up management account"}
             </Button>
           </div>
         </div>

@@ -42,27 +42,27 @@ export default function MarkdownViewer({ markdown }: Props) {
 }
 
 const CustomH1 = ({ children }: BaseProps) => (
-  <h2 className="text-4xl font-bold">{children}</h2>
-);
-
-const CustomH2 = ({ children }: BaseProps) => (
   <h2 className="text-2xl font-bold">{children}</h2>
 );
 
+const CustomH2 = ({ children }: BaseProps) => (
+  <h2 className="text-2xl font-medium">{children}</h2>
+);
+
 const CustomH3 = ({ children }: BaseProps) => (
-  <h3 className="text-xl font-bold">{children}</h3>
+  <h3 className="text-xl font-medium">{children}</h3>
 );
 
 const CustomH4 = ({ children }: BaseProps) => (
-  <h4 className="text-lg font-bold">{children}</h4>
+  <h4 className="text-lg font-medium">{children}</h4>
 );
 
 const CustomH5 = ({ children }: BaseProps) => (
-  <h5 className="text-base font-bold">{children}</h5>
+  <h5 className="text-base font-medium">{children}</h5>
 );
 
 const CustomH6 = ({ children }: BaseProps) => (
-  <h6 className="text-sm font-bold">{children}</h6>
+  <h6 className="text-sm font-medium">{children}</h6>
 );
 
 const CustomParagraph = ({ children }: BaseProps) => (

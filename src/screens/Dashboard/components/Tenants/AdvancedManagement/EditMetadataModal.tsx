@@ -72,7 +72,7 @@ export default function EditMetadataModal({
 
     const token = await getAccessTokenSilently();
 
-    const response = await fetch(buildPath("/adm/rs/tenant-owner/meta"), {
+    const response = await fetch(buildPath("/_adm/tenant-owner/meta"), {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,

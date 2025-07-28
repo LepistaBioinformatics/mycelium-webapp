@@ -108,7 +108,7 @@ export default function CreateConnectionStringModal({
         )
         ?.map((role) => [role.role, role.permission]);
 
-      const response = await fetch(buildPath("/adm/rs/beginners/tokens"), {
+      const response = await fetch(buildPath("/_adm/beginners/tokens"), {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,

@@ -82,7 +82,7 @@ export default function MyceliumProfile({ user }: Props) {
       if (!token) throw new Error("Token is required");
 
       const registeringResponse = await fetch(
-        buildPath("/adm/rs/beginners/users"),
+        buildPath("/_adm/beginners/users"),
         {
           method: "POST",
           headers: {
@@ -124,7 +124,7 @@ export default function MyceliumProfile({ user }: Props) {
       if (!token) throw new Error("Token is required");
 
       const registeringResponse = await fetch(
-        buildPath("/adm/rs/beginners/accounts"),
+        buildPath("/_adm/beginners/accounts"),
         {
           method: "POST",
           headers: {
@@ -206,7 +206,7 @@ export default function MyceliumProfile({ user }: Props) {
   );
 
   const { data: profile, mutate: mutateProfile } = useSWR(
-    !needsRegistration ? buildPath("/adm/rs/beginners/profile") : null,
+    !needsRegistration ? buildPath("/_adm/beginners/profile") : null,
     fetcher,
     {
       revalidateIfStale: true,

@@ -71,8 +71,8 @@ export default function UpgradeOrDowngradeAccountModal({
       const params = { path: { account_id: account.id } };
       const url =
         action === AllowedActions.Upgrade
-          ? buildPath("/adm/su/staffs/accounts/{account_id}/upgrade", params)
-          : buildPath("/adm/su/staffs/accounts/{account_id}/downgrade", params);
+          ? buildPath("/_adm/staffs/accounts/{account_id}/upgrade", params)
+          : buildPath("/_adm/staffs/accounts/{account_id}/downgrade", params);
 
       const response = await fetch(url, {
         method: "PATCH",

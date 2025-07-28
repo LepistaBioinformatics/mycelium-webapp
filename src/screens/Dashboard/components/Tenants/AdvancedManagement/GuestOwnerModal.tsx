@@ -82,7 +82,7 @@ export default function GuestOwnerModal({
 
     const token = await getAccessTokenSilently();
 
-    const response = await fetch(buildPath("/adm/rs/tenant-owner/owners"), {
+    const response = await fetch(buildPath("/_adm/tenant-owner/owners"), {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,

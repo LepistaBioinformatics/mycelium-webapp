@@ -64,7 +64,7 @@ export default function Webhooks() {
     if (searchTerm && searchTerm !== "") searchParams.name = searchTerm;
     if (pageSize) searchParams.pageSize = pageSize.toString();
 
-    return buildPath("/adm/rs/system-manager/webhooks", {
+    return buildPath("/_adm/system-manager/webhooks", {
       query: searchParams,
     });
   }, [searchTerm, skip, pageSize, isAuthenticated, hasEnoughPermissions]);

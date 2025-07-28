@@ -35,7 +35,7 @@ export default function DeleteTenant({ tenant, isOpen, onClose }: Props) {
     if (!tenant.id) return;
 
     await fetch(
-      buildPath("/adm/su/managers/tenants/{id}", { path: { id: tenant.id } }),
+      buildPath("/_adm/managers/tenants/{id}", { path: { id: tenant.id } }),
       {
         method: "DELETE",
         headers: {

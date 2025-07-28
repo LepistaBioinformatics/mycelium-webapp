@@ -83,7 +83,7 @@ export default function UnInviteGuestModal({
 
     const response = await fetch(
       buildPath(
-        "/adm/rs/subscriptions-manager/guests/accounts/{account_id}/roles/{role_id}",
+        "/_adm/subscriptions-manager/guests/accounts/{account_id}/roles/{role_id}",
         {
           path: { account_id: accountId, role_id: localInvitationRecord },
           query: { email },

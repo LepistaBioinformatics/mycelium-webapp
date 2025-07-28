@@ -4,7 +4,7 @@
  */
 
 export interface paths {
-    "/adm/rs/accounts-manager/guests/accounts/{account_id}/roles/{role_id}": {
+    "/_adm/accounts-manager/guests/accounts/{account_id}/roles/{role_id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -26,7 +26,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/adm/rs/beginners/accounts": {
+    "/_adm/beginners/accounts": {
         parameters: {
             query?: never;
             header?: never;
@@ -52,7 +52,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/adm/rs/beginners/accounts/{account_id}": {
+    "/_adm/beginners/accounts/{account_id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -74,7 +74,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/adm/rs/beginners/accounts/{account_id}/update-account-name": {
+    "/_adm/beginners/accounts/{account_id}/update-account-name": {
         parameters: {
             query?: never;
             header?: never;
@@ -96,7 +96,7 @@ export interface paths {
         patch: operations["update_own_account_name_url"];
         trace?: never;
     };
-    "/adm/rs/beginners/meta": {
+    "/_adm/beginners/meta": {
         parameters: {
             query?: never;
             header?: never;
@@ -115,7 +115,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/adm/rs/beginners/profile": {
+    "/_adm/beginners/profile": {
         parameters: {
             query?: never;
             header?: never;
@@ -132,7 +132,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/adm/rs/beginners/tenants/{tenant_id}": {
+    "/_adm/beginners/tenants/{tenant_id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -149,7 +149,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/adm/rs/beginners/tokens": {
+    "/_adm/beginners/tokens": {
         parameters: {
             query?: never;
             header?: never;
@@ -172,7 +172,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/adm/rs/beginners/users": {
+    "/_adm/beginners/users": {
         parameters: {
             query?: never;
             header?: never;
@@ -196,7 +196,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/adm/rs/beginners/users/login": {
+    "/_adm/beginners/users/login": {
         parameters: {
             query?: never;
             header?: never;
@@ -220,7 +220,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/adm/rs/beginners/users/reset-password": {
+    "/_adm/beginners/users/reset-password": {
         parameters: {
             query?: never;
             header?: never;
@@ -242,7 +242,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/adm/rs/beginners/users/start-password-reset": {
+    "/_adm/beginners/users/start-password-reset": {
         parameters: {
             query?: never;
             header?: never;
@@ -264,7 +264,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/adm/rs/beginners/users/status": {
+    "/_adm/beginners/users/status": {
         parameters: {
             query?: never;
             header?: never;
@@ -288,7 +288,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/adm/rs/beginners/users/totp/check-token": {
+    "/_adm/beginners/users/totp/check-token": {
         parameters: {
             query?: never;
             header?: never;
@@ -311,7 +311,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/adm/rs/beginners/users/totp/disable": {
+    "/_adm/beginners/users/totp/disable": {
         parameters: {
             query?: never;
             header?: never;
@@ -333,7 +333,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/adm/rs/beginners/users/totp/enable": {
+    "/_adm/beginners/users/totp/enable": {
         parameters: {
             query?: never;
             header?: never;
@@ -356,7 +356,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/adm/rs/beginners/users/totp/validate-app": {
+    "/_adm/beginners/users/totp/validate-app": {
         parameters: {
             query?: never;
             header?: never;
@@ -378,7 +378,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/adm/rs/beginners/users/validate-activation-token": {
+    "/_adm/beginners/users/validate-activation-token": {
         parameters: {
             query?: never;
             header?: never;
@@ -400,7 +400,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/adm/rs/gateway-manager/routes": {
+    "/_adm/gateway-manager/routes": {
         parameters: {
             query?: never;
             header?: never;
@@ -423,7 +423,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/adm/rs/gateway-manager/services": {
+    "/_adm/gateway-manager/services": {
         parameters: {
             query?: never;
             header?: never;
@@ -446,7 +446,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/adm/rs/gateway-manager/tools": {
+    "/_adm/gateway-manager/tools": {
         parameters: {
             query?: never;
             header?: never;
@@ -469,7 +469,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/adm/rs/guests-manager/guest-roles": {
+    "/_adm/guests-manager/guest-roles": {
         parameters: {
             query?: never;
             header?: never;
@@ -490,7 +490,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/adm/rs/guests-manager/guest-roles/{guest_role_id}": {
+    "/_adm/guests-manager/guest-roles/{guest_role_id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -514,7 +514,7 @@ export interface paths {
         patch: operations["update_guest_role_name_and_description_url"];
         trace?: never;
     };
-    "/adm/rs/guests-manager/guest-roles/{guest_role_id}/children/{child_id}": {
+    "/_adm/guests-manager/guest-roles/{guest_role_id}/children/{child_id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -538,7 +538,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/adm/rs/guests-manager/guest-roles/{guest_role_id}/permissions": {
+    "/_adm/guests-manager/guest-roles/{guest_role_id}/permissions": {
         parameters: {
             query?: never;
             header?: never;
@@ -558,7 +558,160 @@ export interface paths {
         patch: operations["update_guest_role_permissions_url"];
         trace?: never;
     };
-    "/adm/rs/subscriptions-manager/accounts": {
+    "/_adm/managers/accounts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create system account */
+        post: operations["create_system_account_url"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/_adm/managers/guest-roles": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create system roles
+         * @description System roles should be used to attribute permissions to actors who manage
+         *     specific parts of the system. This function creates the following roles:
+         *
+         *     - Subscriptions Manager
+         *     - Users Manager
+         *     - Account Manager
+         *     - Guest Manager
+         *     - Gateway Manager
+         *     - System Manager
+         *     - Tenant Manager
+         *
+         *
+         */
+        post: operations["create_system_roles_url"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/_adm/managers/tenants": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List tenants */
+        get: operations["list_tenant_url"];
+        put?: never;
+        /** Create a new tenant */
+        post: operations["create_tenant_url"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/_adm/managers/tenants/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Delete a tenant */
+        delete: operations["delete_tenant_url"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/_adm/managers/tenants/{id}/owner/{owner_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * Exclude a tenant owner
+         * @description A single tenant can have multiple owners. This endpoint allows to exclude an
+         *     owner from the tenant.
+         *
+         *
+         */
+        delete: operations["exclude_tenant_owner_url"];
+        options?: never;
+        head?: never;
+        /**
+         * Include a tenant owner
+         * @description A single tenant can have multiple owners. This endpoint allows to include a
+         *     new owner to the tenant.
+         *
+         *
+         */
+        patch: operations["include_tenant_owner_url"];
+        trace?: never;
+    };
+    "/_adm/staffs/accounts/{account_id}/downgrade": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Downgrade account privileges
+         * @description Decrease permissions of the refereed account.
+         */
+        patch: operations["downgrade_account_privileges_url"];
+        trace?: never;
+    };
+    "/_adm/staffs/accounts/{account_id}/upgrade": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Upgrade account privileges
+         * @description Increase permissions of the refereed account.
+         */
+        patch: operations["upgrade_account_privileges_url"];
+        trace?: never;
+    };
+    "/_adm/subscriptions-manager/accounts": {
         parameters: {
             query?: never;
             header?: never;
@@ -588,7 +741,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/adm/rs/subscriptions-manager/accounts/{account_id}": {
+    "/_adm/subscriptions-manager/accounts/{account_id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -613,7 +766,7 @@ export interface paths {
         patch: operations["update_account_name_and_flags_url"];
         trace?: never;
     };
-    "/adm/rs/subscriptions-manager/accounts/{account_id}/propagate": {
+    "/_adm/subscriptions-manager/accounts/{account_id}/propagate": {
         parameters: {
             query?: never;
             header?: never;
@@ -633,7 +786,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/adm/rs/subscriptions-manager/guest-roles": {
+    "/_adm/subscriptions-manager/guest-roles": {
         parameters: {
             query?: never;
             header?: never;
@@ -650,7 +803,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/adm/rs/subscriptions-manager/guest-roles/{id}": {
+    "/_adm/subscriptions-manager/guest-roles/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -667,7 +820,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/adm/rs/subscriptions-manager/guests": {
+    "/_adm/subscriptions-manager/guests": {
         parameters: {
             query?: never;
             header?: never;
@@ -684,7 +837,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/adm/rs/subscriptions-manager/guests/accounts/{account_id}": {
+    "/_adm/subscriptions-manager/guests/accounts/{account_id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -705,7 +858,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/adm/rs/subscriptions-manager/guests/accounts/{account_id}/roles/{role_id}": {
+    "/_adm/subscriptions-manager/guests/accounts/{account_id}/roles/{role_id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -728,7 +881,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/adm/rs/subscriptions-manager/tags": {
+    "/_adm/subscriptions-manager/tags": {
         parameters: {
             query?: never;
             header?: never;
@@ -745,7 +898,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/adm/rs/subscriptions-manager/tags/{tag_id}": {
+    "/_adm/subscriptions-manager/tags/{tag_id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -763,7 +916,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/adm/rs/system-manager/error-codes": {
+    "/_adm/system-manager/error-codes": {
         parameters: {
             query?: never;
             header?: never;
@@ -790,7 +943,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/adm/rs/system-manager/error-codes/prefixes/{prefix}/codes/{code}": {
+    "/_adm/system-manager/error-codes/prefixes/{prefix}/codes/{code}": {
         parameters: {
             query?: never;
             header?: never;
@@ -824,7 +977,7 @@ export interface paths {
         patch: operations["update_error_code_message_and_details_url"];
         trace?: never;
     };
-    "/adm/rs/system-manager/webhooks": {
+    "/_adm/system-manager/webhooks": {
         parameters: {
             query?: never;
             header?: never;
@@ -842,7 +995,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/adm/rs/system-manager/webhooks/{webhook_id}": {
+    "/_adm/system-manager/webhooks/{webhook_id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -860,7 +1013,7 @@ export interface paths {
         patch: operations["update_webhook_url"];
         trace?: never;
     };
-    "/adm/rs/tenant-manager/accounts": {
+    "/_adm/tenant-manager/accounts": {
         parameters: {
             query?: never;
             header?: never;
@@ -883,7 +1036,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/adm/rs/tenant-manager/accounts/{account_id}": {
+    "/_adm/tenant-manager/accounts/{account_id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -905,7 +1058,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/adm/rs/tenant-manager/guests/accounts/{account_id}": {
+    "/_adm/tenant-manager/guests/accounts/{account_id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -927,7 +1080,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/adm/rs/tenant-manager/guests/accounts/{account_id}/roles/{role_id}": {
+    "/_adm/tenant-manager/guests/accounts/{account_id}/roles/{role_id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -944,7 +1097,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/adm/rs/tenant-manager/tags": {
+    "/_adm/tenant-manager/tags": {
         parameters: {
             query?: never;
             header?: never;
@@ -961,7 +1114,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/adm/rs/tenant-manager/tags/{tag_id}": {
+    "/_adm/tenant-manager/tags/{tag_id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -979,7 +1132,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/adm/rs/tenant-manager/tenants/{tenant_id}": {
+    "/_adm/tenant-manager/tenants/{tenant_id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -996,7 +1149,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/adm/rs/tenant-owner/accounts": {
+    "/_adm/tenant-owner/accounts": {
         parameters: {
             query?: never;
             header?: never;
@@ -1019,7 +1172,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/adm/rs/tenant-owner/accounts/{account_id}": {
+    "/_adm/tenant-owner/accounts/{account_id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -1041,7 +1194,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/adm/rs/tenant-owner/meta": {
+    "/_adm/tenant-owner/meta": {
         parameters: {
             query?: never;
             header?: never;
@@ -1059,7 +1212,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/adm/rs/tenant-owner/owners": {
+    "/_adm/tenant-owner/owners": {
         parameters: {
             query?: never;
             header?: never;
@@ -1077,7 +1230,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/adm/rs/tenant-owner/tenants/{tenant_id}/": {
+    "/_adm/tenant-owner/tenants/{tenant_id}/": {
         parameters: {
             query?: never;
             header?: never;
@@ -1094,7 +1247,7 @@ export interface paths {
         patch: operations["update_tenant_name_and_description_url"];
         trace?: never;
     };
-    "/adm/rs/tenant-owner/tenants/{tenant_id}/archive": {
+    "/_adm/tenant-owner/tenants/{tenant_id}/archive": {
         parameters: {
             query?: never;
             header?: never;
@@ -1111,7 +1264,7 @@ export interface paths {
         patch: operations["update_tenant_archiving_status_url"];
         trace?: never;
     };
-    "/adm/rs/tenant-owner/tenants/{tenant_id}/trash": {
+    "/_adm/tenant-owner/tenants/{tenant_id}/trash": {
         parameters: {
             query?: never;
             header?: never;
@@ -1128,7 +1281,7 @@ export interface paths {
         patch: operations["update_tenant_trashing_status_url"];
         trace?: never;
     };
-    "/adm/rs/tenant-owner/tenants/{tenant_id}/verify": {
+    "/_adm/tenant-owner/tenants/{tenant_id}/verify": {
         parameters: {
             query?: never;
             header?: never;
@@ -1145,7 +1298,7 @@ export interface paths {
         patch: operations["update_tenant_verifying_status_url"];
         trace?: never;
     };
-    "/adm/rs/users-manager/accounts/{account_id}/activate": {
+    "/_adm/users-manager/accounts/{account_id}/activate": {
         parameters: {
             query?: never;
             header?: never;
@@ -1166,7 +1319,7 @@ export interface paths {
         patch: operations["activate_account_url"];
         trace?: never;
     };
-    "/adm/rs/users-manager/accounts/{account_id}/approve": {
+    "/_adm/users-manager/accounts/{account_id}/approve": {
         parameters: {
             query?: never;
             header?: never;
@@ -1187,7 +1340,7 @@ export interface paths {
         patch: operations["approve_account_url"];
         trace?: never;
     };
-    "/adm/rs/users-manager/accounts/{account_id}/archive": {
+    "/_adm/users-manager/accounts/{account_id}/archive": {
         parameters: {
             query?: never;
             header?: never;
@@ -1207,7 +1360,7 @@ export interface paths {
         patch: operations["archive_account_url"];
         trace?: never;
     };
-    "/adm/rs/users-manager/accounts/{account_id}/deactivate": {
+    "/_adm/users-manager/accounts/{account_id}/deactivate": {
         parameters: {
             query?: never;
             header?: never;
@@ -1228,7 +1381,7 @@ export interface paths {
         patch: operations["deactivate_account_url"];
         trace?: never;
     };
-    "/adm/rs/users-manager/accounts/{account_id}/disapprove": {
+    "/_adm/users-manager/accounts/{account_id}/disapprove": {
         parameters: {
             query?: never;
             header?: never;
@@ -1249,7 +1402,7 @@ export interface paths {
         patch: operations["disapprove_account_url"];
         trace?: never;
     };
-    "/adm/rs/users-manager/accounts/{account_id}/unarchive": {
+    "/_adm/users-manager/accounts/{account_id}/unarchive": {
         parameters: {
             query?: never;
             header?: never;
@@ -1267,182 +1420,6 @@ export interface paths {
          * @description Set target account as un-archived.
          */
         patch: operations["unarchive_account_url"];
-        trace?: never;
-    };
-    "/adm/su/managers/accounts": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Create system account */
-        post: operations["create_system_account_url"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/adm/su/managers/guest-roles": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Create system roles
-         * @description System roles should be used to attribute permissions to actors who manage
-         *     specific parts of the system. This function creates the following roles:
-         *
-         *     - Subscriptions Manager
-         *     - Users Manager
-         *     - Account Manager
-         *     - Guest Manager
-         *     - Gateway Manager
-         *     - System Manager
-         *     - Tenant Manager
-         *
-         *
-         */
-        post: operations["create_system_roles_url"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/adm/su/managers/tenants": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** List tenants */
-        get: operations["list_tenant_url"];
-        put?: never;
-        /** Create a new tenant */
-        post: operations["create_tenant_url"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/adm/su/managers/tenants/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        /** Delete a tenant */
-        delete: operations["delete_tenant_url"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/adm/su/managers/tenants/{id}/owner/{owner_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        /**
-         * Exclude a tenant owner
-         * @description A single tenant can have multiple owners. This endpoint allows to exclude an
-         *     owner from the tenant.
-         *
-         *
-         */
-        delete: operations["exclude_tenant_owner_url"];
-        options?: never;
-        head?: never;
-        /**
-         * Include a tenant owner
-         * @description A single tenant can have multiple owners. This endpoint allows to include a
-         *     new owner to the tenant.
-         *
-         *
-         */
-        patch: operations["include_tenant_owner_url"];
-        trace?: never;
-    };
-    "/adm/su/staffs/accounts/{account_id}/downgrade": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        /**
-         * Downgrade account privileges
-         * @description Decrease permissions of the refereed account.
-         */
-        patch: operations["downgrade_account_privileges_url"];
-        trace?: never;
-    };
-    "/adm/su/staffs/accounts/{account_id}/upgrade": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        /**
-         * Upgrade account privileges
-         * @description Increase permissions of the refereed account.
-         */
-        patch: operations["upgrade_account_privileges_url"];
-        trace?: never;
-    };
-    "/adm/svc/tools": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * List routes by service
-         * @description This function is restricted to the GatewayManager users. List routes by
-         *     service name or service id.
-         *
-         *
-         */
-        get: operations["list_discoverable_services_url"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
         trace?: never;
     };
     "/health": {
@@ -1478,6 +1455,29 @@ export interface paths {
          * @description This is usual during system checks.
          */
         get: operations["now_url"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/tools": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List routes by service
+         * @description This function is restricted to the GatewayManager users. List routes by
+         *     service name or service id.
+         *
+         *
+         */
+        get: operations["list_discoverable_services_url"];
         put?: never;
         post?: never;
         delete?: never;
@@ -2009,17 +2009,7 @@ export interface components {
              *     roles. If not specified, the actions allowed by the token will be
              *     scoped to the user profile.
              *      */
-            roles?: string[] | null;
-            /** @description The permissioned roles
-             *
-             *     If specified, the actions allowed by the token will be scoped to the
-             *     roles and permissions. Otherwise, the complete set of roles and
-             *     permissions present in the user profile will be used.
-             *      */
-            permissionedRoles?: [
-                string,
-                "read" | "write"
-            ][] | null;
+            roles?: components["schemas"]["PermissionedRole"][] | null;
         };
         CreateTokenResponse: {
             connectionString: string;
@@ -2336,12 +2326,7 @@ export interface components {
             /** @description The email which the guest user is connected to */
             email: string;
             /** @description The roles which the guest user was invited to */
-            roles?: string[] | null;
-            /** @description The permissioned roles which the guest user was invited to */
-            permissionedRoles?: [
-                string,
-                "read" | "write"
-            ][] | null;
+            roles?: components["schemas"]["PermissionedRole"][] | null;
             /** @description The guest user was verified */
             wasVerified?: boolean | null;
         };
@@ -2511,6 +2496,7 @@ export interface components {
             style?: string | null;
             explode?: boolean | null;
             schema: components["schemas"]["SchemaOrOneOf"];
+            security?: unknown;
         };
         /** @description A parent record
          *
@@ -2749,6 +2735,10 @@ export interface components {
         PasswordHash: Record<string, never>;
         /** @enum {string} */
         Permission: "read" | "write";
+        PermissionedRole: {
+            name: string;
+            permission?: null | components["schemas"]["Permission"];
+        };
         /** @description This object should be used over the application layer operations. */
         Profile: {
             owners: components["schemas"]["Owner"][];
@@ -3001,36 +2991,7 @@ export interface components {
              *     Protect the route with the user profile filtered by roles
              *      */
             protectedByRoles: {
-                roles: string[];
-            };
-        } | {
-            /** @description
-             *     Protect the route with the user profile filtered by roles and
-             *     permissions
-             *      */
-            protectedByPermissionedRoles: {
-                permissionedRoles: [
-                    string,
-                    "read" | "write"
-                ][];
-            };
-        } | {
-            /** @description
-             *     Protect the route with service token associated to a specific role list
-             *      */
-            protectedByServiceTokenWithRole: {
-                roles: string[];
-            };
-        } | {
-            /** @description
-             *     Protect the route with service token associated to a specific role and
-             *     permissions
-             *      */
-            protectedByServiceTokenWithPermissionedRoles: {
-                permissionedRoles: [
-                    string,
-                    "read" | "write"
-                ][];
+                roles: components["schemas"]["PermissionedRole"][];
             };
         };
         /** @description The Upstream Service
@@ -3343,6 +3304,11 @@ export interface components {
              *     The allowed method of the operation.
              *      */
             method: components["schemas"]["HttpMethod"];
+            /** @description The operation value
+             *
+             *     The operation value.
+             *      */
+            operation_value?: unknown;
             /** @description The mycelium security group
              *
              *     The mycelium security group for the operation.
@@ -5351,6 +5317,516 @@ export interface operations {
             };
         };
     };
+    create_system_account_url: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateSystemSubscriptionAccountBody"];
+            };
+        };
+        responses: {
+            /** @description Account created. */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GuestRole"][];
+                };
+            };
+            /** @description Unauthorized. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Forbidden. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Unknown internal server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+        };
+    };
+    create_system_roles_url: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Guest roles created. */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GuestRole"][];
+                };
+            };
+            /** @description Unauthorized. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Forbidden. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Unknown internal server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+        };
+    };
+    list_tenant_url: {
+        parameters: {
+            query?: {
+                /** @description Filter tenants by name */
+                name?: string | null;
+                /** @description Filter tenants by owner */
+                owner?: string | null;
+                /** @description Filter tenants by metadata key */
+                metadata?: string | null;
+                /** @description Filter tenants by tag
+                 *
+                 *     Example: `key=value` */
+                tag?: string | null;
+                skip?: number | null;
+                pageSize?: number | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Fetching success. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Tenant"][];
+                };
+            };
+            /** @description Not found. */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Forbidden. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Unknown internal server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+        };
+    };
+    create_tenant_url: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateTenantBody"];
+            };
+        };
+        responses: {
+            /** @description Tenant created. */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Tenant"];
+                };
+            };
+            /** @description Tenant already exists. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Unauthorized. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Forbidden. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Unknown internal server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+        };
+    };
+    delete_tenant_url: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The tenant primary key. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Tenant successfully registered. */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/plain": string;
+                };
+            };
+            /** @description Bad request. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Unauthorized. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Forbidden. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Unknown internal server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+        };
+    };
+    exclude_tenant_owner_url: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The tenant primary key. */
+                id: string;
+                owner_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Owner deleted. */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Forbidden. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Unknown internal server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+        };
+    };
+    include_tenant_owner_url: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The tenant primary key. */
+                id: string;
+                owner_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Owner included. */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TenantOwnerConnection"];
+                };
+            };
+            /** @description Unauthorized. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Forbidden. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Unknown internal server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+        };
+    };
+    downgrade_account_privileges_url: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The account primary key. */
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DowngradeAccountPrivilegesBody"];
+            };
+        };
+        responses: {
+            /** @description Account downgraded. */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Account"];
+                };
+            };
+            /** @description Account not downgraded. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Unauthorized. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Forbidden. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Unknown internal server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+        };
+    };
+    upgrade_account_privileges_url: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The account primary key. */
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpgradeAccountPrivilegesBody"];
+            };
+        };
+        responses: {
+            /** @description Account upgraded. */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Account"];
+                };
+            };
+            /** @description Account not upgraded. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Unauthorized. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Forbidden. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Unknown internal server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+        };
+    };
     list_accounts_by_type_url: {
         parameters: {
             query?: {
@@ -5796,12 +6272,7 @@ export interface operations {
                 /** @description The email which the guest user is connected to */
                 email: string;
                 /** @description The roles which the guest user was invited to */
-                roles?: string[] | null;
-                /** @description The permissioned roles which the guest user was invited to */
-                permissionedRoles?: [
-                    string,
-                    "read" | "write"
-                ][] | null;
+                roles?: components["schemas"]["PermissionedRole"][] | null;
                 /** @description The guest user was verified */
                 wasVerified?: boolean | null;
             };
@@ -8235,58 +8706,7 @@ export interface operations {
             };
         };
     };
-    create_system_account_url: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CreateSystemSubscriptionAccountBody"];
-            };
-        };
-        responses: {
-            /** @description Account created. */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["GuestRole"][];
-                };
-            };
-            /** @description Unauthorized. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HttpJsonResponse"];
-                };
-            };
-            /** @description Forbidden. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HttpJsonResponse"];
-                };
-            };
-            /** @description Unknown internal server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HttpJsonResponse"];
-                };
-            };
-        };
-    };
-    create_system_roles_url: {
+    health_url: {
         parameters: {
             query?: never;
             header?: never;
@@ -8295,185 +8715,8 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Guest roles created. */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["GuestRole"][];
-                };
-            };
-            /** @description Unauthorized. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HttpJsonResponse"];
-                };
-            };
-            /** @description Forbidden. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HttpJsonResponse"];
-                };
-            };
-            /** @description Unknown internal server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HttpJsonResponse"];
-                };
-            };
-        };
-    };
-    list_tenant_url: {
-        parameters: {
-            query?: {
-                /** @description Filter tenants by name */
-                name?: string | null;
-                /** @description Filter tenants by owner */
-                owner?: string | null;
-                /** @description Filter tenants by metadata key */
-                metadata?: string | null;
-                /** @description Filter tenants by tag
-                 *
-                 *     Example: `key=value` */
-                tag?: string | null;
-                skip?: number | null;
-                pageSize?: number | null;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Fetching success. */
+            /** @description Health check passed. */
             200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Tenant"][];
-                };
-            };
-            /** @description Not found. */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Unauthorized. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HttpJsonResponse"];
-                };
-            };
-            /** @description Forbidden. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HttpJsonResponse"];
-                };
-            };
-            /** @description Unknown internal server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HttpJsonResponse"];
-                };
-            };
-        };
-    };
-    create_tenant_url: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CreateTenantBody"];
-            };
-        };
-        responses: {
-            /** @description Tenant created. */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Tenant"];
-                };
-            };
-            /** @description Tenant already exists. */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HttpJsonResponse"];
-                };
-            };
-            /** @description Unauthorized. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HttpJsonResponse"];
-                };
-            };
-            /** @description Forbidden. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HttpJsonResponse"];
-                };
-            };
-            /** @description Unknown internal server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HttpJsonResponse"];
-                };
-            };
-        };
-    };
-    delete_tenant_url: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The tenant primary key. */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Tenant successfully registered. */
-            201: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -8481,266 +8724,24 @@ export interface operations {
                     "text/plain": string;
                 };
             };
-            /** @description Bad request. */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HttpJsonResponse"];
-                };
-            };
-            /** @description Unauthorized. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HttpJsonResponse"];
-                };
-            };
-            /** @description Forbidden. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HttpJsonResponse"];
-                };
-            };
-            /** @description Unknown internal server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HttpJsonResponse"];
-                };
-            };
         };
     };
-    exclude_tenant_owner_url: {
+    now_url: {
         parameters: {
             query?: never;
             header?: never;
-            path: {
-                /** @description The tenant primary key. */
-                id: string;
-                owner_id: string;
-            };
+            path?: never;
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description Owner deleted. */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Unauthorized. */
-            401: {
+            /** @description The current datetime with timezone. */
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["HttpJsonResponse"];
-                };
-            };
-            /** @description Forbidden. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HttpJsonResponse"];
-                };
-            };
-            /** @description Unknown internal server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HttpJsonResponse"];
-                };
-            };
-        };
-    };
-    include_tenant_owner_url: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The tenant primary key. */
-                id: string;
-                owner_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Owner included. */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["TenantOwnerConnection"];
-                };
-            };
-            /** @description Unauthorized. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HttpJsonResponse"];
-                };
-            };
-            /** @description Forbidden. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HttpJsonResponse"];
-                };
-            };
-            /** @description Unknown internal server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HttpJsonResponse"];
-                };
-            };
-        };
-    };
-    downgrade_account_privileges_url: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The account primary key. */
-                account_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["DowngradeAccountPrivilegesBody"];
-            };
-        };
-        responses: {
-            /** @description Account downgraded. */
-            202: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Account"];
-                };
-            };
-            /** @description Account not downgraded. */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HttpJsonResponse"];
-                };
-            };
-            /** @description Unauthorized. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HttpJsonResponse"];
-                };
-            };
-            /** @description Forbidden. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HttpJsonResponse"];
-                };
-            };
-            /** @description Unknown internal server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HttpJsonResponse"];
-                };
-            };
-        };
-    };
-    upgrade_account_privileges_url: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The account primary key. */
-                account_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["UpgradeAccountPrivilegesBody"];
-            };
-        };
-        responses: {
-            /** @description Account upgraded. */
-            202: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Account"];
-                };
-            };
-            /** @description Account not upgraded. */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HttpJsonResponse"];
-                };
-            };
-            /** @description Unauthorized. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HttpJsonResponse"];
-                };
-            };
-            /** @description Forbidden. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HttpJsonResponse"];
-                };
-            };
-            /** @description Unknown internal server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HttpJsonResponse"];
+                    "text/plain": string;
                 };
             };
         };
@@ -8798,46 +8799,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HttpJsonResponse"];
-                };
-            };
-        };
-    };
-    health_url: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Health check passed. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "text/plain": string;
-                };
-            };
-        };
-    };
-    now_url: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description The current datetime with timezone. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "text/plain": string;
                 };
             };
         };

@@ -49,7 +49,7 @@ export default function UnguestOwner({
 
     const token = await getAccessTokenSilently();
 
-    await fetch(buildPath("/adm/rs/tenant-owner/owners"), {
+    await fetch(buildPath("/_adm/tenant-owner/owners"), {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${token}`,

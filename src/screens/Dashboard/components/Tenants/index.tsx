@@ -74,7 +74,7 @@ export default function Tenants() {
     if (searchTerm && searchTerm !== "") searchParams.name = searchTerm;
     if (pageSize) searchParams.pageSize = pageSize.toString();
 
-    return buildPath("/adm/su/managers/tenants", {
+    return buildPath("/_adm/managers/tenants", {
       query: searchParams,
     });
   }, [searchTerm, skip, pageSize, isAuthenticated, hasEnoughPermissions]);
@@ -122,7 +122,7 @@ export default function Tenants() {
       const token = await getAccessTokenSilently();
 
       await fetch(
-        buildPath("/adm/rs/beginners/tenants/{tenant_id}", {
+        buildPath("/_adm/beginners/tenants/{tenant_id}", {
           path: { tenant_id: tenantId },
         }),
         { headers: { Authorization: `Bearer ${token}` } }

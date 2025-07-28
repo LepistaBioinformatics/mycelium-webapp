@@ -62,7 +62,7 @@ export default function RegisterGuestRoleChild({
 
       const response = await fetch(
         buildPath(
-          "/adm/rs/guests-manager/guest-roles/{guest_role_id}/children/{child_id}",
+          "/_adm/guests-manager/guest-roles/{guest_role_id}/children/{child_id}",
           { path: { guest_role_id: parentRole.id, child_id: childRole.id } }
         ),
         {
@@ -88,7 +88,7 @@ export default function RegisterGuestRoleChild({
       parentRole.id,
       getAccessTokenSilently,
       onSuccess,
-      parseHttpError
+      parseHttpError,
     ]
   );
 

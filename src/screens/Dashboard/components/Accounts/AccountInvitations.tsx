@@ -65,7 +65,7 @@ export default function AccountInvitations({
       "actorAssociated" in accountType
     ) {
       return buildPath(
-        "/adm/rs/subscriptions-manager/guests/accounts/{account_id}",
+        "/_adm/subscriptions-manager/guests/accounts/{account_id}",
         {
           path: { account_id: account.id },
         }
@@ -265,7 +265,7 @@ function Invitation({
     if (!tenantInfo?.id) return null;
 
     if (typeof localInvitationRecord === "string") {
-      return buildPath("/adm/rs/subscriptions-manager/guest-roles/{id}", {
+      return buildPath("/_adm/subscriptions-manager/guest-roles/{id}", {
         path: { id: localInvitationRecord },
       });
     }

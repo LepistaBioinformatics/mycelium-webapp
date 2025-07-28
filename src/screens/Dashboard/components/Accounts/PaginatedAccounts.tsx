@@ -287,7 +287,7 @@ export default function PaginatedAccounts({
       }
     }
 
-    return buildPath("/adm/rs/subscriptions-manager/accounts", {
+    return buildPath("/_adm/subscriptions-manager/accounts", {
       query: searchParams,
     });
   }, [

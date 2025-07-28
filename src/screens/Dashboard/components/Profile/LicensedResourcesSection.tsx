@@ -10,7 +10,7 @@ import IntroSection from "@/components/ui/IntroSection";
 import { useTranslation } from "react-i18next";
 import { MycRole } from "@/types/MyceliumRole";
 import { Link } from "react-router";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 
 type LicensedResource = components["schemas"]["LicensedResource"];
 
@@ -49,10 +49,6 @@ export default function LicensedResourcesSection({ licensedResources }: Props) {
         return self.findIndex((t) => t.id === accId.id) === index;
       });
   }, [licensedResources]);
-
-  useEffect(() => {
-    console.log(uniqueAccountIds);
-  }, [uniqueAccountIds]);
 
   return (
     licensedResources?.length && (

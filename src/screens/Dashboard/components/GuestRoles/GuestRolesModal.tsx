@@ -83,18 +83,15 @@ export default function GuestRolesModal({
 
     if (guestRole && guestRole?.id) {
       return {
-        baseUrl: buildPath(
-          "/adm/rs/guests-manager/guest-roles/{guest_role_id}",
-          {
-            path: { guest_role_id: guestRole.id },
-          }
-        ),
+        baseUrl: buildPath("/_adm/guests-manager/guest-roles/{guest_role_id}", {
+          path: { guest_role_id: guestRole.id },
+        }),
         method: "PATCH",
       };
     }
 
     return {
-      baseUrl: buildPath("/adm/rs/guests-manager/guest-roles"),
+      baseUrl: buildPath("/_adm/guests-manager/guest-roles"),
       method: "POST",
     };
   }, [guestRole, isAuthenticated, hasEnoughPermissions]);

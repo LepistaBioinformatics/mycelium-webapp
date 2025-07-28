@@ -14,8 +14,8 @@ export interface TenantResolverChildProps {
 interface Props {
   tenantId: string;
   children:
-  | React.ReactElement<TenantResolverChildProps>
-  | React.ReactElement<TenantResolverChildProps>[];
+    | React.ReactElement<TenantResolverChildProps>
+    | React.ReactElement<TenantResolverChildProps>[];
 }
 
 export default function TenantResolver({ tenantId, children }: Props) {
@@ -26,10 +26,9 @@ export default function TenantResolver({ tenantId, children }: Props) {
   const memoizedUrl = useMemo(() => {
     if (tenantId === SYSTEM_TENANT_ID) return null;
 
-    return buildPath(
-      "/adm/rs/beginners/tenants/{tenant_id}",
-      { path: { tenant_id: tenantId } }
-    );
+    return buildPath("/_adm/beginners/tenants/{tenant_id}", {
+      path: { tenant_id: tenantId },
+    });
   }, [tenantId]);
 
   const { tenantStatus, isLoading, error } = useTenantDetails({
@@ -48,7 +47,7 @@ export default function TenantResolver({ tenantId, children }: Props) {
             tenantId,
             tenantStatus,
             isLoading,
-            error
+            error,
           });
         }
 

@@ -204,8 +204,8 @@ export default function WebhookModal({
     const response = await fetch(
       buildPath(
         webhook
-          ? "/adm/rs/system-manager/webhooks/{webhook_id}"
-          : "/adm/rs/system-manager/webhooks",
+          ? "/_adm/system-manager/webhooks/{webhook_id}"
+          : "/_adm/system-manager/webhooks",
         {
           path: {
             webhook_id: webhook?.id ?? "",

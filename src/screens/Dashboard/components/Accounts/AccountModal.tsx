@@ -84,7 +84,7 @@ export default function AccountModal({
   const buildBaseUrl = useCallback(() => {
     if (systemAccountType) {
       return {
-        baseUrl: buildPath("/adm/su/managers/accounts"),
+        baseUrl: buildPath("/_adm/managers/accounts"),
         method: "POST",
       };
     }
@@ -92,7 +92,7 @@ export default function AccountModal({
     if (account) {
       return {
         baseUrl: buildPath(
-          "/adm/rs/subscriptions-manager/accounts/{account_id}",
+          "/_adm/subscriptions-manager/accounts/{account_id}",
           {
             path: { account_id: accountId ?? "" },
           }
@@ -102,7 +102,7 @@ export default function AccountModal({
     }
 
     return {
-      baseUrl: buildPath("/adm/rs/subscriptions-manager/accounts"),
+      baseUrl: buildPath("/_adm/subscriptions-manager/accounts"),
       method: "POST",
     };
   }, [systemAccountType, account, accountId]);
@@ -194,8 +194,8 @@ export default function AccountModal({
                 ? t("screens.Dashboard.Accounts.AccountModal.updating")
                 : t("screens.Dashboard.Accounts.AccountModal.update")
               : isLoading
-                ? t("screens.Dashboard.Accounts.AccountModal.creating")
-                : t("screens.Dashboard.Accounts.AccountModal.create")}
+              ? t("screens.Dashboard.Accounts.AccountModal.creating")
+              : t("screens.Dashboard.Accounts.AccountModal.create")}
           </Button>
 
           {hasAdminPrivileges && !account && (

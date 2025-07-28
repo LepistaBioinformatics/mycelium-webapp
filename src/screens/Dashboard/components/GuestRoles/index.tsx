@@ -82,7 +82,7 @@ export default function GuestRoles() {
     if (searchTerm && searchTerm !== "") searchParams.name = searchTerm;
     if (pageSize) searchParams.pageSize = pageSize.toString();
 
-    return buildPath("/adm/rs/guests-manager/guest-roles", {
+    return buildPath("/_adm/guests-manager/guest-roles", {
       query: searchParams,
     });
   }, [searchTerm, skip, pageSize, isAuthenticated, hasEnoughPermissions]);

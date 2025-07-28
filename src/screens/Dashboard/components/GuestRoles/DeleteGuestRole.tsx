@@ -35,7 +35,7 @@ export default function DeleteGuestRole({ guestRole, isOpen, onClose }: Props) {
     if (!guestRole.id) return;
 
     await fetch(
-      buildPath("/adm/rs/guests-manager/guest-roles/{guest_role_id}", {
+      buildPath("/_adm/guests-manager/guest-roles/{guest_role_id}", {
         path: { guest_role_id: guestRole.id },
       }),
       {

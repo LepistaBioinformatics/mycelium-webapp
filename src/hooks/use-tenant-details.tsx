@@ -33,7 +33,7 @@ export default function useTenantDetails({ tenantId, customUrl }: Props) {
     if (customUrl) return customUrl;
 
     if (tenantId) {
-      return buildPath("/adm/rs/beginners/tenants/{tenant_id}", {
+      return buildPath("/_adm/beginners/tenants/{tenant_id}", {
         path: { tenant_id: tenantId },
       });
     }
