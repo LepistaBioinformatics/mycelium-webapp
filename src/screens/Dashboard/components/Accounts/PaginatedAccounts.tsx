@@ -40,6 +40,7 @@ export interface PaginatedAccountsProps {
   restrictAccountTypeTo?: (
     | "subscription"
     | "actorAssociated"
+    | "roleAssociated"
     | "tenantManager"
     | "user"
     | "manager"
@@ -93,6 +94,14 @@ const COMMANDS = {
         "Action restricted to subscriptions-manager users. Disabled if tenant is not selected",
       adminOnly: false,
       tenantNeeded: true,
+    },
+    roleAssociated: {
+      brief: "Select Role Associated accounts",
+      command: "/roleAssociated",
+      description:
+        "Action restricted to subscriptions-manager users. Disabled if tenant is not selected",
+      adminOnly: false,
+      tenantNeeded: false,
     },
   },
   status: {
@@ -229,7 +238,7 @@ export default function PaginatedAccounts({
       // Match /staff, /manager, /user, /subscription, /actorAssociated, /tenantManager
       //
       const typePattern =
-        /(\/staff|\/manager|\/user|\/subscription|\/actorAssociated|\/tenantManager)/;
+        /(\/staff|\/manager|\/user|\/subscription|\/actorAssociated|\/tenantManager|\/roleAssociated)/;
 
       if (typePattern.test(searchTerm)) {
         const typeValue = typePattern.exec(searchTerm)?.[1];
@@ -460,7 +469,7 @@ export default function PaginatedAccounts({
                     <div className="flex items-center gap-2">
                       {account?.name}
                     </div>
-                    {account.isDefault && (
+                    {account.isSystemAccount && (
                       <span className="text-xs text-gray-500 dark:text-gray-400">
                         (Default)
                       </span>

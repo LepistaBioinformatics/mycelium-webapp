@@ -1536,7 +1536,7 @@ export interface components {
              *      */
             isDeleted: boolean;
             verboseStatus?: null | components["schemas"]["VerboseStatus"];
-            isDefault: boolean;
+            isSystemAccount: boolean;
             /** @description The Account Owners
              *
              *     This is the list of account owners. The account owners are the users who
@@ -1683,7 +1683,7 @@ export interface components {
                  *      */
                 isDeleted: boolean;
                 verboseStatus?: null | components["schemas"]["VerboseStatus"];
-                isDefault: boolean;
+                isSystemAccount: boolean;
                 /** @description The Account Owners
                  *
                  *     This is the list of account owners. The account owners are the users who
@@ -2547,7 +2547,7 @@ export interface components {
                  *      */
                 isDeleted: boolean;
                 verboseStatus?: null | components["schemas"]["VerboseStatus"];
-                isDefault: boolean;
+                isSystemAccount: boolean;
                 /** @description The Account Owners
                  *
                  *     This is the list of account owners. The account owners are the users who

@@ -27,7 +27,7 @@ interface IFormInputs {
 
 export interface SearchProps
   extends BaseProps,
-  VariantProps<typeof containerStyles> {
+    VariantProps<typeof containerStyles> {
   term?: string;
   onSubmit: (term?: string) => void;
   placeholder?: string;
@@ -61,11 +61,7 @@ function Container({
 
   const onSubmitHandler: SubmitHandler<IFormInputs> = async ({
     term,
-  }: IFormInputs) => {
-    console.log("Search term submitted:", term);
-
-    onSubmit(term.trim())
-  };
+  }: IFormInputs) => onSubmit(term.trim());
 
   return (
     <div
@@ -86,7 +82,6 @@ function Container({
                 <>
                   <TextInput
                     id="term"
-                    autoFocus
                     type="search"
                     sizing="md"
                     color="custom"

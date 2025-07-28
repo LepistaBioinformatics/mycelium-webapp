@@ -94,7 +94,11 @@ const ROUTES = {
             path: "/dashboard/tenants/:tenantId/accounts",
             element: (
               <Accounts
-                restrictAccountTypeTo={["subscription", "tenantManager"]}
+                restrictAccountTypeTo={[
+                  "subscription",
+                  "tenantManager",
+                  "roleAssociated",
+                ]}
               />
             ),
             errorElement: <ErrorBoundary />,

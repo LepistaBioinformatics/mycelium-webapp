@@ -197,7 +197,7 @@ export default function GuestToAccountModal({
             )}
             selectedRole={selectedRole}
             setSelectedRole={(role) => setSelectedRole(role)}
-            shouldBeSystemRole={account.isDefault}
+            shouldBeSystemRole={account.isSystemAccount}
             {...guestRoleSelectorProps}
           />
 

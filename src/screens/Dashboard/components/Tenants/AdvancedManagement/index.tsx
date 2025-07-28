@@ -22,11 +22,13 @@ import BrandCard from "./BrandCard";
 import ColorsCard from "./ColorsCard";
 import LegalSettings from "./LegalSettings";
 import { useTranslation } from "react-i18next";
-import { MdManageAccounts } from "react-icons/md";
+import { MdManageAccounts, MdSwitchAccount } from "react-icons/md";
 import CreateConnectionStringModal from "../../CreateConnectionStringModal";
 import DetailsBox from "@/components/ui/DetailsBox";
 import Banner from "@/components/ui/Banner";
 import Button from "@/components/ui/Button";
+import CreateSubscriptionManagerAccountModal from "./CreateSubscriptionManagerAccountModal";
+import { FaKey } from "react-icons/fa";
 
 export default function AdvancedManagement() {
   const { t } = useTranslation();
@@ -46,6 +48,11 @@ export default function AdvancedManagement() {
     setIsCreateConnectionStringModalOpen,
   ] = useState(false);
 
+  const [
+    isCreateSubscriptionManagerAccountModalOpen,
+    setIsCreateSubscriptionManagerAccountModalOpen,
+  ] = useState(false);
+
   const handleCreateConnectionStringModalOpen = () => {
     setIsCreateConnectionStringModalOpen(true);
   };
@@ -56,6 +63,18 @@ export default function AdvancedManagement() {
 
   const handleCreateConnectionStringModalSuccess = () => {
     setIsCreateConnectionStringModalOpen(false);
+  };
+
+  const handleCreateSubscriptionManagerAccountModalOpen = () => {
+    setIsCreateSubscriptionManagerAccountModalOpen(true);
+  };
+
+  const handleCreateSubscriptionManagerAccountModalClose = () => {
+    setIsCreateSubscriptionManagerAccountModalOpen(false);
+  };
+
+  const handleCreateSubscriptionManagerAccountModalSuccess = () => {
+    setIsCreateSubscriptionManagerAccountModalOpen(false);
   };
 
   const { hasEnoughPermissions, isLoadingUser, isLoadingProfile } = useProfile({
@@ -270,9 +289,12 @@ export default function AdvancedManagement() {
             <DetailsBox centralized={false}>
               <DetailsBox.Summary>
                 <Typography decoration="faded" as="small" width="xxs">
-                  {t(
-                    "screens.Dashboard.Tenants.AdvancedManagement.createConnectionString.cta"
-                  )}
+                  <span className="text-blue-500 dark:text-lime-400 flex gap-2 items-center">
+                    <FaKey size={12} className="inline" />
+                    {t(
+                      "screens.Dashboard.Tenants.AdvancedManagement.createConnectionString.cta"
+                    )}
+                  </span>
                 </Typography>
               </DetailsBox.Summary>
 
@@ -300,6 +322,52 @@ export default function AdvancedManagement() {
                       >
                         {t(
                           "screens.Dashboard.Tenants.AdvancedManagement.createConnectionString.button"
+                        )}
+                      </Button>
+                    </div>
+                  </div>
+                </Banner>
+              </DetailsBox.Content>
+            </DetailsBox>
+
+            <DetailsBox centralized={false}>
+              <DetailsBox.Summary>
+                <Typography decoration="faded" as="small" width="xxs">
+                  <span className="text-blue-500 dark:text-lime-400 flex gap-2 items-center">
+                    <MdSwitchAccount size={12} className="inline" />
+                    {t(
+                      "screens.Dashboard.Tenants.AdvancedManagement.createSubscriptionManagerAccount.cta"
+                    )}
+                  </span>
+                </Typography>
+              </DetailsBox.Summary>
+
+              <DetailsBox.Content>
+                <Banner intent="warning">
+                  <div className="flex justify-between gap-2 my-5">
+                    <div className="flex flex-col gap-2">
+                      <Typography as="small" decoration="bold">
+                        {t(
+                          "screens.Dashboard.Tenants.AdvancedManagement.createSubscriptionManagerAccount.title"
+                        )}
+                      </Typography>
+
+                      <Typography decoration="smooth" width="xxs" as="small">
+                        {t(
+                          "screens.Dashboard.Tenants.AdvancedManagement.createSubscriptionManagerAccount.description"
+                        )}
+                      </Typography>
+                    </div>
+
+                    <div>
+                      <Button
+                        onClick={
+                          handleCreateSubscriptionManagerAccountModalOpen
+                        }
+                        rounded
+                      >
+                        {t(
+                          "screens.Dashboard.Tenants.AdvancedManagement.createSubscriptionManagerAccount.button"
                         )}
                       </Button>
                     </div>
@@ -378,6 +446,12 @@ export default function AdvancedManagement() {
         onClose={handleCreateConnectionStringModalClose}
         onSuccess={handleCreateConnectionStringModalSuccess}
         tenantId={tenantId}
+      />
+
+      <CreateSubscriptionManagerAccountModal
+        isOpen={isCreateSubscriptionManagerAccountModalOpen}
+        onClose={handleCreateSubscriptionManagerAccountModalClose}
+        onSuccess={handleCreateSubscriptionManagerAccountModalSuccess}
       />
     </>
   );

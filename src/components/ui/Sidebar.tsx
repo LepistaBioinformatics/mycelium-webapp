@@ -11,7 +11,7 @@ import LanguageSwitcher from "../LanguageSwitcher";
 import SignOutButton from "./SignOutButton";
 
 const containerStyles = cva(
-  "hidden sm:flex bg-indigo-50 dark:bg-zinc-700 min-w-md max-h-screen overflow-y-auto scrollbar px-2 pt-2 pb-5 flex flex-col gap-8 justify-between align-middle border-r-2 border-indigo-300 dark:border-lime-700 shadow",
+  "hidden sm:flex bg-indigo-300 dark:bg-zinc-700 min-w-md max-h-screen overflow-y-auto scrollbar px-2 pt-2 pb-5 flex flex-col gap-8 justify-between align-middle border-r-2 border-indigo-300 dark:border-lime-700 shadow",
   {
     variants: {
       open: {
@@ -62,17 +62,17 @@ function Container({
         <Divider style="partial" marginY="none" thickness="sm" />
 
         <div className={buttonStyles({ open: isOpen })}>
-          <div className="flex justify-center items-center w-full text-center rounded-full p-2 hover:bg-indigo-200 dark:hover:bg-zinc-600">
+          <div className="flex justify-center items-center w-full text-center bg-white dark:bg-zinc-700 rounded-full p-2 hover:bg-indigo-200 dark:hover:bg-zinc-600">
             <LanguageSwitcher />
           </div>
 
-          <div className="flex justify-center items-center w-full text-center rounded-full p-2 hover:bg-indigo-200 dark:hover:bg-zinc-600">
+          <div className="flex justify-center items-center w-full text-center bg-white dark:bg-zinc-700 rounded-full p-2 hover:bg-indigo-200 dark:hover:bg-zinc-600">
             <ThemeSwitcher />
           </div>
 
           <button
             onClick={toggle}
-            className="flex justify-center items-center w-full text-center bg-indigo-50 dark:bg-zinc-700 hover:bg-indigo-200 dark:hover:bg-zinc-600 rounded-full p-2"
+            className="flex justify-center items-center w-full text-center bg-white dark:bg-zinc-700 hover:bg-indigo-200 dark:hover:bg-zinc-600 rounded-full p-2"
           >
             <PiSidebarSimple className="text-zinc-800 dark:text-zinc-300" />
           </button>

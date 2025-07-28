@@ -28,14 +28,14 @@ export default function HomePage() {
         <AppHeader discrete logout={logout} />
 
         <PageBody.Content gap={3} padding="none">
-          <div className="flex sm:flex-row flex-col gap-4 items-center justify-around w-full">
+          <div className="flex sm:flex-row flex-col gap-4 items-center justify-around w-full delay-1000">
             <div className="flex flex-col items-center justify-center hidden sm:block bg-[url(/custom/mag.png)] bg-center bg-no-repeat bg-cover w-1/2 h-[95vh] z-40 group">
-              <div className="h-full w-full flex flex-col items-center justify-center backdrop-blur-lg hover:backdrop-blur-none bg-indigo-700/50 group-hover:bg-transparent dark:bg-zinc-900/50 transition-all transition-discrete duration-[500ms]">
-                <div className="flex flex-col gap-4 items-center justify-center h-fit w-fit bg-lime-100 rounded-full group-hover:-translate-y-[60%] group-hover:scale-50 transition-all transition-discrete duration-[500ms]">
+              <div className="h-full w-full flex flex-col items-center justify-center backdrop-blur-lg hover:backdrop-blur-none bg-indigo-700/50 group-hover:bg-transparent dark:bg-zinc-900/50 transition-all transition-discrete duration-[500ms] delay-1000">
+                <div className="flex flex-col gap-4 items-center justify-center h-fit w-fit bg-lime-100 rounded-full group-hover:-translate-y-[60%] group-hover:scale-50 transition-all transition-discrete duration-[500ms] delay-1000">
                   <img
                     src="/custom/home-logo-dark.png"
                     alt="Mycelium API Gateway"
-                    className="mx-auto rounded-full border-2 border-lime-500 hue-rotate-90 dark:hue-rotate-0 group-hover:hue-rotate-0"
+                    className="mx-auto rounded-full border-2 border-lime-500 hue-rotate-90 dark:hue-rotate-0 group-hover:hue-rotate-0 delay-1000"
                     width={300}
                     height={300}
                   />

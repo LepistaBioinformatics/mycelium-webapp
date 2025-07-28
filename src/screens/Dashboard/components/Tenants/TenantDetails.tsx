@@ -175,9 +175,7 @@ export default function TenantDetails({ isOpen, onClose, tenant }: Props) {
         onToggle={(state) => handleToggleSection(OpenedSection.Details, state)}
       >
         <DetailsBox.Summary>
-          <Typography as="span">
-            {t("screens.Dashboard.Tenants.TenantDetails.details")}
-          </Typography>
+          {t("screens.Dashboard.Tenants.TenantDetails.details")}
         </DetailsBox.Summary>
 
         <DetailsBox.Content minHeight="50">
@@ -254,9 +252,7 @@ export default function TenantDetails({ isOpen, onClose, tenant }: Props) {
         }
       >
         <DetailsBox.Summary>
-          <Typography as="span">
-            {t("screens.Dashboard.Tenants.TenantDetails.advancedActions")}
-          </Typography>
+          {t("screens.Dashboard.Tenants.TenantDetails.advancedActions")}
         </DetailsBox.Summary>
 
         <DetailsBox.Content minHeight="50">

@@ -338,9 +338,7 @@ export default function AccountDetails({ onClose }: Props) {
         onToggle={(state) => handleToggleSection(OpenedSection.Details, state)}
       >
         <DetailsBox.Summary>
-          <Typography as="span">
-            {t("screens.Dashboard.Accounts.AccountDetails.details")}
-          </Typography>
+          {t("screens.Dashboard.Accounts.AccountDetails.details")}
         </DetailsBox.Summary>
 
         <DetailsBox.Content minHeight="30">
@@ -445,9 +443,7 @@ export default function AccountDetails({ onClose }: Props) {
           }
         >
           <DetailsBox.Summary>
-            <Typography as="span">
-              {t("screens.Dashboard.Accounts.AccountDetails.invitations")}
-            </Typography>
+            {t("screens.Dashboard.Accounts.AccountDetails.invitations")}
           </DetailsBox.Summary>
 
           {openedSection === OpenedSection.Invitations && (
@@ -486,9 +482,7 @@ export default function AccountDetails({ onClose }: Props) {
         }
       >
         <DetailsBox.Summary>
-          <Typography as="span">
-            {t("screens.Dashboard.Accounts.AccountDetails.advancedActions")}
-          </Typography>
+          {t("screens.Dashboard.Accounts.AccountDetails.advancedActions")}
         </DetailsBox.Summary>
 
         <DetailsBox.Content minHeight="50">

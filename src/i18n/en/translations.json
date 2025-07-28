@@ -308,6 +308,13 @@
             "button": "Delete"
           }
         },
+        "CreateSubscriptionManagerAccountModal": {
+          "title": "Create subscription manager account",
+          "description": "Create a subscription manager account for Namespace. This account will be used to manage the subscription of Namespace.",
+          "button": "Confirm",
+          "creating": "Creating ...",
+          "success": "Successful created subscription manager account"
+        },
         "AdvancedManagement": {
           "title": "Advanced Management",
           "longDescription": "You can manage your namepace people and settings here. ",
@@ -315,9 +322,15 @@
           "manageAccounts": "See accounts",
           "manageAccountsDescription": "Click here to see the accounts recorded in Namespace.",
           "createConnectionString": {
-            "cta": "Advanced options",
+            "cta": "Connection string",
             "title": "Create connection string for Namespace",
             "description": "Create a connection string for Namespace. This connection string will be used to authenticate your account programmatically.",
+            "button": "Create"
+          },
+          "createSubscriptionManagerAccount": {
+            "cta": "Subscription manager",
+            "title": "Create subscription manager account",
+            "description": "Create a subscription manager account for Namespace. This account will be used to manage the subscription of Namespace.",
             "button": "Create"
           },
           "name": {

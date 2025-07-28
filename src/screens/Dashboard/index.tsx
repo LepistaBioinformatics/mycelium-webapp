@@ -138,8 +138,13 @@ function MainHeader({ isOpen }: { isOpen: boolean }) {
   };
 
   return (
-    <div className="flex justify-center items-center gap-2 text-zinc-800 dark:text-zinc-300 bg-indigo-300 dark:bg-zinc-900 bg-opacity-50 dark:bg-opacity-50 backdrop-blur-sm border border-indigo-500 dark:border-lime-500 rounded-full p-2">
-      {isOpen ? tenantInfo.name : tenantShortName()}
+    <div
+      className="flex justify-center font-semibold gap-2 py-2 px-4 text-indigo-600 dark:text-zinc-300 bg-white dark:bg-zinc-900 backdrop-blur-sm border border-indigo-500 dark:border-lime-500 rounded-full truncate max-w-full"
+      title={tenantInfo.name}
+    >
+      <span className="truncate max-w-[12rem]">
+        {isOpen ? tenantInfo.name : tenantShortName()}
+      </span>
     </div>
   );
 }

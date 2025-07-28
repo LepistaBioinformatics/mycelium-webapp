@@ -15,7 +15,7 @@ const styles = cva(
   {
     variants: {
       show: {
-        true: "opacity-100",
+        true: "hidden sm:opacity-100",
         false: "opacity-0",
       },
       intent: {
