@@ -21,7 +21,7 @@ import { RootState } from "@/states/store";
 import { TENANT_ID_HEADER } from "@/constants/http-headers";
 
 type GuestRole = components["schemas"]["GuestRole"];
-type SystemActor = components["schemas"]["SystemActor"];
+type SystemActor = components["schemas"]["SystemActor"] | string;
 
 type Inputs = {
   name: string;

@@ -256,6 +256,17 @@ export default function AccountDetails({ onClose }: Props) {
     return true;
   }, [account]);
 
+  const restrictRoleToSlug = useMemo(() => {
+    if (!account) return null;
+    if (typeof account.accountType === "string") return null;
+
+    if ("roleAssociated" in account.accountType) {
+      return account?.accountType?.roleAssociated;
+    }
+
+    return null;
+  }, [account]);
+
   const Container = ({ children }: BaseProps) => (
     <SideCurtain
       open={isOpen}
@@ -628,6 +639,7 @@ export default function AccountDetails({ onClose }: Props) {
           isOpen={isGuestToAccountModalOpen}
           onClose={handleCloseGuestToAccountModal}
           account={account}
+          restrictRoleToSlug={restrictRoleToSlug?.roleName ?? undefined}
         />
       )}
 

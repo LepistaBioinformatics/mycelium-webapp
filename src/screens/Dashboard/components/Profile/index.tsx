@@ -21,6 +21,7 @@ import CreateConnectionStringModal from "../CreateConnectionStringModal";
 import Button from "@/components/ui/Button";
 import DetailsBox from "@/components/ui/DetailsBox";
 import Banner from "@/components/ui/Banner";
+import { FaKey } from "react-icons/fa";
 
 type Profile = components["schemas"]["Profile"];
 
@@ -123,9 +124,10 @@ export default function Profile() {
             <CardsSection.Body>
               <DetailsBox centralized={false}>
                 <DetailsBox.Summary>
-                  <Typography decoration="faded" as="small" width="xxs">
+                  <span className="text-blue-500 dark:text-lime-400 flex gap-2 items-center">
+                    <FaKey size={12} className="inline" />
                     {t("screens.Dashboard.Profile.createConnectionString.cta")}
-                  </Typography>
+                  </span>
                 </DetailsBox.Summary>
 
                 <DetailsBox.Content>
