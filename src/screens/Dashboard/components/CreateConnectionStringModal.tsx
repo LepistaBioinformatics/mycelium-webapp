@@ -26,8 +26,7 @@ interface Props {
   onSuccess: () => void;
   tenantId?: string | null;
   accountId?: string | null;
-  roles?: string[] | null;
-  permissionedRoles?: PermissionedRole[] | null;
+  roles?: PermissionedRole[] | null;
 }
 
 type Inputs = {
@@ -48,7 +47,7 @@ export default function CreateConnectionStringModal({
   onClose,
   tenantId,
   accountId,
-  permissionedRoles,
+  roles,
 }: Props) {
   const { t } = useTranslation();
 
@@ -99,7 +98,7 @@ export default function CreateConnectionStringModal({
         return;
       }
 
-      const consolidatedRoles = permissionedRoles
+      const consolidatedRoles = roles
         ?.filter(
           (role) =>
             !removedRoles.some(
@@ -118,7 +117,7 @@ export default function CreateConnectionStringModal({
           expiration: Number(Expiration[expiration]),
           tenantId,
           accountId,
-          permissionedRoles: consolidatedRoles,
+          roles: consolidatedRoles,
         }),
       });
 
@@ -241,7 +240,7 @@ export default function CreateConnectionStringModal({
             </div>
           )}
 
-          {permissionedRoles && permissionedRoles.length > 0 && (
+          {roles && roles.length > 0 && (
             <div className="flex flex-col sm:flex-row gap-4 rounded-lg bg-zinc-100 dark:bg-zinc-800 py-2 px-2 flex justify-between gap-2 group/clip">
               <div className="flex sm:flex-col gap-3">
                 <Typography as="span">
@@ -257,7 +256,7 @@ export default function CreateConnectionStringModal({
               </div>
 
               <div className="flex flex-col gap-3 py-2">
-                {permissionedRoles.map(({ role, permission }, index) => (
+                {roles.map(({ role, permission }, index) => (
                   <div
                     key={index}
                     className="flex items-center justify-between gap-8 border-t border-indigo-300 dark:border-lime-900 px-3"
