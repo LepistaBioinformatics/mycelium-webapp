@@ -7,7 +7,7 @@ import { FaUserCheck } from "react-icons/fa";
 import { MdNearbyError } from "react-icons/md";
 import { MdWebhook } from "react-icons/md";
 import { components } from "@/services/openapi/mycelium-schema";
-import AdvancedManagement from "@/screens/Dashboard/components/Tenants/AdvancedManagement";
+import AdvancedManagement from "@/screens/Dashboard/components/Tenants/Details";
 import React, { lazy } from "react";
 import { TFunction } from "i18next";
 
