@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 
 interface Props extends TenantResolverChildProps {
   tenantId: string;
+  omitPrefix?: boolean;
 }
 
 export default function TenantBasicInfo({
@@ -13,6 +14,7 @@ export default function TenantBasicInfo({
   isLoading,
   error,
   tenantId,
+  omitPrefix,
 }: Props) {
   const { t } = useTranslation();
 
@@ -32,13 +34,14 @@ export default function TenantBasicInfo({
 
   const Item = ({ status }: { status: string }) => (
     <IntroSection.Item
-      prefix={t("screens.Dashboard.TenantBasicInfo.from.prefix")}
       title={t("screens.Dashboard.TenantBasicInfo.from.title", {
         tenantId,
       })}
     >
-      {status}
-      <CopyToClipboard text={tenantId} />
+      <span className="flex items-center justify-start gap-1">
+        <span>{status}</span>
+        <CopyToClipboard text={tenantId} />
+      </span>
     </IntroSection.Item>
   );
 
@@ -46,21 +49,21 @@ export default function TenantBasicInfo({
   // If the tenant is deleted, show the tenantId
   //
   if (tenantStatus === "deleted") {
-    return <Item status="Deleted" />;
+    return <Item status="Tenant Deleted" />;
   }
 
   //
   // If the tenant is unknown, show the tenantId
   //
   if (tenantStatus === "unknown") {
-    return <Item status="Unknown" />;
+    return <Item status="Copy ID to Clipboard" />;
   }
 
   //
   // If the tenant is unauthorized, show the tenantId
   //
   if (tenantStatus === "unauthorized") {
-    return <Item status="Unauthorized" />;
+    return <Item status="Copy ID to Clipboard" />;
   }
 
   //
@@ -68,7 +71,11 @@ export default function TenantBasicInfo({
   //
   return (
     <IntroSection.Item
-      prefix={t("screens.Dashboard.TenantBasicInfo.from.prefix")}
+      prefix={
+        omitPrefix
+          ? undefined
+          : t("screens.Dashboard.TenantBasicInfo.from.prefix")
+      }
       title={t("screens.Dashboard.TenantBasicInfo.from.title", {
         tenantId,
       })}

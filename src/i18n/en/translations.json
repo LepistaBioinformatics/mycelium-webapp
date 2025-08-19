@@ -67,8 +67,7 @@
       "Profile": {
         "title": "Profile",
         "loading": "Carrying profile ...",
-        "relationship": "Shared accounts",
-        "relationshipDescription": "Here you can see the shared accounts with you, in addition to the namespaces you have access to. ",
+        "relationship": "Manage your account",
         "loggedInAs": {
           "prefix": "User",
           "title": "Your name",
@@ -88,6 +87,7 @@
       },
       "CreateConnectionStringModal": {
         "title": "Create Connection String",
+        "tabName": "Advanced Options",
         "accountId": "Restricted to account",
         "accountIdDescription": "The connection string will be restricted to the account with the ID.",
         "tenantId": "Restricted to tenant",
@@ -109,6 +109,11 @@
               "oneYear": "1 year (365 days)"
             }
           },
+          "name": {
+            "label": "Name",
+            "title": "Connection string name",
+            "placeholder": "My connection string"
+          },
           "create": {
             "label": "Create",
             "creating": "Creating ...",
@@ -118,7 +123,9 @@
           "copy": {
             "label": "Copy",
             "success": "Connection string copied to clipboard"
-          }
+          },
+          "copied": "Copied",
+          "reset": "Reset"
         }
       },
       "AboutCard": {
@@ -189,10 +196,11 @@
       },
       "TenantOwnershipSection": {
         "title": "Your namespaces",
-        "loadAll": "Load all {{count}} namespaces"
+        "tabName": "Namespaces"
       },
       "LicensedResourcesSection": {
         "title": "Accounts you have access",
+        "tabName": "Shared with me",
         "noResources": "No account shared with you",
         "noResourcesDescription": "You do not have access to any account",
         "accountName": {
@@ -206,6 +214,12 @@
         "permission": {
           "title": "Permission attributed to you",
           "prefix": "You can"
+        },
+        "createConnectionString": {
+          "title": "Create connection string",
+          "prefix": "Create",
+          "description": "Create a connection string for the account. This connection string will be used to authenticate your account programmatically.",
+          "button": "Create"
         },
         "verified": "Verified"
       },
@@ -231,6 +245,9 @@
         "description": {
           "title": "Namepace Description",
           "prefix": "More"
+        },
+        "actions": {
+          "title": "Manage"
         }
       },
       "Tenants": {

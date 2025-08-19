@@ -1,5 +1,6 @@
 import Button from "@/components/ui/Button";
 import CopyToClipboard from "@/components/ui/CopyToClipboard";
+import Divider from "@/components/ui/Divider";
 import FormField from "@/components/ui/FomField";
 import Modal from "@/components/ui/Modal";
 import PermissionIcon from "@/components/ui/PermissionIcon";
@@ -12,7 +13,7 @@ import { Select, Spinner, TextInput } from "flowbite-react";
 import { ComponentProps, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { FaCopy } from "react-icons/fa";
+import { FaCheck, FaCopy, FaTimes } from "react-icons/fa";
 import { RiCheckboxBlankLine, RiCheckboxLine } from "react-icons/ri";
 
 type PermissionedRole = {
@@ -30,6 +31,7 @@ interface Props {
 }
 
 type Inputs = {
+  name: string;
   expiration: number;
 };
 
@@ -51,6 +53,8 @@ export default function CreateConnectionStringModal({
 }: Props) {
   const { t } = useTranslation();
 
+  const [copied, setCopied] = useState(false);
+
   const { parseHttpError, dispatchWarning } = useSuspenseError();
 
   const { getAccessTokenSilently } = useProfile();
@@ -69,11 +73,26 @@ export default function CreateConnectionStringModal({
     formState: { errors },
   } = useForm<Inputs>({
     defaultValues: {
+      name: "",
       expiration: Number(Expiration.sixMonths),
     },
   });
 
+  const nameWatcher = watch("name");
   const expirationWatcher = watch("expiration");
+
+  const handleReset = () => {
+    setConnectionString(null);
+    setRemovedRoles([]);
+    reset();
+  };
+
+  const handleClicked = () => {
+    setCopied(true);
+    setTimeout(() => {
+      setCopied(false);
+    }, 3000);
+  };
 
   const handleClose = () => {
     setConnectionString(null);
@@ -81,11 +100,17 @@ export default function CreateConnectionStringModal({
     onClose();
   };
 
-  const onSubmit: SubmitHandler<Inputs> = async ({ expiration }) => {
+  const onSubmit: SubmitHandler<Inputs> = async ({ name, expiration }) => {
     setIsSubmitting(true);
 
     if (!expiration) {
       dispatchWarning("Expiration is required");
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (!name) {
+      dispatchWarning("Name is required");
       setIsSubmitting(false);
       return;
     }
@@ -115,6 +140,7 @@ export default function CreateConnectionStringModal({
         },
         body: JSON.stringify({
           expiration: Number(Expiration[expiration]),
+          name,
           tenantId,
           accountId,
           roles: consolidatedRoles,
@@ -194,18 +220,18 @@ export default function CreateConnectionStringModal({
 
       <Modal.Body>
         <div className="flex flex-col gap-4 w-full">
-          <Typography as="small" decoration="smooth">
+          <Typography as="p" decoration="smooth">
             {t("screens.Dashboard.CreateConnectionStringModal.explain")}
           </Typography>
 
           {accountId && (
-            <div className="rounded-lg bg-zinc-100 dark:bg-zinc-800 px-2 flex flex-col sm:flex-row justify-between gap-2 group/clip">
+            <div className="rounded-lg bg-zinc-100 dark:bg-zinc-800 px-2 flex flex-col justify-between group/clip">
               <div className="flex sm:flex-col gap-1">
-                <Typography as="span">
+                <Typography as="h5">
                   {t("screens.Dashboard.CreateConnectionStringModal.accountId")}
                   <CopyToClipboard text={accountId} inline groupHidden />
                 </Typography>
-                <Typography as="small" decoration="smooth" width="xxs">
+                <Typography as="p" decoration="smooth">
                   {t(
                     "screens.Dashboard.CreateConnectionStringModal.accountIdDescription"
                   )}
@@ -220,13 +246,13 @@ export default function CreateConnectionStringModal({
           )}
 
           {tenantId && (
-            <div className="rounded-lg bg-zinc-100 dark:bg-zinc-800 px-2 flex flex-col sm:flex-row justify-between gap-2 group/clip">
+            <div className="rounded-lg bg-zinc-100 dark:bg-zinc-800 px-2 flex flex-col justify-between group/clip">
               <div className="flex sm:flex-col gap-3">
-                <Typography as="span">
+                <Typography as="h5">
                   {t("screens.Dashboard.CreateConnectionStringModal.tenantId")}
                   <CopyToClipboard text={tenantId} inline groupHidden />
                 </Typography>
-                <Typography as="small" decoration="smooth" width="xxs">
+                <Typography as="p" decoration="smooth">
                   {t(
                     "screens.Dashboard.CreateConnectionStringModal.tenantIdDescription"
                   )}
@@ -241,14 +267,14 @@ export default function CreateConnectionStringModal({
           )}
 
           {roles && roles.length > 0 && (
-            <div className="flex flex-col sm:flex-row gap-4 rounded-lg bg-zinc-100 dark:bg-zinc-800 py-2 px-2 flex justify-between gap-2 group/clip">
+            <div className="rounded-lg bg-zinc-100 dark:bg-zinc-800 px-2 flex flex-col gap-5 justify-between group/clip py-2">
               <div className="flex sm:flex-col gap-3">
-                <Typography as="span">
+                <Typography as="h5">
                   {t(
                     "screens.Dashboard.CreateConnectionStringModal.permissionedRoles"
                   )}
                 </Typography>
-                <Typography as="small" decoration="smooth" width="xxs">
+                <Typography as="p" decoration="smooth">
                   {t(
                     "screens.Dashboard.CreateConnectionStringModal.permissionedRolesDescription"
                   )}
@@ -259,7 +285,7 @@ export default function CreateConnectionStringModal({
                 {roles.map(({ role, permission }, index) => (
                   <div
                     key={index}
-                    className="flex items-center justify-between gap-8 border-t border-indigo-300 dark:border-lime-900 px-3"
+                    className="flex items-center justify-between gap-8 border-t border-indigo-300 dark:border-lime-900 px-3 py-2"
                   >
                     <div className="flex items-center gap-2">
                       <span>{role}</span>
@@ -289,6 +315,33 @@ export default function CreateConnectionStringModal({
             <div>
               <FormField
                 label={t(
+                  "screens.Dashboard.CreateConnectionStringModal.form.name.label"
+                )}
+                title={t(
+                  "screens.Dashboard.CreateConnectionStringModal.form.name.title"
+                )}
+                width="full"
+              >
+                <TextInput
+                  id="name"
+                  autoFocus
+                  type="text"
+                  required
+                  sizing="lg"
+                  disabled={isSubmitting || connectionString !== null || copied}
+                  placeholder={t(
+                    "screens.Dashboard.CreateConnectionStringModal.form.name.placeholder"
+                  )}
+                  {...register("name", { required: true })}
+                />
+
+                {errors.expiration && <span>This field is required</span>}
+              </FormField>
+            </div>
+
+            <div>
+              <FormField
+                label={t(
                   "screens.Dashboard.CreateConnectionStringModal.form.expiration.label"
                 )}
                 title={t(
@@ -296,7 +349,12 @@ export default function CreateConnectionStringModal({
                 )}
                 width="full"
               >
-                <Select id="expiration" sizing="lg" {...register("expiration")}>
+                <Select
+                  id="expiration"
+                  sizing="lg"
+                  disabled={isSubmitting || connectionString !== null || copied}
+                  {...register("expiration")}
+                >
                   {ExpirationOptions.map((expiration) => {
                     return (
                       <option key={expiration} value={expiration}>
@@ -319,8 +377,11 @@ export default function CreateConnectionStringModal({
               disabled={
                 isSubmitting ||
                 connectionString !== null ||
+                nameWatcher === "" ||
                 expirationWatcher === null ||
-                errors.expiration !== undefined
+                errors.expiration !== undefined ||
+                errors.name !== undefined ||
+                copied
               }
             >
               {isSubmitting ? (
@@ -334,22 +395,51 @@ export default function CreateConnectionStringModal({
           </form>
 
           {connectionString && (
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-5 mt-12">
+              <Divider />
+
               <TextInput value={connectionString} disabled />
 
-              <Button
-                intent="warning"
-                rounded
-                fullWidth
-                onClick={() => {
-                  navigator.clipboard.writeText(connectionString);
-                }}
-              >
-                {t(
-                  "screens.Dashboard.CreateConnectionStringModal.form.copy.label"
-                )}
-                <FaCopy className="inline-block ml-2" />
-              </Button>
+              <div className="flex flex-col-reverse sm:flex-row gap-5 justify-rev sm:justify-between">
+                <Button
+                  intent="warning"
+                  rounded
+                  fullWidth
+                  disabled={connectionString === null}
+                  onClick={() => handleReset()}
+                >
+                  {t(
+                    "screens.Dashboard.CreateConnectionStringModal.form.reset"
+                  )}
+                  <FaTimes className="inline-block ml-2" />
+                </Button>
+
+                <Button
+                  rounded
+                  fullWidth
+                  disabled={copied}
+                  onClick={() => {
+                    navigator.clipboard.writeText(connectionString);
+                    handleClicked();
+                  }}
+                >
+                  {copied ? (
+                    <>
+                      {t(
+                        "screens.Dashboard.CreateConnectionStringModal.form.copied"
+                      )}
+                      <FaCheck className="inline-block ml-2" />
+                    </>
+                  ) : (
+                    <>
+                      {t(
+                        "screens.Dashboard.CreateConnectionStringModal.form.copy.label"
+                      )}
+                      <FaCopy className="inline-block ml-2" />
+                    </>
+                  )}
+                </Button>
+              </div>
             </div>
           )}
         </div>

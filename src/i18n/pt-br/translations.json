@@ -68,7 +68,6 @@
         "title": "Perfil",
         "loading": "Carregando perfil...",
         "relationship": "Contas compartilhadas",
-        "relationshipDescription": "Aqui você pode ver as contas compartilhadas com você, além dos namespaces que você tem acesso. Novos clientes verão essa seção vazios.",
         "loggedInAs": {
           "prefix": "Usuário",
           "title": "Seu nome",
@@ -88,6 +87,7 @@
       },
       "CreateConnectionStringModal": {
         "title": "Criar string de conexão",
+        "tabName": "Opções avançadas",
         "accountId": "Restrito a conta",
         "accountIdDescription": "A string de conexão será restrita à conta com o ID.",
         "tenantId": "Restrito ao inquilino",
@@ -109,6 +109,11 @@
               "oneYear": "1 ano (365 dias)"
             }
           },
+          "name": {
+            "label": "Nome",
+            "title": "Nome da string de conexão",
+            "placeholder": "Minha string de conexão"
+          },
           "create": {
             "label": "Criar",
             "creating": "Criando...",
@@ -118,7 +123,9 @@
           "copy": {
             "label": "Copiar",
             "success": "String de conexão copiada para a área de transferência"
-          }
+          },
+          "copied": "Copiado",
+          "reset": "Reset"
         }
       },
       "AboutCard": {
@@ -189,10 +196,11 @@
       },
       "TenantOwnershipSection": {
         "title": "Seus namespaces",
-        "loadAll": "Carregar todos os {{count}} namespaces"
+        "tabName": "Namespaces"
       },
       "LicensedResourcesSection": {
         "title": "Contas que você tem acesso",
+        "tabName": "Compartilhado comigo",
         "noResources": "Nenhuma conta compartilhada com você",
         "noResourcesDescription": "Você não tem acesso a nenhuma conta",
         "accountName": {
@@ -231,6 +239,9 @@
         "description": {
           "title": "Descrição do namespace",
           "prefix": "Mais"
+        },
+        "actions": {
+          "title": "Gerenciar"
         }
       },
       "Tenants": {

@@ -68,7 +68,6 @@
         "title": "Perfil",
         "loading": "Carrying Perfil ...",
         "relationship": "Cuentas compartidas",
-        "relationshipDescription": "Aquí puede ver las cuentas compartidas con usted, además de los espacios de nombres a los que tiene acceso. Los nuevos clientes verán esta sección vacía.",
         "loggedInAs": {
           "prefix": "Usuario",
           "title": "Su nombre",
@@ -88,6 +87,7 @@
       },
       "CreateConnectionStringModal": {
         "title": "Crear cadena de conexión",
+        "tabName": "Opciones avanzadas",
         "accountId": "Restringido a cuenta",
         "accountIdDescription": "La cadena de conexión se restringirá a la cuenta con el ID.",
         "tenantId": "Restringido a inquilino",
@@ -109,6 +109,11 @@
               "oneYear": "1 año (365 días)"
             }
           },
+          "name": {
+            "label": "Nombre",
+            "title": "Nombre de la cadena de conexión",
+            "placeholder": "Mi cadena de conexión"
+          },
           "create": {
             "label": "Crear",
             "creating": "Creando...",
@@ -118,7 +123,9 @@
           "copy": {
             "label": "Copiar",
             "success": "Cadena de conexión copiada para el portapapeles"
-          }
+          },
+          "copied": "Copiado",
+          "reset": "Reset"
         }
       },
       "AboutCard": {
@@ -189,10 +196,11 @@
       },
       "TenantOwnershipSection": {
         "title": "Tus espacios de nombres",
-        "loadAll": "Cargar todo {{count}} espacios de nombres"
+        "tabName": "Espacios de nombres"
       },
       "LicensedResourcesSection": {
         "title": "Cuentas a las que tiene acceso",
+        "tabName": "Compartido conmigo",
         "noResources": "No hay cuenta compartida contigo",
         "noResourcesDescription": "No tiene acceso a ninguna cuenta",
         "accountName": {
@@ -231,6 +239,9 @@
         "description": {
           "title": "Descripción de NamePace",
           "prefix": "Más"
+        },
+        "actions": {
+          "title": "Gestionar"
         }
       },
       "Tenants": {

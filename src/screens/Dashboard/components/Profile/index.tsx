@@ -1,13 +1,15 @@
+"use client";
+
 import PageBody from "@/components/ui/PageBody";
+import { TabItem, Tabs } from "flowbite-react";
 import Typography from "@/components/ui/Typography";
 import useProfile from "@/hooks/use-profile";
 import { components } from "@/services/openapi/mycelium-schema";
 import { useMemo, useState } from "react";
 import { RiDashboardFill } from "react-icons/ri";
-import CardsSection from "@/components/ui/CardsSection";
+import Section from "@/components/ui/Section";
 import getTenantsOwnershipOrNull from "@/functions/get-tenant-ownership-or-null";
 import getLicensedResourcesOrNull from "@/functions/get-licensed-resources-or-null";
-import PermissionsDetails from "./PermissionsDetails";
 import ControlPanelBreadcrumbItem from "../ControlPanelBreadcrumbItem";
 import TenantOwnershipSection from "./TenantOwnershipSection";
 import LicensedResourcesSection from "./LicensedResourcesSection";
@@ -15,13 +17,14 @@ import { GiWizardStaff } from "react-icons/gi";
 import { GrUserAdmin } from "react-icons/gr";
 import IntroSection from "@/components/ui/IntroSection";
 import { useTranslation } from "react-i18next";
-import SeeMoreText from "@/components/ui/SeeMoreText";
 import CopyToClipboard from "@/components/ui/CopyToClipboard";
 import CreateConnectionStringModal from "../CreateConnectionStringModal";
 import Button from "@/components/ui/Button";
-import DetailsBox from "@/components/ui/DetailsBox";
 import Banner from "@/components/ui/Banner";
-import { FaKey } from "react-icons/fa";
+import Card from "@/components/ui/Card";
+import { SlOrganization } from "react-icons/sl";
+import { MdManageAccounts } from "react-icons/md";
+import { IoOptions } from "react-icons/io5";
 
 type Profile = components["schemas"]["Profile"];
 
@@ -68,8 +71,8 @@ export default function Profile() {
         </PageBody.Breadcrumb>
 
         <PageBody.Content padding="md" container flex="col" gap={12}>
-          <CardsSection>
-            <CardsSection.Header>
+          <Section>
+            <Section.Header>
               {isLoadingUser ? (
                 <Typography>
                   {t("screens.Dashboard.Profile.loading")}
@@ -119,78 +122,134 @@ export default function Profile() {
                   </IntroSection.Item>
                 </IntroSection>
               )}
-            </CardsSection.Header>
-
-            <CardsSection.Body>
-              <DetailsBox centralized={false}>
-                <DetailsBox.Summary>
-                  <span className="text-blue-500 dark:text-lime-400 flex gap-2 items-center">
-                    <FaKey size={12} className="inline" />
-                    {t("screens.Dashboard.Profile.createConnectionString.cta")}
-                  </span>
-                </DetailsBox.Summary>
-
-                <DetailsBox.Content>
-                  <Banner intent="warning">
-                    <div className="flex justify-between gap-2 my-5">
-                      <div className="flex flex-col gap-2">
-                        <Typography as="small" decoration="bold">
-                          {t(
-                            "screens.Dashboard.Profile.createConnectionString.title"
-                          )}
-                        </Typography>
-
-                        <Typography decoration="smooth" width="xxs" as="small">
-                          {t(
-                            "screens.Dashboard.Profile.createConnectionString.description"
-                          )}
-                        </Typography>
-                      </div>
-
-                      <div>
-                        <Button
-                          onClick={handleCreateConnectionStringModalOpen}
-                          rounded
-                        >
-                          {t(
-                            "screens.Dashboard.Profile.createConnectionString.button"
-                          )}
-                        </Button>
-                      </div>
-                    </div>
-                  </Banner>
-                </DetailsBox.Content>
-              </DetailsBox>
-
+            </Section.Header>
+            <Section.Body>
               <div className="flex flex-col gap-3 w-full mt-12 h-full">
                 <div>
                   <Typography decoration="smooth" as="h3">
                     {t("screens.Dashboard.Profile.relationship")}
                   </Typography>
-
-                  <Typography decoration="smooth" width="md">
-                    <SeeMoreText
-                      text={t(
-                        "screens.Dashboard.Profile.relationshipDescription"
-                      )}
-                      maxLength={100}
-                    />
-                  </Typography>
                 </div>
-
                 <div className="flex flex-col sm:flex-row sm:flex-wrap gap-8 sm:gap-3 w-full h-full">
-                  <TenantOwnershipSection tenantsOwnership={tenantsOwnership} />
-                  <LicensedResourcesSection
-                    licensedResources={licensedResources}
-                  />
+                  <Tabs
+                    aria-label=""
+                    variant="fullWidth"
+                    className="w-full overflow-x-auto"
+                    color="zinc"
+                    theme={{
+                      tablist: {
+                        base: "flex text-center border dark:border-none",
+                        variant: {
+                          fullWidth:
+                            "grid w-full grid-flow-col divide-x divide-zinc-200 rounded-none text-sm font-medium shadow dark:divide-zinc-700 text-zinc-500 dark:text-zinc-400",
+                        },
+                        tabitem: {
+                          variant: {
+                            fullWidth: {
+                              active: {
+                                on: "rounded-none bg-zinc-100 p-4 text-zinc-900 dark:bg-zinc-700 dark:text-white",
+                                off: "rounded-none bg-white hover:bg-zinc-50 hover:text-zinc-700 dark:bg-zinc-800 dark:hover:bg-zinc-700 dark:hover:text-white",
+                              },
+                            },
+                          },
+                        },
+                      },
+                    }}
+                  >
+                    <TabItem
+                      active
+                      title={
+                        <span className="whitespace-nowrap">
+                          {t(
+                            "screens.Dashboard.LicensedResourcesSection.tabName"
+                          )}
+                        </span>
+                      }
+                      icon={MdManageAccounts}
+                    >
+                      <LicensedResourcesSection
+                        licensedResources={licensedResources}
+                      />
+                    </TabItem>
+
+                    <TabItem
+                      title={
+                        <span className="whitespace-nowrap">
+                          {t(
+                            "screens.Dashboard.TenantOwnershipSection.tabName"
+                          )}
+                        </span>
+                      }
+                      icon={SlOrganization}
+                      className="mx-2"
+                    >
+                      <TenantOwnershipSection
+                        tenantsOwnership={tenantsOwnership}
+                      />
+                    </TabItem>
+
+                    <TabItem
+                      title={
+                        <span className="whitespace-nowrap">
+                          {t(
+                            "screens.Dashboard.CreateConnectionStringModal.tabName"
+                          )}
+                        </span>
+                      }
+                      icon={IoOptions}
+                    >
+                      <Card padding="sm" width="alwaysFull" height="adaptive">
+                        <Card.Header>
+                          <Typography as="h5" decoration="faded">
+                            {t(
+                              "screens.Dashboard.LicensedResourcesSection.title"
+                            )}
+                          </Typography>
+                        </Card.Header>
+
+                        <Card.Body width="full">
+                          <Banner intent="warning">
+                            <div className="flex flex-col sm:flex-row justify-between gap-2 my-5">
+                              <div className="flex flex-col gap-2">
+                                <Typography as="h4" decoration="semibold">
+                                  {t(
+                                    "screens.Dashboard.Profile.createConnectionString.title"
+                                  )}
+                                </Typography>
+
+                                <Typography
+                                  decoration="smooth"
+                                  as="p"
+                                  width="md"
+                                >
+                                  {t(
+                                    "screens.Dashboard.Profile.createConnectionString.description"
+                                  )}
+                                </Typography>
+                              </div>
+
+                              <div>
+                                <Button
+                                  onClick={
+                                    handleCreateConnectionStringModalOpen
+                                  }
+                                  rounded
+                                >
+                                  {t(
+                                    "screens.Dashboard.Profile.createConnectionString.button"
+                                  )}
+                                </Button>
+                              </div>
+                            </div>
+                          </Banner>
+                        </Card.Body>
+                      </Card>
+                    </TabItem>
+                  </Tabs>
                 </div>
               </div>
-            </CardsSection.Body>
-          </CardsSection>
-
-          {licensedResources && profile && (
-            <PermissionsDetails profile={profile} />
-          )}
+            </Section.Body>
+          </Section>
         </PageBody.Content>
       </PageBody>
 

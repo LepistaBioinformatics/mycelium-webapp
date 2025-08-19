@@ -59,6 +59,6 @@ function Body({ children, ...props }: BodyProps) {
 // ? Composite Container
 // ? ---------------------------------------------------------------------------
 
-const CardsSection = Object.assign(Container, { Header, Body });
+const Section = Object.assign(Container, { Header, Body });
 
-export default CardsSection;
+export default Section;

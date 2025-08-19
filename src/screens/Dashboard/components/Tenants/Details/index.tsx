@@ -10,7 +10,7 @@ import { SlOrganization } from "react-icons/sl";
 import useTenantDetails from "@/hooks/use-tenant-details";
 import { buildPath } from "@/services/openapi/mycelium-api";
 import Typography from "@/components/ui/Typography";
-import CardsSection from "@/components/ui/CardsSection";
+import Section from "@/components/ui/Section";
 import { formatDDMMYY } from "@/functions/format-dd-mm-yy";
 import IntroSection from "@/components/ui/IntroSection";
 import { useDispatch } from "react-redux";
@@ -209,8 +209,8 @@ export default function AdvancedManagement() {
   return (
     <>
       <BasePage>
-        <CardsSection gap="fixed">
-          <CardsSection.Header>
+        <Section gap="fixed">
+          <Section.Header>
             <IntroSection
               prefix={t(
                 "screens.Dashboard.Tenants.AdvancedManagement.name.prefix"
@@ -274,18 +274,18 @@ export default function AdvancedManagement() {
                 )}
               </Link>
             </IntroSection>
-          </CardsSection.Header>
+          </Section.Header>
 
-          <CardsSection.Body>
+          <Section.Body>
             <SeeMoreText
               text={t(
                 "screens.Dashboard.Tenants.AdvancedManagement.longDescription"
               )}
               maxLength={100}
             />
-          </CardsSection.Body>
+          </Section.Body>
 
-          <CardsSection.Body>
+          <Section.Body>
             <DetailsBox centralized={false}>
               <DetailsBox.Summary>
                 <Typography decoration="faded" as="small" width="xxs">
@@ -375,20 +375,20 @@ export default function AdvancedManagement() {
                 </Banner>
               </DetailsBox.Content>
             </DetailsBox>
-          </CardsSection.Body>
-        </CardsSection>
+          </Section.Body>
+        </Section>
 
         {activeTenant && (
-          <CardsSection>
-            <CardsSection.Header>
+          <Section>
+            <Section.Header>
               <Typography as="h3" decoration="smooth">
                 {t(
                   "screens.Dashboard.Tenants.AdvancedManagement.legalSettingsAndPeople.title"
                 )}
               </Typography>
-            </CardsSection.Header>
+            </Section.Header>
 
-            <CardsSection.Body>
+            <Section.Body>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-12 sm:gap-3 w-full">
                 {/* flex flex-col md:flex-row md:flex-wrap */}
                 <OwnersCard
@@ -401,12 +401,12 @@ export default function AdvancedManagement() {
                   mutateTenantStatus={mutateTenantStatus}
                 />
               </div>
-            </CardsSection.Body>
-          </CardsSection>
+            </Section.Body>
+          </Section>
         )}
 
-        <CardsSection>
-          <CardsSection.Header>
+        <Section>
+          <Section.Header>
             <Typography as="h3" decoration="smooth">
               <span>
                 {t(
@@ -414,9 +414,9 @@ export default function AdvancedManagement() {
                 )}
               </span>
             </Typography>
-          </CardsSection.Header>
+          </Section.Header>
 
-          <CardsSection.Body>
+          <Section.Body>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12 sm:gap-3 w-full">
               {activeTenant && (
                 <>
@@ -437,8 +437,8 @@ export default function AdvancedManagement() {
                 </>
               )}
             </div>
-          </CardsSection.Body>
-        </CardsSection>
+          </Section.Body>
+        </Section>
       </BasePage>
 
       <CreateConnectionStringModal

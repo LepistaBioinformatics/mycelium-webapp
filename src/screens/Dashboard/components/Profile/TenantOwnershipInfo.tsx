@@ -1,3 +1,6 @@
+"use client";
+
+import { cva, VariantProps } from "class-variance-authority";
 import { MdManageAccounts } from "react-icons/md";
 import Typography from "@/components/ui/Typography";
 import { formatDDMMYY } from "@/functions/format-dd-mm-yy";
@@ -9,13 +12,102 @@ import { Link } from "react-router";
 import { TenantTagTypes } from "@/types/TenantTagTypes";
 import { useTranslation } from "react-i18next";
 import { IoMdMore } from "react-icons/io";
-import { FaGear } from "react-icons/fa6";
+import { TableCell, TableRow } from "flowbite-react";
 
 interface Props extends TenantResolverChildProps {
   since: string;
+  index?: number;
 }
 
-export default function TenantOwnershipInfo({
+export function TenantOwnershipInfoTableRow({
+  since,
+  tenantId,
+  tenantStatus,
+  isLoading,
+  error,
+  index,
+}: Props) {
+  const { t } = useTranslation();
+
+  const ActionsCell = () => (
+    <TableCell>
+      <TenantOwnershipInfoActions tenantId={tenantId} />
+    </TableCell>
+  );
+
+  const Since = () => (
+    <TableCell>{formatDDMMYY(new Date(since), true)}</TableCell>
+  );
+
+  const EmptyCell = () => <TableCell>---</TableCell>;
+
+  const HeaderCell = useCallback(
+    ({ name }: { name?: string }) => {
+      if (!name) {
+        return <EmptyCell />;
+      }
+
+      return (
+        <TableCell className="text-indigo-500 dark:text-lime-500 hover:underline">
+          <Link to={`/dashboard/tenants/${tenantId}`}>{name}</Link>
+        </TableCell>
+      );
+    },
+    [tenantId, t]
+  );
+
+  const Container = ({ children }: BaseProps) => (
+    <TableRow
+      key={index}
+      className="bg-white dark:border-gray-700 dark:bg-gray-800"
+    >
+      {children}
+      <ActionsCell />
+    </TableRow>
+  );
+
+  if (tenantStatus === "deleted" || tenantStatus === "unknown") {
+    return (
+      <Container>
+        <EmptyCell />
+        <Since />
+        <EmptyCell />
+      </Container>
+    );
+  }
+
+  if (tenantStatus === "unauthorized") {
+    return (
+      <Container>
+        <EmptyCell />
+        <Since />
+        <TableCell>
+          {t("screens.Dashboard.TenantOwnershipInfo.unauthorized")}
+        </TableCell>
+      </Container>
+    );
+  }
+
+  if (isLoading || !tenantStatus || error) {
+    return (
+      <Container>
+        <EmptyCell />
+        <Since />
+        <EmptyCell />
+      </Container>
+    );
+  }
+
+  return (
+    <Container>
+      <HeaderCell name={tenantStatus?.active?.name} />
+      <Since />
+      <TableCell>{tenantStatus?.active?.description}</TableCell>
+    </Container>
+  );
+}
+
+export function TenantOwnershipInfoCard({
   since,
   tenantId,
   tenantStatus,
@@ -101,12 +193,13 @@ export default function TenantOwnershipInfo({
           content={
             <div className="flex items-center gap-2">
               <TenantLogo />
-              <span
+              <Link
                 title={t("screens.Dashboard.TenantOwnershipInfo.name")}
-                className="cursor-help"
+                className="text-indigo-500 dark:text-lime-500 hover:underline"
+                to={`/dashboard/tenants/${tenantId}`}
               >
                 {tenantStatus.active.name}
-              </span>
+              </Link>
             </div>
           }
           as="h3"
@@ -134,28 +227,10 @@ export default function TenantOwnershipInfo({
           <IoMdMore className="text-3xl hidden sm:block group-hover:hidden transition-all duration-500" />
 
           <div className="min-h-full sm:hidden sm:group-hover:block transition-all duration-500">
-            <div className="flex flex-col items-center gap-12 sm:gap-4">
-              <Link
-                to={`/dashboard/tenants/${tenantId}`}
-                className="flex flex-col items-center gap-2 p-1 rounded-lg bg-indigo-500 dark:bg-lime-500"
-                title={t("screens.Dashboard.TenantOwnershipInfo.manageTenant")}
-              >
-                <FaGear size={18} className="text-zinc-50 dark:text-zinc-900" />
-              </Link>
-
-              <Link
-                to={`/dashboard/tenants/${tenantId}/accounts`}
-                className="flex flex-col items-center gap-2 p-1 rounded-lg bg-indigo-500 dark:bg-lime-500"
-                title={t(
-                  "screens.Dashboard.TenantOwnershipInfo.manageAccounts"
-                )}
-              >
-                <MdManageAccounts
-                  size={18}
-                  className="text-zinc-50 dark:text-zinc-900"
-                />
-              </Link>
-            </div>
+            <TenantOwnershipInfoActions
+              tenantId={tenantId}
+              direction="column"
+            />
           </div>
         </div>
       </div>
@@ -166,5 +241,39 @@ export default function TenantOwnershipInfo({
         </Typography>
       )}
     </MiniBox>
+  );
+}
+
+const styles = cva("flex items-center gap-12 sm:gap-4", {
+  variants: {
+    direction: {
+      row: "flex-row",
+      column: "flex-col",
+    },
+  },
+  defaultVariants: {
+    direction: "row",
+  },
+});
+
+function TenantOwnershipInfoActions({
+  tenantId,
+  direction,
+}: VariantProps<typeof styles> & { tenantId: string }) {
+  const { t } = useTranslation();
+
+  return (
+    <div className={styles({ direction })}>
+      <Link
+        to={`/dashboard/tenants/${tenantId}/accounts`}
+        className="flex flex-col items-center gap-2 p-1 rounded-lg bg-indigo-500 dark:bg-lime-500"
+        title={t("screens.Dashboard.TenantOwnershipInfo.manageAccounts")}
+      >
+        <MdManageAccounts
+          size={18}
+          className="text-zinc-50 dark:text-zinc-900"
+        />
+      </Link>
+    </div>
   );
 }

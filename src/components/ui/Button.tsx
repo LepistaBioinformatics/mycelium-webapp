@@ -7,7 +7,7 @@ const styles = cva("text-gray-700 dark:text-gray-50", {
       true: "w-full",
     },
     center: {
-      true: "text-center justify-center",
+      true: "text-center justify-center items-center",
     },
     rounded: {
       true: "rounded-lg",
