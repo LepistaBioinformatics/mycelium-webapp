@@ -1491,7 +1491,7 @@ export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
         /** @enum {string} */
-        APIAccountType: "staff" | "manager" | "user" | "subscription" | "actorAssociated" | "tenantManager";
+        APIAccountType: "staff" | "manager" | "user" | "subscription" | "actorAssociated" | "tenantManager" | "roleAssociated";
         Account: {
             /**
              * Format: uuid
@@ -1982,6 +1982,11 @@ export interface components {
              *
              */
             expiration: number;
+            /** @description The name of the token
+             *
+             *     The name of the token.
+             *      */
+            name: string;
             /**
              * Format: uuid
              * @description A single tenant ID
@@ -2723,7 +2728,7 @@ export interface components {
                  *
                  *     Then, the downstream url should be:
                  *
-                 *     ```
+                 *     ```bash
                  *     http://proxy.example.com:8080/http://service.example.com:8080/api/v1/service/1234567890
                  *     ```
                  *      */
@@ -3097,7 +3102,7 @@ export interface components {
              *
              *     Then, the downstream url should be:
              *
-             *     ```
+             *     ```bash
              *     http://proxy.example.com:8080/http://service.example.com:8080/api/v1/service/1234567890
              *     ```
              *      */
@@ -3219,7 +3224,9 @@ export interface components {
              * Format: uuid
              * @description The tenant ID that the profile has administration privileges
              */
-            tenant: string;
+            id: string;
+            /** @description The tenant name */
+            name: string;
             /**
              * Format: date-time
              * @description The date and time the tenant was granted to the profile
@@ -3394,7 +3401,7 @@ export interface components {
             isActive?: boolean | null;
             isChecked?: boolean | null;
             isArchived?: boolean | null;
-            isDefault?: boolean | null;
+            isSystemAccount?: boolean | null;
         };
         UpdateTenantNameAndDescriptionBody: {
             name?: string | null;

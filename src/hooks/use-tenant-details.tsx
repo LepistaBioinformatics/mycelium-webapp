@@ -61,10 +61,11 @@ export default function useTenantDetails({ tenantId, customUrl }: Props) {
         });
     },
     {
+      revalidateOnMount: false,
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
-      revalidateOnMount: true,
-      revalidateIfStale: true,
+      revalidateIfStale: false,
+      refreshInterval: 1000 * 60 * 2, // 2 minutes
     }
   );
 

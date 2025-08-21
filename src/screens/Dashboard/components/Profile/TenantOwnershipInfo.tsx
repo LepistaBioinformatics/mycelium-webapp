@@ -2,29 +2,29 @@
 
 import { cva, VariantProps } from "class-variance-authority";
 import { MdManageAccounts } from "react-icons/md";
-import Typography from "@/components/ui/Typography";
 import { formatDDMMYY } from "@/functions/format-dd-mm-yy";
 import { useCallback } from "react";
-import { TenantResolverChildProps } from "./TenantResolver";
 import MiniBox from "@/components/ui/MiniBox";
 import IntroSection from "@/components/ui/IntroSection";
 import { Link } from "react-router";
-import { TenantTagTypes } from "@/types/TenantTagTypes";
 import { useTranslation } from "react-i18next";
 import { IoMdMore } from "react-icons/io";
 import { TableCell, TableRow } from "flowbite-react";
 
-interface Props extends TenantResolverChildProps {
+interface Props {
   since: string;
   index?: number;
+  tenantId: string;
+  tenantName?: string;
 }
 
 export function TenantOwnershipInfoTableRow({
   since,
   tenantId,
-  tenantStatus,
-  isLoading,
-  error,
+  tenantName,
+  //tenantStatus,
+  //isLoading,
+  //error,
   index,
 }: Props) {
   const { t } = useTranslation();
@@ -66,7 +66,7 @@ export function TenantOwnershipInfoTableRow({
     </TableRow>
   );
 
-  if (tenantStatus === "deleted" || tenantStatus === "unknown") {
+  /* if (tenantStatus === "deleted" || tenantStatus === "unknown") {
     return (
       <Container>
         <EmptyCell />
@@ -96,13 +96,12 @@ export function TenantOwnershipInfoTableRow({
         <EmptyCell />
       </Container>
     );
-  }
+  } */
 
   return (
     <Container>
-      <HeaderCell name={tenantStatus?.active?.name} />
+      <HeaderCell name={tenantName} />
       <Since />
-      <TableCell>{tenantStatus?.active?.description}</TableCell>
     </Container>
   );
 }
@@ -110,15 +109,12 @@ export function TenantOwnershipInfoTableRow({
 export function TenantOwnershipInfoCard({
   since,
   tenantId,
-  tenantStatus,
-  isLoading,
-  error,
-}: Props) {
+  tenantName,
+}: //tenantStatus,
+//isLoading,
+//error,
+Props) {
   const { t } = useTranslation();
-
-  const title = t("screens.Dashboard.TenantOwnershipInfo.title", {
-    tenantId,
-  });
 
   const Since = () => (
     <IntroSection.Item
@@ -132,11 +128,11 @@ export function TenantOwnershipInfoCard({
   );
 
   const TenantData = useCallback(() => {
-    if (isLoading || !tenantStatus || error) {
-      return <Since />;
-    }
+    // if (isLoading || !tenantStatus || error) {
+    //   return <Since />;
+    // }
 
-    if (tenantStatus === "deleted" || tenantStatus === "unknown") {
+    /* if (tenantStatus === "deleted" || tenantStatus === "unknown") {
       return (
         <div>
           <Since />
@@ -147,20 +143,20 @@ export function TenantOwnershipInfoCard({
           </IntroSection.Item>
         </div>
       );
-    }
+    } */
 
-    if (tenantStatus === "unauthorized") {
-      return (
-        <div>
-          <Since />
-          <IntroSection.Item prefix="status" title={title} isError>
-            {t("screens.Dashboard.TenantOwnershipInfo.unauthorized")}
-          </IntroSection.Item>
-        </div>
-      );
-    }
+    //if (tenantStatus === "unauthorized") {
+    //  return (
+    //    <div>
+    //      <Since />
+    //      <IntroSection.Item prefix="status" title={title} isError>
+    //        {t("screens.Dashboard.TenantOwnershipInfo.unauthorized")}
+    //      </IntroSection.Item>
+    //    </div>
+    //  );
+    //}
 
-    const TenantLogo = () => {
+    /* const TenantLogo = () => {
       const tags = tenantStatus.active.tags;
       if (!tags) return null;
 
@@ -185,27 +181,27 @@ export function TenantOwnershipInfoCard({
       }
 
       return null;
-    };
+    }; */
 
     return (
       <div>
         <IntroSection
           content={
             <div className="flex items-center gap-2">
-              <TenantLogo />
+              {/* <TenantLogo /> */}
               <Link
                 title={t("screens.Dashboard.TenantOwnershipInfo.name")}
                 className="text-indigo-500 dark:text-lime-500 hover:underline"
                 to={`/dashboard/tenants/${tenantId}`}
               >
-                {tenantStatus.active.name}
+                {tenantName}
               </Link>
             </div>
           }
           as="h3"
         >
           <Since />
-          <IntroSection.Item
+          {/* <IntroSection.Item
             prefixProps={{ nowrap: true }}
             prefix={t(
               "screens.Dashboard.TenantOwnershipInfo.description.prefix"
@@ -213,11 +209,11 @@ export function TenantOwnershipInfoCard({
             title={t("screens.Dashboard.TenantOwnershipInfo.description.title")}
           >
             {tenantStatus.active.description}
-          </IntroSection.Item>
+          </IntroSection.Item> */}
         </IntroSection>
       </div>
     );
-  }, [Since, error, isLoading, t, tenantStatus, title]);
+  }, [Since, t, tenantName, tenantId]);
 
   return (
     <MiniBox>
@@ -235,11 +231,11 @@ export function TenantOwnershipInfoCard({
         </div>
       </div>
 
-      {error && (
+      {/* {error && (
         <Typography as="small" isError>
           {error.message}
         </Typography>
-      )}
+      )} */}
     </MiniBox>
   );
 }

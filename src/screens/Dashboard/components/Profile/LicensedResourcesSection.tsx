@@ -11,7 +11,6 @@ import Card from "@/components/ui/Card";
 import Typography from "@/components/ui/Typography";
 import { components } from "@/services/openapi/mycelium-schema";
 import { RiRobot2Line } from "react-icons/ri";
-import TenantResolver from "./TenantResolver";
 import TenantBasicInfo from "./TenantBasicInfo";
 import PermissionIcon from "@/components/ui/PermissionIcon";
 import MiniBox from "@/components/ui/MiniBox";
@@ -302,12 +301,11 @@ export default function LicensedResourcesSection({ licensedResources }: Props) {
                             <HeaderHeader resource={resource} />
                           </TableCell>
                           <TableCell>
-                            <TenantResolver tenantId={resource.tenantId}>
-                              <TenantBasicInfo
-                                tenantId={resource.tenantId}
-                                omitPrefix
-                              />
-                            </TenantResolver>
+                            <TenantBasicInfo
+                              tenantId={resource.tenantId}
+                              tenantName={resource.name}
+                              omitPrefix
+                            />
                           </TableCell>
                           <TableCell>
                             {resource.roles.map((role, index) => (
@@ -358,9 +356,10 @@ export default function LicensedResourcesSection({ licensedResources }: Props) {
                       content={<HeaderHeader resource={resource} />}
                       as="h3"
                     >
-                      <TenantResolver tenantId={resource.tenantId}>
-                        <TenantBasicInfo tenantId={resource.tenantId} />
-                      </TenantResolver>
+                      <TenantBasicInfo
+                        tenantId={resource.tenantId}
+                        tenantName={resource.name}
+                      />
 
                       {resource.roles.map((role, index) => (
                         <div

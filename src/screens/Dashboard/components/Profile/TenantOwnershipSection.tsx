@@ -1,6 +1,5 @@
 import Card from "@/components/ui/Card";
 import Typography from "@/components/ui/Typography";
-import TenantResolver from "./TenantResolver";
 import {
   TenantOwnershipInfoCard,
   TenantOwnershipInfoTableRow,
@@ -64,9 +63,6 @@ export default function TenantOwnershipSection({ tenantsOwnership }: Props) {
                   {t("screens.Dashboard.TenantOwnershipInfo.since.prefix")}
                 </TableHeadCell>
                 <TableHeadCell>
-                  {t("screens.Dashboard.TenantOwnershipInfo.description.title")}
-                </TableHeadCell>
-                <TableHeadCell>
                   {t("screens.Dashboard.TenantOwnershipInfo.actions.title")}
                 </TableHeadCell>
               </TableHead>
@@ -75,16 +71,13 @@ export default function TenantOwnershipSection({ tenantsOwnership }: Props) {
                 {tenantsOwnership
                   ?.sort((a, b) => b.since.localeCompare(a.since))
                   ?.map((tenant, index) => (
-                    <TenantResolver
-                      key={tenant.tenant}
-                      tenantId={tenant.tenant}
-                    >
-                      <TenantOwnershipInfoTableRow
-                        since={tenant.since}
-                        tenantId={tenant.tenant}
-                        index={index}
-                      />
-                    </TenantResolver>
+                    <TenantOwnershipInfoTableRow
+                      key={tenant.id + index}
+                      since={tenant.since}
+                      tenantId={tenant.id}
+                      tenantName={tenant.name}
+                      index={index}
+                    />
                   ))}
               </TableBody>
             </Table>
@@ -95,12 +88,11 @@ export default function TenantOwnershipSection({ tenantsOwnership }: Props) {
           {tenantsOwnership
             ?.sort((a, b) => b.since.localeCompare(a.since))
             ?.map((tenant) => (
-              <TenantResolver key={tenant.tenant} tenantId={tenant.tenant}>
-                <TenantOwnershipInfoCard
-                  since={tenant.since}
-                  tenantId={tenant.tenant}
-                />
-              </TenantResolver>
+              <TenantOwnershipInfoCard
+                since={tenant.since}
+                tenantId={tenant.id}
+                tenantName={tenant.name}
+              />
             ))}
         </div>
       </Card.Body>

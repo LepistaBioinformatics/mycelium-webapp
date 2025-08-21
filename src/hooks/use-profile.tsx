@@ -106,7 +106,7 @@ export default function useProfile(args?: Props) {
       if (tenantsOwnership && "records" in tenantsOwnership) {
         if (
           tenantsOwnership.records.some((tenant) =>
-            args?.tenantOwnerNeeded?.includes(tenant.tenant)
+            args?.tenantOwnerNeeded?.includes(tenant.id)
           )
         ) {
           return true;
@@ -256,7 +256,7 @@ export default function useProfile(args?: Props) {
 
     const profileWithTtl = {
       ...profile,
-      ttl: Date.now() + 1000 * 60 * 2,
+      ttl: Date.now() + 1000 * 60 * 1, // 1 minute
     } as ProfileWithTtl;
 
     sessionStorage.setItem(PROFILE_KEY, JSON.stringify(profileWithTtl));

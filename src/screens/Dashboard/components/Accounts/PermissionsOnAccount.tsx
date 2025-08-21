@@ -27,7 +27,7 @@ export default function PermissionsOnAccount({ accountId, tenantId }: Props) {
 
     if (!tenantsOwnership) return null;
 
-    return tenantsOwnership.filter((tenant) => tenant.tenant === tenantId);
+    return tenantsOwnership.filter((tenant) => tenant.id === tenantId);
   }, [profile?.tenantsOwnership, tenantId]);
 
   /**
