@@ -61,7 +61,7 @@ export default function useTenantDetails({ tenantId, customUrl }: Props) {
         });
     },
     {
-      revalidateOnMount: false,
+      revalidateOnMount: true,
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
       revalidateIfStale: false,

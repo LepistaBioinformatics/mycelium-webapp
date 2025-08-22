@@ -22,9 +22,6 @@ export function TenantOwnershipInfoTableRow({
   since,
   tenantId,
   tenantName,
-  //tenantStatus,
-  //isLoading,
-  //error,
   index,
 }: Props) {
   const { t } = useTranslation();
@@ -48,7 +45,7 @@ export function TenantOwnershipInfoTableRow({
       }
 
       return (
-        <TableCell className="text-indigo-500 dark:text-lime-500 hover:underline">
+        <TableCell className="text-indigo-500 dark:text-lime-500 hover:underline font-bold">
           <Link to={`/dashboard/tenants/${tenantId}`}>{name}</Link>
         </TableCell>
       );
@@ -66,38 +63,6 @@ export function TenantOwnershipInfoTableRow({
     </TableRow>
   );
 
-  /* if (tenantStatus === "deleted" || tenantStatus === "unknown") {
-    return (
-      <Container>
-        <EmptyCell />
-        <Since />
-        <EmptyCell />
-      </Container>
-    );
-  }
-
-  if (tenantStatus === "unauthorized") {
-    return (
-      <Container>
-        <EmptyCell />
-        <Since />
-        <TableCell>
-          {t("screens.Dashboard.TenantOwnershipInfo.unauthorized")}
-        </TableCell>
-      </Container>
-    );
-  }
-
-  if (isLoading || !tenantStatus || error) {
-    return (
-      <Container>
-        <EmptyCell />
-        <Since />
-        <EmptyCell />
-      </Container>
-    );
-  } */
-
   return (
     <Container>
       <HeaderCell name={tenantName} />
@@ -110,10 +75,7 @@ export function TenantOwnershipInfoCard({
   since,
   tenantId,
   tenantName,
-}: //tenantStatus,
-//isLoading,
-//error,
-Props) {
+}: Props) {
   const { t } = useTranslation();
 
   const Since = () => (
@@ -128,67 +90,11 @@ Props) {
   );
 
   const TenantData = useCallback(() => {
-    // if (isLoading || !tenantStatus || error) {
-    //   return <Since />;
-    // }
-
-    /* if (tenantStatus === "deleted" || tenantStatus === "unknown") {
-      return (
-        <div>
-          <Since />
-          <IntroSection.Item prefix="status" title={title}>
-            {tenantStatus === "deleted"
-              ? t("screens.Dashboard.TenantOwnershipInfo.deleted")
-              : t("screens.Dashboard.TenantOwnershipInfo.unknown")}
-          </IntroSection.Item>
-        </div>
-      );
-    } */
-
-    //if (tenantStatus === "unauthorized") {
-    //  return (
-    //    <div>
-    //      <Since />
-    //      <IntroSection.Item prefix="status" title={title} isError>
-    //        {t("screens.Dashboard.TenantOwnershipInfo.unauthorized")}
-    //      </IntroSection.Item>
-    //    </div>
-    //  );
-    //}
-
-    /* const TenantLogo = () => {
-      const tags = tenantStatus.active.tags;
-      if (!tags) return null;
-
-      const tenantLogo = tags?.find(
-        (tag: any) => tag?.value === TenantTagTypes.Brand
-      )?.meta?.base64Logo;
-
-      if (tenantLogo) {
-        return (
-          <img
-            src={tenantLogo}
-            alt="Tenant logo"
-            title={t("screens.Dashboard.TenantOwnershipInfo.logo")}
-            className="w-full h-full object-cover rounded-full transition-all duration-200 hover:border-[0.1px] border-indigo-500 dark:border-lime-500 hover:shadow-lg bg-white dark:bg-gray-800"
-            style={{
-              width: "24px",
-              height: "24px",
-              objectFit: "cover",
-            }}
-          />
-        );
-      }
-
-      return null;
-    }; */
-
     return (
       <div>
         <IntroSection
           content={
             <div className="flex items-center gap-2">
-              {/* <TenantLogo /> */}
               <Link
                 title={t("screens.Dashboard.TenantOwnershipInfo.name")}
                 className="text-indigo-500 dark:text-lime-500 hover:underline"
@@ -198,18 +104,8 @@ Props) {
               </Link>
             </div>
           }
-          as="h3"
         >
           <Since />
-          {/* <IntroSection.Item
-            prefixProps={{ nowrap: true }}
-            prefix={t(
-              "screens.Dashboard.TenantOwnershipInfo.description.prefix"
-            )}
-            title={t("screens.Dashboard.TenantOwnershipInfo.description.title")}
-          >
-            {tenantStatus.active.description}
-          </IntroSection.Item> */}
         </IntroSection>
       </div>
     );
@@ -230,12 +126,6 @@ Props) {
           </div>
         </div>
       </div>
-
-      {/* {error && (
-        <Typography as="small" isError>
-          {error.message}
-        </Typography>
-      )} */}
     </MiniBox>
   );
 }

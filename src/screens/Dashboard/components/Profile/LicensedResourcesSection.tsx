@@ -140,18 +140,17 @@ export default function LicensedResourcesSection({ licensedResources }: Props) {
     return (
       <div className="flex items-center gap-2">
         {resource.sysAcc && (
-          <div>
-            <RiRobot2Line
-              className="text-indigo-500 h-4 w-4 dark:text-lime-500 hover:cursor-help"
-              title={t(
-                "screens.Dashboard.LicensedResourcesSection.accountName.system"
-              )}
-            />
-          </div>
+          <RiRobot2Line
+            className="text-indigo-500 h-4 w-4 dark:text-lime-500 hover:cursor-help"
+            title={t(
+              "screens.Dashboard.LicensedResourcesSection.accountName.system"
+            )}
+          />
         )}
         <Typography
           truncate
           width="fit"
+          decoration="bold"
           title={t(
             "screens.Dashboard.LicensedResourcesSection.accountName.title",
             {
@@ -309,7 +308,10 @@ export default function LicensedResourcesSection({ licensedResources }: Props) {
                           </TableCell>
                           <TableCell>
                             {resource.roles.map((role, index) => (
-                              <div key={index + role.role}>
+                              <div
+                                key={index + role.role}
+                                className="whitespace-nowrap"
+                              >
                                 <span>{role.role}</span>
                                 <PermissionIcon permission={role.perm} inline />
                               </div>

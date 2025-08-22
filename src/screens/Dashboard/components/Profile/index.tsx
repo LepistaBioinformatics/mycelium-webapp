@@ -25,13 +25,30 @@ import Card from "@/components/ui/Card";
 import { SlOrganization } from "react-icons/sl";
 import { MdManageAccounts } from "react-icons/md";
 import { IoOptions } from "react-icons/io5";
+import { useSearchParams } from "react-router";
+
+enum ActiveTab {
+  LicensedResources = 0,
+  TenantOwnership = 1,
+  CreateConnectionString = 2,
+}
 
 type Profile = components["schemas"]["Profile"];
 
 export default function Profile() {
   const { t } = useTranslation();
 
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const { user, profile, isLoadingUser } = useProfile();
+
+  const activeTab = useMemo(() => {
+    const tab = searchParams.get("tab");
+
+    if (!tab) return ActiveTab.LicensedResources;
+
+    return parseInt(tab) as ActiveTab;
+  }, [searchParams]);
 
   const tenantsOwnership = useMemo(
     () => getTenantsOwnershipOrNull(profile?.tenantsOwnership),
@@ -132,6 +149,9 @@ export default function Profile() {
                 </div>
                 <div className="flex flex-col sm:flex-row sm:flex-wrap gap-8 sm:gap-3 w-full h-full">
                   <Tabs
+                    onActiveTabChange={(tab) => {
+                      setSearchParams({ tab: tab.toString() });
+                    }}
                     aria-label=""
                     variant="fullWidth"
                     className="w-full overflow-x-auto"
@@ -157,7 +177,7 @@ export default function Profile() {
                     }}
                   >
                     <TabItem
-                      active
+                      active={activeTab === ActiveTab.LicensedResources}
                       title={
                         <span className="whitespace-nowrap">
                           {t(
@@ -173,6 +193,7 @@ export default function Profile() {
                     </TabItem>
 
                     <TabItem
+                      active={activeTab === ActiveTab.TenantOwnership}
                       title={
                         <span className="whitespace-nowrap">
                           {t(
@@ -189,6 +210,7 @@ export default function Profile() {
                     </TabItem>
 
                     <TabItem
+                      active={activeTab === ActiveTab.CreateConnectionString}
                       title={
                         <span className="whitespace-nowrap">
                           {t(
