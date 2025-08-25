@@ -4,7 +4,6 @@ import { useMemo, useState } from "react";
 import Card from "@/components/ui/Card";
 import Typography from "@/components/ui/Typography";
 import IntroSection from "@/components/ui/IntroSection";
-import MiniBox from "@/components/ui/MiniBox";
 import { components } from "@/services/openapi/mycelium-schema";
 import GuestOwnerModal from "./GuestOwnerModal";
 import UnguestOwner from "./UnguestOwnerModal";
@@ -13,6 +12,7 @@ import useProfile from "@/hooks/use-profile";
 import { MycRole } from "@/types/MyceliumRole";
 import { MycPermission } from "@/types/MyceliumPermission";
 import { useTranslation } from "react-i18next";
+import ListItem from "@/components/ui/ListItem";
 
 type TenantOwner = components["schemas"]["Owner"];
 type Tenant = components["schemas"]["Tenant"];
@@ -81,7 +81,7 @@ export default function OwnersCard({ tenant, mutateTenantStatus }: Props) {
       <Card padding="sm" height="adaptive" group>
         <Card.Header>
           <div className="flex flex-col gap-2">
-            <Typography as="h6">
+            <Typography as="h5">
               <div className="flex items-center gap-2">
                 <span>
                   {t(
@@ -96,7 +96,7 @@ export default function OwnersCard({ tenant, mutateTenantStatus }: Props) {
               </div>
             </Typography>
 
-            <Typography as="small" decoration="smooth" width="xs">
+            <Typography as="span" decoration="smooth">
               {t(
                 "screens.Dashboard.Tenants.AdvancedManagement.legalSettingsAndPeople.owners.description"
               )}
@@ -105,7 +105,7 @@ export default function OwnersCard({ tenant, mutateTenantStatus }: Props) {
         </Card.Header>
 
         <Card.Body>
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-0">
             {owners?.map((owner) => {
               const ownerName =
                 owner.firstName && owner.lastName
@@ -113,7 +113,7 @@ export default function OwnersCard({ tenant, mutateTenantStatus }: Props) {
                   : owner.username;
 
               return (
-                <MiniBox key={owner.id} width="full">
+                <ListItem key={owner.id}>
                   <div className="flex items-center gap-2 justify-between group/item group/clip min-w-fit">
                     <IntroSection
                       content={ownerName}
@@ -148,7 +148,7 @@ export default function OwnersCard({ tenant, mutateTenantStatus }: Props) {
                       </button>
                     </div>
                   </div>
-                </MiniBox>
+                </ListItem>
               );
             })}
           </div>

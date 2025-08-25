@@ -15,7 +15,7 @@ export default function EditAccountModal({
   onClose,
   onSuccess,
   account,
-  accountId
+  accountId,
 }: Props) {
   return (
     <AccountModal
@@ -24,6 +24,7 @@ export default function EditAccountModal({
       onSuccess={onSuccess}
       account={account}
       accountId={accountId}
+      scope="subscription"
     />
-  )
+  );
 }

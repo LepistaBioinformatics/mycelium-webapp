@@ -17,8 +17,8 @@ import DetailsBox from "@/components/ui/DetailsBox";
 import useSuspenseError from "@/hooks/use-suspense-error";
 import PaginatedRecords from "@/types/PaginatedRecords";
 import IntroSection from "@/components/ui/IntroSection";
-import MiniBox from "@/components/ui/MiniBox";
 import { useTranslation } from "react-i18next";
+import ListItem from "@/components/ui/ListItem";
 
 type Account = components["schemas"]["Account"];
 type GuestUser = components["schemas"]["GuestUser"];
@@ -115,12 +115,12 @@ export default function AccountInvitations({
 
   return (
     <div className="flex flex-col gap-2">
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-0">
         {invitations?.records
           ?.slice(0, showMaxInvitations ? invitations.count : pageSize)
           ?.map((invitation) => (
             <Fragment key={invitation.id}>
-              <MiniBox>
+              <ListItem>
                 <IntroSection
                   content={
                     <div className="flex flex-nowrap justify-between items-center mb-1">
@@ -193,7 +193,7 @@ export default function AccountInvitations({
                     </Banner>
                   </DetailsBox.Content>
                 </DetailsBox>
-              </MiniBox>
+              </ListItem>
             </Fragment>
           ))}
       </div>

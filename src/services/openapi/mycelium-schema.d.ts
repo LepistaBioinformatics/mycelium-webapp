@@ -741,6 +741,27 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/_adm/subscriptions-manager/accounts/role-associated": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create Role Associated Account
+         * @description Role associated accounts mirrors the guest-roles used to connect peoples in
+         *     non-personal accounts, like institutions, groups, etc.
+         */
+        post: operations["create_role_associated_account_url"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/_adm/subscriptions-manager/accounts/{account_id}": {
         parameters: {
             query?: never;
@@ -5913,6 +5934,69 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": components["schemas"]["CreateSubscriptionAccountBody"];
+            };
+        };
+        responses: {
+            /** @description Account created. */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Account"];
+                };
+            };
+            /** @description Account already exists. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Unauthorized. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Forbidden. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Unknown internal server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+        };
+    };
+    create_role_associated_account_url: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description The tenant unique id. */
+                "x-mycelium-tenant-id": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateRoleAssociatedAccountBody"];
             };
         };
         responses: {

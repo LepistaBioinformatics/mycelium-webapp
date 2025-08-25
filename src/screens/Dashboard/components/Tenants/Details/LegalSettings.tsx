@@ -143,13 +143,13 @@ export default function LegalSettings({ tenant, mutateTenantStatus }: Props) {
       <Card padding="sm" height="adaptive" group>
         <Card.Header>
           <div className="flex flex-col gap-2">
-            <Typography as="h6">
+            <Typography as="h5">
               {t(
                 "screens.Dashboard.Tenants.AdvancedManagement.legalSettingsAndPeople.legalSettings.title"
               )}
             </Typography>
 
-            <Typography as="small" decoration="smooth" width="sm">
+            <Typography as="span" decoration="smooth" width="sm">
               {t(
                 "screens.Dashboard.Tenants.AdvancedManagement.legalSettingsAndPeople.legalSettings.description"
               )}

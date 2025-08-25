@@ -1,6 +1,5 @@
 import Banner from "@/components/ui/Banner";
 import Button from "@/components/ui/Button";
-import Divider from "@/components/ui/Divider";
 import FormField from "@/components/ui/FomField";
 import Modal from "@/components/ui/Modal";
 import Typography from "@/components/ui/Typography";
@@ -13,7 +12,7 @@ import { RootState } from "@/states/store";
 import { MycPermission } from "@/types/MyceliumPermission";
 import { MycRole } from "@/types/MyceliumRole";
 import { TextInput } from "flowbite-react";
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
@@ -21,13 +20,15 @@ import { useSelector } from "react-redux";
 type Account = components["schemas"]["Account"];
 
 enum SystemAccountTypes {
-  GATEWAY_MANAGER = "gatewayManager",
-  GUEST_MANAGER = "guestsManager",
-  SYSTEM_MANAGER = "systemManager",
+  SYSTEM__GATEWAY_MANAGER = "gatewayManager",
+  SYSTEM__GUEST_MANAGER = "guestsManager",
+  SYSTEM__SYSTEM_MANAGER = "systemManager",
 }
 
 type Inputs = {
   name: string;
+  roleName?: string;
+  roleDescription?: string;
   accountType?: SystemAccountTypes;
 };
 
@@ -37,7 +38,10 @@ export interface AccountModalProps {
   onSuccess: () => void;
   account?: Account | null;
   accountId?: string | null;
+  scope?: "subscription" | "roleAssociated" | "systemScoped" | undefined;
 }
+
+const MIN_LENGTH = 2;
 
 export default function AccountModal({
   isOpen,
@@ -45,6 +49,7 @@ export default function AccountModal({
   onSuccess,
   account,
   accountId,
+  scope,
 }: AccountModalProps) {
   const { t } = useTranslation();
 
@@ -75,14 +80,21 @@ export default function AccountModal({
   });
 
   const nameWatch = watch("name");
+  const roleNameWatch = watch("roleName");
+  const roleDescriptionWatch = watch("roleDescription");
 
   const handleLocalSuccess = () => {
     onSuccess();
     reset();
   };
 
+  const handleClose = () => {
+    reset();
+    onClose();
+  };
+
   const buildBaseUrl = useCallback(() => {
-    if (systemAccountType) {
+    if (systemAccountType && scope === "systemScoped") {
       return {
         baseUrl: buildPath("/_adm/managers/accounts"),
         method: "POST",
@@ -101,13 +113,26 @@ export default function AccountModal({
       };
     }
 
+    if (scope === "roleAssociated") {
+      return {
+        baseUrl: buildPath(
+          "/_adm/subscriptions-manager/accounts/role-associated"
+        ),
+        method: "POST",
+      };
+    }
+
     return {
       baseUrl: buildPath("/_adm/subscriptions-manager/accounts"),
       method: "POST",
     };
-  }, [systemAccountType, account, accountId]);
+  }, [systemAccountType, account, accountId, scope]);
 
-  const onSubmit: SubmitHandler<Inputs> = async ({ name }) => {
+  const onSubmit: SubmitHandler<Inputs> = async ({
+    name,
+    roleName,
+    roleDescription,
+  }) => {
     setIsLoading(true);
 
     const token = await getAccessTokenSilently();
@@ -126,7 +151,13 @@ export default function AccountModal({
         "Content-Type": "application/json",
         [TENANT_ID_HEADER]: tenantInfo?.id ?? "",
       },
-      body: JSON.stringify({ name, actor: systemAccountType }),
+      body: JSON.stringify({
+        name,
+        accountName: name,
+        actor: systemAccountType,
+        roleName,
+        roleDescription,
+      }),
     });
 
     if (!response.ok) {
@@ -143,9 +174,45 @@ export default function AccountModal({
     setSystemAccountType(accountType);
   };
 
+  const disableSubmit = useMemo(() => {
+    if (scope === "subscription") {
+      return !nameWatch || nameWatch.length < 3 || isLoading || !tenantInfo?.id;
+    }
+
+    if (scope === "roleAssociated") {
+      return (
+        !roleNameWatch ||
+        roleNameWatch.length < MIN_LENGTH ||
+        !roleDescriptionWatch ||
+        roleDescriptionWatch.length < MIN_LENGTH ||
+        isLoading ||
+        !hasAdminPrivileges
+      );
+    }
+
+    return (
+      !nameWatch ||
+      nameWatch.length < MIN_LENGTH ||
+      isLoading ||
+      !hasAdminPrivileges
+    );
+  }, [
+    nameWatch,
+    roleNameWatch,
+    roleDescriptionWatch,
+    isLoading,
+    scope,
+    tenantInfo?.id,
+    hasAdminPrivileges,
+  ]);
+
+  if (!scope) {
+    return null;
+  }
+
   return (
     <Modal open={isOpen}>
-      <Modal.Header handleClose={onClose}>
+      <Modal.Header handleClose={handleClose}>
         <Typography>
           {account
             ? t("screens.Dashboard.Accounts.AccountModal.editAccount")
@@ -155,60 +222,173 @@ export default function AccountModal({
 
       <Modal.Body>
         <form
-          className="flex flex-col gap-5 w-full mb-24"
+          className="flex flex-col gap-5 w-full mb-3"
           onSubmit={handleSubmit(onSubmit)}
         >
-          <FormField
-            label={t("screens.Dashboard.Accounts.AccountModal.name.title")}
-            title={t("screens.Dashboard.Accounts.AccountModal.name.title")}
-          >
-            <TextInput
-              placeholder={t(
-                "screens.Dashboard.Accounts.AccountModal.name.placeholder"
-              )}
-              sizing="lg"
-              color="custom"
-              autoFocus
-              theme={{
-                field: {
-                  input: {
-                    colors: {
-                      custom:
-                        "border-zinc-400 bg-indigo-50 text-zinc-900 focus:border-cyan-500 focus:ring-zinc-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white placeholder-zinc-500  dark:placeholder-zinc-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500",
-                    },
-                  },
-                },
-              }}
-              {...register("name")}
-            />
-            {errors.name && <span>This field is required</span>}
-          </FormField>
-
-          <Button
-            rounded
-            type="submit"
-            disabled={!nameWatch || isLoading || !tenantInfo?.id}
-          >
-            {account
-              ? isLoading
-                ? t("screens.Dashboard.Accounts.AccountModal.updating")
-                : t("screens.Dashboard.Accounts.AccountModal.update")
-              : isLoading
-              ? t("screens.Dashboard.Accounts.AccountModal.creating")
-              : t("screens.Dashboard.Accounts.AccountModal.create")}
-          </Button>
-
-          {hasAdminPrivileges && !account && (
+          {scope === "roleAssociated" && (
             <>
-              <Divider style="or" />
+              <FormField
+                label={t("screens.Dashboard.Accounts.AccountModal.name.title")}
+                title={t("screens.Dashboard.Accounts.AccountModal.name.title")}
+              >
+                <TextInput
+                  placeholder={t(
+                    "screens.Dashboard.Accounts.AccountModal.name.placeholder"
+                  )}
+                  color="custom"
+                  autoFocus
+                  theme={{
+                    field: {
+                      input: {
+                        colors: {
+                          custom:
+                            "border-zinc-400 bg-indigo-50 text-zinc-900 focus:border-cyan-500 focus:ring-zinc-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white placeholder-zinc-500  dark:placeholder-zinc-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500",
+                        },
+                      },
+                    },
+                  }}
+                  {...register("name")}
+                />
+                {errors.name && <span>This field is required</span>}
+              </FormField>
+
+              <FormField
+                label={t(
+                  "screens.Dashboard.Accounts.AccountModal.roleName.title"
+                )}
+                title={t(
+                  "screens.Dashboard.Accounts.AccountModal.roleName.title"
+                )}
+              >
+                <TextInput
+                  placeholder={t(
+                    "screens.Dashboard.Accounts.AccountModal.roleName.placeholder"
+                  )}
+                  color="custom"
+                  theme={{
+                    field: {
+                      input: {
+                        colors: {
+                          custom:
+                            "border-zinc-400 bg-indigo-50 text-zinc-900 focus:border-cyan-500 focus:ring-zinc-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white placeholder-zinc-500  dark:placeholder-zinc-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500",
+                        },
+                      },
+                    },
+                  }}
+                  {...register("roleName")}
+                />
+                {errors.roleName && <span>This field is required</span>}
+              </FormField>
+
+              <FormField
+                label={t(
+                  "screens.Dashboard.Accounts.AccountModal.roleDescription.title"
+                )}
+                title={t(
+                  "screens.Dashboard.Accounts.AccountModal.roleDescription.title"
+                )}
+              >
+                <TextInput
+                  placeholder={t(
+                    "screens.Dashboard.Accounts.AccountModal.roleDescription.placeholder"
+                  )}
+                  color="custom"
+                  theme={{
+                    field: {
+                      input: {
+                        colors: {
+                          custom:
+                            "border-zinc-400 bg-indigo-50 text-zinc-900 focus:border-cyan-500 focus:ring-zinc-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white placeholder-zinc-500  dark:placeholder-zinc-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500",
+                        },
+                      },
+                    },
+                  }}
+                  {...register("roleDescription")}
+                />
+                {errors.roleDescription && <span>This field is required</span>}
+              </FormField>
+
+              <Button rounded type="submit" disabled={disableSubmit}>
+                {account
+                  ? isLoading
+                    ? t("screens.Dashboard.Accounts.AccountModal.updating")
+                    : t("screens.Dashboard.Accounts.AccountModal.update")
+                  : isLoading
+                  ? t("screens.Dashboard.Accounts.AccountModal.creating")
+                  : t("screens.Dashboard.Accounts.AccountModal.create")}
+              </Button>
+            </>
+          )}
+
+          {scope === "subscription" && (
+            <>
+              <FormField
+                label={t("screens.Dashboard.Accounts.AccountModal.name.title")}
+                title={t("screens.Dashboard.Accounts.AccountModal.name.title")}
+              >
+                <TextInput
+                  placeholder={t(
+                    "screens.Dashboard.Accounts.AccountModal.name.placeholder"
+                  )}
+                  sizing="lg"
+                  color="custom"
+                  autoFocus
+                  theme={{
+                    field: {
+                      input: {
+                        colors: {
+                          custom:
+                            "border-zinc-400 bg-indigo-50 text-zinc-900 focus:border-cyan-500 focus:ring-zinc-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white placeholder-zinc-500  dark:placeholder-zinc-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500",
+                        },
+                      },
+                    },
+                  }}
+                  {...register("name")}
+                />
+                {errors.name && <span>This field is required</span>}
+              </FormField>
+
+              <Button rounded type="submit" disabled={disableSubmit}>
+                {account
+                  ? isLoading
+                    ? t("screens.Dashboard.Accounts.AccountModal.updating")
+                    : t("screens.Dashboard.Accounts.AccountModal.update")
+                  : isLoading
+                  ? t("screens.Dashboard.Accounts.AccountModal.creating")
+                  : t("screens.Dashboard.Accounts.AccountModal.create")}
+              </Button>
+            </>
+          )}
+
+          {hasAdminPrivileges && !account && scope === "systemScoped" && (
+            <>
+              <FormField
+                label={t("screens.Dashboard.Accounts.AccountModal.name.title")}
+                title={t("screens.Dashboard.Accounts.AccountModal.name.title")}
+              >
+                <TextInput
+                  placeholder={t(
+                    "screens.Dashboard.Accounts.AccountModal.name.placeholder"
+                  )}
+                  sizing="lg"
+                  color="custom"
+                  autoFocus
+                  theme={{
+                    field: {
+                      input: {
+                        colors: {
+                          custom:
+                            "border-zinc-400 bg-indigo-50 text-zinc-900 focus:border-cyan-500 focus:ring-zinc-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white placeholder-zinc-500  dark:placeholder-zinc-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500",
+                        },
+                      },
+                    },
+                  }}
+                  {...register("name")}
+                />
+                {errors.name && <span>This field is required</span>}
+              </FormField>
 
               <div className="flex flex-col gap-5">
-                <Typography width="md" as="small" decoration="smooth">
-                  {t(
-                    "screens.Dashboard.Accounts.AccountModal.createSystemAccount.description"
-                  )}
-                </Typography>
-
                 <Banner intent="success">
                   <div className="flex justify-between gap-2 my-5">
                     <div className="flex flex-col gap-2">
@@ -229,10 +409,10 @@ export default function AccountModal({
                       <Button
                         rounded
                         type="submit"
-                        disabled={!nameWatch || isLoading}
+                        disabled={disableSubmit}
                         onClick={() =>
                           handleCreateSystemAccount(
-                            SystemAccountTypes.GUEST_MANAGER
+                            SystemAccountTypes.SYSTEM__GUEST_MANAGER
                           )
                         }
                       >
@@ -264,10 +444,10 @@ export default function AccountModal({
                       <Button
                         rounded
                         type="submit"
-                        disabled={!nameWatch || isLoading}
+                        disabled={disableSubmit}
                         onClick={() =>
                           handleCreateSystemAccount(
-                            SystemAccountTypes.GATEWAY_MANAGER
+                            SystemAccountTypes.SYSTEM__GATEWAY_MANAGER
                           )
                         }
                       >
@@ -299,10 +479,10 @@ export default function AccountModal({
                       <Button
                         rounded
                         type="submit"
-                        disabled={!nameWatch || isLoading}
+                        disabled={disableSubmit}
                         onClick={() =>
                           handleCreateSystemAccount(
-                            SystemAccountTypes.SYSTEM_MANAGER
+                            SystemAccountTypes.SYSTEM__SYSTEM_MANAGER
                           )
                         }
                       >

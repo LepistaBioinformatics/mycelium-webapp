@@ -338,6 +338,16 @@
           "breadcrumb": "Namespaces",
           "manageAccounts": "See accounts",
           "manageAccountsDescription": "Click here to see the accounts recorded in Namespace.",
+          "tabs": {
+            "legalInformation": "Legal Information",
+            "owners": "Owners",
+            "managers": "Managers",
+            "brand": "Brand",
+            "advanced": "Advanced"
+          },
+          "advanced": {
+            "title": "Advanced"
+          },
           "createConnectionString": {
             "cta": "Connection string",
             "title": "Create connection string for Namespace",
@@ -471,6 +481,24 @@
       "Accounts": {
         "title": "Accounts",
         "createAccount": "Create Account",
+        "accountType": {
+          "subscription": {
+            "title": "Subscription",
+            "description": "Enterprise like accounts. You can use such account to logically organize resources. This account will be restricted to the tenant."
+          },
+          "roleAssociated": {
+            "title": "Role-Associated",
+            "description": "Use this account type to manage default roles with permissions. This account will be restricted to the tenant."
+          },
+          "tenantScoped": {
+            "title": "Tenant Scoped",
+            "description": "Tenant scoped accounts. You can use such account to manage tenant resources. This account will be restricted to the tenant."
+          },
+          "systemScoped": {
+            "title": "System Scoped",
+            "description": "System scoped accounts. You can use such account to manage system resources. This account will be restricted to the system."
+          }
+        },
         "PaginatedAccounts": {
           "searchPlaceholder": "Search or use the command panel ...",
           "resultsBasedOnTenant": "Accounts registered in",
@@ -599,26 +627,35 @@
             "prefix": "Name",
             "placeholder": "My best account"
           },
+          "roleName": {
+            "title": "Role name",
+            "prefix": "Name",
+            "placeholder": "My best role"
+          },
+          "roleDescription": {
+            "title": "Role description",
+            "prefix": "Description",
+            "placeholder": "Role description"
+          },
           "description": {
             "title": "Account Description",
             "prefix": "Description",
             "placeholder": "Account Description"
           },
           "createSystemAccount": {
-            "description": "Create a system account for Namespace. ",
             "guestManager": {
               "title": "Guest manager",
-              "description": "Guest Manager is a system account designed to manage guest functions and guest -related tokens.",
+              "description": "Guest Manager is a system account designed to manage guest functions.",
               "button": "Create"
             },
             "gatewayManager": {
               "title": "Gateway manager",
-              "description": "Gateway Manager is a system account designed to manage gateways and gateway tokens functions.",
+              "description": "Gateway Manager is a system account designed to manage gateways operations.",
               "button": "Create"
             },
             "systemManager": {
               "title": "System manager",
-              "description": "System Manager is a system account designed to manage system -related system and tokens functions.",
+              "description": "System Manager is a system account designed to manage system operations.",
               "button": "Create"
             }
           }

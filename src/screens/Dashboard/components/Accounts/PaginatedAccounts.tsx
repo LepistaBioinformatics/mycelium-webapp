@@ -467,7 +467,9 @@ export default function PaginatedAccounts({
                     to={`${location.pathname}?accountId=${account?.id}`}
                   >
                     <div className="flex items-center gap-2">
-                      {account?.name}
+                      {account?.name.length > 0
+                        ? account?.name
+                        : account?.id?.slice(0, 8)}
                     </div>
                     {account.isSystemAccount && (
                       <span className="text-xs text-gray-500 dark:text-gray-400">

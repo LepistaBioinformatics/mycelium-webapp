@@ -1,7 +1,9 @@
+"use client";
+
 import PageBody from "@/components/ui/PageBody";
+import { Dropdown, DropdownItem } from "flowbite-react";
 import { useEffect, useMemo, useState } from "react";
-import Button from "@/components/ui/Button";
-import AccountModal from "./AccountModal";
+import AccountModal, { AccountModalProps } from "./AccountModal";
 import AccountDetails from "./AccountDetails";
 import PaginatedAccounts, { PaginatedAccountsProps } from "./PaginatedAccounts";
 import useProfile from "@/hooks/use-profile";
@@ -14,6 +16,7 @@ import { MycPermission } from "@/types/MyceliumPermission";
 import useTenantDetails from "@/hooks/use-tenant-details";
 import { useDispatch } from "react-redux";
 import { setTenantInfo } from "@/states/tenant.state";
+import Typography from "@/components/ui/Typography";
 
 interface Props extends Pick<PaginatedAccountsProps, "restrictAccountTypeTo"> {}
 
@@ -45,6 +48,8 @@ export default function Accounts({ restrictAccountTypeTo }: Props) {
   }, [tenantStatus]);
 
   const [isNewModalOpen, setIsNewModalOpen] = useState(false);
+  const [modalScope, setModalScope] =
+    useState<AccountModalProps["scope"]>("subscription");
   const [forceMutate, setForceMutate] = useState<Date | null>(null);
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -53,6 +58,11 @@ export default function Accounts({ restrictAccountTypeTo }: Props) {
     roles: [MycRole.SubscriptionsManager],
     permissions: [MycPermission.Write],
   });
+
+  const handleOpenModal = (scope: AccountModalProps["scope"]) => {
+    setIsNewModalOpen(true);
+    setModalScope(scope);
+  };
 
   const handleCloseModal = () => {
     setIsNewModalOpen(false);
@@ -66,8 +76,8 @@ export default function Accounts({ restrictAccountTypeTo }: Props) {
   };
 
   const handleSuccess = () => {
-    handleCloseModal();
     setForceMutate(new Date());
+    handleCloseModal();
   };
 
   const shouldCreateAccount = useMemo(() => {
@@ -91,18 +101,96 @@ export default function Accounts({ restrictAccountTypeTo }: Props) {
         restrictAccountTypeTo={restrictAccountTypeTo}
         toolbar={
           <div className="flex justify-end mx-auto w-full sm:max-w-4xl">
-            <Button
-              onClick={() => setIsNewModalOpen(true)}
-              size="sm"
-              rounded="full"
-              intent="link"
-              disabled={!shouldCreateAccount}
+            <Dropdown
+              label={
+                <FaPlus
+                  title={t("screens.Dashboard.Accounts.createAccount")}
+                  className="text-2xl"
+                />
+              }
+              color="gray"
+              arrowIcon={false}
+              dismissOnClick={false}
             >
-              <FaPlus
-                title={t("screens.Dashboard.Accounts.createAccount")}
-                className="text-2xl"
-              />
-            </Button>
+              <div className="flex flex-col gap-0 text-start px-4 py-3">
+                <Typography
+                  as="span"
+                  decoration="faded"
+                  title={t(
+                    "screens.Dashboard.Accounts.accountType.tenantScoped.title"
+                  )}
+                >
+                  {t(
+                    "screens.Dashboard.Accounts.accountType.tenantScoped.title"
+                  )}
+                </Typography>
+              </div>
+              <DropdownItem
+                disabled={!shouldCreateAccount}
+                onClick={() => handleOpenModal("subscription")}
+              >
+                <div className="flex flex-col gap-0 text-start">
+                  <Typography
+                    as="span"
+                    decoration="semibold"
+                    title={t(
+                      "screens.Dashboard.Accounts.accountType.subscription.title"
+                    )}
+                  >
+                    {t(
+                      "screens.Dashboard.Accounts.accountType.subscription.title"
+                    )}
+                  </Typography>
+                  <Typography as="small" decoration="faded" width="xxs">
+                    {t(
+                      "screens.Dashboard.Accounts.accountType.subscription.description"
+                    )}
+                  </Typography>
+                </div>
+              </DropdownItem>
+
+              <DropdownItem
+                disabled={!shouldCreateAccount}
+                onClick={() => handleOpenModal("roleAssociated")}
+              >
+                <div className="flex flex-col gap-0 text-start">
+                  <Typography
+                    as="span"
+                    decoration="semibold"
+                    title={t(
+                      "screens.Dashboard.Accounts.accountType.roleAssociated.title"
+                    )}
+                  >
+                    {t(
+                      "screens.Dashboard.Accounts.accountType.roleAssociated.title"
+                    )}
+                  </Typography>
+                  <Typography as="small" decoration="faded" width="xxs">
+                    {t(
+                      "screens.Dashboard.Accounts.accountType.roleAssociated.description"
+                    )}
+                  </Typography>
+                </div>
+              </DropdownItem>
+
+              <DropdownItem
+                disabled={!hasAdminPrivileges}
+                onClick={() => handleOpenModal("systemScoped")}
+              >
+                <div className="flex flex-col gap-0 text-start">
+                  <Typography as="span" decoration="semibold">
+                    {t(
+                      "screens.Dashboard.Accounts.accountType.systemScoped.title"
+                    )}
+                  </Typography>
+                  <Typography as="small" decoration="faded" width="xxs">
+                    {t(
+                      "screens.Dashboard.Accounts.accountType.systemScoped.description"
+                    )}
+                  </Typography>
+                </div>
+              </DropdownItem>
+            </Dropdown>
           </div>
         }
       />
@@ -113,6 +201,7 @@ export default function Accounts({ restrictAccountTypeTo }: Props) {
         isOpen={isNewModalOpen}
         onClose={handleCloseModal}
         onSuccess={handleSuccess}
+        scope={modalScope}
       />
     </div>
   );

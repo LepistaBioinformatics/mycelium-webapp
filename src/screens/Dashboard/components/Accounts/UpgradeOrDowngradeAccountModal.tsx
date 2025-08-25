@@ -21,7 +21,7 @@ enum AllowedActions {
   Downgrade = "downgrade",
 }
 
-interface Props extends AccountModalProps {}
+interface Props extends Omit<AccountModalProps, "scope"> {}
 
 export default function UpgradeOrDowngradeAccountModal({
   isOpen,

@@ -31,7 +31,7 @@ export default function MobileNavbar({}: Props) {
     <div className={styles({})}>
       <NavbarItem
         icon={
-          <IoHomeSharp className="text-2xl text-indigo-500 dark:text-lime-500" />
+          <IoHomeSharp className="text-2xl text-indigo-500 dark:text-indigo-500" />
         }
         label="Profile"
         href="/dashboard/profile"
@@ -39,7 +39,7 @@ export default function MobileNavbar({}: Props) {
 
       <NavbarItem
         icon={
-          <TiThMenu className="text-2xl text-indigo-500 dark:text-lime-500" />
+          <TiThMenu className="text-2xl text-indigo-500 dark:text-indigo-500" />
         }
         label="Menu"
         onClick={() => setIsMenuOpen(true)}
@@ -47,7 +47,7 @@ export default function MobileNavbar({}: Props) {
 
       <NavbarItem
         icon={
-          <IoMdSettings className="text-2xl text-indigo-500 dark:text-lime-500" />
+          <IoMdSettings className="text-2xl text-indigo-500 dark:text-indigo-500" />
         }
         label="Settings"
         onClick={() => setIsSettingsOpen(true)}

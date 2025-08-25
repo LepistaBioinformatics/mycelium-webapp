@@ -45,7 +45,7 @@ function Container({
 }
 
 const summaryStyles = cva(
-  "cursor-pointer border-t-[0.1px] border-opacity-50 dark:border-opacity-50 border-indigo-400 dark:border-lime-500 sm:hover:border-indigo-400 dark:sm:hover:border-lime-400 px-0 hover:px-2 transition-all duration-300 py-1 hover:bg-indigo-50 dark:hover:bg-zinc-800 text-blue-500 dark:text-lime-400 list-none",
+  "cursor-pointer border-t-[0.1px] border-opacity-50 dark:border-opacity-50 border-indigo-400 dark:border-lime-600 sm:hover:border-indigo-400 dark:sm:hover:border-lime-400 px-0 hover:px-2 transition-all duration-300 py-1 hover:bg-indigo-50 dark:hover:bg-zinc-800 text-blue-500 dark:text-lime-400 list-none",
   {
     variants: {
       marginTop: {

@@ -181,8 +181,8 @@ export default function AccountDetails({ onClose }: Props) {
   } = useSWR<Account>(
     accountId
       ? buildPath("/_adm/subscriptions-manager/accounts/{account_id}", {
-        path: { account_id: accountId },
-      })
+          path: { account_id: accountId },
+        })
       : null,
     async (url: string) => {
       const token = await getAccessTokenSilently();
@@ -561,67 +561,67 @@ export default function AccountDetails({ onClose }: Props) {
             !["user", "staff", "manager"].includes(
               account?.accountType ?? ""
             )) && (
-              <>
-                <Banner>
-                  <div className="flex justify-between gap-2 my-5">
-                    <div className="flex flex-col gap-2">
-                      <Typography as="span">
-                        {t(
-                          "screens.Dashboard.Accounts.AccountDetails.createConnectionString.title"
-                        )}
-                      </Typography>
+            <>
+              <Banner>
+                <div className="flex justify-between gap-2 my-5">
+                  <div className="flex flex-col gap-2">
+                    <Typography as="span">
+                      {t(
+                        "screens.Dashboard.Accounts.AccountDetails.createConnectionString.title"
+                      )}
+                    </Typography>
 
-                      <Typography as="small" decoration="smooth" width="sm">
-                        {t(
-                          "screens.Dashboard.Accounts.AccountDetails.createConnectionString.description"
-                        )}
-                      </Typography>
-                    </div>
-
-                    <div>
-                      <Button
-                        rounded
-                        onClick={() => setIsCreateConnectionStringModalOpen(true)}
-                      >
-                        {t(
-                          "screens.Dashboard.Accounts.AccountDetails.createConnectionString.button"
-                        )}
-                      </Button>
-                    </div>
+                    <Typography as="small" decoration="smooth" width="sm">
+                      {t(
+                        "screens.Dashboard.Accounts.AccountDetails.createConnectionString.description"
+                      )}
+                    </Typography>
                   </div>
-                </Banner>
 
-                <Banner intent="error">
-                  <div className="flex justify-between gap-2 my-5">
-                    <div className="flex flex-col gap-2">
-                      <Typography as="span">
-                        {t(
-                          "screens.Dashboard.Accounts.AccountDetails.delete.title"
-                        )}
-                      </Typography>
-
-                      <Typography as="small" decoration="smooth" width="sm">
-                        {t(
-                          "screens.Dashboard.Accounts.AccountDetails.delete.description"
-                        )}
-                      </Typography>
-                    </div>
-
-                    <div>
-                      <Button
-                        rounded
-                        intent="danger"
-                        onClick={() => setIsDeleteModalOpen(true)}
-                      >
-                        {t(
-                          "screens.Dashboard.Accounts.AccountDetails.delete.button"
-                        )}
-                      </Button>
-                    </div>
+                  <div>
+                    <Button
+                      rounded
+                      onClick={() => setIsCreateConnectionStringModalOpen(true)}
+                    >
+                      {t(
+                        "screens.Dashboard.Accounts.AccountDetails.createConnectionString.button"
+                      )}
+                    </Button>
                   </div>
-                </Banner>
-              </>
-            )}
+                </div>
+              </Banner>
+
+              <Banner intent="error">
+                <div className="flex justify-between gap-2 my-5">
+                  <div className="flex flex-col gap-2">
+                    <Typography as="span">
+                      {t(
+                        "screens.Dashboard.Accounts.AccountDetails.delete.title"
+                      )}
+                    </Typography>
+
+                    <Typography as="small" decoration="smooth" width="sm">
+                      {t(
+                        "screens.Dashboard.Accounts.AccountDetails.delete.description"
+                      )}
+                    </Typography>
+                  </div>
+
+                  <div>
+                    <Button
+                      rounded
+                      intent="danger"
+                      onClick={() => setIsDeleteModalOpen(true)}
+                    >
+                      {t(
+                        "screens.Dashboard.Accounts.AccountDetails.delete.button"
+                      )}
+                    </Button>
+                  </div>
+                </div>
+              </Banner>
+            </>
+          )}
         </DetailsBox.Content>
       </DetailsBox>
 
