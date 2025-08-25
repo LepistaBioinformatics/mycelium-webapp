@@ -137,6 +137,7 @@ export default function AccountDetails({ onClose }: Props) {
   };
 
   const handleCloseGuestToAccountModal = () => {
+    onClose?.();
     setIsGuestToAccountModalOpen(false);
   };
 
@@ -149,10 +150,12 @@ export default function AccountDetails({ onClose }: Props) {
   };
 
   const handleCloseUnInviteModal = () => {
+    onClose?.();
     setIsUnInviteModalOpen(false);
   };
 
   const handleCloseEditModal = () => {
+    onClose?.();
     setIsEditModalOpen(false);
     mutateAccount(account, { rollbackOnError: true });
   };

@@ -92,6 +92,8 @@ export default function Accounts({ restrictAccountTypeTo }: Props) {
     <div className="p-1 sm:p-5">
       <PaginatedAccounts
         tenantId={tenantId ?? ""}
+        omitToolbar={!shouldCreateAccount || !tenantId}
+        omitNamespaceInfo={!!tenantId}
         forceMutate={forceMutate}
         breadcrumb={
           <PageBody.Breadcrumb.Item icon={MdManageAccounts}>

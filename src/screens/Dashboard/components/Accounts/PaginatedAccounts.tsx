@@ -32,6 +32,8 @@ type Account = components["schemas"]["Account"];
 export interface PaginatedAccountsProps {
   tenantId?: string;
   toolbar?: React.ReactNode;
+  omitToolbar?: boolean;
+  omitNamespaceInfo?: boolean;
   breadcrumb?: React.ReactNode;
   initialSkip?: number;
   initialPageSize?: number;
@@ -143,6 +145,8 @@ const COMMANDS = {
 export default function PaginatedAccounts({
   tenantId,
   toolbar,
+  omitToolbar,
+  omitNamespaceInfo,
   breadcrumb,
   initialSkip,
   initialPageSize,
@@ -433,22 +437,24 @@ export default function PaginatedAccounts({
         id="AccountsContent"
         className="flex flex-col justify-center gap-4 w-full mx-auto"
       >
-        {toolbar}
+        {!omitToolbar && toolbar}
 
-        <div className="flex justify-center mx-auto w-full xl:max-w-4xl">
-          {tenantInfo?.id && (
-            <div className="flex flex-col sm:flex-row items-center gap-2 scale-105">
-              <Typography as="span" decoration="smooth">
-                {t(
-                  "screens.Dashboard.Accounts.PaginatedAccounts.resultsBasedOnTenant"
-                )}
-              </Typography>
-              <Typography as="span" decoration="semibold">
-                {tenantInfo.name}
-              </Typography>
-            </div>
-          )}
-        </div>
+        {omitNamespaceInfo && (
+          <div className="flex justify-center mx-auto w-full xl:max-w-4xl">
+            {tenantInfo?.id && (
+              <div className="flex flex-col sm:flex-row items-center gap-2 scale-105">
+                <Typography as="span" decoration="smooth">
+                  {t(
+                    "screens.Dashboard.Accounts.PaginatedAccounts.resultsBasedOnTenant"
+                  )}
+                </Typography>
+                <Typography as="span" decoration="semibold">
+                  {tenantInfo.name}
+                </Typography>
+              </div>
+            )}
+          </div>
+        )}
 
         <PaginatedContent
           isLoading={isLoadingAccounts}

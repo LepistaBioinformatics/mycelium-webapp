@@ -1,7 +1,7 @@
 import { cva, VariantProps } from "class-variance-authority";
 
 const styles = cva(
-  "flex flex-col text-left gap-1 border-t border-gray-300 dark:border-gray-700  px-4 py-2 mx-auto w-full xl:max-w-4xl",
+  "flex flex-col text-left gap-1 rounded-lg border-l-2 border-t border-gray-300 dark:border-gray-700  px-4 py-2 mx-auto w-full xl:max-w-4xl",
   {
     variants: {
       _index: {
@@ -18,7 +18,8 @@ interface Props extends BaseProps, VariantProps<typeof styles> {
 }
 
 export default function ListItem({ children, index, ...props }: Props) {
-  const _index = index === undefined ? "odd" : index % 2 === 0 ? "even" : "odd";
+  const _index =
+    index === undefined ? "even" : index % 2 === 0 ? "even" : "odd";
 
   return (
     <div className={styles({ _index })} {...props}>
