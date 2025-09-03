@@ -19,7 +19,7 @@ export interface paths {
          *     the `account` argument) to perform actions specified in the `role`
          *     path argument.
          */
-        post: operations["guest_to_children_account_url"];
+        post: operations["guest_to_children_account"];
         delete?: never;
         options?: never;
         head?: never;
@@ -37,7 +37,7 @@ export interface paths {
          * Get my account details
          * @description Get the details of the account associated with the current user.
          */
-        get: operations["get_my_account_details_url"];
+        get: operations["get_my_account_details"];
         put?: never;
         /**
          * Create a user related account
@@ -45,7 +45,7 @@ export interface paths {
          *
          *
          */
-        post: operations["create_default_account_url"];
+        post: operations["create_default_account"];
         delete?: never;
         options?: never;
         head?: never;
@@ -68,23 +68,7 @@ export interface paths {
          *
          *
          */
-        delete: operations["delete_my_account_url"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/_adm/beginners/accounts/{account_id}/update-account-name": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        delete?: never;
+        delete: operations["delete_my_account"];
         options?: never;
         head?: never;
         /**
@@ -93,7 +77,7 @@ export interface paths {
          *
          *
          */
-        patch: operations["update_own_account_name_url"];
+        patch: operations["update_own_account_name"];
         trace?: never;
     };
     "/_adm/beginners/meta": {
@@ -105,11 +89,11 @@ export interface paths {
         };
         get?: never;
         /** Update a account metadata */
-        put: operations["update_account_meta_url"];
+        put: operations["update_account_meta"];
         /** Register a account metadata */
-        post: operations["create_account_meta_url"];
+        post: operations["create_account_meta"];
         /** Delete a account metadata */
-        delete: operations["delete_account_meta_url"];
+        delete: operations["delete_account_meta"];
         options?: never;
         head?: never;
         patch?: never;
@@ -123,7 +107,7 @@ export interface paths {
             cookie?: never;
         };
         /** Fetch a user's profile. */
-        get: operations["fetch_profile_url"];
+        get: operations["fetch_my_mycelium_profile"];
         put?: never;
         post?: never;
         delete?: never;
@@ -140,7 +124,7 @@ export interface paths {
             cookie?: never;
         };
         /** Fetch a user's profile. */
-        get: operations["fetch_tenant_public_info_url"];
+        get: operations["fetch_tenant_public_info"];
         put?: never;
         post?: never;
         delete?: never;
@@ -165,7 +149,7 @@ export interface paths {
          *
          *
          */
-        post: operations["create_connection_string_url"];
+        post: operations["create_connection_string"];
         delete?: never;
         options?: never;
         head?: never;
@@ -189,7 +173,7 @@ export interface paths {
          *
          *
          */
-        post: operations["create_default_user_url"];
+        post: operations["create_default_user"];
         delete?: never;
         options?: never;
         head?: never;
@@ -213,7 +197,7 @@ export interface paths {
          *
          *
          */
-        post: operations["check_email_password_validity_url"];
+        post: operations["login_with_email_and_password"];
         delete?: never;
         options?: never;
         head?: never;
@@ -235,7 +219,7 @@ export interface paths {
          *
          *
          */
-        post: operations["check_token_and_reset_password_url"];
+        post: operations["check_token_and_reset_password"];
         delete?: never;
         options?: never;
         head?: never;
@@ -257,7 +241,7 @@ export interface paths {
          *
          *
          */
-        post: operations["start_password_redefinition_url"];
+        post: operations["start_password_redefinition"];
         delete?: never;
         options?: never;
         head?: never;
@@ -279,7 +263,7 @@ export interface paths {
          *
          *
          */
-        get: operations["check_email_registration_status_url"];
+        get: operations["check_email_registration_status"];
         put?: never;
         post?: never;
         delete?: never;
@@ -304,7 +288,7 @@ export interface paths {
          *
          *
          */
-        post: operations["totp_check_token_url"];
+        post: operations["totp_check_token"];
         delete?: never;
         options?: never;
         head?: never;
@@ -326,7 +310,7 @@ export interface paths {
          *
          *
          */
-        post: operations["totp_disable_url"];
+        post: operations["totp_disable"];
         delete?: never;
         options?: never;
         head?: never;
@@ -349,7 +333,7 @@ export interface paths {
          *
          *
          */
-        post: operations["totp_start_activation_url"];
+        post: operations["totp_start_activation"];
         delete?: never;
         options?: never;
         head?: never;
@@ -371,7 +355,7 @@ export interface paths {
          *
          *
          */
-        post: operations["totp_finish_activation_url"];
+        post: operations["totp_finish_activation"];
         delete?: never;
         options?: never;
         head?: never;
@@ -393,7 +377,7 @@ export interface paths {
          *
          *
          */
-        post: operations["check_user_token_url"];
+        post: operations["check_user_token"];
         delete?: never;
         options?: never;
         head?: never;
@@ -414,7 +398,7 @@ export interface paths {
          *
          *
          */
-        get: operations["list_routes_url"];
+        get: operations["list_routes_by_service"];
         put?: never;
         post?: never;
         delete?: never;
@@ -437,7 +421,7 @@ export interface paths {
          *
          *
          */
-        get: operations["list_services_url"];
+        get: operations["list_services"];
         put?: never;
         post?: never;
         delete?: never;
@@ -460,7 +444,7 @@ export interface paths {
          *
          *
          */
-        get: operations["list_operations_url"];
+        get: operations["list_operations"];
         put?: never;
         post?: never;
         delete?: never;
@@ -477,13 +461,13 @@ export interface paths {
             cookie?: never;
         };
         /** List Roles */
-        get: operations["list_guest_roles_url"];
+        get: operations["list_guest_roles"];
         put?: never;
         /**
          * Create Guest Role
          * @description Guest Roles provide permissions to simple Roles.
          */
-        post: operations["crate_guest_role_url"];
+        post: operations["create_guest_role"];
         delete?: never;
         options?: never;
         head?: never;
@@ -504,14 +488,14 @@ export interface paths {
          * Delete Guest Role
          * @description Delete a single guest role.
          */
-        delete: operations["delete_guest_role_url"];
+        delete: operations["delete_guest_role"];
         options?: never;
         head?: never;
         /**
          * Partial Update Guest Role
          * @description Update name and description of a single Guest Role.
          */
-        patch: operations["update_guest_role_name_and_description_url"];
+        patch: operations["update_guest_role_name_and_description"];
         trace?: never;
     };
     "/_adm/guests-manager/guest-roles/{guest_role_id}/children/{child_id}": {
@@ -527,12 +511,12 @@ export interface paths {
          * Set Child Role
          * @description Insert a child role to a parent role.
          */
-        post: operations["insert_role_child_url"];
+        post: operations["set_role_child"];
         /**
          * Delete Child Role
          * @description Delete a child role to a parent role.
          */
-        delete: operations["remove_role_child_url"];
+        delete: operations["remove_role_child"];
         options?: never;
         head?: never;
         patch?: never;
@@ -555,7 +539,7 @@ export interface paths {
          * Change permissions of Guest Role
          * @description Upgrade or Downgrade permissions of Guest Role.
          */
-        patch: operations["update_guest_role_permissions_url"];
+        patch: operations["update_guest_role_permissions"];
         trace?: never;
     };
     "/_adm/managers/accounts": {
@@ -568,7 +552,7 @@ export interface paths {
         get?: never;
         put?: never;
         /** Create system account */
-        post: operations["create_system_account_url"];
+        post: operations["create_system_level_account"];
         delete?: never;
         options?: never;
         head?: never;
@@ -599,7 +583,7 @@ export interface paths {
          *
          *
          */
-        post: operations["create_system_roles_url"];
+        post: operations["create_system_level_guest_roles"];
         delete?: never;
         options?: never;
         head?: never;
@@ -614,10 +598,10 @@ export interface paths {
             cookie?: never;
         };
         /** List tenants */
-        get: operations["list_tenant_url"];
+        get: operations["list_tenants"];
         put?: never;
         /** Create a new tenant */
-        post: operations["create_tenant_url"];
+        post: operations["create_tenant"];
         delete?: never;
         options?: never;
         head?: never;
@@ -635,7 +619,7 @@ export interface paths {
         put?: never;
         post?: never;
         /** Delete a tenant */
-        delete: operations["delete_tenant_url"];
+        delete: operations["delete_tenant"];
         options?: never;
         head?: never;
         patch?: never;
@@ -658,7 +642,7 @@ export interface paths {
          *
          *
          */
-        delete: operations["exclude_tenant_owner_url"];
+        delete: operations["exclude_tenant_owner"];
         options?: never;
         head?: never;
         /**
@@ -668,7 +652,7 @@ export interface paths {
          *
          *
          */
-        patch: operations["include_tenant_owner_url"];
+        patch: operations["register_tenant_owner"];
         trace?: never;
     };
     "/_adm/staffs/accounts/{account_id}/downgrade": {
@@ -688,7 +672,7 @@ export interface paths {
          * Downgrade account privileges
          * @description Decrease permissions of the refereed account.
          */
-        patch: operations["downgrade_account_privileges_url"];
+        patch: operations["downgrade_account_privileges"];
         trace?: never;
     };
     "/_adm/staffs/accounts/{account_id}/upgrade": {
@@ -708,7 +692,7 @@ export interface paths {
          * Upgrade account privileges
          * @description Increase permissions of the refereed account.
          */
-        patch: operations["upgrade_account_privileges_url"];
+        patch: operations["upgrade_account_privileges"];
         trace?: never;
     };
     "/_adm/subscriptions-manager/accounts": {
@@ -727,14 +711,14 @@ export interface paths {
          *
          *
          */
-        get: operations["list_accounts_by_type_url"];
+        get: operations["list_accounts_by_type"];
         put?: never;
         /**
          * Create Subscription Account
          * @description Subscription accounts represents shared entities, like institutions,
          *     groups, but not real persons.
          */
-        post: operations["create_subscription_account_url"];
+        post: operations["create_subscription_account"];
         delete?: never;
         options?: never;
         head?: never;
@@ -755,7 +739,7 @@ export interface paths {
          * @description Role associated accounts mirrors the guest-roles used to connect peoples in
          *     non-personal accounts, like institutions, groups, etc.
          */
-        post: operations["create_role_associated_account_url"];
+        post: operations["create_role_associated_account"];
         delete?: never;
         options?: never;
         head?: never;
@@ -773,7 +757,7 @@ export interface paths {
          * Get Subscription Account
          * @description Get a single subscription account.
          */
-        get: operations["get_account_details_url"];
+        get: operations["get_account_details"];
         put?: never;
         post?: never;
         delete?: never;
@@ -784,7 +768,7 @@ export interface paths {
          * @description Subscription accounts represents shared entities, like institutions,
          *     groups, but not real persons.
          */
-        patch: operations["update_account_name_and_flags_url"];
+        patch: operations["update_account_name_and_flags"];
         trace?: never;
     };
     "/_adm/subscriptions-manager/accounts/{account_id}/propagate": {
@@ -800,7 +784,7 @@ export interface paths {
          * Propagate Subscription Account
          * @description Propagate a single subscription account.
          */
-        post: operations["propagate_existing_subscription_account_url"];
+        post: operations["propagate_existing_subscription_account"];
         delete?: never;
         options?: never;
         head?: never;
@@ -815,7 +799,7 @@ export interface paths {
             cookie?: never;
         };
         /** List Roles */
-        get: operations["list_guest_roles_url"];
+        get: operations["list_guest_roles"];
         put?: never;
         post?: never;
         delete?: never;
@@ -832,7 +816,7 @@ export interface paths {
             cookie?: never;
         };
         /** Fetch Guest Role Details */
-        get: operations["fetch_guest_role_details_url"];
+        get: operations["fetch_guest_role_details"];
         put?: never;
         post?: never;
         delete?: never;
@@ -849,7 +833,7 @@ export interface paths {
             cookie?: never;
         };
         /** List subscription accounts which email was guest */
-        get: operations["list_licensed_accounts_of_email_url"];
+        get: operations["list_licensed_accounts_of_email"];
         put?: never;
         post?: never;
         delete?: never;
@@ -870,7 +854,7 @@ export interface paths {
          * @description This action fetches all non-subscription accounts related to the
          *     informed subscription account.
          */
-        get: operations["list_guest_on_subscription_account_url"];
+        get: operations["list_guest_on_subscription_account"];
         put?: never;
         post?: never;
         delete?: never;
@@ -894,9 +878,9 @@ export interface paths {
          *     the `account` argument) to perform actions specified in the `role`
          *     path argument.
          */
-        post: operations["guest_user_url"];
+        post: operations["guest_user"];
         /** Uninvite user to perform a role to account */
-        delete: operations["uninvite_guest_url"];
+        delete: operations["uninvite_guest"];
         options?: never;
         head?: never;
         patch?: never;
@@ -912,7 +896,7 @@ export interface paths {
         get?: never;
         put?: never;
         /** Register a tag */
-        post: operations["register_account_tag_url"];
+        post: operations["register_account_tag"];
         delete?: never;
         options?: never;
         head?: never;
@@ -928,10 +912,10 @@ export interface paths {
         };
         get?: never;
         /** Update a tag */
-        put: operations["update_account_tag_url"];
+        put: operations["update_account_tag"];
         post?: never;
         /** Delete a tag */
-        delete: operations["delete_account_tag_url"];
+        delete: operations["delete_account_tag"];
         options?: never;
         head?: never;
         patch?: never;
@@ -951,13 +935,13 @@ export interface paths {
          *
          *
          */
-        get: operations["list_error_codes_url"];
+        get: operations["list_error_codes"];
         put?: never;
         /**
          * Register a new error code.
          * @description This action is restricted to manager users.
          */
-        post: operations["register_error_code_url"];
+        post: operations["register_error_code"];
         delete?: never;
         options?: never;
         head?: never;
@@ -977,7 +961,7 @@ export interface paths {
          *
          *
          */
-        get: operations["get_error_code_url"];
+        get: operations["get_error_code"];
         put?: never;
         post?: never;
         /**
@@ -986,7 +970,7 @@ export interface paths {
          *
          *
          */
-        delete: operations["delete_error_code_url"];
+        delete: operations["delete_error_code"];
         options?: never;
         head?: never;
         /**
@@ -995,7 +979,7 @@ export interface paths {
          *
          *
          */
-        patch: operations["update_error_code_message_and_details_url"];
+        patch: operations["update_error_code_message_and_details"];
         trace?: never;
     };
     "/_adm/system-manager/webhooks": {
@@ -1006,10 +990,10 @@ export interface paths {
             cookie?: never;
         };
         /** List webhooks */
-        get: operations["list_webhooks_url"];
+        get: operations["list_webhooks"];
         put?: never;
         /** Create a webhook */
-        post: operations["crate_webhook_url"];
+        post: operations["create_webhook"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1027,11 +1011,11 @@ export interface paths {
         put?: never;
         post?: never;
         /** Delete a webhook */
-        delete: operations["delete_webhook_url"];
+        delete: operations["delete_webhook"];
         options?: never;
         head?: never;
         /** Update a webhook */
-        patch: operations["update_webhook_url"];
+        patch: operations["update_webhook"];
         trace?: never;
     };
     "/_adm/tenant-manager/accounts": {
@@ -1050,7 +1034,7 @@ export interface paths {
          *
          *
          */
-        post: operations["create_subscription_manager_account_url"];
+        post: operations["create_subscription_manager_account"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1073,7 +1057,7 @@ export interface paths {
          *
          *
          */
-        delete: operations["delete_subscription_account_url"];
+        delete: operations["delete_subscription_account"];
         options?: never;
         head?: never;
         patch?: never;
@@ -1094,7 +1078,7 @@ export interface paths {
          *     the `account` argument) to perform actions specified in the `role`
          *     path argument.
          */
-        post: operations["guest_user_to_subscription_manager_account_url"];
+        post: operations["guest_user_to_subscription_manager_account"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1112,7 +1096,7 @@ export interface paths {
         put?: never;
         post?: never;
         /** Uninvite user to perform a role to account */
-        delete: operations["revoke_user_guest_to_subscription_manager_account_url"];
+        delete: operations["revoke_user_guest_to_subscription_manager_account"];
         options?: never;
         head?: never;
         patch?: never;
@@ -1128,7 +1112,7 @@ export interface paths {
         get?: never;
         put?: never;
         /** Create a tag */
-        post: operations["register_tenant_tag_url"];
+        post: operations["register_tenant_tag"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1144,10 +1128,10 @@ export interface paths {
         };
         get?: never;
         /** Update a tag */
-        put: operations["update_tenant_tag_url"];
+        put: operations["update_tenant_tag"];
         post?: never;
         /** Delete a tag */
-        delete: operations["delete_tenant_tag_url"];
+        delete: operations["delete_tenant_tag"];
         options?: never;
         head?: never;
         patch?: never;
@@ -1161,7 +1145,7 @@ export interface paths {
             cookie?: never;
         };
         /** Fetch a tenant's details */
-        get: operations["get_tenant_details_url"];
+        get: operations["get_tenant_details"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1186,7 +1170,7 @@ export interface paths {
          *
          *
          */
-        post: operations["create_management_account_url"];
+        post: operations["create_management_account"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1209,7 +1193,7 @@ export interface paths {
          *
          *
          */
-        delete: operations["delete_tenant_manager_account_url"];
+        delete: operations["delete_tenant_manager_account"];
         options?: never;
         head?: never;
         patch?: never;
@@ -1225,9 +1209,9 @@ export interface paths {
         get?: never;
         put?: never;
         /** Register a tenant metadata */
-        post: operations["create_tenant_meta_url"];
+        post: operations["register_tenant_meta"];
         /** Delete a tenant metadata */
-        delete: operations["delete_tenant_meta_url"];
+        delete: operations["delete_tenant_meta"];
         options?: never;
         head?: never;
         patch?: never;
@@ -1243,9 +1227,9 @@ export interface paths {
         get?: never;
         put?: never;
         /** Guest a user to work as a tenant owner */
-        post: operations["guest_tenant_owner_url"];
+        post: operations["guest_tenant_owner"];
         /** Revoke a user from working as a tenant owner */
-        delete: operations["revoke_tenant_owner_url"];
+        delete: operations["revoke_tenant_owner"];
         options?: never;
         head?: never;
         patch?: never;
@@ -1265,7 +1249,7 @@ export interface paths {
         options?: never;
         head?: never;
         /** Update the name and description of a tenant */
-        patch: operations["update_tenant_name_and_description_url"];
+        patch: operations["update_tenant_name_and_description"];
         trace?: never;
     };
     "/_adm/tenant-owner/tenants/{tenant_id}/archive": {
@@ -1282,7 +1266,7 @@ export interface paths {
         options?: never;
         head?: never;
         /** Include an archive status to a tenant */
-        patch: operations["update_tenant_archiving_status_url"];
+        patch: operations["update_tenant_archiving_status"];
         trace?: never;
     };
     "/_adm/tenant-owner/tenants/{tenant_id}/trash": {
@@ -1299,7 +1283,7 @@ export interface paths {
         options?: never;
         head?: never;
         /** Include a trash status to a tenant */
-        patch: operations["update_tenant_trashing_status_url"];
+        patch: operations["update_tenant_trashing_status"];
         trace?: never;
     };
     "/_adm/tenant-owner/tenants/{tenant_id}/verify": {
@@ -1316,7 +1300,7 @@ export interface paths {
         options?: never;
         head?: never;
         /** Include a verified status to a tenant */
-        patch: operations["update_tenant_verifying_status_url"];
+        patch: operations["update_tenant_verifying_status"];
         trace?: never;
     };
     "/_adm/users-manager/accounts/{account_id}/activate": {
@@ -1337,7 +1321,7 @@ export interface paths {
          * @description Any account could be activated and deactivated. This action turn an
          *     account active.
          */
-        patch: operations["activate_account_url"];
+        patch: operations["activate_account"];
         trace?: never;
     };
     "/_adm/users-manager/accounts/{account_id}/approve": {
@@ -1358,7 +1342,7 @@ export interface paths {
          * @description New accounts should be approved after has permissions to perform
          *     operation on the system. These endpoint should approve such account.
          */
-        patch: operations["approve_account_url"];
+        patch: operations["approve_account"];
         trace?: never;
     };
     "/_adm/users-manager/accounts/{account_id}/archive": {
@@ -1378,7 +1362,7 @@ export interface paths {
          * Archive account
          * @description Set target account as archived.
          */
-        patch: operations["archive_account_url"];
+        patch: operations["archive_account"];
         trace?: never;
     };
     "/_adm/users-manager/accounts/{account_id}/deactivate": {
@@ -1399,7 +1383,7 @@ export interface paths {
          * @description Any account could be activated and deactivated. This action turn an
          *     account deactivated.
          */
-        patch: operations["deactivate_account_url"];
+        patch: operations["deactivate_account"];
         trace?: never;
     };
     "/_adm/users-manager/accounts/{account_id}/disapprove": {
@@ -1420,7 +1404,7 @@ export interface paths {
          * @description Also approved account should be disapproved at any time. These endpoint
          *     work for this.
          */
-        patch: operations["disapprove_account_url"];
+        patch: operations["disapprove_account"];
         trace?: never;
     };
     "/_adm/users-manager/accounts/{account_id}/unarchive": {
@@ -1440,7 +1424,7 @@ export interface paths {
          * Unarchive account
          * @description Set target account as un-archived.
          */
-        patch: operations["unarchive_account_url"];
+        patch: operations["unarchive_account"];
         trace?: never;
     };
     "/health": {
@@ -1455,7 +1439,7 @@ export interface paths {
          * @description If the server is running it returns a 200 response with a JSON body
          *     containing the success message.
          */
-        get: operations["health_url"];
+        get: operations["check_service_health"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1475,7 +1459,7 @@ export interface paths {
          * Provide a datetime with the server's timezone.
          * @description This is usual during system checks.
          */
-        get: operations["now_url"];
+        get: operations["get_server_datetime"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1498,7 +1482,7 @@ export interface paths {
          *
          *
          */
-        get: operations["list_discoverable_services_url"];
+        get: operations["list_discoverable_services"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1961,6 +1945,7 @@ export interface components {
             system: boolean;
         };
         CreateRoleAssociatedAccountBody: {
+            accountName: string;
             roleName: string;
             roleDescription: string;
         };
@@ -3626,7 +3611,7 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
-    guest_to_children_account_url: {
+    guest_to_children_account: {
         parameters: {
             query?: never;
             header: {
@@ -3703,7 +3688,7 @@ export interface operations {
             };
         };
     };
-    get_my_account_details_url: {
+    get_my_account_details: {
         parameters: {
             query?: never;
             header?: never;
@@ -3757,7 +3742,7 @@ export interface operations {
             };
         };
     };
-    create_default_account_url: {
+    create_default_account: {
         parameters: {
             query?: never;
             header?: never;
@@ -3817,7 +3802,7 @@ export interface operations {
             };
         };
     };
-    delete_my_account_url: {
+    delete_my_account: {
         parameters: {
             query?: never;
             header?: never;
@@ -3839,7 +3824,7 @@ export interface operations {
             };
         };
     };
-    update_own_account_name_url: {
+    update_own_account_name: {
         parameters: {
             query?: never;
             header?: never;
@@ -3902,7 +3887,7 @@ export interface operations {
             };
         };
     };
-    update_account_meta_url: {
+    update_account_meta: {
         parameters: {
             query?: never;
             header?: never;
@@ -3960,7 +3945,7 @@ export interface operations {
             };
         };
     };
-    create_account_meta_url: {
+    create_account_meta: {
         parameters: {
             query?: never;
             header?: never;
@@ -4020,7 +4005,7 @@ export interface operations {
             };
         };
     };
-    delete_account_meta_url: {
+    delete_account_meta: {
         parameters: {
             query?: never;
             header?: never;
@@ -4078,7 +4063,7 @@ export interface operations {
             };
         };
     };
-    fetch_profile_url: {
+    fetch_my_mycelium_profile: {
         parameters: {
             query?: {
                 withUrl?: boolean | null;
@@ -4143,7 +4128,7 @@ export interface operations {
             };
         };
     };
-    fetch_tenant_public_info_url: {
+    fetch_tenant_public_info: {
         parameters: {
             query?: never;
             header?: never;
@@ -4208,7 +4193,7 @@ export interface operations {
             };
         };
     };
-    create_connection_string_url: {
+    create_connection_string: {
         parameters: {
             query?: never;
             header?: never;
@@ -4259,7 +4244,7 @@ export interface operations {
             };
         };
     };
-    create_default_user_url: {
+    create_default_user: {
         parameters: {
             query?: never;
             header?: {
@@ -4313,7 +4298,7 @@ export interface operations {
             };
         };
     };
-    check_email_password_validity_url: {
+    login_with_email_and_password: {
         parameters: {
             query?: never;
             header?: never;
@@ -4364,7 +4349,7 @@ export interface operations {
             };
         };
     };
-    check_token_and_reset_password_url: {
+    check_token_and_reset_password: {
         parameters: {
             query?: never;
             header?: never;
@@ -4415,7 +4400,7 @@ export interface operations {
             };
         };
     };
-    start_password_redefinition_url: {
+    start_password_redefinition: {
         parameters: {
             query?: never;
             header?: never;
@@ -4466,7 +4451,7 @@ export interface operations {
             };
         };
     };
-    check_email_registration_status_url: {
+    check_email_registration_status: {
         parameters: {
             query?: never;
             header?: never;
@@ -4486,7 +4471,7 @@ export interface operations {
             };
         };
     };
-    totp_check_token_url: {
+    totp_check_token: {
         parameters: {
             query?: never;
             header?: never;
@@ -4537,7 +4522,7 @@ export interface operations {
             };
         };
     };
-    totp_disable_url: {
+    totp_disable: {
         parameters: {
             query?: never;
             header?: never;
@@ -4588,7 +4573,7 @@ export interface operations {
             };
         };
     };
-    totp_start_activation_url: {
+    totp_start_activation: {
         parameters: {
             query?: {
                 qrCode?: boolean | null;
@@ -4637,7 +4622,7 @@ export interface operations {
             };
         };
     };
-    totp_finish_activation_url: {
+    totp_finish_activation: {
         parameters: {
             query?: never;
             header?: never;
@@ -4688,7 +4673,7 @@ export interface operations {
             };
         };
     };
-    check_user_token_url: {
+    check_user_token: {
         parameters: {
             query?: never;
             header?: never;
@@ -4739,7 +4724,7 @@ export interface operations {
             };
         };
     };
-    list_routes_url: {
+    list_routes_by_service: {
         parameters: {
             query?: {
                 id?: string | null;
@@ -4796,7 +4781,7 @@ export interface operations {
             };
         };
     };
-    list_services_url: {
+    list_services: {
         parameters: {
             query?: {
                 id?: string | null;
@@ -4853,7 +4838,7 @@ export interface operations {
             };
         };
     };
-    list_operations_url: {
+    list_operations: {
         parameters: {
             query?: {
                 query?: string | null;
@@ -4911,7 +4896,7 @@ export interface operations {
             };
         };
     };
-    list_guest_roles_url: {
+    list_guest_roles: {
         parameters: {
             query?: {
                 /** @description The name of the guest role. */
@@ -4972,7 +4957,7 @@ export interface operations {
             };
         };
     };
-    crate_guest_role_url: {
+    create_guest_role: {
         parameters: {
             query?: never;
             header?: never;
@@ -5032,7 +5017,7 @@ export interface operations {
             };
         };
     };
-    delete_guest_role_url: {
+    delete_guest_role: {
         parameters: {
             query?: never;
             header?: never;
@@ -5089,7 +5074,7 @@ export interface operations {
             };
         };
     };
-    update_guest_role_name_and_description_url: {
+    update_guest_role_name_and_description: {
         parameters: {
             query?: never;
             header?: never;
@@ -5152,7 +5137,7 @@ export interface operations {
             };
         };
     };
-    insert_role_child_url: {
+    set_role_child: {
         parameters: {
             query?: never;
             header?: never;
@@ -5217,7 +5202,7 @@ export interface operations {
             };
         };
     };
-    remove_role_child_url: {
+    remove_role_child: {
         parameters: {
             query?: never;
             header?: never;
@@ -5282,7 +5267,7 @@ export interface operations {
             };
         };
     };
-    update_guest_role_permissions_url: {
+    update_guest_role_permissions: {
         parameters: {
             query?: never;
             header?: never;
@@ -5345,7 +5330,7 @@ export interface operations {
             };
         };
     };
-    create_system_account_url: {
+    create_system_level_account: {
         parameters: {
             query?: never;
             header?: never;
@@ -5396,7 +5381,7 @@ export interface operations {
             };
         };
     };
-    create_system_roles_url: {
+    create_system_level_guest_roles: {
         parameters: {
             query?: never;
             header?: never;
@@ -5443,7 +5428,7 @@ export interface operations {
             };
         };
     };
-    list_tenant_url: {
+    list_tenants: {
         parameters: {
             query?: {
                 /** @description Filter tenants by name */
@@ -5510,7 +5495,7 @@ export interface operations {
             };
         };
     };
-    create_tenant_url: {
+    create_tenant: {
         parameters: {
             query?: never;
             header?: never;
@@ -5570,7 +5555,7 @@ export interface operations {
             };
         };
     };
-    delete_tenant_url: {
+    delete_tenant: {
         parameters: {
             query?: never;
             header?: never;
@@ -5629,7 +5614,7 @@ export interface operations {
             };
         };
     };
-    exclude_tenant_owner_url: {
+    exclude_tenant_owner: {
         parameters: {
             query?: never;
             header?: never;
@@ -5678,7 +5663,7 @@ export interface operations {
             };
         };
     };
-    include_tenant_owner_url: {
+    register_tenant_owner: {
         parameters: {
             query?: never;
             header?: never;
@@ -5729,7 +5714,7 @@ export interface operations {
             };
         };
     };
-    downgrade_account_privileges_url: {
+    downgrade_account_privileges: {
         parameters: {
             query?: never;
             header?: never;
@@ -5792,7 +5777,7 @@ export interface operations {
             };
         };
     };
-    upgrade_account_privileges_url: {
+    upgrade_account_privileges: {
         parameters: {
             query?: never;
             header?: never;
@@ -5855,7 +5840,7 @@ export interface operations {
             };
         };
     };
-    list_accounts_by_type_url: {
+    list_accounts_by_type: {
         parameters: {
             query?: {
                 term?: string | null;
@@ -5921,7 +5906,7 @@ export interface operations {
             };
         };
     };
-    create_subscription_account_url: {
+    create_subscription_account: {
         parameters: {
             query?: never;
             header: {
@@ -5984,7 +5969,7 @@ export interface operations {
             };
         };
     };
-    create_role_associated_account_url: {
+    create_role_associated_account: {
         parameters: {
             query?: never;
             header: {
@@ -6047,7 +6032,7 @@ export interface operations {
             };
         };
     };
-    get_account_details_url: {
+    get_account_details: {
         parameters: {
             query?: never;
             header: {
@@ -6107,7 +6092,7 @@ export interface operations {
             };
         };
     };
-    update_account_name_and_flags_url: {
+    update_account_name_and_flags: {
         parameters: {
             query?: never;
             header: {
@@ -6173,7 +6158,7 @@ export interface operations {
             };
         };
     };
-    propagate_existing_subscription_account_url: {
+    propagate_existing_subscription_account: {
         parameters: {
             query?: never;
             header: {
@@ -6233,7 +6218,7 @@ export interface operations {
             };
         };
     };
-    list_guest_roles_url: {
+    list_guest_roles: {
         parameters: {
             query?: {
                 /** @description The name of the guest role. */
@@ -6297,7 +6282,7 @@ export interface operations {
             };
         };
     };
-    fetch_guest_role_details_url: {
+    fetch_guest_role_details: {
         parameters: {
             query?: never;
             header: {
@@ -6357,7 +6342,7 @@ export interface operations {
             };
         };
     };
-    list_licensed_accounts_of_email_url: {
+    list_licensed_accounts_of_email: {
         parameters: {
             query: {
                 /** @description The email which the guest user is connected to */
@@ -6421,7 +6406,7 @@ export interface operations {
             };
         };
     };
-    list_guest_on_subscription_account_url: {
+    list_guest_on_subscription_account: {
         parameters: {
             query?: never;
             header: {
@@ -6481,7 +6466,7 @@ export interface operations {
             };
         };
     };
-    guest_user_url: {
+    guest_user: {
         parameters: {
             query?: never;
             header: {
@@ -6558,7 +6543,7 @@ export interface operations {
             };
         };
     };
-    uninvite_guest_url: {
+    uninvite_guest: {
         parameters: {
             query: {
                 email: string;
@@ -6622,7 +6607,7 @@ export interface operations {
             };
         };
     };
-    register_account_tag_url: {
+    register_account_tag: {
         parameters: {
             query?: never;
             header: {
@@ -6688,7 +6673,7 @@ export interface operations {
             };
         };
     };
-    update_account_tag_url: {
+    update_account_tag: {
         parameters: {
             query?: never;
             header: {
@@ -6754,7 +6739,7 @@ export interface operations {
             };
         };
     };
-    delete_account_tag_url: {
+    delete_account_tag: {
         parameters: {
             query?: never;
             header: {
@@ -6816,7 +6801,7 @@ export interface operations {
             };
         };
     };
-    list_error_codes_url: {
+    list_error_codes: {
         parameters: {
             query?: {
                 prefix?: string | null;
@@ -6876,7 +6861,7 @@ export interface operations {
             };
         };
     };
-    register_error_code_url: {
+    register_error_code: {
         parameters: {
             query?: never;
             header?: never;
@@ -6936,7 +6921,7 @@ export interface operations {
             };
         };
     };
-    get_error_code_url: {
+    get_error_code: {
         parameters: {
             query?: never;
             header?: never;
@@ -6995,7 +6980,7 @@ export interface operations {
             };
         };
     };
-    delete_error_code_url: {
+    delete_error_code: {
         parameters: {
             query?: never;
             header?: never;
@@ -7054,7 +7039,7 @@ export interface operations {
             };
         };
     };
-    update_error_code_message_and_details_url: {
+    update_error_code_message_and_details: {
         parameters: {
             query?: never;
             header?: never;
@@ -7119,7 +7104,7 @@ export interface operations {
             };
         };
     };
-    list_webhooks_url: {
+    list_webhooks: {
         parameters: {
             query?: {
                 name?: string | null;
@@ -7176,7 +7161,7 @@ export interface operations {
             };
         };
     };
-    crate_webhook_url: {
+    create_webhook: {
         parameters: {
             query?: never;
             header?: never;
@@ -7236,7 +7221,7 @@ export interface operations {
             };
         };
     };
-    delete_webhook_url: {
+    delete_webhook: {
         parameters: {
             query?: never;
             header?: never;
@@ -7293,7 +7278,7 @@ export interface operations {
             };
         };
     };
-    update_webhook_url: {
+    update_webhook: {
         parameters: {
             query?: never;
             header?: never;
@@ -7347,7 +7332,7 @@ export interface operations {
             };
         };
     };
-    create_subscription_manager_account_url: {
+    create_subscription_manager_account: {
         parameters: {
             query?: never;
             header: {
@@ -7397,7 +7382,7 @@ export interface operations {
             };
         };
     };
-    delete_subscription_account_url: {
+    delete_subscription_account: {
         parameters: {
             query?: never;
             header: {
@@ -7457,7 +7442,7 @@ export interface operations {
             };
         };
     };
-    guest_user_to_subscription_manager_account_url: {
+    guest_user_to_subscription_manager_account: {
         parameters: {
             query?: never;
             header: {
@@ -7532,7 +7517,7 @@ export interface operations {
             };
         };
     };
-    revoke_user_guest_to_subscription_manager_account_url: {
+    revoke_user_guest_to_subscription_manager_account: {
         parameters: {
             query: {
                 email: string;
@@ -7596,7 +7581,7 @@ export interface operations {
             };
         };
     };
-    register_tenant_tag_url: {
+    register_tenant_tag: {
         parameters: {
             query?: never;
             header: {
@@ -7659,7 +7644,7 @@ export interface operations {
             };
         };
     };
-    update_tenant_tag_url: {
+    update_tenant_tag: {
         parameters: {
             query?: never;
             header: {
@@ -7725,7 +7710,7 @@ export interface operations {
             };
         };
     };
-    delete_tenant_tag_url: {
+    delete_tenant_tag: {
         parameters: {
             query?: never;
             header: {
@@ -7787,7 +7772,7 @@ export interface operations {
             };
         };
     };
-    get_tenant_details_url: {
+    get_tenant_details: {
         parameters: {
             query?: never;
             header?: never;
@@ -7852,7 +7837,7 @@ export interface operations {
             };
         };
     };
-    create_management_account_url: {
+    create_management_account: {
         parameters: {
             query?: never;
             header: {
@@ -7911,7 +7896,7 @@ export interface operations {
             };
         };
     };
-    delete_tenant_manager_account_url: {
+    delete_tenant_manager_account: {
         parameters: {
             query?: never;
             header: {
@@ -7963,7 +7948,7 @@ export interface operations {
             };
         };
     };
-    create_tenant_meta_url: {
+    register_tenant_meta: {
         parameters: {
             query?: never;
             header: {
@@ -8026,7 +8011,7 @@ export interface operations {
             };
         };
     };
-    delete_tenant_meta_url: {
+    delete_tenant_meta: {
         parameters: {
             query?: never;
             header: {
@@ -8087,7 +8072,7 @@ export interface operations {
             };
         };
     };
-    guest_tenant_owner_url: {
+    guest_tenant_owner: {
         parameters: {
             query?: never;
             header: {
@@ -8150,7 +8135,7 @@ export interface operations {
             };
         };
     };
-    revoke_tenant_owner_url: {
+    revoke_tenant_owner: {
         parameters: {
             query?: never;
             header: {
@@ -8211,7 +8196,7 @@ export interface operations {
             };
         };
     };
-    update_tenant_name_and_description_url: {
+    update_tenant_name_and_description: {
         parameters: {
             query?: never;
             header?: never;
@@ -8272,7 +8257,7 @@ export interface operations {
             };
         };
     };
-    update_tenant_archiving_status_url: {
+    update_tenant_archiving_status: {
         parameters: {
             query?: never;
             header?: never;
@@ -8329,7 +8314,7 @@ export interface operations {
             };
         };
     };
-    update_tenant_trashing_status_url: {
+    update_tenant_trashing_status: {
         parameters: {
             query?: never;
             header?: never;
@@ -8386,7 +8371,7 @@ export interface operations {
             };
         };
     };
-    update_tenant_verifying_status_url: {
+    update_tenant_verifying_status: {
         parameters: {
             query?: never;
             header?: never;
@@ -8443,7 +8428,7 @@ export interface operations {
             };
         };
     };
-    activate_account_url: {
+    activate_account: {
         parameters: {
             query?: never;
             header?: never;
@@ -8502,7 +8487,7 @@ export interface operations {
             };
         };
     };
-    approve_account_url: {
+    approve_account: {
         parameters: {
             query?: never;
             header?: never;
@@ -8561,7 +8546,7 @@ export interface operations {
             };
         };
     };
-    archive_account_url: {
+    archive_account: {
         parameters: {
             query?: never;
             header?: never;
@@ -8620,7 +8605,7 @@ export interface operations {
             };
         };
     };
-    deactivate_account_url: {
+    deactivate_account: {
         parameters: {
             query?: never;
             header?: never;
@@ -8679,7 +8664,7 @@ export interface operations {
             };
         };
     };
-    disapprove_account_url: {
+    disapprove_account: {
         parameters: {
             query?: never;
             header?: never;
@@ -8738,7 +8723,7 @@ export interface operations {
             };
         };
     };
-    unarchive_account_url: {
+    unarchive_account: {
         parameters: {
             query?: never;
             header?: never;
@@ -8797,7 +8782,7 @@ export interface operations {
             };
         };
     };
-    health_url: {
+    check_service_health: {
         parameters: {
             query?: never;
             header?: never;
@@ -8817,7 +8802,7 @@ export interface operations {
             };
         };
     };
-    now_url: {
+    get_server_datetime: {
         parameters: {
             query?: never;
             header?: never;
@@ -8837,7 +8822,7 @@ export interface operations {
             };
         };
     };
-    list_discoverable_services_url: {
+    list_discoverable_services: {
         parameters: {
             query?: {
                 id?: string | null;
