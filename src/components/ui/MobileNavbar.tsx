@@ -82,7 +82,11 @@ function NavbarItem({
     );
   }
 
-  return <button onClick={onClick}>{icon}</button>;
+  return (
+    <button className="bg-transparent" onClick={onClick}>
+      {icon}
+    </button>
+  );
 }
 
 function MenuModal({

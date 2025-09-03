@@ -30,6 +30,7 @@ import PermissionsOnAccount from "./PermissionsOnAccount";
 import CreateConnectionStringModal from "../CreateConnectionStringModal";
 import getLicensedResourcesOrNull from "@/functions/get-licensed-resources-or-null";
 import { MycPermission } from "@/types/MyceliumPermission";
+import GuestsByEmail from "./GuestsByEmail";
 
 type Account = components["schemas"]["Account"];
 type GuestUser = components["schemas"]["GuestUser"];
@@ -42,6 +43,7 @@ enum OpenedSection {
   Details,
   Invitations,
   AdvancedActions,
+  MyGuests,
 }
 
 export default function AccountDetails({ onClose }: Props) {
@@ -252,11 +254,28 @@ export default function AccountDetails({ onClose }: Props) {
     }
   }, [account, profile?.owners]);
 
+  const accountEmails = useMemo(() => {
+    if (!account) return undefined;
+    if (typeof account.accountType === "object") return undefined;
+
+    if ("records" in account.owners) {
+      return account.owners.records;
+    }
+
+    return undefined;
+  }, [account]);
+
   const includeInvitationsFeature = useMemo(() => {
     if (!account) return false;
     if (typeof account.accountType === "string") return false;
 
     return true;
+  }, [account]);
+
+  const includeMyGuestsFeature = useMemo(() => {
+    if (!account) return false;
+
+    return typeof account.accountType === "string";
   }, [account]);
 
   const restrictRoleToSlug = useMemo(() => {
@@ -486,6 +505,27 @@ export default function AccountDetails({ onClose }: Props) {
               )}
             </DetailsBox.Content>
           )}
+        </DetailsBox>
+      )}
+
+      {includeMyGuestsFeature && accountEmails && (
+        <DetailsBox
+          open={openedSection === OpenedSection.MyGuests}
+          onToggle={(state) =>
+            handleToggleSection(OpenedSection.MyGuests, state)
+          }
+        >
+          <DetailsBox.Summary>
+            {t("screens.Dashboard.Accounts.AccountDetails.myGuests")}
+          </DetailsBox.Summary>
+
+          <div className="max-h-[calc(100vh-15rem)] overflow-y-auto scrollbar">
+            <DetailsBox.Content minHeight="50">
+              {accountEmails?.map((email, index) => (
+                <GuestsByEmail key={index} email={email.email} />
+              ))}
+            </DetailsBox.Content>
+          </div>
         </DetailsBox>
       )}
 

@@ -23,6 +23,7 @@ import CreateConnectionStringModal from "../CreateConnectionStringModal";
 import { MycPermission } from "@/types/MyceliumPermission";
 import Button from "@/components/ui/Button";
 import { FaKey } from "react-icons/fa";
+import { GrUserManager } from "react-icons/gr";
 
 type LicensedResource = components["schemas"]["LicensedResource"];
 type Permission = components["schemas"]["Permission"];
@@ -136,20 +137,49 @@ export default function LicensedResourcesSection({ licensedResources }: Props) {
     setIsCreateConnectionStringModalOpen(true);
   };
 
+  const getAccountType = (resource: CustomLicensedResource) => {
+    if (resource.sysAcc) {
+      return {
+        text: t(
+          "screens.Dashboard.LicensedResourcesSection.accountType.types.system"
+        ),
+        Icon: RiRobot2Line,
+      };
+    }
+
+    if (resource.role === MycRole.TenantManager) {
+      return {
+        text: t(
+          "screens.Dashboard.LicensedResourcesSection.accountType.types.tenantScoped"
+        ),
+        Icon: GrUserManager,
+      };
+    }
+
+    if (resource.role === MycRole.SystemManager) {
+      return {
+        text: t(
+          "screens.Dashboard.LicensedResourcesSection.accountType.types.systemScoped"
+        ),
+        Icon: GrUserManager,
+      };
+    }
+
+    return {
+      text: t(
+        "screens.Dashboard.LicensedResourcesSection.accountType.types.subscription"
+      ),
+      Icon: GrUserManager,
+    };
+  };
+
   const HeaderHeader = ({ resource }: { resource: CustomLicensedResource }) => {
     return (
       <div className="flex items-center gap-2">
-        {resource.sysAcc && (
-          <RiRobot2Line
-            className="text-indigo-500 h-4 w-4 dark:text-lime-500 hover:cursor-help"
-            title={t(
-              "screens.Dashboard.LicensedResourcesSection.accountName.system"
-            )}
-          />
-        )}
         <Typography
           truncate
           width="fit"
+          as="h5"
           decoration="bold"
           title={t(
             "screens.Dashboard.LicensedResourcesSection.accountName.title",
@@ -250,17 +280,9 @@ export default function LicensedResourcesSection({ licensedResources }: Props) {
                       </div>
                     </TableHeadCell>
                     <TableHeadCell>
-                      <div className="flex items-center gap-3 group/sort">
-                        <TbSortDescending2Filled
-                          size={16}
-                          title="Sort by tenant"
-                          className="inline-block group-hover/sort:text-indigo-500 dark:group-hover/sort:text-lime-500 cursor-pointer"
-                          onClick={() => setSortBy(SortBy.Tenant)}
-                        />
-                        <span>
-                          {t("screens.Dashboard.TenantBasicInfo.from.prefix")}
-                        </span>
-                      </div>
+                      {t(
+                        "screens.Dashboard.LicensedResourcesSection.accountType.title"
+                      )}
                     </TableHeadCell>
                     <TableHeadCell>
                       {t(
@@ -291,54 +313,60 @@ export default function LicensedResourcesSection({ licensedResources }: Props) {
 
                         return 0;
                       })
-                      ?.map((resource, index) => (
-                        <TableRow
-                          key={index}
-                          className="bg-white dark:border-gray-700 dark:bg-gray-800"
-                        >
-                          <TableCell>
-                            <HeaderHeader resource={resource} />
-                          </TableCell>
-                          <TableCell>
-                            <TenantBasicInfo
-                              tenantId={resource.tenantId}
-                              tenantName={resource.name}
-                              omitPrefix
-                            />
-                          </TableCell>
-                          <TableCell>
-                            {resource.roles.map((role, index) => (
-                              <div
-                                key={index + role.role}
-                                className="whitespace-nowrap"
-                              >
-                                <span>{role.role}</span>
-                                <PermissionIcon permission={role.perm} inline />
-                              </div>
-                            ))}
-                          </TableCell>
-                          <TableCell
-                            className="text-right"
-                            title={t(
-                              "screens.Dashboard.LicensedResourcesSection.createConnectionString.title"
-                            )}
+                      ?.map((resource, index) => {
+                        const accountType = getAccountType(resource);
+
+                        return (
+                          <TableRow
+                            key={index}
+                            className="bg-white dark:border-gray-700 dark:bg-gray-800"
                           >
-                            <Button
-                              rounded
-                              intent="link"
-                              center
-                              onClick={() =>
-                                handleOpenCreateConnectionStringModal(
-                                  resource.id,
-                                  resource.tenantId
-                                )
-                              }
+                            <TableCell>
+                              <HeaderHeader resource={resource} />
+                            </TableCell>
+                            <TableCell>
+                              <accountType.Icon
+                                className="cursor-help text-indigo-500 dark:text-lime-500 text-lg"
+                                title={accountType.text}
+                              />
+                            </TableCell>
+                            <TableCell>
+                              {resource.roles.map((role, index) => (
+                                <div
+                                  key={index + role.role}
+                                  className="whitespace-nowrap"
+                                >
+                                  <span>{role.role}</span>
+                                  <PermissionIcon
+                                    permission={role.perm}
+                                    inline
+                                  />
+                                </div>
+                              ))}
+                            </TableCell>
+                            <TableCell
+                              className="text-right"
+                              title={t(
+                                "screens.Dashboard.LicensedResourcesSection.createConnectionString.title"
+                              )}
                             >
-                              <FaKey className="inline-block" />
-                            </Button>
-                          </TableCell>
-                        </TableRow>
-                      ))}
+                              <Button
+                                rounded
+                                intent="link"
+                                center
+                                onClick={() =>
+                                  handleOpenCreateConnectionStringModal(
+                                    resource.id,
+                                    resource.tenantId
+                                  )
+                                }
+                              >
+                                <FaKey className="inline-block" />
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
                   </TableBody>
                 </Table>
               </div>

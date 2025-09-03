@@ -39,8 +39,6 @@ export default function MyceliumProfile({ user }: Props) {
 
   const { getAccessTokenSilently } = useAuth0();
 
-  const [registeringUser, setRegisteringUser] = useState<boolean>(false);
-
   const [registeringAccount, setRegisteringAccount] = useState<boolean>(false);
 
   const [registeringStatus, setRegisteringStatus] = useState<RegisteringStatus>(
@@ -66,54 +64,7 @@ export default function MyceliumProfile({ user }: Props) {
   const firstName = watch("firstName");
   const lastName = watch("lastName");
 
-  const handleRegisterUser = async ({
-    firstName,
-    lastName,
-  }: Pick<Inputs, "firstName" | "lastName">) => {
-    if (registeringStatus !== RegisteringStatus.NotStarted) return;
-
-    setRegisteringUser(true);
-
-    try {
-      if (!user?.email) throw new Error("User email is required");
-
-      const token = await getAccessTokenSilently();
-
-      if (!token) throw new Error("Token is required");
-
-      const registeringResponse = await fetch(
-        buildPath("/_adm/beginners/users"),
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            email: user?.email,
-            firstName,
-            lastName,
-          }),
-        }
-      );
-
-      if (registeringResponse.ok) {
-        setRegisteringStatus(RegisteringStatus.Account);
-        return registeringResponse.json();
-      }
-
-      throw new Error(await registeringResponse.text());
-    } catch (error) {
-      setError(error as string);
-      setRegisteringStatus(RegisteringStatus.Error);
-    } finally {
-      setRegisteringUser(false);
-    }
-  };
-
-  const handleRegisterAccount = async (response: { id?: string }) => {
-    console.debug("handleRegisterAccount", response);
-
+  const handleRegisterAccount = async () => {
     setRegisteringAccount(true);
 
     try {
@@ -217,12 +168,12 @@ export default function MyceliumProfile({ user }: Props) {
     }
   );
 
-  const onSubmit: SubmitHandler<Inputs> = ({ firstName, lastName }, event) => {
+  // eslint-disable-next-line no-empty-pattern
+  const onSubmit: SubmitHandler<Inputs> = ({ }, event) => {
     event?.preventDefault();
 
     Promise.resolve()
-      .then(() => handleRegisterUser({ firstName, lastName }))
-      .then((response) => handleRegisterAccount(response))
+      .then(handleRegisterAccount)
       .then(() => setRegisteringStatus(RegisteringStatus.Finished))
       .then(() => mutateProfile())
       .catch((error) => {
@@ -282,74 +233,73 @@ export default function MyceliumProfile({ user }: Props) {
           {[RegisteringStatus.NotStarted, RegisteringStatus.Error].includes(
             registeringStatus
           ) && (
-            <>
-              <form
-                onSubmit={handleSubmit(onSubmit)}
-                className="flex flex-col items-center justify-center gap-0 w-full"
-              >
-                <FormField
-                  label={t(
-                    "screens.HomePage.MyceliumProfile.form.firstName.label"
-                  )}
-                  title={t(
-                    "screens.HomePage.MyceliumProfile.form.firstName.title"
-                  )}
+              <>
+                <form
+                  onSubmit={handleSubmit(onSubmit)}
+                  className="flex flex-col items-center justify-center gap-0 w-full"
                 >
-                  <TextInput
-                    {...register("firstName", { required: true })}
-                    placeholder={t(
-                      "screens.HomePage.MyceliumProfile.form.firstName.placeholder"
+                  <FormField
+                    label={t(
+                      "screens.HomePage.MyceliumProfile.form.firstName.label"
                     )}
-                    defaultValue={user?.given_name ?? ""}
-                    type="text"
-                    autoFocus
-                  />
-
-                  {errors.firstName && <span>{errors.firstName.message}</span>}
-                </FormField>
-
-                <FormField
-                  label={t(
-                    "screens.HomePage.MyceliumProfile.form.lastName.label"
-                  )}
-                  title={t(
-                    "screens.HomePage.MyceliumProfile.form.lastName.title"
-                  )}
-                >
-                  <TextInput
-                    {...register("lastName", { required: true })}
-                    placeholder={t(
-                      "screens.HomePage.MyceliumProfile.form.lastName.placeholder"
+                    title={t(
+                      "screens.HomePage.MyceliumProfile.form.firstName.title"
                     )}
-                    defaultValue={user?.family_name ?? ""}
-                    type="text"
-                  />
+                  >
+                    <TextInput
+                      {...register("firstName", { required: true })}
+                      placeholder={t(
+                        "screens.HomePage.MyceliumProfile.form.firstName.placeholder"
+                      )}
+                      defaultValue={user?.given_name ?? ""}
+                      type="text"
+                      autoFocus
+                    />
 
-                  {errors.lastName && <span>{errors.lastName.message}</span>}
-                </FormField>
+                    {errors.firstName && <span>{errors.firstName.message}</span>}
+                  </FormField>
 
-                <Button
-                  type="submit"
-                  fullWidth
-                  rounded
-                  disabled={
-                    registeringAccount ||
-                    registeringUser ||
-                    firstName === undefined ||
-                    lastName === undefined
-                  }
-                >
-                  {registeringAccount || registeringUser
-                    ? t("screens.HomePage.MyceliumProfile.submitting")
-                    : t("screens.HomePage.MyceliumProfile.submit")}
-                </Button>
-              </form>
+                  <FormField
+                    label={t(
+                      "screens.HomePage.MyceliumProfile.form.lastName.label"
+                    )}
+                    title={t(
+                      "screens.HomePage.MyceliumProfile.form.lastName.title"
+                    )}
+                  >
+                    <TextInput
+                      {...register("lastName", { required: true })}
+                      placeholder={t(
+                        "screens.HomePage.MyceliumProfile.form.lastName.placeholder"
+                      )}
+                      defaultValue={user?.family_name ?? ""}
+                      type="text"
+                    />
 
-              <div className="flex flex-col items-center justify-center gap-2">
-                {error && <span>{error.toString()}</span>}
-              </div>
-            </>
-          )}
+                    {errors.lastName && <span>{errors.lastName.message}</span>}
+                  </FormField>
+
+                  <Button
+                    type="submit"
+                    fullWidth
+                    rounded
+                    disabled={
+                      registeringAccount ||
+                      firstName === undefined ||
+                      lastName === undefined
+                    }
+                  >
+                    {registeringAccount
+                      ? t("screens.HomePage.MyceliumProfile.submitting")
+                      : t("screens.HomePage.MyceliumProfile.submit")}
+                  </Button>
+                </form>
+
+                <div className="flex flex-col items-center justify-center gap-2">
+                  {error && <span>{error.toString()}</span>}
+                </div>
+              </>
+            )}
         </div>
       )}
     </div>

@@ -40,12 +40,10 @@ export function TenantOwnershipInfoTableRow({
 
   const HeaderCell = useCallback(
     ({ name }: { name?: string }) => {
-      if (!name) {
-        return <EmptyCell />;
-      }
+      if (!name) return <EmptyCell />;
 
       return (
-        <TableCell className="text-indigo-500 dark:text-lime-500 hover:underline font-bold">
+        <TableCell className="text-indigo-500 dark:text-lime-500 hover:underline font-semibold text-lg">
           <Link to={`/dashboard/tenants/${tenantId}`}>{name}</Link>
         </TableCell>
       );

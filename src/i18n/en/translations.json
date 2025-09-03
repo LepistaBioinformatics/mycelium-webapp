@@ -211,6 +211,16 @@
           "title": "Function attributed to you",
           "prefix": "With role"
         },
+        "accountType": {
+          "title": "Type",
+          "prefix": "Type",
+          "types": {
+            "system": "System",
+            "subscription": "Subscription",
+            "tenantManager": "Tenant Manager",
+            "systemManager": "System Manager"
+          }
+        },
         "permission": {
           "title": "Permission attributed to you",
           "prefix": "You can"
@@ -540,6 +550,7 @@
           "details": "Details",
           "invitations": "Shares",
           "advancedActions": "Advanced actions",
+          "myGuests": "My invitations",
           "noAccess": {
             "title": "You do not have access to this account"
           },
@@ -607,6 +618,26 @@
             "title": "Create connection string with account scope",
             "description": "Create a connection string for the account. This connection string will be used to authenticate your account programmatically.",
             "button": "Create"
+          },
+          "email": {
+            "title": "Email",
+            "prefix": "Email"
+          },
+          "inAccount": {
+            "title": "Account name",
+            "prefix": "In account"
+          },
+          "inTenant": {
+            "title": "Namespace name",
+            "prefix": "In namespace"
+          },
+          "withRole": {
+            "title": "Role",
+            "prefix": "With role"
+          },
+          "withPermission": {
+            "title": "Permission",
+            "prefix": "With permission"
           }
         },
         "PermissionsOnAccount": {

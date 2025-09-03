@@ -217,7 +217,7 @@ export default function Tenants() {
                       title={t(
                         "screens.Dashboard.Tenants.viewTenantBasicDetails"
                       )}
-                      className="hover:underline text-indigo-500 dark:text-lime-400"
+                      className="hover:underline text-indigo-500 dark:text-lime-400 bg-transparent"
                       onClick={() => handleViewTenantClick(tenant)}
                     >
                       {tenant?.name}
