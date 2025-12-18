@@ -21,9 +21,9 @@ const styles = cva(
   }
 );
 
-interface Props extends VariantProps<typeof styles> {}
+interface Props extends VariantProps<typeof styles> { }
 
-export default function MobileNavbar({}: Props) {
+export default function MobileNavbar({ }: Props) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
@@ -155,14 +155,14 @@ function SettingsModal({
         <div className="flex flex-col gap-3 px-4 w-full">
           <div className="flex flex-col gap-2">
             <Typography>{t("Menu.subtitle")}</Typography>
-            <div className="items-center text-center bg-indigo-50 dark:bg-zinc-700 rounded-full p-2 transition-all">
+            <div className="items-center text-center bg-violet-50 dark:bg-zinc-700 rounded-full p-2 transition-all">
               <LanguageSwitcher horizontal keepOpen />
             </div>
           </div>
 
           <div className="flex flex-col gap-2">
             <Typography>{t("Menu.theme")}</Typography>
-            <div className="flex justify-center gap-3 items-center text-center bg-indigo-50 dark:bg-zinc-700 rounded-full p-2 transition-all">
+            <div className="flex justify-center gap-3 items-center text-center bg-violet-50 dark:bg-zinc-700 rounded-full p-2 transition-all">
               <ThemeSwitcher />
             </div>
           </div>

@@ -150,7 +150,7 @@ function TenantOwnershipInfoActions({
     <div className={styles({ direction })}>
       <Link
         to={`/dashboard/tenants/${tenantId}/accounts`}
-        className="flex flex-col items-center gap-2 p-1 rounded-lg bg-indigo-500 dark:bg-lime-500"
+        className="flex flex-col items-center gap-2 p-1 rounded-lg bg-violet-500 dark:bg-lime-500"
         title={t("screens.Dashboard.TenantOwnershipInfo.manageAccounts")}
       >
         <MdManageAccounts

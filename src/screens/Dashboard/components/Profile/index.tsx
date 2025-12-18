@@ -30,7 +30,8 @@ import { useSearchParams } from "react-router";
 enum ActiveTab {
   LicensedResources = 0,
   TenantOwnership = 1,
-  CreateConnectionString = 2,
+  ListConnectionStrings = 2,
+  AdvancedOptions = 3,
 }
 
 type Profile = components["schemas"]["Profile"];
@@ -210,11 +211,23 @@ export default function Profile() {
                     </TabItem>
 
                     <TabItem
-                      active={activeTab === ActiveTab.CreateConnectionString}
+                      active={activeTab === ActiveTab.ListConnectionStrings}
+                      title={
+                        <span className="whitespace-nowrap">
+                          {t("screens.Dashboard.ListConnectionStringsSection.tabName")}
+                        </span>
+                      }
+                      icon={IoOptions}
+                    >
+                      Content
+                    </TabItem>
+
+                    <TabItem
+                      active={activeTab === ActiveTab.AdvancedOptions}
                       title={
                         <span className="whitespace-nowrap">
                           {t(
-                            "screens.Dashboard.CreateConnectionStringModal.tabName"
+                            "screens.Dashboard.AdvancedOptionsModal.tabName"
                           )}
                         </span>
                       }

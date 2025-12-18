@@ -11,7 +11,7 @@ const appHeaderStyles = cva(
     variants: {
       discrete: {
         true: "bg-transparent",
-        false: "bg-indigo-800 dark:text-white",
+        false: "bg-violet-800 dark:text-white",
       },
       rounded: {
         true: "rounded-lg",
@@ -27,7 +27,7 @@ const appHeaderStyles = cva(
 
 interface AppHeaderProps
   extends BaseProps,
-    VariantProps<typeof appHeaderStyles> {
+  VariantProps<typeof appHeaderStyles> {
   logout: () => void;
 }
 

@@ -168,7 +168,7 @@ export default function GuestRolesModal({
                   input: {
                     colors: {
                       custom:
-                        "border-zinc-400 bg-indigo-50 text-zinc-900 focus:border-cyan-500 focus:ring-zinc-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white placeholder-zinc-500  dark:placeholder-zinc-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500",
+                        "border-zinc-400 bg-violet-50 text-zinc-900 focus:border-cyan-500 focus:ring-zinc-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white placeholder-zinc-500  dark:placeholder-zinc-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500",
                     },
                   },
                 },
@@ -197,7 +197,7 @@ export default function GuestRolesModal({
               theme={{
                 colors: {
                   custom:
-                    "border-zinc-400 bg-indigo-50 text-zinc-900 focus:border-cyan-500 focus:ring-zinc-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white placeholder-zinc-500  dark:placeholder-zinc-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500",
+                    "border-zinc-400 bg-violet-50 text-zinc-900 focus:border-cyan-500 focus:ring-zinc-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white placeholder-zinc-500  dark:placeholder-zinc-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500",
                 },
               }}
               {...register("description")}
@@ -212,11 +212,11 @@ export default function GuestRolesModal({
             title={
               guestRole
                 ? t(
-                    "screens.Dashboard.GuestRoles.GuestRolesModal.form.permission.titleReadOnly"
-                  )
+                  "screens.Dashboard.GuestRoles.GuestRolesModal.form.permission.titleReadOnly"
+                )
                 : t(
-                    "screens.Dashboard.GuestRoles.GuestRolesModal.form.permission.titleWrite"
-                  )
+                  "screens.Dashboard.GuestRoles.GuestRolesModal.form.permission.titleWrite"
+                )
             }
           >
             <Select
@@ -226,11 +226,11 @@ export default function GuestRolesModal({
               title={
                 guestRole
                   ? t(
-                      "screens.Dashboard.GuestRoles.GuestRolesModal.form.permission.titleReadOnly"
-                    )
+                    "screens.Dashboard.GuestRoles.GuestRolesModal.form.permission.titleReadOnly"
+                  )
                   : t(
-                      "screens.Dashboard.GuestRoles.GuestRolesModal.form.permission.titleWrite"
-                    )
+                    "screens.Dashboard.GuestRoles.GuestRolesModal.form.permission.titleWrite"
+                  )
               }
               defaultValue={
                 (guestRole?.permission as MycPermission | undefined) ||
@@ -259,12 +259,12 @@ export default function GuestRolesModal({
             {guestRole
               ? isLoading
                 ? t(
-                    "screens.Dashboard.GuestRoles.GuestRolesModal.form.updating"
-                  )
+                  "screens.Dashboard.GuestRoles.GuestRolesModal.form.updating"
+                )
                 : t("screens.Dashboard.GuestRoles.GuestRolesModal.form.update")
               : isLoading
-              ? t("screens.Dashboard.GuestRoles.GuestRolesModal.form.creating")
-              : t("screens.Dashboard.GuestRoles.GuestRolesModal.form.create")}
+                ? t("screens.Dashboard.GuestRoles.GuestRolesModal.form.creating")
+                : t("screens.Dashboard.GuestRoles.GuestRolesModal.form.create")}
           </Button>
         </form>
       </Modal.Body>

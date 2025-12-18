@@ -7,7 +7,7 @@ const styles = cva("w-full", {
       invisible: "border-0",
       smooth: "opacity-30",
       partial:
-        "w-48 mx-auto border-0 rounded-sm bg-indigo-300 dark:bg-lime-700",
+        "w-48 mx-auto border-0 rounded-sm bg-violet-300 dark:bg-lime-700",
     },
     thickness: {
       sm: "h-0.5",

@@ -139,7 +139,7 @@ const progressBarStyles = cva(
     variants: {
       intent: {
         error: "bg-red-500 dark:bg-red-500",
-        info: "bg-indigo-500 dark:bg-indigo-500",
+        info: "bg-violet-500 dark:bg-violet-500",
         success: "bg-green-500 dark:bg-green-500",
         warning: "bg-yellow-500 dark:bg-yellow-500",
         neutral: "bg-gray-400 dark:bg-gray-600",
@@ -153,7 +153,7 @@ const progressBarStyles = cva(
 
 interface ProgressBarProps
   extends BaseProps,
-    VariantProps<typeof progressBarStyles> {
+  VariantProps<typeof progressBarStyles> {
   percent: number;
 }
 

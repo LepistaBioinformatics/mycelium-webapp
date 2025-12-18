@@ -18,7 +18,7 @@ import { useTranslation } from "react-i18next";
 export default function Dashboard() {
   const { t } = useTranslation();
 
-  const { isOpen, toggle } = useToggleSidebar(true);
+  const { isOpen, toggle } = useToggleSidebar(false);
 
   const [showLogoutModal, setShowLogoutModal] = useState(false);
 
@@ -139,7 +139,7 @@ function MainHeader({ isOpen }: { isOpen: boolean }) {
 
   return (
     <div
-      className="flex justify-center font-semibold gap-2 py-2 px-4 text-indigo-600 dark:text-zinc-300 bg-white dark:bg-zinc-900 backdrop-blur-sm border border-indigo-500 dark:border-lime-500 rounded-full truncate max-w-full"
+      className="flex justify-center font-semibold gap-2 py-2 px-4 text-indigo-600 dark:text-zinc-300 bg-white dark:bg-zinc-900 backdrop-blur-sm border border-indigo-500 dark:border-lime-500 rounded-lg truncate max-w-full"
       title={tenantInfo.name}
     >
       <span className="truncate max-w-[12rem]">

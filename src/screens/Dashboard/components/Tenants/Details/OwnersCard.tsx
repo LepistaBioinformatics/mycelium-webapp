@@ -105,7 +105,7 @@ export default function OwnersCard({ tenant, mutateTenantStatus }: Props) {
         </Card.Header>
 
         <Card.Body>
-          <div className="flex flex-col gap-0">
+          <div className="flex flex-col gap-3">
             {owners?.map((owner) => {
               const ownerName =
                 owner.firstName && owner.lastName

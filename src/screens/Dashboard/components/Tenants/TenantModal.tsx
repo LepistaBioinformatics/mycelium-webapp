@@ -148,7 +148,7 @@ export default function TenantModal({
                   input: {
                     colors: {
                       custom:
-                        "border-zinc-400 bg-indigo-50 text-zinc-900 focus:border-cyan-500 focus:ring-zinc-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white placeholder-zinc-500  dark:placeholder-zinc-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500",
+                        "border-zinc-400 bg-violet-50 text-zinc-900 focus:border-cyan-500 focus:ring-zinc-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white placeholder-zinc-500  dark:placeholder-zinc-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500",
                     },
                   },
                 },
@@ -176,7 +176,7 @@ export default function TenantModal({
               theme={{
                 colors: {
                   custom:
-                    "border-zinc-400 bg-indigo-50 text-zinc-900 focus:border-cyan-500 focus:ring-zinc-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white placeholder-zinc-500  dark:placeholder-zinc-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500",
+                    "border-zinc-400 bg-violet-50 text-zinc-900 focus:border-cyan-500 focus:ring-zinc-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white placeholder-zinc-500  dark:placeholder-zinc-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500",
                 },
               }}
               {...register("description")}
@@ -194,8 +194,8 @@ export default function TenantModal({
                 ? t("screens.Dashboard.Tenants.TenantModal.formFields.updating")
                 : t("screens.Dashboard.Tenants.TenantModal.formFields.update")
               : isLoading
-              ? t("screens.Dashboard.Tenants.TenantModal.formFields.creating")
-              : t("screens.Dashboard.Tenants.TenantModal.formFields.create")}
+                ? t("screens.Dashboard.Tenants.TenantModal.formFields.creating")
+                : t("screens.Dashboard.Tenants.TenantModal.formFields.create")}
           </Button>
         </form>
       </Modal.Body>

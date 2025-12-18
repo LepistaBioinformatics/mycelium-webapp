@@ -20,7 +20,7 @@ const containerStyles = cva(
 
 interface ContainerProps
   extends BaseProps,
-    VariantProps<typeof containerStyles> {
+  VariantProps<typeof containerStyles> {
   title: string;
   handleClose?: () => void;
 }
@@ -52,9 +52,9 @@ function Container({
     >
       <div
         id="side-curtain-content"
-        className="flex flex-col w-full sm:w-[70%] xl:w-1/2 sm:mb-16 h-[92vh] sm:h-screen overflow-y-auto bg-gray-50 dark:bg-zinc-900 px-2 border-2 border-gray-300 dark:border-gray-700 scrollbar"
+        className="flex flex-col w-full sm:w-[70%] xl:w-1/2 sm:mb-16 h-[92vh] sm:h-screen overflow-y-auto bg-white dark:bg-zinc-900 px-2 border-2 border-gray-300 dark:border-gray-700 scrollbar"
       >
-        <div className="flex justify-between items-center gap-2 w-full py-3 sticky top-0 bg-gray-50 dark:bg-zinc-900">
+        <div className="flex justify-between items-center gap-2 w-full py-3 sticky top-0 bg-white dark:bg-zinc-900">
           <Typography as="h4" decoration="smooth">
             {title}
           </Typography>

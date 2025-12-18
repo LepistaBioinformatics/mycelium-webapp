@@ -85,7 +85,7 @@
           "title": "Tu correo electrónico"
         }
       },
-      "CreateConnectionStringModal": {
+      "AdvancedOptionsModal": {
         "title": "Crear cadena de conexión",
         "tabName": "Opciones avanzadas",
         "accountId": "Restringido a cuenta",
@@ -197,6 +197,10 @@
       "TenantOwnershipSection": {
         "title": "Tus espacios de nombres",
         "tabName": "Espacios de nombres"
+      },
+      "ListConnectionStringsSection": {
+        "title": "Cadenas de conexión",
+        "tabName": "Cadenas de conexión"
       },
       "LicensedResourcesSection": {
         "title": "Cuentas a las que tiene acceso",

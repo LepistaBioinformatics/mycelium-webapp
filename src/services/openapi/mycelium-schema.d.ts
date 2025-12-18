@@ -4,6 +4,40 @@
  */
 
 export interface paths {
+    "/_adm/accounts-manager/guest-roles": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Roles */
+        get: operations["list_guest_roles_as_account_manager"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/_adm/accounts-manager/guest-roles/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Fetch Guest Role Details */
+        get: operations["fetch_guest_role_details_as_account_manager"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/_adm/accounts-manager/guests/accounts/{account_id}/roles/{role_id}": {
         parameters: {
             query?: never;
@@ -140,7 +174,13 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        /**
+         * List My Connection Strings
+         * @description This action lists all connection strings for the current user.
+         *
+         *
+         */
+        get: operations["list_my_connection_strings"];
         put?: never;
         /**
          * Create Connection String
@@ -1861,6 +1901,40 @@ export interface components {
         } | {
             ids: string[];
         };
+        ConnectionStringBean: {
+            /** @description The signature */
+            sig: string;
+        } | {
+            /**
+             * Format: date-time
+             * @description The expiration date time
+             */
+            edt: string;
+        } | {
+            /**
+             * Format: uuid
+             * @description The tenant ID
+             */
+            tid: string;
+        } | {
+            /**
+             * Format: uuid
+             * @description The account ID
+             */
+            aid: string;
+        } | {
+            /**
+             * Format: uuid
+             * @description A service account ID
+             */
+            sid: string;
+        } | {
+            /** @description A list of roles with your permissions */
+            rls: components["schemas"]["PermissionedRole"][];
+        } | {
+            /** @description The endpoint URL */
+            url: string;
+        };
         /** @description Content Schema
          *
          *     Should used to represent the content of the response.
@@ -2030,6 +2104,7 @@ export interface components {
             description?: string | null;
             url: string;
             trigger: components["schemas"]["WebHookTrigger"];
+            method?: null | components["schemas"]["HttpMethod"];
             secret?: null | components["schemas"]["HttpSecret"];
         };
         DeleteAccountMetaParams: {
@@ -2142,17 +2217,6 @@ export interface components {
         GuestUserToChildrenBody: {
             /** @description The email of the guest user */
             email: string;
-            /**
-             * Format: uuid
-             * @description The parent role id
-             *
-             *     The parent related to the guest role to be created. Example, if the
-             *     guest role is a child of the account manager role, the parent role id
-             *     should be this role id.
-             *
-             *     The child role id should be passed as the `role_id` path argument.
-             */
-            parentRoleId: string;
         };
         GuestUserToSubscriptionManagerAccountBody: {
             email: string;
@@ -2303,6 +2367,14 @@ export interface components {
              *     This is the verbose name of the role that is own of the resource to be
              *     managed. */
             role: string;
+            /**
+             * Format: uuid
+             * @description The Guest Role ID
+             *
+             *     This is the ID of the guest role that is own of the resource to be
+             *     managed.
+             */
+            roleId: string;
             /** @description The guest role permissions
              *
              *     This is the list of permissions that the guest role has. */
@@ -2450,6 +2522,96 @@ export interface components {
             username?: string | null;
             /** @description If the owner is the principal account owner */
             isPrincipal: boolean;
+        };
+        /** @description A default pagination response
+         *
+         *     A paginated record include the total number of records found into a query
+         *     plus page size which records will be retrieved, the number of records to be
+         *     ignored (such value should be discovered after the first query), and the
+         *     records itself. */
+        PaginatedRecord_Account: {
+            /** Format: int64 */
+            count: number;
+            /** Format: int64 */
+            skip?: number | null;
+            /** Format: int64 */
+            size?: number | null;
+            records: {
+                /**
+                 * Format: uuid
+                 * @description The Account ID
+                 */
+                id?: string | null;
+                /** @description The Account Name */
+                name: string;
+                /** @description The Account Slug
+                 *
+                 *     This is generated from the account name. This is used for programmatic
+                 *     access and verification of the account.
+                 *      */
+                slug: string;
+                /** @description Account Tags
+                 *
+                 *     Information about the account. This is used for categorizing and filter
+                 *     account.
+                 *      */
+                tags?: components["schemas"]["Tag"][] | null;
+                /** @description Account is active
+                 *
+                 *     If the account is active. This is used for logic trash and restore
+                 *     account.
+                 *      */
+                isActive: boolean;
+                /** @description Account is checked
+                 *
+                 *     If the account was verified by a human. This is used for account
+                 *     verification.
+                 *      */
+                isChecked: boolean;
+                /** @description Account is archived
+                 *
+                 *     If the account is archived. This is used for account archiving.
+                 *      */
+                isArchived: boolean;
+                /** @description Account is deleted
+                 *
+                 *     If the account is deleted. This is used for logic trash and restore
+                 *     account.
+                 *      */
+                isDeleted: boolean;
+                verboseStatus?: null | components["schemas"]["VerboseStatus"];
+                isSystemAccount: boolean;
+                /** @description The Account Owners
+                 *
+                 *     This is the list of account owners. The account owners are the users who
+                 *     have the account owner role. */
+                owners: components["schemas"]["Children_User_String"];
+                /** @description The Account Type
+                 *
+                 *     Account type is the type of the account. The account type is used to
+                 *     categorize the account. */
+                accountType: components["schemas"]["AccountType"];
+                guestUsers?: null | components["schemas"]["Children_GuestUser_String"];
+                /**
+                 * Format: date-time
+                 * @description The Account Created Date
+                 */
+                createdAt: string;
+                createdBy?: null | components["schemas"]["WrittenBy"];
+                /**
+                 * Format: date-time
+                 * @description The Account Updated Date
+                 */
+                updatedAt?: string | null;
+                updatedBy?: null | components["schemas"]["WrittenBy"];
+                /** @description The Account Meta
+                 *
+                 *     Store metadata about the account.
+                 *      */
+                meta?: {
+                    [key: string]: string;
+                } | null;
+            }[];
         };
         /** @description A default pagination response
          *
@@ -2644,7 +2806,7 @@ export interface components {
                  *     generated using the name of the service.
                  *
                  */
-                id: string;
+                id?: string;
                 /** @description The service unique name
                  *
                  *     The name of the service. The name should be unique and is used to
@@ -2669,7 +2831,7 @@ export interface components {
                 routes: components["schemas"]["Route"][];
                 /** @description The health status of the service
                  *      */
-                healthStatus: components["schemas"]["HealthStatus"];
+                healthStatus?: components["schemas"]["HealthStatus"];
                 /** @description The service health check configuration
                  *
                  *     The health check configuration for the service.
@@ -2810,6 +2972,13 @@ export interface components {
             verboseStatus?: null | components["schemas"]["VerboseStatus"];
             licensedResources?: null | components["schemas"]["LicensedResources"];
             tenantsOwnership?: null | components["schemas"]["TenantsOwnership"];
+            /** @description The Account Meta
+             *
+             *     Store metadata about the account.
+             *      */
+            meta?: {
+                [key: string]: string;
+            } | null;
             /** @description This argument stores the licensed resources state
              *
              *     The licensed_resources_state should store the current filtering state.
@@ -2857,6 +3026,39 @@ export interface components {
         } | {
             internal: components["schemas"]["PasswordHash"];
         };
+        PublicConnectionStringInfo: {
+            /**
+             * Format: int32
+             * @description The unique identifier of the token
+             */
+            id: number;
+            /**
+             * Format: uuid
+             * @description The inner identifier of the token
+             */
+            innerId: string;
+            /**
+             * Format: uuid
+             * @description The account id of the token
+             */
+            accountId: string;
+            /** @description The email of the token */
+            email: components["schemas"]["Email"];
+            /** @description The name of the token */
+            name: string;
+            /**
+             * Format: date-time
+             * @description The expiration date time
+             */
+            expiration: string;
+            /**
+             * Format: date-time
+             * @description The creation date time of the token
+             */
+            createdAt: string;
+            /** @description The scope of the token */
+            scope: components["schemas"]["ConnectionStringBean"][];
+        };
         ResetPasswordBody: {
             token: string;
             email: string;
@@ -2872,7 +3074,7 @@ export interface components {
              */
             id?: string | null;
             /** @description The route service */
-            service: components["schemas"]["Parent_Service_String"];
+            service?: components["schemas"]["Parent_Service_String"];
             /** @description The route name */
             securityGroup: components["schemas"]["SecurityGroup"];
             /** @description The route description */
@@ -3001,9 +3203,7 @@ export interface components {
             /** @description
              *     Protect the route with the user profile filtered by roles
              *      */
-            protectedByRoles: {
-                roles: components["schemas"]["PermissionedRole"][];
-            };
+            protectedByRoles: components["schemas"]["PermissionedRole"][];
         };
         /** @description The Upstream Service
          *
@@ -3018,7 +3218,7 @@ export interface components {
              *     generated using the name of the service.
              *
              */
-            id: string;
+            id?: string;
             /** @description The service unique name
              *
              *     The name of the service. The name should be unique and is used to
@@ -3043,7 +3243,7 @@ export interface components {
             routes: components["schemas"]["Route"][];
             /** @description The health status of the service
              *      */
-            healthStatus: components["schemas"]["HealthStatus"];
+            healthStatus?: components["schemas"]["HealthStatus"];
             /** @description The service health check configuration
              *
              *     The health check configuration for the service.
@@ -3208,7 +3408,7 @@ export interface components {
              */
             updated?: string | null;
         };
-        TenantMetaKey: "federal_revenue_register" | "federal_revenue_register_type" | "country" | "state" | "province" | "city" | "address1" | "address2" | "zip_code" | {
+        TenantMetaKey: "federal_revenue_register" | "federal_revenue_register_type" | "country" | "state" | "province" | "city" | "address1" | "address2" | "zip_code" | "website_url" | "support_email" | "locale" | "legal_name" | "trading_name" | "contact_person" | {
             /** @description To specify any other meta key
              *
              *     Specify any other meta key that is not listed here. */
@@ -3473,6 +3673,7 @@ export interface components {
             url: string;
             /** @description The webhook trigger */
             trigger: components["schemas"]["WebHookTrigger"];
+            method?: null | components["schemas"]["HttpMethod"];
             /** @description The webhook is active */
             isActive: boolean;
             /**
@@ -3611,6 +3812,130 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    list_guest_roles_as_account_manager: {
+        parameters: {
+            query?: {
+                /** @description The name of the guest role. */
+                name?: string | null;
+                /** @description The slug of the guest role. */
+                slug?: string | null;
+                /** @description If it is a system role. */
+                system?: boolean | null;
+            };
+            header: {
+                /** @description The tenant unique id. */
+                "x-mycelium-tenant-id": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Success. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GuestRole"][];
+                };
+            };
+            /** @description Not found. */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Forbidden. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Unknown internal server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+        };
+    };
+    fetch_guest_role_details_as_account_manager: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description The tenant unique id. */
+                "x-mycelium-tenant-id": string;
+            };
+            path: {
+                /** @description The guest role primary key. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Success. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GuestRole"];
+                };
+            };
+            /** @description Not found. */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Forbidden. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Unknown internal server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+        };
+    };
     guest_to_children_account: {
         parameters: {
             query?: never;
@@ -4162,6 +4487,53 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Unauthorized. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Forbidden. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Unknown internal server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+        };
+    };
+    list_my_connection_strings: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Connection strings listed. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PublicConnectionStringInfo"][];
                 };
             };
             /** @description Unauthorized. */
@@ -5867,7 +6239,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["Account"][];
+                    "application/json": components["schemas"]["PaginatedRecord_Account"];
                 };
             };
             /** @description Not found. */

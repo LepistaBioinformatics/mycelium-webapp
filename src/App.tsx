@@ -19,7 +19,7 @@ export default function App() {
   }, [profile, t]);
 
   return (
-    <div id="App" className="bg-zinc-50 dark:bg-zinc-900">
+    <div id="App" className="bg-white dark:bg-zinc-900">
       <BrowserRouter>
         <Routes>
           <Route path="*" element={<NotFound />} />

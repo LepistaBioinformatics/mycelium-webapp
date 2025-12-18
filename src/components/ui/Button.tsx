@@ -17,7 +17,7 @@ const styles = cva("text-gray-700 dark:text-gray-50", {
     },
     intent: {
       primary:
-        "bg-indigo-500 hover:bg-indigo-600 dark:bg-lime-600 dark:hover:bg-lime-700 text-white",
+        "bg-violet-500 hover:bg-violet-600 dark:bg-lime-600 dark:hover:bg-lime-700 text-white",
       secondary:
         "text-white font-semibold bg-gray-500 hover:bg-gray-600 dark:bg-gray-600 dark:hover:bg-gray-700",
       warning:
@@ -25,7 +25,7 @@ const styles = cva("text-gray-700 dark:text-gray-50", {
       danger:
         "bg-red-500 dark:bg-red-600 text-white hover:bg-red-600 dark:hover:bg-red-700",
       link: "!text-indigo-500 dark:text-lime-500 bg-transparent hover:bg-transparent border border-transparent hover:border-indigo-500 dark:hover:border-lime-500",
-      info: "bg-indigo-500 text-white hover:bg-indigo-600 dark:bg-indigo-500 dark:hover:bg-indigo-700",
+      info: "bg-violet-500 text-white hover:bg-violet-600 dark:bg-violet-500 dark:hover:bg-violet-700",
     },
     size: {
       xs: "py-1 px-2 text-xs",

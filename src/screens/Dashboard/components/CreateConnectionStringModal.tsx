@@ -214,14 +214,14 @@ export default function CreateConnectionStringModal({
     <Modal open={isOpen}>
       <Modal.Header handleClose={handleClose}>
         <Typography>
-          {t("screens.Dashboard.CreateConnectionStringModal.title")}
+          {t("screens.Dashboard.AdvancedOptionsModal.title")}
         </Typography>
       </Modal.Header>
 
       <Modal.Body>
         <div className="flex flex-col gap-4 w-full">
           <Typography as="p" decoration="smooth">
-            {t("screens.Dashboard.CreateConnectionStringModal.explain")}
+            {t("screens.Dashboard.AdvancedOptionsModal.explain")}
           </Typography>
 
           <form
@@ -231,10 +231,10 @@ export default function CreateConnectionStringModal({
             <div>
               <FormField
                 label={t(
-                  "screens.Dashboard.CreateConnectionStringModal.form.name.label"
+                  "screens.Dashboard.AdvancedOptionsModal.form.name.label"
                 )}
                 title={t(
-                  "screens.Dashboard.CreateConnectionStringModal.form.name.title"
+                  "screens.Dashboard.AdvancedOptionsModal.form.name.title"
                 )}
                 width="full"
               >
@@ -245,7 +245,7 @@ export default function CreateConnectionStringModal({
                   required
                   disabled={isSubmitting || connectionString !== null || copied}
                   placeholder={t(
-                    "screens.Dashboard.CreateConnectionStringModal.form.name.placeholder"
+                    "screens.Dashboard.AdvancedOptionsModal.form.name.placeholder"
                   )}
                   {...register("name", { required: true })}
                 />
@@ -257,10 +257,10 @@ export default function CreateConnectionStringModal({
             <div>
               <FormField
                 label={t(
-                  "screens.Dashboard.CreateConnectionStringModal.form.expiration.label"
+                  "screens.Dashboard.AdvancedOptionsModal.form.expiration.label"
                 )}
                 title={t(
-                  "screens.Dashboard.CreateConnectionStringModal.form.expiration.title"
+                  "screens.Dashboard.AdvancedOptionsModal.form.expiration.title"
                 )}
                 width="full"
               >
@@ -273,7 +273,7 @@ export default function CreateConnectionStringModal({
                     return (
                       <option key={expiration} value={expiration}>
                         {t(
-                          `screens.Dashboard.CreateConnectionStringModal.form.expiration.options.${expiration}`
+                          `screens.Dashboard.AdvancedOptionsModal.form.expiration.options.${expiration}`
                         )}
                       </option>
                     );
@@ -302,7 +302,7 @@ export default function CreateConnectionStringModal({
                 <Spinner />
               ) : (
                 t(
-                  "screens.Dashboard.CreateConnectionStringModal.form.create.label"
+                  "screens.Dashboard.AdvancedOptionsModal.form.create.label"
                 )
               )}
             </Button>
@@ -323,7 +323,7 @@ export default function CreateConnectionStringModal({
                   onClick={() => handleReset()}
                 >
                   {t(
-                    "screens.Dashboard.CreateConnectionStringModal.form.reset"
+                    "screens.Dashboard.AdvancedOptionsModal.form.reset"
                   )}
                   <FaTimes className="inline-block ml-2" />
                 </Button>
@@ -340,14 +340,14 @@ export default function CreateConnectionStringModal({
                   {copied ? (
                     <>
                       {t(
-                        "screens.Dashboard.CreateConnectionStringModal.form.copied"
+                        "screens.Dashboard.AdvancedOptionsModal.form.copied"
                       )}
                       <FaCheck className="inline-block ml-2" />
                     </>
                   ) : (
                     <>
                       {t(
-                        "screens.Dashboard.CreateConnectionStringModal.form.copy.label"
+                        "screens.Dashboard.AdvancedOptionsModal.form.copy.label"
                       )}
                       <FaCopy className="inline-block ml-2" />
                     </>
@@ -362,12 +362,12 @@ export default function CreateConnectionStringModal({
               <div className="flex sm:flex-col gap-3">
                 <Typography as="h5">
                   {t(
-                    "screens.Dashboard.CreateConnectionStringModal.permissionedRoles"
+                    "screens.Dashboard.AdvancedOptionsModal.permissionedRoles"
                   )}
                 </Typography>
                 <Typography as="p" decoration="smooth">
                   {t(
-                    "screens.Dashboard.CreateConnectionStringModal.permissionedRolesDescription"
+                    "screens.Dashboard.AdvancedOptionsModal.permissionedRolesDescription"
                   )}
                 </Typography>
               </div>
@@ -388,7 +388,7 @@ export default function CreateConnectionStringModal({
                       role={role}
                       permission={permission}
                       title={t(
-                        "screens.Dashboard.CreateConnectionStringModal.removeRole"
+                        "screens.Dashboard.AdvancedOptionsModal.removeRole"
                       )}
                       className="text-lg text-orange-300 dark:text-orange-300 cursor-pointer"
                       onClick={() => handleRemoveRole({ role, permission })}
@@ -403,12 +403,12 @@ export default function CreateConnectionStringModal({
             <div className="rounded-lg bg-zinc-100 dark:bg-zinc-800 px-2 flex flex-col justify-between group/clip">
               <div className="flex sm:flex-col gap-1">
                 <Typography as="h5">
-                  {t("screens.Dashboard.CreateConnectionStringModal.accountId")}
+                  {t("screens.Dashboard.AdvancedOptionsModal.accountId")}
                   <CopyToClipboard text={accountId} inline groupHidden />
                 </Typography>
                 <Typography as="p" decoration="smooth">
                   {t(
-                    "screens.Dashboard.CreateConnectionStringModal.accountIdDescription"
+                    "screens.Dashboard.AdvancedOptionsModal.accountIdDescription"
                   )}
                 </Typography>
               </div>
@@ -424,12 +424,12 @@ export default function CreateConnectionStringModal({
             <div className="rounded-lg bg-zinc-100 dark:bg-zinc-800 px-2 flex flex-col justify-between group/clip">
               <div className="flex sm:flex-col gap-3">
                 <Typography as="h5">
-                  {t("screens.Dashboard.CreateConnectionStringModal.tenantId")}
+                  {t("screens.Dashboard.AdvancedOptionsModal.tenantId")}
                   <CopyToClipboard text={tenantId} inline groupHidden />
                 </Typography>
                 <Typography as="p" decoration="smooth">
                   {t(
-                    "screens.Dashboard.CreateConnectionStringModal.tenantIdDescription"
+                    "screens.Dashboard.AdvancedOptionsModal.tenantIdDescription"
                   )}
                 </Typography>
               </div>

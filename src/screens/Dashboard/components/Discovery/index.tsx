@@ -174,7 +174,7 @@ export default function Discovery() {
 
                 <div className="flex gap-2">
                   {record?.tags?.map((tag) => (
-                    <span className="text-sm rounded-r-full border border-dashed border-indigo-700 dark:border-indigo-600 bg-indigo-300 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 px-2 mt-2 flex flex-col gap-2">
+                    <span className="text-sm rounded-r-full border border-dashed border-indigo-700 dark:border-indigo-600 bg-violet-300 dark:bg-violet-900 text-indigo-700 dark:text-indigo-300 px-2 mt-2 flex flex-col gap-2">
                       {tag}
                     </span>
                   ))}
@@ -260,7 +260,7 @@ const OperationMethod = ({ method }: { method: string }) => {
   switch (method) {
     case "GET":
       return (
-        <span className={style("bg-indigo-500 border-indigo-500")}>
+        <span className={style("bg-violet-500 border-indigo-500")}>
           {method}
         </span>
       );

@@ -218,6 +218,12 @@ export default function Webhooks() {
               </IntroSection.Item>
 
               <IntroSection.Item prefix={t("screens.Dashboard.Webhooks.url")}>
+                <span className="uppercase">
+                  {webhook?.method}
+                </span>
+              </IntroSection.Item>
+
+              <IntroSection.Item prefix={t("screens.Dashboard.Webhooks.url")}>
                 <span className="flex items-center gap-2 group group/clip">
                   {webhook?.url}
                   <CopyToClipboard text={webhook?.url ?? ""} groupHidden />

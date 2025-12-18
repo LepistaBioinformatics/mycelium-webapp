@@ -310,7 +310,7 @@ export default function AdvancedManagement() {
               aria-label=""
               variant="fullWidth"
               className="w-full overflow-x-auto"
-              color="zinc"
+              color="viopet"
               theme={{
                 tablist: {
                   base: "flex text-center border dark:border-none",
@@ -322,7 +322,7 @@ export default function AdvancedManagement() {
                     variant: {
                       fullWidth: {
                         active: {
-                          on: "rounded-none bg-zinc-100 p-4 text-zinc-900 dark:bg-zinc-700 dark:text-white",
+                          on: "rounded-none bg-violet-100 p-4 text-zinc-900 dark:bg-zinc-700 dark:text-white",
                           off: "rounded-none bg-white hover:bg-zinc-50 hover:text-zinc-700 dark:bg-zinc-800 dark:hover:bg-zinc-700 dark:hover:text-white",
                         },
                       },
@@ -341,6 +341,7 @@ export default function AdvancedManagement() {
                   </span>
                 }
                 icon={GoLaw}
+                color="violet"
               >
                 <LegalSettings
                   tenant={activeTenant}

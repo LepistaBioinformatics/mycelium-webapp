@@ -47,7 +47,7 @@ const textInputTheme = {
     input: {
       colors: {
         custom:
-          "border-zinc-400 bg-indigo-50 text-zinc-900 focus:border-cyan-500 focus:ring-zinc-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white placeholder-zinc-500  dark:placeholder-zinc-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500",
+          "border-zinc-400 bg-violet-50 text-zinc-900 focus:border-cyan-500 focus:ring-zinc-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white placeholder-zinc-500  dark:placeholder-zinc-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500",
       },
     },
   },
@@ -290,7 +290,7 @@ export default function WebhookModal({
               theme={{
                 colors: {
                   custom:
-                    "border-zinc-400 bg-indigo-50 text-zinc-900 focus:border-cyan-500 focus:ring-zinc-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white placeholder-zinc-500  dark:placeholder-zinc-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500",
+                    "border-zinc-400 bg-violet-50 text-zinc-900 focus:border-cyan-500 focus:ring-zinc-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white placeholder-zinc-500  dark:placeholder-zinc-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500",
                 },
               }}
               {...register("description")}
@@ -340,11 +340,11 @@ export default function WebhookModal({
               title={
                 webhook
                   ? t(
-                      "screens.Dashboard.GuestRoles.GuestRolesModal.form.permission.titleReadOnly"
-                    )
+                    "screens.Dashboard.GuestRoles.GuestRolesModal.form.permission.titleReadOnly"
+                  )
                   : t(
-                      "screens.Dashboard.GuestRoles.GuestRolesModal.form.permission.titleWrite"
-                    )
+                    "screens.Dashboard.GuestRoles.GuestRolesModal.form.permission.titleWrite"
+                  )
               }
               {...register("trigger")}
             >
@@ -528,12 +528,12 @@ export default function WebhookModal({
             {webhook
               ? isLoading
                 ? t(
-                    "screens.Dashboard.Webhooks.WebhookModal.formFields.updating"
-                  )
+                  "screens.Dashboard.Webhooks.WebhookModal.formFields.updating"
+                )
                 : t("screens.Dashboard.Webhooks.WebhookModal.formFields.update")
               : isLoading
-              ? t("screens.Dashboard.Webhooks.WebhookModal.formFields.creating")
-              : t("screens.Dashboard.Webhooks.WebhookModal.formFields.create")}
+                ? t("screens.Dashboard.Webhooks.WebhookModal.formFields.creating")
+                : t("screens.Dashboard.Webhooks.WebhookModal.formFields.create")}
           </Button>
         </form>
       </Modal.Body>

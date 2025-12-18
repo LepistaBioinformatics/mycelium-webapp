@@ -21,7 +21,7 @@ type State = "open" | "closed";
 
 interface ContainerProps
   extends BaseProps,
-    VariantProps<typeof containerStyles> {
+  VariantProps<typeof containerStyles> {
   onToggle?: (state: State) => void;
 }
 
@@ -45,7 +45,7 @@ function Container({
 }
 
 const summaryStyles = cva(
-  "cursor-pointer border-t-[0.1px] border-opacity-20 dark:border-opacity-20 border-indigo-400 dark:border-lime-600 sm:hover:border-indigo-400 dark:sm:hover:border-lime-400 px-0 hover:px-2 transition-all duration-300 py-1 hover:bg-indigo-50 dark:hover:bg-zinc-800 text-blue-500 dark:text-lime-400 list-none",
+  "cursor-pointer border-t-[0.1px] border-opacity-20 dark:border-opacity-20 border-indigo-400 dark:border-lime-600 sm:hover:border-indigo-400 dark:sm:hover:border-lime-400 px-0 hover:px-2 transition-all duration-300 py-1 hover:bg-violet-50 dark:hover:bg-zinc-800 text-violet-500 dark:text-lime-400 list-none",
   {
     variants: {
       marginTop: {
@@ -82,7 +82,7 @@ const summaryStyles = cva(
   }
 );
 
-interface SummaryProps extends BaseProps, VariantProps<typeof summaryStyles> {}
+interface SummaryProps extends BaseProps, VariantProps<typeof summaryStyles> { }
 
 function Summary({
   children,
@@ -118,7 +118,7 @@ const contentStyles = cva("flex flex-col gap-8 py-5 px-0", {
   },
 });
 
-interface ContentProps extends BaseProps, VariantProps<typeof contentStyles> {}
+interface ContentProps extends BaseProps, VariantProps<typeof contentStyles> { }
 
 function Content({ children, minHeight, ...props }: ContentProps) {
   return (

@@ -27,7 +27,7 @@ interface IFormInputs {
 
 export interface SearchProps
   extends BaseProps,
-    VariantProps<typeof containerStyles> {
+  VariantProps<typeof containerStyles> {
   term?: string;
   onSubmit: (term?: string) => void;
   placeholder?: string;
@@ -97,7 +97,7 @@ function Container({
                           base: "block w-full border disabled:cursor-not-allowed disabled:opacity-50 text-start sm:text-center text-lg",
                           colors: {
                             custom:
-                              "border-zinc-400 bg-indigo-50 text-zinc-900 focus:border-cyan-500 focus:ring-zinc-500 dark:border-zinc-900 sm:dark:border-zinc-800 dark:bg-zinc-900 sm:dark:bg-zinc-800 dark:text-white placeholder-zinc-500 dark:placeholder-zinc-400 dark:focus:border-lime-500 dark:focus:ring-lime-500",
+                              "border-zinc-400 bg-violet-50 text-zinc-900 focus:border-cyan-500 focus:ring-zinc-500 dark:border-zinc-900 sm:dark:border-zinc-800 dark:bg-zinc-900 sm:dark:bg-zinc-800 dark:text-white placeholder-zinc-500 dark:placeholder-zinc-400 dark:focus:border-lime-500 dark:focus:ring-lime-500",
                           },
                           withAddon: {
                             off: "rounded-lg sm:rounded-full",
@@ -133,7 +133,7 @@ function Container({
 }
 
 const commandPaletteContentStyles = cva(
-  "flex flex-col absolute left-0 gap-8 max-h-[250px] overflow-y-auto bg-indigo-50 dark:bg-zinc-800 rounded-lg p-2 mt-4 border-2 border-zinc-300 dark:border-zinc-500 scrollbar w-full shadow-lg dark:shadow-zinc-900",
+  "flex flex-col absolute left-0 gap-8 max-h-[250px] overflow-y-auto bg-violet-50 dark:bg-zinc-800 rounded-lg p-2 mt-4 border-2 border-zinc-300 dark:border-zinc-500 scrollbar w-full shadow-lg dark:shadow-zinc-900",
   {
     variants: {},
     defaultVariants: {},
@@ -150,7 +150,7 @@ function CommandPaletteContent({ children }: CommandPaletteContentProps) {
 }
 
 const commandPaletteItemStyles = cva(
-  "flex flex-col gap-0 mb-1 hover:bg-indigo-100 dark:hover:bg-zinc-700 w-full group",
+  "flex flex-col gap-0 mb-1 hover:bg-violet-100 dark:hover:bg-zinc-700 w-full group",
   {
     variants: {
       disabled: {

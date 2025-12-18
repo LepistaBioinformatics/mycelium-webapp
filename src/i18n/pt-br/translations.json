@@ -85,7 +85,7 @@
           "title": "Seu e-mail"
         }
       },
-      "CreateConnectionStringModal": {
+      "AdvancedOptionsModal": {
         "title": "Criar string de conexão",
         "tabName": "Opções avançadas",
         "accountId": "Restrito a conta",
@@ -197,6 +197,10 @@
       "TenantOwnershipSection": {
         "title": "Seus namespaces",
         "tabName": "Namespaces"
+      },
+      "ListConnectionStringsSection": {
+        "title": "Strings de conexão",
+        "tabName": "Strings de conexão"
       },
       "LicensedResourcesSection": {
         "title": "Contas que você tem acesso",

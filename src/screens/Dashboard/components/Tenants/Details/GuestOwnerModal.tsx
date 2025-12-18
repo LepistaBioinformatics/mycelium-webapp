@@ -148,7 +148,7 @@ export default function GuestOwnerModal({
                   input: {
                     colors: {
                       custom:
-                        "border-zinc-400 bg-indigo-50 text-zinc-900 focus:border-cyan-500 focus:ring-zinc-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white placeholder-zinc-500  dark:placeholder-zinc-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500",
+                        "border-zinc-400 bg-violet-50 text-zinc-900 focus:border-cyan-500 focus:ring-zinc-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white placeholder-zinc-500  dark:placeholder-zinc-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500",
                     },
                   },
                 },
@@ -161,11 +161,11 @@ export default function GuestOwnerModal({
           <Button rounded type="submit" disabled={!emailWatch || isLoading}>
             {isLoading
               ? t(
-                  "screens.Dashboard.Tenants.AdvancedManagement.legalSettingsAndPeople.owners.guestOwner.form.registering"
-                )
+                "screens.Dashboard.Tenants.AdvancedManagement.legalSettingsAndPeople.owners.guestOwner.form.registering"
+              )
               : t(
-                  "screens.Dashboard.Tenants.AdvancedManagement.legalSettingsAndPeople.owners.guestOwner.form.register"
-                )}
+                "screens.Dashboard.Tenants.AdvancedManagement.legalSettingsAndPeople.owners.guestOwner.form.register"
+              )}
           </Button>
         </form>
       </Modal.Body>

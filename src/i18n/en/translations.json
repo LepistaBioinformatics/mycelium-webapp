@@ -85,7 +85,7 @@
           "title": "Your email"
         }
       },
-      "CreateConnectionStringModal": {
+      "AdvancedOptionsModal": {
         "title": "Create Connection String",
         "tabName": "Advanced Options",
         "accountId": "Restricted to account",
@@ -197,6 +197,10 @@
       "TenantOwnershipSection": {
         "title": "Your namespaces",
         "tabName": "Namespaces"
+      },
+      "ListConnectionStringsSection": {
+        "title": "Connection strings",
+        "tabName": "Connection strings"
       },
       "LicensedResourcesSection": {
         "title": "Accounts you have access",
@@ -568,7 +572,7 @@
           },
           "slug": {
             "title": "Slug",
-            "prefix": "Single Identifier (Slug)"
+            "prefix": "Unique Identifier (Slug)"
           },
           "created": {
             "title": "Created in",
@@ -747,7 +751,7 @@
         "listItem": {
           "slug": {
             "title": "Use this key to set up guest roles on Downstream Systems and Services",
-            "prefix": "Single Identifier (Slug)"
+            "prefix": "Unique Identifier (Slug)"
           },
           "description": {
             "title": "When to use",
@@ -764,7 +768,7 @@
           },
           "slug": {
             "title": "Invited role key",
-            "prefix": "Single Identifier (Slug)"
+            "prefix": "Unique Identifier (Slug)"
           },
           "system": {
             "title": "Is it a system role?",
