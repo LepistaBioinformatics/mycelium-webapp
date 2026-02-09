@@ -716,7 +716,7 @@ export default function AccountDetails({ onClose }: Props) {
       )}
 
       {isCreateConnectionStringModalOpen && account?.id && (
-        <AdvancedOptionsModal
+        <CreateConnectionStringModal
           isOpen={isCreateConnectionStringModalOpen}
           onClose={handleCloseCreateConnectionStringModal}
           onSuccess={handleSuccessCreateConnectionString}
