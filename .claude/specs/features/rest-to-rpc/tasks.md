@@ -6,7 +6,7 @@ Legend: ⬜ not started · 🔄 in progress · ✅ done · 🔴 blocked
 
 ## T0 — RPC client layer
 
-**Status:** ⬜
+\*\*Status:\*\* ✅
 
 **What:** Create `src/services/rpc/client.ts` with `rpcCall` and `rpcBatch`.
 
@@ -24,7 +24,7 @@ Legend: ⬜ not started · 🔄 in progress · ✅ done · 🔴 blocked
 
 ## T1 — `systemManager` wrappers + WebHooks + ErrorCodes
 
-**Status:** ⬜
+\*\*Status:\*\* ✅
 
 **Depends on:** T0
 
@@ -48,7 +48,7 @@ Legend: ⬜ not started · 🔄 in progress · ✅ done · 🔴 blocked
 
 ## T2 — `gatewayManager` wrappers + Discovery
 
-**Status:** ⬜
+\*\*Status:\*\* ✅
 
 **Depends on:** T0
 
@@ -65,7 +65,7 @@ Legend: ⬜ not started · 🔄 in progress · ✅ done · 🔴 blocked
 
 ## T3 — `beginners` wrappers (non-profile) + token + account creation
 
-**Status:** ⬜
+\*\*Status:\*\* ✅
 
 **Depends on:** T0
 
@@ -90,7 +90,7 @@ Legend: ⬜ not started · 🔄 in progress · ✅ done · 🔴 blocked
 
 ## T4 — `managers` wrappers + Tenants CRUD
 
-**Status:** ⬜
+\*\*Status:\*\* ✅
 
 **Depends on:** T0
 
@@ -115,7 +115,7 @@ Legend: ⬜ not started · 🔄 in progress · ✅ done · 🔴 blocked
 
 ## T5 — `tenantOwner` wrappers + meta + owners
 
-**Status:** ⬜
+\*\*Status:\*\* ✅
 
 **Depends on:** T0
 
@@ -142,7 +142,7 @@ to confirm which RPC method handles `PUT /_adm/tenant-owner/meta`.
 
 ## T6 — `tenantManager` wrappers + tenant detail, tags, accounts
 
-**Status:** ⬜
+\*\*Status:\*\* ✅
 
 **Depends on:** T0
 
@@ -166,7 +166,7 @@ to confirm which RPC method handles `PUT /_adm/tenant-owner/meta`.
 
 ## T7 — `guestManager` wrappers + GuestRoles screens
 
-**Status:** ⬜
+\*\*Status:\*\* ✅
 
 **Depends on:** T0
 
@@ -191,7 +191,7 @@ to confirm which RPC method handles `PUT /_adm/tenant-owner/meta`.
 
 ## T8 — `subscriptionsManager` wrappers + Accounts screens
 
-**Status:** ⬜
+\*\*Status:\*\* ✅
 
 **Depends on:** T0
 
@@ -222,7 +222,7 @@ to confirm which RPC method handles `PUT /_adm/tenant-owner/meta`.
 
 ## T9 — `staff` wrappers + UpgradeOrDowngrade
 
-**Status:** ⬜
+\*\*Status:\*\* ✅
 
 **Depends on:** T0
 
@@ -240,7 +240,7 @@ to confirm which RPC method handles `PUT /_adm/tenant-owner/meta`.
 
 ## T10 — Final validation
 
-**Status:** ⬜
+\*\*Status:\*\* ✅
 
 **Depends on:** T1–T9
 
