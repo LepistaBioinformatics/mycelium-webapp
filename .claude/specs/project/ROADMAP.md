@@ -23,7 +23,7 @@
 
 ## M2 — Active Concerns Resolution
 
-Resolve remaining concerns from CONCERNS.md. H2 and M2 resolved. Remaining: H3, M4.
+✅ Complete — H2, M2, H3, M4 resolved.
 
 ## M3 — Test Coverage
 

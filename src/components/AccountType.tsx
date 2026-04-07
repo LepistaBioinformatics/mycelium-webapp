@@ -27,6 +27,50 @@ export default function AccountType({
   part = "type",
   extraProps,
 }: Props) {
+  const accountType = useMemo(
+    () =>
+      typeof account.accountType === "object"
+        ? Object.keys(account.accountType).at(0)
+        : undefined,
+    [account.accountType]
+  );
+
+  const renderedValues = useCallback(
+    (values: any) => {
+      if (typeof values === "string") {
+        return (
+          <Typography {...attrs} {...extraProps}>
+            {values}
+          </Typography>
+        );
+      }
+
+      if (Array.isArray(values)) {
+        return values.map((value) => {
+          return (
+            <Typography {...attrs} {...extraProps}>
+              {value}
+            </Typography>
+          );
+        });
+      }
+
+      if (typeof values === "object") {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        return Object.entries(values).map(([_, value]) => {
+          return (
+            <Typography {...attrs} {...extraProps}>
+              {value as string}
+            </Typography>
+          );
+        });
+      }
+
+      return null;
+    },
+    [extraProps]
+  );
+
   if (typeof account.accountType === "string") {
     return (
       <Typography {...attrs} nowrap {...extraProps}>
@@ -34,46 +78,6 @@ export default function AccountType({
       </Typography>
     );
   }
-
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const accountType = useMemo(
-    () => Object.keys(account.accountType).at(0),
-    [account.accountType]
-  );
-
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const renderedValues = useCallback((values: any) => {
-    if (typeof values === "string") {
-      return (
-        <Typography {...attrs} {...extraProps}>
-          {values}
-        </Typography>
-      );
-    }
-
-    if (Array.isArray(values)) {
-      return values.map((value) => {
-        return (
-          <Typography {...attrs} {...extraProps}>
-            {value}
-          </Typography>
-        );
-      });
-    }
-
-    if (typeof values === "object") {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      return Object.entries(values).map(([_, value]) => {
-        return (
-          <Typography {...attrs} {...extraProps}>
-            {value as string}
-          </Typography>
-        );
-      });
-    }
-
-    return null;
-  }, [extraProps]);
 
   if (part === "type") {
     return (

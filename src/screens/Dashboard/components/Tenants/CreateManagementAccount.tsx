@@ -1,7 +1,7 @@
 import Typography from "@/components/ui/Typography";
 import { useCallback, useState } from "react";
 import Modal from "@/components/ui/Modal";
-import { useAuth0 } from "@auth0/auth0-react";
+import useProfile from "@/hooks/use-profile";
 import Button from "@/components/ui/Button";
 import useSuspenseError from "@/hooks/use-suspense-error";
 import { accountsCreateManagementAccount } from "@/services/rpc/tenantOwner";
@@ -24,7 +24,7 @@ export default function CreateManagementAccount({
   onClose,
   tenantId,
 }: Props) {
-  const { getAccessTokenSilently } = useAuth0();
+  const { getAccessTokenSilently } = useProfile();
 
   const { parseHttpError } = useSuspenseError();
 

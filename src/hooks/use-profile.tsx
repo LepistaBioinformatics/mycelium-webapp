@@ -70,6 +70,8 @@ export default function useProfile(args?: Props) {
     getAccessTokenSilently,
     getAccessTokenWithPopup,
     getIdTokenClaims,
+    logout,
+    loginWithRedirect,
     error,
   } = useAuth0();
 
@@ -268,6 +270,8 @@ export default function useProfile(args?: Props) {
     getAccessTokenSilently,
     getAccessTokenWithPopup,
     getIdTokenClaims,
+    logout,
+    loginWithRedirect,
     hasEnoughPermissions,
   };
 }

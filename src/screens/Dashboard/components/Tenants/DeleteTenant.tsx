@@ -6,7 +6,7 @@ import Typography from "@/components/ui/Typography";
 import useSuspenseError from "@/hooks/use-suspense-error";
 import { components } from "@/services/openapi/mycelium-schema";
 import { tenantsDelete } from "@/services/rpc/managers";
-import { useAuth0 } from "@auth0/auth0-react";
+import useProfile from "@/hooks/use-profile";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -21,7 +21,7 @@ interface Props {
 export default function DeleteTenant({ tenant, isOpen, onClose }: Props) {
   const { t } = useTranslation();
 
-  const { getAccessTokenSilently } = useAuth0();
+  const { getAccessTokenSilently } = useProfile();
 
   const { parseHttpError } = useSuspenseError();
 

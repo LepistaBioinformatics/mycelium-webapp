@@ -1,6 +1,6 @@
 import PageBody from "@/components/ui/PageBody";
 import AppHeader from "@/components/ui/AppHeader";
-import { useAuth0 } from "@auth0/auth0-react";
+import useProfile from "@/hooks/use-profile";
 import AuthenticatedUser from "./AuthenticatedUser";
 import Typography from "@/components/ui/Typography";
 import { useTranslation } from "react-i18next";
@@ -19,8 +19,8 @@ import {
 export default function HomePage() {
   const { t } = useTranslation();
 
-  const { user, isAuthenticated, isLoading, logout, getAccessTokenWithPopup } =
-    useAuth0();
+  const { user, isAuthenticated, isLoadingUser: isLoading, logout, getAccessTokenWithPopup } =
+    useProfile();
 
   const Container = ({ children }: BaseProps) => {
     return (

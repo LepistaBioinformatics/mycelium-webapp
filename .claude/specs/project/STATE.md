@@ -15,6 +15,12 @@
 
 _(none)_
 
+## Decisions
+
+- **D5** — M4 resolved by extending `useProfile()` to re-export `logout` and `loginWithRedirect`
+  from Auth0. All 11 direct `useAuth0()` call sites now go through `use-profile.tsx`.
+  `useAuth0` is imported only in `use-profile.tsx`.
+
 ## Lessons
 
 - **L1 — tenantOwner.meta** — The `/_adm/tenant-owner/meta` endpoint is POST not PUT. The correct

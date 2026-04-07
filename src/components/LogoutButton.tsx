@@ -1,7 +1,7 @@
-import { useAuth0 } from "@auth0/auth0-react";
+import useProfile from "@/hooks/use-profile";
 
 const LogoutButton = () => {
-  const { logout } = useAuth0();
+  const { logout } = useProfile();
 
   return (
     <button onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}>

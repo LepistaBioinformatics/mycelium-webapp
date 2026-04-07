@@ -3,7 +3,7 @@ import Typography from "./Typography";
 import { Link } from "react-router";
 import ThemeSwitcher from "./ThemeSwitcher";
 import { PiSignOutBold } from "react-icons/pi";
-import { useAuth0 } from "@auth0/auth0-react";
+import useProfile from "@/hooks/use-profile";
 
 const appHeaderStyles = cva(
   "text-white dark:text-white absolute top-0 w-full mx-auto px-2 sm:px-5 z-30",
@@ -36,7 +36,7 @@ export default function AppHeader({
   logout,
   ...props
 }: AppHeaderProps) {
-  const { user } = useAuth0();
+  const { user } = useProfile();
 
   return (
     <header className={appHeaderStyles({ discrete })} {...props}>

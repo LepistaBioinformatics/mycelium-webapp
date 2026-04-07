@@ -3,7 +3,6 @@ import useToggleSidebar from "@/hooks/use-toggle-sidebar";
 import { Outlet } from "react-router";
 import { useSelector } from "react-redux";
 import { RootState } from "@/states/store";
-import { useAuth0 } from "@auth0/auth0-react";
 import Typography from "@/components/ui/Typography";
 import Button from "@/components/ui/Button";
 import { useEffect, useMemo, useState } from "react";
@@ -76,7 +75,7 @@ function LogoutModal({
   show: boolean;
   setShow: (show: boolean) => void;
 }) {
-  const { logout: auth0Logout } = useAuth0();
+  const { logout: auth0Logout } = useProfile();
 
   return (
     <Modal open={show}>

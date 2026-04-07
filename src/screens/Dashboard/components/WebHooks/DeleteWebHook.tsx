@@ -5,7 +5,7 @@ import Modal from "@/components/ui/Modal";
 import Typography from "@/components/ui/Typography";
 import { components } from "@/services/openapi/mycelium-schema";
 import { webhooksDelete } from "@/services/rpc/systemManager";
-import { useAuth0 } from "@auth0/auth0-react";
+import useProfile from "@/hooks/use-profile";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -20,7 +20,7 @@ interface Props {
 export default function DeleteWebHook({ webhook, isOpen, onClose }: Props) {
   const { t } = useTranslation();
 
-  const { getAccessTokenSilently } = useAuth0();
+  const { getAccessTokenSilently } = useProfile();
 
   const [isLoading, setIsLoading] = useState(false);
 

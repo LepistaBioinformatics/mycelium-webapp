@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
 import Typography from "@/components/ui/Typography";
-import { useAuth0, User } from "@auth0/auth0-react";
+import { User } from "@auth0/auth0-react";
+import useProfile from "@/hooks/use-profile";
 import { useCallback, useEffect, useState } from "react";
 import { components } from "@/services/openapi/mycelium-schema";
 import useSWR from "swr";
@@ -38,7 +39,7 @@ export default function MyceliumProfile({ user }: Props) {
 
   const [error, setError] = useState<string | null>(null);
 
-  const { getAccessTokenSilently } = useAuth0();
+  const { getAccessTokenSilently } = useProfile();
 
   const [registeringAccount, setRegisteringAccount] = useState<boolean>(false);
 

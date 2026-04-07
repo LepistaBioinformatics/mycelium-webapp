@@ -12,7 +12,6 @@ import { IoMdSettings } from "react-icons/io";
 import LanguageSwitcher from "../LanguageSwitcher";
 import SignOutButton from "./SignOutButton";
 import ThemeSwitcher from "./ThemeSwitcher";
-import { useAuth0 } from "@auth0/auth0-react";
 
 const styles = cva(
   "sm:hidden h-16 z-[999] fixed bottom-0 left-0 right-0 bg-white dark:bg-zinc-900 flex items-center justify-around px-4 border-t-2 border-gray-200 dark:border-gray-800",
@@ -143,7 +142,7 @@ function SettingsModal({
 }) {
   const { t } = useTranslation();
 
-  const { logout } = useAuth0();
+  const { logout } = useProfile();
 
   return (
     <Modal open={isOpen} handleClose={onClose}>
