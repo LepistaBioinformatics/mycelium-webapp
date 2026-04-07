@@ -7,7 +7,7 @@ import PermissionIcon from "@/components/ui/PermissionIcon";
 import Typography from "@/components/ui/Typography";
 import useProfile from "@/hooks/use-profile";
 import useSuspenseError from "@/hooks/use-suspense-error";
-import { buildPath } from "@/services/openapi/mycelium-api";
+import { tokensCreate } from "@/services/rpc/beginners";
 import { MycPermission } from "@/types/MyceliumPermission";
 import { Select, Spinner, TextInput } from "flowbite-react";
 import { ComponentProps, useState } from "react";
@@ -55,7 +55,7 @@ export default function CreateConnectionStringModal({
 
   const [copied, setCopied] = useState(false);
 
-  const { parseHttpError, dispatchWarning } = useSuspenseError();
+  const { dispatchWarning } = useSuspenseError();
 
   const { getAccessTokenSilently } = useProfile();
 
@@ -116,13 +116,6 @@ export default function CreateConnectionStringModal({
     }
 
     try {
-      const token = await getAccessTokenSilently();
-
-      if (!token) {
-        setIsSubmitting(false);
-        return;
-      }
-
       const consolidatedRoles = roles
         ?.filter(
           (role) =>
@@ -130,34 +123,25 @@ export default function CreateConnectionStringModal({
               (r) => r.role === role.role && r.permission === role.permission
             )
         )
-        ?.map((role) => [role.role, role.permission]);
+        ?.map((role) => ({
+          name: role.role,
+          permission: role.permission === MycPermission.Read ? 0 : 1,
+        }));
 
-      const response = await fetch(buildPath("/_adm/beginners/tokens"), {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
+      const data = await tokensCreate(
+        {
           expiration: Number(Expiration[expiration]),
           name,
-          tenantId,
-          accountId,
-          roles: consolidatedRoles,
-        }),
-      });
-
-      if (!response.ok) {
-        parseHttpError(response);
-        setIsSubmitting(false);
-        return;
-      }
-
-      const data = await response.json();
+          tenantId: tenantId ?? null,
+          serviceAccountId: accountId ?? null,
+          roles: consolidatedRoles ?? null,
+        },
+        getAccessTokenSilently
+      );
 
       setConnectionString(data.connectionString);
     } catch (error) {
-      console.error(error);
+      dispatchWarning(String(error));
     } finally {
       setIsSubmitting(false);
     }

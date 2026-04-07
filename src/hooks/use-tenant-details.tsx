@@ -2,11 +2,18 @@ import useSWR from "swr";
 import useProfile from "./use-profile";
 import useSuspenseError from "./use-suspense-error";
 import { TenantStatus } from "@/types/TenantStatus";
-import { buildPath } from "@/services/openapi/mycelium-api";
 import { useMemo } from "react";
+import { tenantsGetPublicInfo } from "@/services/rpc/beginners";
+import { components } from "@/services/openapi/mycelium-schema";
+
+type Tenant = components["schemas"]["Tenant"];
 
 interface Props {
   tenantId?: string | null;
+  /**
+   * When provided, the hook fetches using a raw URL (REST) instead of RPC.
+   * Used by screens that call a non-beginners endpoint (e.g. tenant-manager).
+   */
   customUrl?: string | null;
 }
 
@@ -15,39 +22,56 @@ interface Props {
  *
  * It will return the tenant status (active, deleted, unknown) and the
  * tenant details.
+ *
+ * When `tenantId` is provided (and no `customUrl`), uses the JSON-RPC
+ * `beginners.tenants.getPublicInfo` method.
+ *
+ * When `customUrl` is provided, falls back to a raw REST GET request so that
+ * non-beginners endpoints (e.g. tenant-manager) continue to work.
  */
 export default function useTenantDetails({ tenantId, customUrl }: Props) {
   const { getAccessTokenSilently } = useProfile();
 
   const { parseHttpError } = useSuspenseError();
 
-  /**
-   * 1. If customUrl is provided, it will be used instead of the default URL.
-   *
-   * 2. If tenantId is provided, it will be used to build the default URL.
-   *
-   * 3. If neither is provided, the hook will return null and the SWR will not
-   *    be initialized.
-   */
-  const memoizedUrl = useMemo(() => {
-    if (customUrl) return customUrl;
-
-    if (tenantId) {
-      return buildPath("/_adm/beginners/tenants/{tenant_id}", {
-        path: { tenant_id: tenantId },
-      });
-    }
-
+  // RPC path: tuple key so SWR can distinguish from other callers
+  const rpcKey = useMemo(() => {
+    if (customUrl) return null;
+    if (tenantId) return ["rpc", "beginners.tenants.getPublicInfo", tenantId];
     return null;
   }, [tenantId, customUrl]);
 
   const {
-    data: tenantStatus,
-    isLoading,
-    error,
-    mutate,
+    data: rpcTenantStatus,
+    isLoading: rpcIsLoading,
+    error: rpcError,
+    mutate: rpcMutate,
   } = useSWR<TenantStatus>(
-    memoizedUrl,
+    rpcKey,
+    async ([, , id]: [string, string, string]) => {
+      const tenant: Tenant = await tenantsGetPublicInfo(
+        { tenantId: id },
+        getAccessTokenSilently
+      );
+      return { active: tenant };
+    },
+    {
+      revalidateOnMount: true,
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      revalidateIfStale: false,
+      refreshInterval: 1000 * 60 * 2, // 2 minutes
+    }
+  );
+
+  // REST fallback path (used when customUrl is provided)
+  const {
+    data: restTenantStatus,
+    isLoading: restIsLoading,
+    error: restError,
+    mutate: restMutate,
+  } = useSWR<TenantStatus>(
+    customUrl ?? null,
     async (url: string) => {
       const token = await getAccessTokenSilently();
 
@@ -69,10 +93,19 @@ export default function useTenantDetails({ tenantId, customUrl }: Props) {
     }
   );
 
+  if (customUrl) {
+    return {
+      tenantStatus: restTenantStatus,
+      isLoading: restIsLoading,
+      error: restError,
+      mutate: restMutate,
+    };
+  }
+
   return {
-    tenantStatus,
-    isLoading,
-    error,
-    mutate,
+    tenantStatus: rpcTenantStatus,
+    isLoading: rpcIsLoading,
+    error: rpcError,
+    mutate: rpcMutate,
   };
 }

@@ -4,8 +4,8 @@ import CopyToClipboard from "@/components/ui/CopyToClipboard";
 import PageBody from "@/components/ui/PageBody";
 import Typography from "@/components/ui/Typography";
 import useProfile from "@/hooks/use-profile";
-import { buildPath } from "@/services/openapi/mycelium-api";
 import { components } from "@/services/openapi/mycelium-schema";
+import { tenantsGetPublicInfo } from "@/services/rpc/beginners";
 import { tenantsList } from "@/services/rpc/managers";
 import PaginatedRecords from "@/types/PaginatedRecords";
 import { useCallback, useMemo, useState } from "react";
@@ -118,15 +118,7 @@ export default function Tenants() {
 
       dispatch(setTenantIsLoading(true));
 
-      const token = await getAccessTokenSilently();
-
-      await fetch(
-        buildPath("/_adm/beginners/tenants/{tenant_id}", {
-          path: { tenant_id: tenantId },
-        }),
-        { headers: { Authorization: `Bearer ${token}` } }
-      )
-        .then((res) => res.json())
+      tenantsGetPublicInfo({ tenantId }, getAccessTokenSilently)
         .then((data) => dispatch(setTenantInfo(data)))
         .catch((err) => console.error(err))
         .finally(() => dispatch(setTenantIsLoading(false)));

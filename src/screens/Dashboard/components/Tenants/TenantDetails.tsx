@@ -3,7 +3,7 @@ import SideCurtain from "@/components/ui/SideCurtain";
 import Typography from "@/components/ui/Typography";
 import { formatDDMMYY } from "@/functions/format-dd-mm-yy";
 import useProfile from "@/hooks/use-profile";
-import { buildPath } from "@/services/openapi/mycelium-api";
+import { tenantsGetPublicInfo } from "@/services/rpc/beginners";
 import { components } from "@/services/openapi/mycelium-schema";
 import { useCallback, useMemo, useState } from "react";
 import DeleteTenant from "./DeleteTenant";
@@ -70,19 +70,11 @@ export default function TenantDetails({ isOpen, onClose, tenant }: Props) {
         return;
       }
 
-      const token = await getAccessTokenSilently();
-
-      await fetch(
-        buildPath("/_adm/beginners/tenants/{tenant_id}", {
-          path: { tenant_id: tenantId },
-        }),
-        { headers: { Authorization: `Bearer ${token}` } }
-      )
-        .then((res) => res.json())
+      tenantsGetPublicInfo({ tenantId }, getAccessTokenSilently)
         .then((data) => dispatch(setTenantInfo(data)))
         .catch((err) => console.error(err));
     },
-    [tenantInfo, getAccessTokenSilently]
+    [tenantInfo, getAccessTokenSilently, dispatch]
   );
 
   const owners = useMemo(() => {

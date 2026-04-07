@@ -5,6 +5,7 @@ import { useCallback, useEffect, useState } from "react";
 import { components } from "@/services/openapi/mycelium-schema";
 import useSWR from "swr";
 import { buildPath } from "@/services/openapi/mycelium-api";
+import { accountsCreate } from "@/services/rpc/beginners";
 import { SubmitHandler, useForm } from "react-hook-form";
 import FormField from "@/components/ui/FomField";
 import Button from "@/components/ui/Button";
@@ -70,31 +71,11 @@ export default function MyceliumProfile({ user }: Props) {
     try {
       if (!user?.email) throw new Error("User email is required");
 
-      const token = await getAccessTokenSilently();
+      await accountsCreate({ name: user.email }, getAccessTokenSilently);
 
-      if (!token) throw new Error("Token is required");
-
-      const registeringResponse = await fetch(
-        buildPath("/_adm/beginners/accounts"),
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ name: user?.email }),
-        }
-      );
-
-      if (registeringResponse.ok) {
-        setTimeout(() => {
-          setRegisteringStatus(RegisteringStatus.Finished);
-        }, 1000);
-
-        return;
-      }
-
-      throw new Error(await registeringResponse.text());
+      setTimeout(() => {
+        setRegisteringStatus(RegisteringStatus.Finished);
+      }, 1000);
     } catch (error) {
       setError(error as string);
       setRegisteringStatus(RegisteringStatus.Error);
