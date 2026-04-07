@@ -4,11 +4,17 @@ import Typography from "@/components/ui/Typography";
 import { useCallback, useMemo, useState } from "react";
 import useProfile from "@/hooks/use-profile";
 import Button from "@/components/ui/Button";
-import { buildPath } from "@/services/openapi/mycelium-api";
 import useSuspenseError from "@/hooks/use-suspense-error";
 import { Spinner } from "flowbite-react";
 import Countdown from "react-countdown";
 import { useTranslation } from "react-i18next";
+import {
+  accountsUpgradePrivileges,
+  accountsDowngradePrivileges,
+} from "@/services/rpc/staff";
+
+type UpgradeTargetAccountType = "staff" | "manager";
+type DowngradeTargetAccountType = "manager" | "user";
 
 enum AllowedAccountTypes {
   User = "user",
@@ -33,7 +39,7 @@ export default function UpgradeOrDowngradeAccountModal({
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const { parseHttpError } = useSuspenseError();
+  const { dispatchError } = useSuspenseError();
 
   const { hasAdminPrivileges, getAccessTokenSilently } = useProfile();
 
@@ -68,24 +74,27 @@ export default function UpgradeOrDowngradeAccountModal({
         return;
       }
 
-      const params = { path: { account_id: account.id } };
-      const url =
-        action === AllowedActions.Upgrade
-          ? buildPath("/_adm/staffs/accounts/{account_id}/upgrade", params)
-          : buildPath("/_adm/staffs/accounts/{account_id}/downgrade", params);
-
-      const response = await fetch(url, {
-        method: "PATCH",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ to: accountType }),
-      });
-
-      if (!response.ok) {
+      try {
+        if (action === AllowedActions.Upgrade) {
+          await accountsUpgradePrivileges(
+            {
+              accountId: account.id,
+              to: accountType as UpgradeTargetAccountType,
+            },
+            () => Promise.resolve(token)
+          );
+        } else {
+          await accountsDowngradePrivileges(
+            {
+              accountId: account.id,
+              to: accountType as DowngradeTargetAccountType,
+            },
+            () => Promise.resolve(token)
+          );
+        }
+      } catch (err) {
         setIsLoading(false);
-        parseHttpError(response);
+        dispatchError(err instanceof Error ? err.message : String(err));
         return;
       }
 
@@ -96,7 +105,7 @@ export default function UpgradeOrDowngradeAccountModal({
       hasAdminPrivileges,
       getAccessTokenSilently,
       account?.id,
-      parseHttpError,
+      dispatchError,
       onSuccess,
     ]
   );
