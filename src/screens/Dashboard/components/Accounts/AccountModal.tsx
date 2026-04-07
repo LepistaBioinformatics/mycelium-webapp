@@ -8,7 +8,7 @@ import useProfile from "@/hooks/use-profile";
 import useSuspenseError from "@/hooks/use-suspense-error";
 import { buildPath } from "@/services/openapi/mycelium-api";
 import { components } from "@/services/openapi/mycelium-schema";
-import { accountsCreateSystemAccount } from "@/services/rpc/managers";
+import { accountsCreateSubscriptionAccount } from "@/services/rpc/subscriptionsManager";
 import { RootState } from "@/states/store";
 import { MycPermission } from "@/types/MyceliumPermission";
 import { MycRole } from "@/types/MyceliumRole";
@@ -94,7 +94,14 @@ export default function AccountModal({
     onClose();
   };
 
-  const buildBaseUrl = useCallback(() => {
+  const buildManagerBaseUrl = useCallback(() => {
+    if (systemAccountType && scope === "systemScoped") {
+      return {
+        baseUrl: buildPath("/_adm/managers/accounts"),
+        method: "POST",
+      };
+    }
+
     if (account) {
       return {
         baseUrl: buildPath(
@@ -116,11 +123,8 @@ export default function AccountModal({
       };
     }
 
-    return {
-      baseUrl: buildPath("/_adm/subscriptions-manager/accounts"),
-      method: "POST",
-    };
-  }, [account, accountId, scope]);
+    return null;
+  }, [systemAccountType, account, accountId, scope]);
 
   const onSubmit: SubmitHandler<Inputs> = async ({
     name,
@@ -129,51 +133,61 @@ export default function AccountModal({
   }) => {
     setIsLoading(true);
 
-    try {
-      if (systemAccountType && scope === "systemScoped") {
-        await accountsCreateSystemAccount(
-          { name, actor: systemAccountType },
+    const token = await getAccessTokenSilently();
+
+    if (!token) {
+      setIsLoading(false);
+      return;
+    }
+
+    // Subscriptions-manager POST branch: use RPC
+    if (scope === "subscription" && !account && tenantInfo?.id) {
+      try {
+        await accountsCreateSubscriptionAccount(
+          { tenantId: tenantInfo.id, name },
           getAccessTokenSilently
         );
-      } else {
-        const token = await getAccessTokenSilently();
-
-        if (!token) {
-          setIsLoading(false);
-          return;
-        }
-
-        const { baseUrl, method } = buildBaseUrl();
-
-        const response = await fetch(baseUrl, {
-          method,
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-            [TENANT_ID_HEADER]: tenantInfo?.id ?? "",
-          },
-          body: JSON.stringify({
-            name,
-            accountName: name,
-            actor: systemAccountType,
-            roleName,
-            roleDescription,
-          }),
-        });
-
-        if (!response.ok) {
-          parseHttpError(response);
-          setIsLoading(false);
-          return;
-        }
+        handleLocalSuccess();
+      } catch {
+        // error is surfaced by rpcCall
       }
-
-      handleLocalSuccess();
-    } catch (err) {
-      parseHttpError(err as Response);
-    } finally {
       setIsLoading(false);
+      return;
     }
+
+    // Manager POST (systemScoped), PATCH, and roleAssociated branches: use REST
+    const urlResult = buildManagerBaseUrl();
+    if (!urlResult) {
+      setIsLoading(false);
+      return;
+    }
+
+    const { baseUrl, method } = urlResult;
+
+    const response = await fetch(baseUrl, {
+      method,
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+        [TENANT_ID_HEADER]: tenantInfo?.id ?? "",
+      },
+      body: JSON.stringify({
+        name,
+        accountName: name,
+        actor: systemAccountType,
+        roleName,
+        roleDescription,
+      }),
+    });
+
+    if (!response.ok) {
+      parseHttpError(response);
+      setIsLoading(false);
+      return;
+    }
+
+    handleLocalSuccess();
+    setIsLoading(false);
   };
 
   const handleCreateSystemAccount = (accountType: SystemAccountTypes) => {

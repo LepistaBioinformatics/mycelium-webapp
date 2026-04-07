@@ -3,12 +3,10 @@ import Button from "@/components/ui/Button";
 import FormField from "@/components/ui/FomField";
 import Modal from "@/components/ui/Modal";
 import Typography from "@/components/ui/Typography";
-import { TENANT_ID_HEADER } from "@/constants/http-headers";
 import validateEmail from "@/functions/validate-email";
 import useProfile from "@/hooks/use-profile";
-import useSuspenseError from "@/hooks/use-suspense-error";
-import { buildPath } from "@/services/openapi/mycelium-api";
 import { components } from "@/services/openapi/mycelium-schema";
+import { guestsGuestUserToSubscriptionAccount } from "@/services/rpc/subscriptionsManager";
 import { RootState } from "@/states/store";
 import { MycPermission } from "@/types/MyceliumPermission";
 import { MycRole } from "@/types/MyceliumRole";
@@ -47,8 +45,6 @@ export default function GuestToAccountModal({
   const [selectedRole, setSelectedRole] = useState<GuestRole | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const { parseHttpError } = useSuspenseError();
-
   const { getAccessTokenSilently } = useProfile({
     roles: [MycRole.SubscriptionsManager],
     permissions: [MycPermission.Write],
@@ -85,42 +81,28 @@ export default function GuestToAccountModal({
       return;
     }
 
-    if (!account.id || !selectedRole.id) {
+    if (!account.id || !selectedRole.id || !tenantId) {
       setIsSubmitting(false);
       return;
     }
 
-    const token = await getAccessTokenSilently();
-
-    const response = await fetch(
-      buildPath(
-        "/_adm/subscriptions-manager/guests/accounts/{account_id}/roles/{role_id}",
+    try {
+      await guestsGuestUserToSubscriptionAccount(
         {
-          path: { account_id: account.id, role_id: selectedRole?.id },
-        }
-      ),
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-          ...(tenantId ? { [TENANT_ID_HEADER]: tenantId } : {}),
-        },
-        body: JSON.stringify({
+          tenantId,
+          accountId: account.id,
+          roleId: selectedRole.id,
           email: data.email,
-        }),
-      }
-    );
+        },
+        getAccessTokenSilently
+      );
 
-    if (!response.ok) {
-      parseHttpError(response);
       setIsSubmitting(false);
-      return;
+      onClose();
+      reset();
+    } catch {
+      setIsSubmitting(false);
     }
-
-    setIsSubmitting(false);
-    onClose();
-    reset();
   };
 
   const emailIsValid = useMemo(() => {

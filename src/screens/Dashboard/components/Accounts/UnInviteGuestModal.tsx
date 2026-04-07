@@ -3,12 +3,10 @@ import Divider from "@/components/ui/Divider";
 import IntroSection from "@/components/ui/IntroSection";
 import Modal from "@/components/ui/Modal";
 import Typography from "@/components/ui/Typography";
-import { TENANT_ID_HEADER } from "@/constants/http-headers";
 import formatEmail from "@/functions/format-email";
 import useProfile from "@/hooks/use-profile";
-import useSuspenseError from "@/hooks/use-suspense-error";
-import { buildPath } from "@/services/openapi/mycelium-api";
 import { components } from "@/services/openapi/mycelium-schema";
+import { guestsRevokeUserGuestToSubscriptionAccount } from "@/services/rpc/subscriptionsManager";
 import { RootState } from "@/states/store";
 import { MycPermission } from "@/types/MyceliumPermission";
 import { MycRole } from "@/types/MyceliumRole";
@@ -38,8 +36,6 @@ export default function UnInviteGuestModal({
     permissions: [MycPermission.Write],
     restrictSystemAccount: true,
   });
-
-  const { parseHttpError } = useSuspenseError();
 
   const { tenantInfo } = useSelector((state: RootState) => state.tenant);
 
@@ -79,34 +75,27 @@ export default function UnInviteGuestModal({
       throw new Error("Failed to uninvite guest");
     }
 
-    const token = await getAccessTokenSilently();
-
-    const response = await fetch(
-      buildPath(
-        "/_adm/subscriptions-manager/guests/accounts/{account_id}/roles/{role_id}",
-        {
-          path: { account_id: accountId, role_id: localInvitationRecord },
-          query: { email },
-        }
-      ),
-      {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-          [TENANT_ID_HEADER]: tenantInfo?.id ?? "",
-        },
-      }
-    );
-
-    if (!response.ok) {
-      parseHttpError(response);
+    if (!tenantInfo?.id) {
       setIsSubmitting(false);
-      return;
+      throw new Error("Failed to uninvite guest: no tenant");
     }
 
-    setIsSubmitting(false);
-    onClose();
+    try {
+      await guestsRevokeUserGuestToSubscriptionAccount(
+        {
+          tenantId: tenantInfo.id,
+          accountId,
+          roleId: localInvitationRecord,
+          email,
+        },
+        getAccessTokenSilently
+      );
+
+      setIsSubmitting(false);
+      onClose();
+    } catch {
+      setIsSubmitting(false);
+    }
   };
 
   return (
