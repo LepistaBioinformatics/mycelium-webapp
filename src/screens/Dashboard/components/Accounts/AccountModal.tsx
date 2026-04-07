@@ -8,6 +8,7 @@ import useProfile from "@/hooks/use-profile";
 import useSuspenseError from "@/hooks/use-suspense-error";
 import { buildPath } from "@/services/openapi/mycelium-api";
 import { components } from "@/services/openapi/mycelium-schema";
+import { accountsCreateSystemAccount } from "@/services/rpc/managers";
 import { RootState } from "@/states/store";
 import { MycPermission } from "@/types/MyceliumPermission";
 import { MycRole } from "@/types/MyceliumRole";
@@ -94,13 +95,6 @@ export default function AccountModal({
   };
 
   const buildBaseUrl = useCallback(() => {
-    if (systemAccountType && scope === "systemScoped") {
-      return {
-        baseUrl: buildPath("/_adm/managers/accounts"),
-        method: "POST",
-      };
-    }
-
     if (account) {
       return {
         baseUrl: buildPath(
@@ -126,7 +120,7 @@ export default function AccountModal({
       baseUrl: buildPath("/_adm/subscriptions-manager/accounts"),
       method: "POST",
     };
-  }, [systemAccountType, account, accountId, scope]);
+  }, [account, accountId, scope]);
 
   const onSubmit: SubmitHandler<Inputs> = async ({
     name,
@@ -135,39 +129,51 @@ export default function AccountModal({
   }) => {
     setIsLoading(true);
 
-    const token = await getAccessTokenSilently();
+    try {
+      if (systemAccountType && scope === "systemScoped") {
+        await accountsCreateSystemAccount(
+          { name, actor: systemAccountType },
+          getAccessTokenSilently
+        );
+      } else {
+        const token = await getAccessTokenSilently();
 
-    if (!token) {
+        if (!token) {
+          setIsLoading(false);
+          return;
+        }
+
+        const { baseUrl, method } = buildBaseUrl();
+
+        const response = await fetch(baseUrl, {
+          method,
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+            [TENANT_ID_HEADER]: tenantInfo?.id ?? "",
+          },
+          body: JSON.stringify({
+            name,
+            accountName: name,
+            actor: systemAccountType,
+            roleName,
+            roleDescription,
+          }),
+        });
+
+        if (!response.ok) {
+          parseHttpError(response);
+          setIsLoading(false);
+          return;
+        }
+      }
+
+      handleLocalSuccess();
+    } catch (err) {
+      parseHttpError(err as Response);
+    } finally {
       setIsLoading(false);
-      return;
     }
-
-    const { baseUrl, method } = buildBaseUrl();
-
-    const response = await fetch(baseUrl, {
-      method,
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-        [TENANT_ID_HEADER]: tenantInfo?.id ?? "",
-      },
-      body: JSON.stringify({
-        name,
-        accountName: name,
-        actor: systemAccountType,
-        roleName,
-        roleDescription,
-      }),
-    });
-
-    if (!response.ok) {
-      parseHttpError(response);
-      setIsLoading(false);
-      return;
-    }
-
-    handleLocalSuccess();
-    setIsLoading(false);
   };
 
   const handleCreateSystemAccount = (accountType: SystemAccountTypes) => {

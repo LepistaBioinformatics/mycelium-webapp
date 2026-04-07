@@ -6,8 +6,8 @@ import Modal from "@/components/ui/Modal";
 import Typography from "@/components/ui/Typography";
 import useProfile from "@/hooks/use-profile";
 import useSuspenseError from "@/hooks/use-suspense-error";
-import { buildPath } from "@/services/openapi/mycelium-api";
 import { components } from "@/services/openapi/mycelium-schema";
+import { tenantsCreate } from "@/services/rpc/managers";
 import { Textarea, TextInput } from "flowbite-react";
 import { useMemo, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -82,30 +82,24 @@ export default function TenantModal({
     if (!ownershipId) {
       setIsLoading(false);
       return;
-    } else {
-      data = {
-        ...data,
-        ownerId: ownershipId,
-      };
     }
 
-    const token = await getAccessTokenSilently();
+    try {
+      await tenantsCreate(
+        {
+          name: data.name,
+          description: data.description || null,
+          ownerId: ownershipId,
+        },
+        getAccessTokenSilently
+      );
 
-    const response = await fetch(buildPath("/_adm/managers/tenants"), {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-
-    if (!response.ok) {
-      parseHttpError(response);
+      handleLocalSuccess();
+    } catch (err) {
+      parseHttpError(err as Response);
+    } finally {
+      setIsLoading(false);
     }
-
-    handleLocalSuccess();
-    setIsLoading(false);
   };
 
   if (!hasAdminPrivileges) {

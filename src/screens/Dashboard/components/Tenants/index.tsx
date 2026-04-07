@@ -6,6 +6,7 @@ import Typography from "@/components/ui/Typography";
 import useProfile from "@/hooks/use-profile";
 import { buildPath } from "@/services/openapi/mycelium-api";
 import { components } from "@/services/openapi/mycelium-schema";
+import { tenantsList } from "@/services/rpc/managers";
 import PaginatedRecords from "@/types/PaginatedRecords";
 import { useCallback, useMemo, useState } from "react";
 import useSWR from "swr";
@@ -16,7 +17,6 @@ import DashBoardBody from "../DashBoardBody";
 import useSearchBarParams from "@/hooks/use-search-bar-params";
 import PaginatedContent from "../PaginatedContent";
 import ListItem from "@/components/ui/ListItem";
-import useSuspenseError from "@/hooks/use-suspense-error";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/states/store";
 import { FaGear, FaRegStar, FaStar } from "react-icons/fa6";
@@ -36,8 +36,6 @@ export default function Tenants() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [currentTenant, setCurrentTenant] = useState<Tenant | null>(null);
-
-  const { parseHttpError } = useSuspenseError();
 
   const { tenantInfo, isLoading: isLoadingTenantInfo } = useSelector(
     (state: RootState) => state.tenant
@@ -64,19 +62,17 @@ export default function Tenants() {
       initialPageSize: 10,
     });
 
-  const memoizedUrl = useMemo(() => {
+  const swrKey = useMemo(() => {
     if (!isAuthenticated) return null;
     if (!hasEnoughPermissions) return null;
 
-    const searchParams: Record<string, string> = {};
-
-    if (skip) searchParams.skip = skip.toString();
-    if (searchTerm && searchTerm !== "") searchParams.name = searchTerm;
-    if (pageSize) searchParams.pageSize = pageSize.toString();
-
-    return buildPath("/_adm/managers/tenants", {
-      query: searchParams,
-    });
+    return ["rpc", "managers.tenants.list", skip, pageSize, searchTerm] as [
+      string,
+      string,
+      number,
+      number,
+      string,
+    ];
   }, [searchTerm, skip, pageSize, isAuthenticated, hasEnoughPermissions]);
 
   const {
@@ -84,19 +80,22 @@ export default function Tenants() {
     isLoading: isLoadingTenants,
     mutate: mutateTenants,
   } = useSWR<PaginatedRecords<Tenant>>(
-    memoizedUrl,
-    async (url: string) => {
-      const token = await getAccessTokenSilently();
-
-      return await fetch(url, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
+    swrKey,
+    ([, , _skip, _pageSize, _searchTerm]: [
+      string,
+      string,
+      number,
+      number,
+      string,
+    ]) =>
+      tenantsList(
+        {
+          skip: _skip || undefined,
+          pageSize: _pageSize || undefined,
+          name: _searchTerm || undefined,
         },
-      })
-        .then(parseHttpError)
-        .catch(console.error);
-    },
+        getAccessTokenSilently
+      ),
     {
       revalidateIfStale: true,
       revalidateOnFocus: false,

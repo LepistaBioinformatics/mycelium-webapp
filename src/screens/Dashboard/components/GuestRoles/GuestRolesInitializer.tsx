@@ -4,7 +4,7 @@ import DetailsBox from "@/components/ui/DetailsBox";
 import Typography from "@/components/ui/Typography";
 import useProfile from "@/hooks/use-profile";
 import useSuspenseError from "@/hooks/use-suspense-error";
-import { buildPath } from "@/services/openapi/mycelium-api";
+import { guestRolesCreateSystemRoles } from "@/services/rpc/managers";
 import { useState } from "react";
 
 interface Props {
@@ -20,24 +20,14 @@ export default function GuestRolesInitializer({ onSuccess }: Props) {
   const handleInitialize = async () => {
     setIsLoading(true);
 
-    const token = await getAccessTokenSilently();
-
-    const response = await fetch(buildPath("/_adm/managers/guest-roles"), {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (!response.ok) {
-      parseHttpError(response);
+    try {
+      await guestRolesCreateSystemRoles(getAccessTokenSilently);
+      onSuccess();
+    } catch (err) {
+      parseHttpError(err as Response);
+    } finally {
       setIsLoading(false);
-      return;
     }
-
-    setIsLoading(false);
-    onSuccess();
   };
 
   if (isLoadingUser || !profile?.isManager) return null;
