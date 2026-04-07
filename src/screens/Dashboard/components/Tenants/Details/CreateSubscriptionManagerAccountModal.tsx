@@ -3,10 +3,9 @@
 import Button from "@/components/ui/Button";
 import Modal from "@/components/ui/Modal";
 import Typography from "@/components/ui/Typography";
-import { TENANT_ID_HEADER } from "@/constants/http-headers";
 import useProfile from "@/hooks/use-profile";
 import useSuspenseError from "@/hooks/use-suspense-error";
-import { buildPath } from "@/services/openapi/mycelium-api";
+import { accountsCreateSubscriptionManagerAccount } from "@/services/rpc/tenantManager";
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router";
@@ -36,7 +35,7 @@ export default function CreateSubscriptionManagerAccountModal({
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const { parseHttpError } = useSuspenseError();
+  const { dispatchError } = useSuspenseError();
 
   const handleLocalSuccess = () => {
     onSuccess();
@@ -50,23 +49,17 @@ export default function CreateSubscriptionManagerAccountModal({
       return;
     }
 
-    const token = await getAccessTokenSilently();
-
-    const response = await fetch(buildPath("/_adm/tenant-manager/accounts"), {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        [TENANT_ID_HEADER]: tenantId,
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (!response.ok) {
-      parseHttpError(response);
+    try {
+      await accountsCreateSubscriptionManagerAccount(
+        { tenantId },
+        getAccessTokenSilently
+      );
+      handleLocalSuccess();
+    } catch (err: unknown) {
+      dispatchError(err instanceof Error ? err.message : String(err));
+    } finally {
+      setIsLoading(false);
     }
-
-    handleLocalSuccess();
-    setIsLoading(false);
   };
 
   if (!hasAdminPrivileges) {

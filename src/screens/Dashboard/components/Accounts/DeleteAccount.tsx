@@ -3,10 +3,9 @@
 import Button from "@/components/ui/Button";
 import Modal from "@/components/ui/Modal";
 import Typography from "@/components/ui/Typography";
-import { TENANT_ID_HEADER } from "@/constants/http-headers";
 import useProfile from "@/hooks/use-profile";
 import useSuspenseError from "@/hooks/use-suspense-error";
-import { buildPath } from "@/services/openapi/mycelium-api";
+import { accountsDeleteSubscriptionAccount } from "@/services/rpc/tenantManager";
 import { components } from "@/services/openapi/mycelium-schema";
 import { MycPermission } from "@/types/MyceliumPermission";
 import { MycRole } from "@/types/MyceliumRole";
@@ -36,35 +35,26 @@ export default function DeleteAccount({
     restrictSystemAccount: true,
   });
 
-  const { parseHttpError } = useSuspenseError();
+  const { dispatchError } = useSuspenseError();
 
   const [isLoading, setIsLoading] = useState(false);
 
   const handleDelete = async () => {
     setIsLoading(true);
 
-    const token = await getAccessTokenSilently();
-
     if (!account.id) return;
 
-    await fetch(
-      buildPath("/_adm/tenant-manager/accounts/{account_id}", {
-        path: { account_id: account.id },
-      }),
-      {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          [TENANT_ID_HEADER]: tenantId,
-        },
-      }
-    )
-      .then(parseHttpError)
-      .catch(console.error)
-      .finally(() => {
-        setIsLoading(false);
-        onClose();
-      });
+    try {
+      await accountsDeleteSubscriptionAccount(
+        { tenantId, accountId: account.id },
+        getAccessTokenSilently
+      );
+    } catch (err: unknown) {
+      dispatchError(err instanceof Error ? err.message : String(err));
+    } finally {
+      setIsLoading(false);
+      onClose();
+    }
   };
 
   return (

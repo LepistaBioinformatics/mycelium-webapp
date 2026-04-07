@@ -1,7 +1,10 @@
 import useProfile from "@/hooks/use-profile";
 import useSearchBarParams from "@/hooks/use-search-bar-params";
-import { buildPath } from "@/services/openapi/mycelium-api";
 import { components } from "@/services/openapi/mycelium-schema";
+import {
+  accountsList,
+  AccountsListParams,
+} from "@/services/rpc/subscriptionsManager";
 import { useEffect, useMemo } from "react";
 import useSWR from "swr";
 import DashBoardBody from "../DashBoardBody";
@@ -9,7 +12,6 @@ import PaginatedRecords from "@/types/PaginatedRecords";
 import PaginatedContent from "../PaginatedContent";
 import Typography from "@/components/ui/Typography";
 import CopyToClipboard from "@/components/ui/CopyToClipboard";
-import { TENANT_ID_HEADER } from "@/constants/http-headers";
 import AccountType from "@/components/AccountType";
 import Owners from "@/components/Owners";
 import { formatDDMMYY } from "@/functions/format-dd-mm-yy";
@@ -18,7 +20,6 @@ import { MycRole } from "@/types/MyceliumRole";
 import { MycPermission } from "@/types/MyceliumPermission";
 import { projectVariants } from "@/constants/shared-component-styles";
 import SearchBar from "@/components/ui/SearchBar";
-import useSuspenseError from "@/hooks/use-suspense-error";
 import { useSelector } from "react-redux";
 import { RootState } from "@/states/store";
 import { useTranslation } from "react-i18next";
@@ -159,8 +160,6 @@ export default function PaginatedAccounts({
 
   const { tenantInfo } = useSelector((state: RootState) => state.tenant);
 
-  const { parseHttpError } = useSuspenseError();
-
   const {
     isLoadingUser,
     isAuthenticated,
@@ -179,68 +178,33 @@ export default function PaginatedAccounts({
       initialPageSize,
     });
 
-  const memoizedUrl = useMemo(() => {
+  const rpcParams = useMemo((): AccountsListParams | null => {
     if (!isAuthenticated) return null;
     if (!hasEnoughPermissions) return null;
 
-    const searchParams: Record<string, string> = {};
+    const params: AccountsListParams = {};
 
-    if (skip) searchParams.skip = skip.toString();
-    if (pageSize) searchParams.pageSize = pageSize.toString();
+    if (skip) params.skip = skip;
+    if (pageSize) params.pageSize = pageSize;
+    if (tenantId) params.tenantId = tenantId;
 
     if (searchTerm && searchTerm !== "") {
-      //
-      // Handle tag
-      //
-      // Tag is a single word starting with a #. It is optional and all text
-      // after the # should be split by spaces and only the first word should be
-      // used as the prefix.
-      //
       const tagValuePattern = /^(#.*)$/;
       const tagValuePatternTest = tagValuePattern.test(searchTerm);
 
       if (tagValuePatternTest && !restrictAccountTypeTo) {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const [_, tagValue] = searchTerm.split("=");
-        if (tagValue) searchParams.tagValue = tagValue;
+        if (tagValue) params.tagValue = tagValue;
       }
 
-      //
-      // Handle status
-      //
-      // Status options should be:
-      // - unverified
-      // - verified
-      // - inactive
-      // - archived
-      //
-      // The status should be optional and the default should be unverified.
-      //
-      // Match /unverified, /verified, /inactive, /archived
-      //
       const statusPattern = /(\/unverified|\/verified|\/inactive|\/archived)/;
 
       if (statusPattern.test(searchTerm) && !restrictAccountTypeTo) {
         const statusValue = statusPattern.exec(searchTerm)?.[1];
-        if (statusValue) searchParams.status = statusValue?.replace("/", "");
+        if (statusValue) params.status = statusValue?.replace("/", "");
       }
 
-      //
-      // Handle account type
-      //
-      // Account type options should be:
-      // - staff
-      // - manager
-      // - user
-      // - subscription
-      // - roleAssociated
-      // - actorAssociated
-      // - tenantManager
-      //
-      // The account type should be optional and the default should be user.
-      //
-      // Match /staff, /manager, /user, /subscription, /actorAssociated, /tenantManager
-      //
       const typePattern =
         /(\/staff|\/manager|\/user|\/subscription|\/actorAssociated|\/tenantManager|\/roleAssociated)/;
 
@@ -249,32 +213,20 @@ export default function PaginatedAccounts({
         if (typeValue) {
           const parsedValue = typeValue?.replace("/", "");
 
-          //
-          // Try to match patterns like:
-          // - "/actorAssociated guests-manager"
-          // - "/actorAssociated gateway-manager"
-          // - "/actorAssociated any-other-actor-with-no-spaces"
-          //
           if (parsedValue === "actorAssociated") {
             const actorNamePattern = /\/actorAssociated\s(\w+)/;
             const actorNameMatch = searchTerm.match(actorNamePattern);
 
             if (actorNameMatch) {
               const actorName = actorNameMatch[1];
-              if (actorName) searchParams.actor = actorName?.trim();
+              if (actorName) params.actor = actorName?.trim();
             }
           }
 
-          searchParams.accountType = parsedValue;
+          params.accountType = parsedValue;
         }
       }
 
-      //
-      // Handle text that not match any of the above patterns
-      //
-      // Extract all text that not match any of the above patterns. Example:
-      // /staff /verified /user text -> text
-      //
       let simpleText = searchTerm;
 
       [COMMANDS.accountType, COMMANDS.status].forEach((item) => {
@@ -283,56 +235,49 @@ export default function PaginatedAccounts({
         });
       });
 
-      if (simpleText && !searchParams?.actor) searchParams.term = simpleText;
+      if (simpleText && !params?.actor) params.term = simpleText;
     }
 
     if (restrictAccountTypeTo) {
-      //
-      // If none of the allowed account types is in the search params, add the first allowed
-      // account type to the search params.
-      //
-      const { accountType: accountTypeParam } = searchParams;
+      const { accountType: accountTypeParam } = params;
 
       if (!accountTypeParam) {
-        searchParams.accountType = restrictAccountTypeTo.at(0) as any;
-      } else if (!restrictAccountTypeTo.includes(accountTypeParam as any)) {
-        searchParams.accountType = restrictAccountTypeTo.at(0) as any;
+        params.accountType = restrictAccountTypeTo.at(0) as string;
+      } else if (!restrictAccountTypeTo.includes(accountTypeParam as never)) {
+        params.accountType = restrictAccountTypeTo.at(0) as string;
       }
     }
 
-    return buildPath("/_adm/subscriptions-manager/accounts", {
-      query: searchParams,
-    });
+    return params;
   }, [
     searchTerm,
     skip,
     pageSize,
+    tenantId,
     isAuthenticated,
     restrictAccountTypeTo,
     hasEnoughPermissions,
   ]);
+
+  const swrKey = useMemo(() => {
+    if (!rpcParams) return null;
+    return [
+      "rpc",
+      "subscriptionsManager.accounts.list",
+      JSON.stringify(rpcParams),
+    ] as const;
+  }, [rpcParams]);
 
   const {
     data: accounts,
     isLoading: isLoadingAccounts,
     mutate: mutateAccounts,
   } = useSWR<PaginatedRecords<Account>>(
-    memoizedUrl,
-    async (url: string) => {
-      const token = await getAccessTokenSilently();
-
-      return await fetch(url, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-          ...(tenantId ? { [TENANT_ID_HEADER]: tenantId } : {}),
-        },
-      })
-        .then(parseHttpError)
-        .catch((err) => {
-          console.error(err);
-        });
-    },
+    swrKey,
+    () =>
+      accountsList(rpcParams!, getAccessTokenSilently) as unknown as Promise<
+        PaginatedRecords<Account>
+      >,
     {
       revalidateIfStale: true,
       revalidateOnFocus: false,
@@ -342,16 +287,10 @@ export default function PaginatedAccounts({
     }
   );
 
-  /**
-   * Mutate accounts when tenantId changes.
-   */
   useEffect(() => {
     if (tenantId) mutateAccounts(accounts, { rollbackOnError: false });
   }, [accounts, mutateAccounts, tenantId]);
 
-  /**
-   * Mutate accounts when forceMutate changes.
-   */
   useEffect(() => {
     if (forceMutate) mutateAccounts(accounts, { rollbackOnError: true });
   }, [forceMutate, mutateAccounts, accounts]);
@@ -359,9 +298,7 @@ export default function PaginatedAccounts({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const onSubmit = (term?: string, _?: string) => {
     setSkip(0);
-
     if (term !== undefined) setSearchTerm(term);
-
     mutateAccounts(accounts, { rollbackOnError: true });
   };
 
@@ -390,7 +327,7 @@ export default function PaginatedAccounts({
                 ([_, value]) =>
                   !restrictAccountTypeTo ||
                   restrictAccountTypeTo.includes(
-                    value.command.replace("/", "") as any
+                    value.command.replace("/", "") as never
                   )
               )
               ?.map(([key, value]) => (

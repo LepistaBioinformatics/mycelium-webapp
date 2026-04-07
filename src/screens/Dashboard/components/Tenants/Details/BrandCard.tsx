@@ -7,10 +7,9 @@ import { components } from "@/services/openapi/mycelium-schema";
 import { useCallback, useMemo, useState } from "react";
 import { TenantTagTypes } from "@/types/TenantTagTypes";
 import { FileInput } from "flowbite-react";
-import { buildPath } from "@/services/openapi/mycelium-api";
+import { tagsCreate, tagsUpdate } from "@/services/rpc/tenantManager";
 import useSuspenseError from "@/hooks/use-suspense-error";
 import useProfile from "@/hooks/use-profile";
-import { TENANT_ID_HEADER } from "@/constants/http-headers";
 import { MycRole } from "@/types/MyceliumRole";
 import { MycPermission } from "@/types/MyceliumPermission";
 import { useTranslation } from "react-i18next";
@@ -49,7 +48,7 @@ export default function BrandCard({ tenant, mutateTenantStatus }: Props) {
     restrictSystemAccount: true,
   });
 
-  const { parseHttpError } = useSuspenseError();
+  const { dispatchError } = useSuspenseError();
 
   const brandTag = useMemo(() => {
     if (!tenant) return null;
@@ -59,14 +58,6 @@ export default function BrandCard({ tenant, mutateTenantStatus }: Props) {
     return tenant.tags.find((tag) => tag.value === TenantTagTypes.Brand);
   }, [tenant]);
 
-  /**
-   * Handles the image upload event.
-   *
-   * @description This function is used to handle the input image and validate
-   * its dimensions. For now, the image must be 128x128 pixels.
-   *
-   * @param event - The change event from the file input.
-   */
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -101,12 +92,6 @@ export default function BrandCard({ tenant, mutateTenantStatus }: Props) {
     reader.readAsDataURL(file);
   };
 
-  /**
-   * Converts a blob to a base64 string.
-   *
-   * @param blob - The blob to convert.
-   * @returns The base64 string.
-   */
   const blobToBase64 = (blob: Blob): Promise<string> => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -116,11 +101,6 @@ export default function BrandCard({ tenant, mutateTenantStatus }: Props) {
     });
   };
 
-  /**
-   * Converts a preview image to a base64 string.
-   *
-   * @returns The base64 string.
-   */
   const convertPreviewToBase64 = useCallback(async () => {
     if (!preview) return null;
 
@@ -129,32 +109,6 @@ export default function BrandCard({ tenant, mutateTenantStatus }: Props) {
     return (await blobToBase64(blob)) as string;
   }, [preview]);
 
-  /**
-   * Returns the method and url for the brand tag update.
-   *
-   * @returns The method and url.
-   */
-  const { method, url } = useMemo(() => {
-    if (updatingBrand && brandTag?.id) {
-      return {
-        method: "PUT",
-        url: buildPath("/_adm/tenant-manager/tags/{tag_id}", {
-          path: { tag_id: brandTag.id },
-        }),
-      };
-    }
-
-    return {
-      method: "POST",
-      url: buildPath("/_adm/tenant-manager/tags"),
-    };
-  }, [updatingBrand, brandTag]);
-
-  /**
-   * Converts a file to a base64 string.
-   *
-   * @returns The base64 string.
-   */
   const convertFileToBase64 = useCallback(async () => {
     setIsUploading(true);
 
@@ -168,37 +122,49 @@ export default function BrandCard({ tenant, mutateTenantStatus }: Props) {
       return;
     }
 
-    const token = await getAccessTokenSilently();
+    const base64Logo = await convertPreviewToBase64();
 
-    const response = await fetch(url, {
-      method,
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-        [TENANT_ID_HEADER]: tenant.id,
-      },
-      body: JSON.stringify({
-        value: TenantTagTypes.Brand,
-        meta: { base64Logo: await convertPreviewToBase64() },
-      }),
-    });
+    const meta: Record<string, string> = base64Logo
+      ? { base64Logo }
+      : {};
 
-    if (!response.ok) {
-      parseHttpError(response);
+    try {
+      if (updatingBrand && brandTag?.id) {
+        await tagsUpdate(
+          {
+            tenantId: tenant.id,
+            tagId: brandTag.id,
+            value: TenantTagTypes.Brand,
+            meta,
+          },
+          getAccessTokenSilently
+        );
+      } else {
+        await tagsCreate(
+          {
+            tenantId: tenant.id,
+            value: TenantTagTypes.Brand,
+            meta,
+          },
+          getAccessTokenSilently
+        );
+      }
+    } catch (err: unknown) {
+      dispatchError(err instanceof Error ? err.message : String(err));
+    } finally {
+      setIsUploading(false);
+      setUpdatingBrand(false);
+      mutateTenantStatus();
     }
-
-    setIsUploading(false);
-    setUpdatingBrand(false);
-    mutateTenantStatus();
   }, [
     preview,
     tenant.id,
     getAccessTokenSilently,
-    url,
-    method,
+    updatingBrand,
+    brandTag,
     convertPreviewToBase64,
     mutateTenantStatus,
-    parseHttpError,
+    dispatchError,
   ]);
 
   if (!hasEnoughPermissions) {

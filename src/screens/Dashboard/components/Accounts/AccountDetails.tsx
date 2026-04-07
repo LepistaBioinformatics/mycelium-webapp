@@ -2,13 +2,12 @@ import SideCurtain from "@/components/ui/SideCurtain";
 import Typography from "@/components/ui/Typography";
 import { formatDDMMYY } from "@/functions/format-dd-mm-yy";
 import useProfile from "@/hooks/use-profile";
-import { buildPath } from "@/services/openapi/mycelium-api";
 import { components } from "@/services/openapi/mycelium-schema";
+import { accountsGet } from "@/services/rpc/subscriptionsManager";
 import { useMemo, useState } from "react";
 import useSWR from "swr";
 import DeleteAccount from "./DeleteAccount";
 import { RootState } from "@/states/store";
-import { TENANT_ID_HEADER } from "@/constants/http-headers";
 import { camelToHumanText } from "@/functions/camel-to-human-text";
 import { useSelector } from "react-redux";
 import Banner from "@/components/ui/Banner";
@@ -16,7 +15,6 @@ import Button from "@/components/ui/Button";
 import GuestToAccountModal from "./GuestToAccountModal";
 import DetailsBox from "@/components/ui/DetailsBox";
 import EditAccountModal from "./EditAccountModal";
-import useSuspenseError from "@/hooks/use-suspense-error";
 import CopyToClipboard from "@/components/ui/CopyToClipboard";
 import UpgradeOrDowngradeAccountModal from "./UpgradeOrDowngradeAccountModal";
 import IntroSection from "@/components/ui/IntroSection";
@@ -84,8 +82,6 @@ export default function AccountDetails({ onClose }: Props) {
   ] = useState(false);
 
   const { profile, getAccessTokenSilently } = useProfile();
-
-  const { parseHttpError } = useSuspenseError();
 
   const [openedSection, setOpenedSection] = useState<OpenedSection>(
     OpenedSection.Details
@@ -179,32 +175,27 @@ export default function AccountDetails({ onClose }: Props) {
     setCurrentGuestUser(guestUser);
   };
 
+  const swrKey = useMemo(() => {
+    if (!accountId) return null;
+    return [
+      "rpc",
+      "subscriptionsManager.accounts.get",
+      accountId,
+      tenantInfo?.id ?? "",
+    ] as const;
+  }, [accountId, tenantInfo?.id]);
+
   const {
     data: account,
     isLoading,
     mutate: mutateAccount,
   } = useSWR<Account>(
-    accountId
-      ? buildPath("/_adm/subscriptions-manager/accounts/{account_id}", {
-        path: { account_id: accountId },
-      })
-      : null,
-    async (url: string) => {
-      const token = await getAccessTokenSilently();
-
-      return fetch(url, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          [TENANT_ID_HEADER]: tenantInfo?.id ?? "",
-        },
-      })
-        .then(parseHttpError)
-        .catch((err) => {
-          console.error(err);
-
-          return null;
-        });
-    },
+    swrKey,
+    async () =>
+      accountsGet(
+        { accountId: accountId!, tenantId: tenantInfo?.id ?? undefined },
+        getAccessTokenSilently
+      ),
     {
       refreshInterval: 1000 * 60,
       revalidateOnFocus: false,
@@ -624,7 +615,9 @@ export default function AccountDetails({ onClose }: Props) {
                     <div>
                       <Button
                         rounded
-                        onClick={() => setIsCreateConnectionStringModalOpen(true)}
+                        onClick={() =>
+                          setIsCreateConnectionStringModalOpen(true)
+                        }
                       >
                         {t(
                           "screens.Dashboard.Accounts.AccountDetails.createConnectionString.button"

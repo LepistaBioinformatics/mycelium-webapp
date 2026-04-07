@@ -1,12 +1,10 @@
 import CopyToClipboard from "@/components/ui/CopyToClipboard";
 import IntroSection from "@/components/ui/IntroSection";
 import ListItem from "@/components/ui/ListItem";
-import { TENANT_ID_HEADER } from "@/constants/http-headers";
 import formatEmail from "@/functions/format-email";
 import useProfile from "@/hooks/use-profile";
-import useSuspenseError from "@/hooks/use-suspense-error";
-import { buildPath } from "@/services/openapi/mycelium-api";
 import { components } from "@/services/openapi/mycelium-schema";
+import { guestsListLicensedAccountsOfEmail } from "@/services/rpc/subscriptionsManager";
 import { RootState } from "@/states/store";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
@@ -27,37 +25,22 @@ export default function GuestsByEmail({ email }: Props) {
 
   const { getAccessTokenSilently } = useProfile();
 
-  const { parseHttpError } = useSuspenseError();
-
   const { tenantInfo } = useSelector((state: RootState) => state.tenant);
 
-  const memoizedUrl = useMemo(() => {
+  const swrKey = useMemo(() => {
     if (!formattedEmail) return null;
     if (!tenantInfo?.id) return null;
 
-    return buildPath("/_adm/subscriptions-manager/guests", {
-      query: { email: formattedEmail },
-    });
+    return `rpc:subscriptionsManager.guests.listLicensedAccountsOfEmail:${formattedEmail}:${tenantInfo.id}`;
   }, [formattedEmail, tenantInfo?.id]);
 
   const { data } = useSWR<LicensedResource[]>(
-    memoizedUrl,
-    async (url: string) => {
-      const token = await getAccessTokenSilently();
-
-      return fetch(url, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          [TENANT_ID_HEADER]: tenantInfo?.id ?? "",
-        },
-      })
-        .then(parseHttpError)
-        .catch((err) => {
-          console.error(err);
-
-          return null;
-        });
-    }
+    swrKey,
+    async () =>
+      guestsListLicensedAccountsOfEmail(
+        { email: formattedEmail!, tenantId: tenantInfo!.id! },
+        getAccessTokenSilently
+      )
   );
 
   return (

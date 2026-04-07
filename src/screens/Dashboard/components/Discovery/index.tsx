@@ -9,8 +9,9 @@ import { MycPermission } from "@/types/MyceliumPermission";
 import { MdInput, MdOutlineOutput, MdWebhook } from "react-icons/md";
 import { components } from "@/services/openapi/mycelium-schema";
 import useSWR from "swr";
-import { buildPath, MYCELIUM_API_URL } from "@/services/openapi/mycelium-api";
+import { MYCELIUM_API_URL } from "@/services/openapi/mycelium-api";
 import useSuspenseError from "@/hooks/use-suspense-error";
+import { toolsList } from "@/services/rpc/gatewayManager";
 import ListItem from "@/components/ui/ListItem";
 import Typography from "@/components/ui/Typography";
 import CopyToClipboard from "@/components/ui/CopyToClipboard";
@@ -43,23 +44,11 @@ export default function Discovery() {
       initialPageSize: 20,
     });
 
-  const memoizedUrl = useMemo(() => {
+  const rpcKey = useMemo(() => {
     if (!isAuthenticated) return null;
     if (!hasEnoughPermissions) return null;
 
-    const searchParams: Record<string, string> = {};
-
-    if (skip) searchParams.skip = skip.toString();
-    if (searchTerm && searchTerm !== "") searchParams.name = searchTerm;
-    if (pageSize) searchParams.pageSize = pageSize.toString();
-
-    return buildPath("/_adm/gateway-manager/tools", {
-      query: {
-        skip: skip.toString() ?? "0",
-        pageSize: pageSize.toString() ?? "20",
-        query: searchTerm ?? "",
-      },
-    });
+    return ["rpc", "gatewayManager.tools.list", skip, pageSize, searchTerm] as const;
   }, [searchTerm, skip, pageSize, isAuthenticated, hasEnoughPermissions]);
 
   const {
@@ -67,21 +56,16 @@ export default function Discovery() {
     isLoading: isLoadingOperations,
     mutate: mutateOperations,
   } = useSWR<PaginatedRecords<ToolOperation>>(
-    memoizedUrl,
-    async (url: string) => {
-      const token = await getAccessTokenSilently();
-
-      return await fetch(url, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
+    rpcKey,
+    async () =>
+      toolsList(
+        {
+          skip: skip ?? 0,
+          pageSize: pageSize ?? 20,
+          query: searchTerm && searchTerm !== "" ? searchTerm : undefined,
         },
-      })
-        .then(parseHttpError)
-        .catch((err) => {
-          console.error(err);
-        });
-    },
+        getAccessTokenSilently
+      ).catch(parseHttpError),
     {
       revalidateIfStale: true,
       revalidateOnFocus: false,

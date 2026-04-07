@@ -10,8 +10,9 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, useParams, useSearchParams } from "react-router";
 import ControlPanelBreadcrumbItem from "../../ControlPanelBreadcrumbItem";
 import { SlOrganization } from "react-icons/sl";
-import useTenantDetails from "@/hooks/use-tenant-details";
-import { buildPath } from "@/services/openapi/mycelium-api";
+import useSWR from "swr";
+import { tenantGet } from "@/services/rpc/tenantManager";
+import { TenantStatus } from "@/types/TenantStatus";
 import Typography from "@/components/ui/Typography";
 import Section from "@/components/ui/Section";
 import { formatDDMMYY } from "@/functions/format-dd-mm-yy";
@@ -101,27 +102,55 @@ export default function AdvancedManagement() {
     setIsCreateSubscriptionManagerAccountModalOpen(false);
   };
 
-  const { hasEnoughPermissions, isLoadingUser, isLoadingProfile } = useProfile({
+  const {
+    hasEnoughPermissions,
+    isLoadingUser,
+    isLoadingProfile,
+    getAccessTokenSilently,
+  } = useProfile({
     roles: [MycRole.TenantManager],
     permissions: [MycPermission.Read, MycPermission.Write],
     restrictSystemAccount: true,
     tenantOwnerNeeded: [tenantId ?? ""],
   });
 
-  const customUrl = useMemo(() => {
-    if (!tenantId) return null;
-
-    return buildPath("/_adm/tenant-manager/tenants/{tenant_id}", {
-      path: { tenant_id: tenantId },
-    });
-  }, [tenantId]);
+  const swrKey = useMemo(
+    () =>
+      tenantId ? ["rpc", "tenantManager.tenant.get", tenantId] : null,
+    [tenantId]
+  );
 
   const {
-    tenantStatus,
+    data: tenantStatus,
     isLoading: isLoadingTenantStatus,
     error: tenantStatusError,
     mutate: mutateTenantStatus,
-  } = useTenantDetails({ customUrl });
+  } = useSWR<TenantStatus>(
+    swrKey,
+    async ([, , id]: [string, string, string]) => {
+      try {
+        const tenant = await tenantGet(
+          { tenantId: id },
+          getAccessTokenSilently
+        );
+        return { active: tenant };
+      } catch (err: unknown) {
+        const msg =
+          err instanceof Error ? err.message : String(err);
+        if (msg.includes("403") || msg.includes("Unauthorized")) {
+          return "unauthorized";
+        }
+        return "unknown";
+      }
+    },
+    {
+      revalidateOnMount: true,
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      revalidateIfStale: false,
+      refreshInterval: 1000 * 60 * 2,
+    }
+  );
 
   useEffect(() => {
     if (
@@ -145,12 +174,6 @@ export default function AdvancedManagement() {
     return null;
   }, [tenantStatus]);
 
-  /**
-   * Base page component that contains the breadcrumb and the content
-   *
-   * @param param0
-   * @returns
-   */
   const BasePage = ({ children }: BaseProps) => (
     <PageBody padding="md" height="fit">
       <PageBody.Breadcrumb>
