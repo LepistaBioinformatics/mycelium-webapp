@@ -8,6 +8,7 @@ import useProfile from "@/hooks/use-profile";
 import useSuspenseError from "@/hooks/use-suspense-error";
 import { buildPath } from "@/services/openapi/mycelium-api";
 import { components } from "@/services/openapi/mycelium-schema";
+import { accountsCreateSystemAccount } from "@/services/rpc/managers";
 import { accountsCreateSubscriptionAccount } from "@/services/rpc/subscriptionsManager";
 import { RootState } from "@/states/store";
 import { MycPermission } from "@/types/MyceliumPermission";
@@ -95,13 +96,6 @@ export default function AccountModal({
   };
 
   const buildManagerBaseUrl = useCallback(() => {
-    if (systemAccountType && scope === "systemScoped") {
-      return {
-        baseUrl: buildPath("/_adm/managers/accounts"),
-        method: "POST",
-      };
-    }
-
     if (account) {
       return {
         baseUrl: buildPath(
@@ -124,7 +118,7 @@ export default function AccountModal({
     }
 
     return null;
-  }, [systemAccountType, account, accountId, scope]);
+  }, [account, accountId, scope]);
 
   const onSubmit: SubmitHandler<Inputs> = async ({
     name,
@@ -155,7 +149,22 @@ export default function AccountModal({
       return;
     }
 
-    // Manager POST (systemScoped), PATCH, and roleAssociated branches: use REST
+    // Manager POST (systemScoped) branch: use RPC
+    if (scope === "systemScoped" && systemAccountType) {
+      try {
+        await accountsCreateSystemAccount(
+          { name, actor: systemAccountType },
+          getAccessTokenSilently
+        );
+        handleLocalSuccess();
+      } catch {
+        // error is surfaced by rpcCall
+      }
+      setIsLoading(false);
+      return;
+    }
+
+    // PATCH and roleAssociated branches: use REST
     const urlResult = buildManagerBaseUrl();
     if (!urlResult) {
       setIsLoading(false);

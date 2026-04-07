@@ -96,7 +96,7 @@ export default function Webhooks() {
     mutateWebhooks(webhooks, { rollbackOnError: true });
   };
 
-  const onSubmit = (term?: string, _?: string) => {
+  const onSubmit = (term?: string) => {
     setSkip(0);
 
     if (term !== undefined) setSearchTerm(term);

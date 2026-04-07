@@ -98,7 +98,7 @@ export default function GuestRoles() {
       .then(() => setIsViewModalOpen(true));
   };
 
-  const onSubmit = (term?: string, _?: string) => {
+  const onSubmit = (term?: string) => {
     setSkip(0);
 
     if (term !== undefined) setSearchTerm(term);
