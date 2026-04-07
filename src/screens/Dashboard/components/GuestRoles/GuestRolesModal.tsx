@@ -6,12 +6,15 @@ import Modal from "@/components/ui/Modal";
 import Typography from "@/components/ui/Typography";
 import useProfile from "@/hooks/use-profile";
 import useSuspenseError from "@/hooks/use-suspense-error";
-import { buildPath } from "@/services/openapi/mycelium-api";
 import { components } from "@/services/openapi/mycelium-schema";
+import {
+  guestRolesCreate,
+  guestRolesUpdateNameAndDescription,
+} from "@/services/rpc/guestManager";
 import { MycPermission } from "@/types/MyceliumPermission";
 import { MycRole } from "@/types/MyceliumRole";
 import { Select, Textarea, TextInput } from "flowbite-react";
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
@@ -74,62 +77,44 @@ export default function GuestRolesModal({
     reset();
   };
 
-  const buildBaseUrl = useCallback(() => {
-    if (!isAuthenticated || !hasEnoughPermissions)
-      return {
-        baseUrl: null,
-        method: null,
-      };
-
-    if (guestRole && guestRole?.id) {
-      return {
-        baseUrl: buildPath("/_adm/guests-manager/guest-roles/{guest_role_id}", {
-          path: { guest_role_id: guestRole.id },
-        }),
-        method: "PATCH",
-      };
-    }
-
-    return {
-      baseUrl: buildPath("/_adm/guests-manager/guest-roles"),
-      method: "POST",
-    };
-  }, [guestRole, isAuthenticated, hasEnoughPermissions]);
-
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
+    if (!isAuthenticated || !hasEnoughPermissions) return;
+
     setIsLoading(true);
 
-    const token = await getAccessTokenSilently();
+    try {
+      if (guestRole && guestRole.id) {
+        await guestRolesUpdateNameAndDescription(
+          {
+            guestRoleId: guestRole.id,
+            name: data.name,
+            description: data.description,
+          },
+          getAccessTokenSilently
+        );
+      } else {
+        await guestRolesCreate(
+          {
+            name: data.name,
+            description: data.description,
+            permission:
+              data.permission !== undefined
+                ? data.permission === MycPermission.Write
+                  ? 1
+                  : 0
+                : undefined,
+            system: data.system,
+          },
+          getAccessTokenSilently
+        );
+      }
 
-    if (!token) {
-      setIsLoading(false);
-      return;
-    }
-
-    const { baseUrl, method } = buildBaseUrl();
-
-    if (!baseUrl || !method) {
-      setIsLoading(false);
-      return;
-    }
-
-    const response = await fetch(baseUrl, {
-      method,
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-
-    if (response.ok) {
       handleLocalSuccess();
+    } catch (err) {
+      parseHttpError(err as Response);
+    } finally {
       setIsLoading(false);
-      return;
     }
-
-    parseHttpError(response);
-    setIsLoading(false);
   };
 
   return (
@@ -212,11 +197,11 @@ export default function GuestRolesModal({
             title={
               guestRole
                 ? t(
-                  "screens.Dashboard.GuestRoles.GuestRolesModal.form.permission.titleReadOnly"
-                )
+                    "screens.Dashboard.GuestRoles.GuestRolesModal.form.permission.titleReadOnly"
+                  )
                 : t(
-                  "screens.Dashboard.GuestRoles.GuestRolesModal.form.permission.titleWrite"
-                )
+                    "screens.Dashboard.GuestRoles.GuestRolesModal.form.permission.titleWrite"
+                  )
             }
           >
             <Select
@@ -226,11 +211,11 @@ export default function GuestRolesModal({
               title={
                 guestRole
                   ? t(
-                    "screens.Dashboard.GuestRoles.GuestRolesModal.form.permission.titleReadOnly"
-                  )
+                      "screens.Dashboard.GuestRoles.GuestRolesModal.form.permission.titleReadOnly"
+                    )
                   : t(
-                    "screens.Dashboard.GuestRoles.GuestRolesModal.form.permission.titleWrite"
-                  )
+                      "screens.Dashboard.GuestRoles.GuestRolesModal.form.permission.titleWrite"
+                    )
               }
               defaultValue={
                 (guestRole?.permission as MycPermission | undefined) ||
@@ -259,8 +244,8 @@ export default function GuestRolesModal({
             {guestRole
               ? isLoading
                 ? t(
-                  "screens.Dashboard.GuestRoles.GuestRolesModal.form.updating"
-                )
+                    "screens.Dashboard.GuestRoles.GuestRolesModal.form.updating"
+                  )
                 : t("screens.Dashboard.GuestRoles.GuestRolesModal.form.update")
               : isLoading
                 ? t("screens.Dashboard.GuestRoles.GuestRolesModal.form.creating")

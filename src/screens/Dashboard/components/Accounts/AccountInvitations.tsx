@@ -2,19 +2,20 @@ import { GoUnverified } from "react-icons/go";
 import Typography from "@/components/ui/Typography";
 import { formatDDMMYY } from "@/functions/format-dd-mm-yy";
 import useProfile from "@/hooks/use-profile";
-import { buildPath } from "@/services/openapi/mycelium-api";
 import { components } from "@/services/openapi/mycelium-schema";
+import {
+  guestsListGuestOnSubscriptionAccount,
+  guestRolesGet,
+} from "@/services/rpc/subscriptionsManager";
 import { Fragment, useMemo, useState } from "react";
 import useSWR from "swr";
 import { RootState } from "@/states/store";
-import { TENANT_ID_HEADER } from "@/constants/http-headers";
 import { useSelector } from "react-redux";
 import Banner from "@/components/ui/Banner";
 import Button from "@/components/ui/Button";
 import formatEmail from "@/functions/format-email";
 import PermissionIcon from "@/components/ui/PermissionIcon";
 import DetailsBox from "@/components/ui/DetailsBox";
-import useSuspenseError from "@/hooks/use-suspense-error";
 import PaginatedRecords from "@/types/PaginatedRecords";
 import IntroSection from "@/components/ui/IntroSection";
 import { useTranslation } from "react-i18next";
@@ -49,9 +50,7 @@ export default function AccountInvitations({
 
   const { getAccessTokenSilently } = useProfile();
 
-  const { parseHttpError } = useSuspenseError();
-
-  const memoizedUrl = useMemo(() => {
+  const swrKey = useMemo(() => {
     if (!account.id || !tenantId) return null;
 
     const { accountType } = account;
@@ -64,37 +63,19 @@ export default function AccountInvitations({
       "roleAssociated" in accountType ||
       "actorAssociated" in accountType
     ) {
-      return buildPath(
-        "/_adm/subscriptions-manager/guests/accounts/{account_id}",
-        {
-          path: { account_id: account.id },
-        }
-      );
+      return `rpc:subscriptionsManager.guests.listGuestOnSubscriptionAccount:${account.id}:${tenantId}`;
     }
 
     return null;
   }, [account.id, account.accountType, tenantId]);
 
   const { data: invitations, isLoading } = useSWR<PaginatedRecords<GuestUser>>(
-    memoizedUrl,
-    async (url: string) => {
-      if (!tenantId) return null;
-
-      const token = await getAccessTokenSilently();
-
-      return fetch(url, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          [TENANT_ID_HEADER]: tenantId,
-        },
-      })
-        .then(parseHttpError)
-        .catch((err) => {
-          console.error(err);
-
-          return null;
-        });
-    },
+    swrKey,
+    async () =>
+      guestsListGuestOnSubscriptionAccount(
+        { tenantId: tenantId!, accountId: account.id! },
+        getAccessTokenSilently
+      ) as unknown as Promise<PaginatedRecords<GuestUser>>,
     {
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
@@ -245,8 +226,6 @@ function Invitation({
 
   const { getAccessTokenSilently } = useProfile();
 
-  const { parseHttpError } = useSuspenseError();
-
   const { tenantInfo } = useSelector((state: RootState) => state.tenant);
 
   const localInvitationRecord: GuestRole | string | null = useMemo(() => {
@@ -259,38 +238,24 @@ function Invitation({
     return null;
   }, [guestRole]);
 
-  const memoizedUrl = useMemo(() => {
+  const swrKey = useMemo(() => {
     if (!localInvitationRecord) return null;
     if (typeof localInvitationRecord === "object") return null;
     if (!tenantInfo?.id) return null;
 
-    if (typeof localInvitationRecord === "string") {
-      return buildPath("/_adm/subscriptions-manager/guest-roles/{id}", {
-        path: { id: localInvitationRecord },
-      });
-    }
-
-    return null;
+    return `rpc:subscriptionsManager.guestRoles.get:${localInvitationRecord}:${tenantInfo.id}`;
   }, [localInvitationRecord, tenantInfo?.id]);
 
   const { data: remoteInvitationRecord } = useSWR<GuestRole>(
-    memoizedUrl,
-    async (url: string) => {
-      const token = await getAccessTokenSilently();
-
-      return fetch(url, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          [TENANT_ID_HEADER]: tenantInfo?.id ?? "",
+    swrKey,
+    async () =>
+      guestRolesGet(
+        {
+          id: localInvitationRecord as string,
+          tenantId: tenantInfo?.id ?? undefined,
         },
-      })
-        .then(parseHttpError)
-        .catch((err) => {
-          console.error(err);
-
-          return null;
-        });
-    }
+        getAccessTokenSilently
+      )
   );
 
   const invitationRecord: GuestRole | undefined = useMemo(() => {

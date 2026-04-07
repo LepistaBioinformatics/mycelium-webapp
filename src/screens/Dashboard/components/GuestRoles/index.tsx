@@ -2,10 +2,10 @@ import PageBody from "@/components/ui/PageBody";
 import { RiRobot2Line } from "react-icons/ri";
 import Typography from "@/components/ui/Typography";
 import useProfile from "@/hooks/use-profile";
-import { buildPath } from "@/services/openapi/mycelium-api";
 import { components } from "@/services/openapi/mycelium-schema";
+import { guestRolesList } from "@/services/rpc/guestManager";
 import PaginatedRecords from "@/types/PaginatedRecords";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import useSWR from "swr";
 import GuestRolesInitializer from "./GuestRolesInitializer";
 import Button from "@/components/ui/Button";
@@ -19,7 +19,6 @@ import { MycPermission } from "@/types/MyceliumPermission";
 import PermissionIcon from "@/components/ui/PermissionIcon";
 import GuestRolesModal from "./GuestRolesModal";
 import GuestRoleDetails from "./GuestRoleDetails";
-import useSuspenseError from "@/hooks/use-suspense-error";
 import { FaUserCheck } from "react-icons/fa6";
 import { useTranslation } from "react-i18next";
 import { FaPlus } from "react-icons/fa";
@@ -35,8 +34,6 @@ export default function GuestRoles() {
   const [currentGuestRole, setCurrentGuestRole] = useState<GuestRole | null>(
     null
   );
-
-  const { parseHttpError } = useSuspenseError();
 
   const {
     isLoadingUser,
@@ -55,6 +52,35 @@ export default function GuestRoles() {
       initialPageSize: 10,
     });
 
+  const swrKey =
+    isAuthenticated && hasEnoughPermissions
+      ? (["rpc", "guestManager.guestRoles.list", skip, pageSize, searchTerm] as const)
+      : null;
+
+  const {
+    data: guestRoles,
+    isLoading: isLoadingGuestRoles,
+    mutate: mutateGuestRoles,
+  } = useSWR<PaginatedRecords<GuestRole>>(
+    swrKey,
+    () =>
+      guestRolesList(
+        {
+          skip: skip ?? undefined,
+          pageSize: pageSize ?? undefined,
+          name: searchTerm && searchTerm !== "" ? searchTerm : undefined,
+        },
+        getAccessTokenSilently
+      ),
+    {
+      revalidateIfStale: true,
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      revalidateOnMount: true,
+      refreshInterval: 1000 * 60,
+    }
+  );
+
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setCurrentGuestRole(null);
@@ -71,48 +97,6 @@ export default function GuestRoles() {
       .then(() => setCurrentGuestRole(guestRole))
       .then(() => setIsViewModalOpen(true));
   };
-
-  const memoizedUrl = useMemo(() => {
-    if (!isAuthenticated) return null;
-    if (!hasEnoughPermissions) return null;
-
-    let searchParams: Record<string, string> = {};
-
-    if (skip) searchParams.skip = skip.toString();
-    if (searchTerm && searchTerm !== "") searchParams.name = searchTerm;
-    if (pageSize) searchParams.pageSize = pageSize.toString();
-
-    return buildPath("/_adm/guests-manager/guest-roles", {
-      query: searchParams,
-    });
-  }, [searchTerm, skip, pageSize, isAuthenticated, hasEnoughPermissions]);
-
-  const {
-    data: guestRoles,
-    isLoading: isLoadingGuestRoles,
-    mutate: mutateGuestRoles,
-  } = useSWR<PaginatedRecords<GuestRole>>(
-    memoizedUrl,
-    async (url: string) => {
-      const token = await getAccessTokenSilently();
-
-      return await fetch(url, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      })
-        .then(parseHttpError)
-        .catch(console.error);
-    },
-    {
-      revalidateIfStale: true,
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false,
-      revalidateOnMount: true,
-      refreshInterval: 1000 * 60,
-    }
-  );
 
   const onSubmit = (term?: string, _?: string) => {
     setSkip(0);

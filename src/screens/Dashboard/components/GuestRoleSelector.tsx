@@ -4,12 +4,13 @@ import PermissionIcon from "@/components/ui/PermissionIcon";
 import Typography from "@/components/ui/Typography";
 import useProfile from "@/hooks/use-profile";
 import useSearchBarParams from "@/hooks/use-search-bar-params";
-import useSuspenseError from "@/hooks/use-suspense-error";
-import { buildPath } from "@/services/openapi/mycelium-api";
 import { components } from "@/services/openapi/mycelium-schema";
+import {
+  guestRolesList,
+  GuestRolesListParams,
+} from "@/services/rpc/subscriptionsManager";
 import { MycPermission } from "@/types/MyceliumPermission";
 import { MycRole } from "@/types/MyceliumRole";
-import PaginatedRecords from "@/types/PaginatedRecords";
 import { TextInput } from "flowbite-react";
 import { useMemo, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -18,7 +19,6 @@ import { camelCaseToKebabCase } from "@/functions/camel-to-kebab-text";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { RootState } from "@/states/store";
-import { TENANT_ID_HEADER } from "@/constants/http-headers";
 
 type GuestRole = components["schemas"]["GuestRole"];
 type SystemActor = components["schemas"]["SystemActor"] | string;
@@ -59,8 +59,6 @@ export default function GuestRoleSelector({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isEditing, setIsEditing] = useState(selectedRole ? false : true);
 
-  const { parseHttpError } = useSuspenseError();
-
   const { tenantInfo } = useSelector((state: RootState) => state.tenant);
 
   const { isAuthenticated, hasEnoughPermissions, getAccessTokenSilently } =
@@ -85,31 +83,24 @@ export default function GuestRoleSelector({
     },
   });
 
-  const memoizedUrl = useMemo(() => {
-    if (!isAuthenticated) return null;
-    if (!hasEnoughPermissions) return null;
+  const swrParams = useMemo<GuestRolesListParams | null>(() => {
+    if (!isAuthenticated || !hasEnoughPermissions) return null;
 
-    const searchParams: Record<string, string> = {
-      pageSize: pageSize.toString(),
+    const params: GuestRolesListParams = {
+      pageSize,
+      system: shouldBeSystemRole,
+      tenantId: tenantInfo?.id ?? undefined,
     };
 
     if (searchTerm && searchTerm !== "") {
-      searchParams.name = searchTerm;
+      params.name = searchTerm;
     }
 
     if (restrictRoleToSlug) {
-      searchParams.slug = camelCaseToKebabCase(restrictRoleToSlug as string);
+      params.slug = camelCaseToKebabCase(restrictRoleToSlug as string);
     }
 
-    if (shouldBeSystemRole) {
-      searchParams.system = "true";
-    } else {
-      searchParams.system = "false";
-    }
-
-    return buildPath("/_adm/subscriptions-manager/guest-roles", {
-      query: searchParams,
-    });
+    return params;
   }, [
     isAuthenticated,
     hasEnoughPermissions,
@@ -117,28 +108,29 @@ export default function GuestRoleSelector({
     searchTerm,
     restrictRoleToSlug,
     shouldBeSystemRole,
+    tenantInfo?.id,
   ]);
 
+  const swrKey = swrParams
+    ? ([
+        "rpc",
+        "subscriptionsManager.guestRoles.list",
+        swrParams.pageSize,
+        swrParams.system,
+        swrParams.name,
+        swrParams.slug,
+        swrParams.tenantId,
+      ] as const)
+    : null;
+
   const {
-    data: guestRoles,
+    data: guestRolesData,
     isLoading,
     isValidating,
     mutate,
-  } = useSWR<PaginatedRecords<GuestRole>>(
-    memoizedUrl,
-    async (url: string) => {
-      const token = await getAccessTokenSilently();
-
-      return await fetch(url, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          [TENANT_ID_HEADER]: tenantInfo?.id ?? "",
-          "Content-Type": "application/json",
-        },
-      })
-        .then(parseHttpError)
-        .catch(console.error);
-    },
+  } = useSWR<GuestRole[]>(
+    swrKey,
+    () => guestRolesList(swrParams!, getAccessTokenSilently),
     {
       revalidateIfStale: true,
       revalidateOnFocus: false,
@@ -151,7 +143,7 @@ export default function GuestRoleSelector({
   const onSubmit: SubmitHandler<Inputs> = async ({ name }) => {
     setIsSubmitting(true);
     setSearchTerm(name);
-    mutate(guestRoles, { rollbackOnError: true });
+    mutate(guestRolesData, { rollbackOnError: true });
     setIsSubmitting(false);
   };
 
@@ -221,12 +213,12 @@ export default function GuestRoleSelector({
             )}
 
             <div className="flex flex-col mt-2 shadow-lg relative">
-              {guestRoles?.records
+              {guestRolesData
                 ?.sort(
                   (a, b) =>
                     a.name.localeCompare(b.name) ||
                     getNumericPermission(a.permission as MycPermission) -
-                    getNumericPermission(b.permission as MycPermission)
+                      getNumericPermission(b.permission as MycPermission)
                 )
                 ?.map((role) => (
                   <SelectionItem
@@ -262,7 +254,7 @@ const selectionItemStyles = cva(
 
 interface SelectionItemProps
   extends BaseProps,
-  VariantProps<typeof selectionItemStyles> {
+    VariantProps<typeof selectionItemStyles> {
   desiredRole: GuestRole;
   parentRole?: GuestRole | null;
   onClick: (role: GuestRole) => void;

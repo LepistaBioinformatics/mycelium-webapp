@@ -8,7 +8,7 @@ import useProfile from "@/hooks/use-profile";
 import { MycRole } from "@/types/MyceliumRole";
 import { MycPermission } from "@/types/MyceliumPermission";
 import useSuspenseError from "@/hooks/use-suspense-error";
-import { buildPath } from "@/services/openapi/mycelium-api";
+import { guestRolesInsertRoleChild } from "@/services/rpc/guestManager";
 import { useTranslation } from "react-i18next";
 
 type GuestRole = components["schemas"]["GuestRole"];
@@ -53,34 +53,17 @@ export default function RegisterGuestRoleChild({
         return;
       }
 
-      const accessToken = await getAccessTokenSilently();
-
-      if (!accessToken) {
+      try {
+        await guestRolesInsertRoleChild(
+          { guestRoleId: parentRole.id, childId: childRole.id },
+          getAccessTokenSilently
+        );
+        onSuccess();
+      } catch (err) {
+        parseHttpError(err as Response);
+      } finally {
         setIsSubmitting(false);
-        return;
       }
-
-      const response = await fetch(
-        buildPath(
-          "/_adm/guests-manager/guest-roles/{guest_role_id}/children/{child_id}",
-          { path: { guest_role_id: parentRole.id, child_id: childRole.id } }
-        ),
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-
-      if (!response.ok) {
-        parseHttpError(response);
-        setIsSubmitting(false);
-        return;
-      }
-
-      setIsSubmitting(false);
-      onSuccess();
     },
     [
       isAuthenticated,

@@ -4,8 +4,8 @@ import Button from "@/components/ui/Button";
 import Modal from "@/components/ui/Modal";
 import Typography from "@/components/ui/Typography";
 import useSuspenseError from "@/hooks/use-suspense-error";
-import { buildPath } from "@/services/openapi/mycelium-api";
 import { components } from "@/services/openapi/mycelium-schema";
+import { guestRolesDelete } from "@/services/rpc/guestManager";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -28,27 +28,21 @@ export default function DeleteGuestRole({ guestRole, isOpen, onClose }: Props) {
   const { parseHttpError } = useSuspenseError();
 
   const handleDelete = async () => {
-    setIsLoading(true);
-
-    const token = await getAccessTokenSilently();
-
     if (!guestRole.id) return;
 
-    await fetch(
-      buildPath("/_adm/guests-manager/guest-roles/{guest_role_id}", {
-        path: { guest_role_id: guestRole.id },
-      }),
-      {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    )
-      .then(parseHttpError)
-      .then(onClose)
-      .catch(console.error)
-      .finally(() => setIsLoading(false));
+    setIsLoading(true);
+
+    try {
+      await guestRolesDelete(
+        { guestRoleId: guestRole.id },
+        getAccessTokenSilently
+      );
+      onClose();
+    } catch (err) {
+      parseHttpError(err as Response);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
