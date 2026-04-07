@@ -19,11 +19,11 @@
 | P7 | `guestManager` — guest roles | `guestManager.ts`, GuestRoles/*, GuestRoleSelector | ✅ done |
 | P8 | `subscriptionsManager` — accounts + guests | `subscriptionsManager.ts`, PaginatedAccounts, AccountDetails, AccountInvitations, GuestsByEmail, GuestToAccountModal, UnInviteGuestModal | ✅ done |
 | P9 | `staff` — upgrade/downgrade | `staff.ts`, UpgradeOrDowngradeAccountModal | ✅ done |
-| P10 | `beginners.profile.get` (deferred) | `use-profile.tsx` — blocked by H2 concern | 🔴 blocked |
+| P10 | `beginners.profile.get` | `use-profile.tsx`, `services/rpc/beginners.ts` | ✅ done |
 
 ## M2 — Active Concerns Resolution
 
-Resolve H2, H3, M2, M4 from CONCERNS.md. Natural follow-on after M1.
+Resolve remaining concerns from CONCERNS.md. H2 and M2 resolved. Remaining: H3, M4.
 
 ## M3 — Test Coverage
 

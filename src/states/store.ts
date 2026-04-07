@@ -1,24 +1,20 @@
 import { configureStore } from '@reduxjs/toolkit';
-import profileReducer from './profile.state';
 import tenantReducer from './tenant.state';
 import notificationReducer from './notification.state';
 import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
-const persistConfig = {
-    key: "myc",
+const tenantPersistConfig = {
+    key: "myc-tenant",
     storage,
 };
 
-const profilePersistedReducer = persistReducer(persistConfig, profileReducer);
-const tenantPersistedReducer = persistReducer(persistConfig, tenantReducer);
-const notificationPersistedReducer = persistReducer(persistConfig, notificationReducer);
+const tenantPersistedReducer = persistReducer(tenantPersistConfig, tenantReducer);
 
 const store = configureStore({
     reducer: {
-        profile: profilePersistedReducer,
         tenant: tenantPersistedReducer,
-        notification: notificationPersistedReducer,
+        notification: notificationReducer,
     },
     middleware: (getDefaultMiddleware) => getDefaultMiddleware({
         serializableCheck: false,

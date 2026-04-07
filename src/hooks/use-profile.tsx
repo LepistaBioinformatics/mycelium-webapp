@@ -3,8 +3,8 @@
 // the API and save it in the session storage.
 //
 
-import { buildPath } from "@/services/openapi/mycelium-api";
 import { components } from "@/services/openapi/mycelium-schema";
+import { profileGet } from "@/services/rpc/beginners";
 import { MycPermission } from "@/types/MyceliumPermission";
 import { MycRole } from "@/types/MyceliumRole";
 import { useAuth0 } from "@auth0/auth0-react";
@@ -76,7 +76,7 @@ export default function useProfile(args?: Props) {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [isLoadingProfile, setIsLoadingProfile] = useState(false);
 
-  const { parseHttpError, parseAuth0Error } = useSuspenseError();
+  const { parseAuth0Error } = useSuspenseError();
 
   useEffect(() => {
     if (error) parseAuth0Error(error);
@@ -227,28 +227,12 @@ export default function useProfile(args?: Props) {
       return localProfile;
     }
 
-    const accessToken = await getAccessTokenSilently();
-
     setIsLoadingProfile(true);
 
-    const url = buildPath("/_adm/beginners/profile", {
-      query: { withUrl: "false" },
-    });
-
-    const response = await fetch(url, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
-
-    setIsLoadingProfile(false);
-
-    if (!response.ok) {
-      parseHttpError(response);
-      return null;
-    }
-
-    const profile = (await response.json()) as Profile;
+    const profile = await profileGet(
+      { withUrl: false },
+      getAccessTokenSilently
+    ).finally(() => setIsLoadingProfile(false));
 
     if (!profile.owners.map((owner) => owner.email).includes(user.email)) {
       return null;

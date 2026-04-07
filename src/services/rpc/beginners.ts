@@ -2,6 +2,7 @@ import { components } from "@/services/openapi/mycelium-schema";
 import { TenantStatus } from "@/types/TenantStatus";
 import { rpcCall } from "./client";
 
+type Profile = components["schemas"]["Profile"];
 type Tenant = components["schemas"]["Tenant"];
 type CreateTokenResponse = components["schemas"]["CreateTokenResponse"];
 
@@ -66,6 +67,25 @@ export function accountsCreate(
 ): Promise<void> {
   return rpcCall<AccountsCreateParams, void>(
     "beginners.accounts.create",
+    params,
+    getToken
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Profile
+// ---------------------------------------------------------------------------
+
+export interface ProfileGetParams {
+  withUrl?: boolean | null;
+}
+
+export function profileGet(
+  params: ProfileGetParams,
+  getToken: () => Promise<string>
+): Promise<Profile> {
+  return rpcCall<ProfileGetParams, Profile>(
+    "beginners.profile.get",
     params,
     getToken
   );

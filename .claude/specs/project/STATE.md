@@ -13,8 +13,7 @@
 
 ## Blockers
 
-- **B1** — `beginners.profile.get` migration (P10) is blocked by concern H2.
-  Do not migrate `use-profile.tsx` or `profile.state.tsx` until H2 is addressed.
+_(none)_
 
 ## Lessons
 
