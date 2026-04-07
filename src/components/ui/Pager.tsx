@@ -26,7 +26,7 @@ export default function Pager({
 
     if (records?.count && records?.count <= records?.records?.length)
       return false;
-    if (records?.records?.length && records?.records?.length < records?.skip)
+    if (records?.records?.length && records?.records?.length < (records?.skip ?? 0))
       return false;
 
     return true;
@@ -39,7 +39,7 @@ export default function Pager({
 
   const showNextPageButton = useMemo(() => {
     if (!records) return false;
-    if (records.skip + records.size >= records.count) return false;
+    if ((records.skip ?? 0) + (records.size ?? 0) >= records.count) return false;
 
     return true;
   }, [records]);
