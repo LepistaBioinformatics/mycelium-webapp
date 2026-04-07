@@ -50,3 +50,21 @@ _(none)_
 
 - Batch RPC calls on screen load (load multiple resources in one round-trip using `rpcBatch`).
   Deferred until all screens are migrated individually — batching is an optimization pass.
+
+- M3 (Test Coverage) deferred in favor of M4 (Native Auth) — user prioritized auth replacement.
+
+## Current Focus
+
+**M4 — Native Auth** (spec complete, not started)
+
+Spec: `.claude/specs/features/native-auth/` — 8 tasks (T0–T8)
+
+**Blocked by:** Gateway feature `magic-link-auth` (GT0–GT7 must be complete first)
+
+Key decisions made:
+- Login flow: email → magic link email → gateway HTML page shows 6-digit code → user types code in webapp → JWT issued
+- JWT stored in React state (primary) + `sessionStorage("myc-native-token")` (page reload)
+- `useNativeAuth` hook is a drop-in replacement for `useAuth0()` surface
+- Auth0 removed from webapp entirely; remains as optional external provider at gateway level
+- `NativeAuthProvider` replaces `Auth0Provider` in `main.tsx`
+- All auth consumption already centralized in `use-profile.tsx` (D5) — migration touches only that file + `main.tsx` + `HomePage`

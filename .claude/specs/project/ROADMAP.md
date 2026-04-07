@@ -28,3 +28,24 @@
 ## M3 — Test Coverage
 
 Add unit tests for RPC wrappers and key hooks. Requires vitest setup (see TESTING.md).
+
+## M4 — Native Auth (Replace Auth0)
+
+**Goal:** Remove `@auth0/auth0-react` dependency. Replace Auth0-based login with gateway
+native magic link (passwordless). Auth0 remains available as gateway-level external provider.
+
+Spec: `.claude/specs/features/native-auth/`
+
+**Blocked by:** Gateway magic-link-auth feature (GT0–GT7)
+
+| Task | Scope | Status |
+|---|---|---|
+| T0 | Types + auth service (`src/services/auth/magic-link.ts`) | ⬜ |
+| T1 | `NativeAuthContext` (JWT lifecycle, sessionStorage) | ⬜ |
+| T2 | `useNativeAuth` hook (drop-in for `useAuth0`) | ⬜ |
+| T3 | Login screen (`/login`) — email step + code step | ⬜ |
+| T4 | Route registration | ⬜ |
+| T5 | `use-profile.tsx` migration | ⬜ |
+| T6 | `main.tsx` migration + remove `@auth0/auth0-react` | ⬜ |
+| T7 | `HomePage` login button | ⬜ |
+| T8 | Final gate check | ⬜ |
