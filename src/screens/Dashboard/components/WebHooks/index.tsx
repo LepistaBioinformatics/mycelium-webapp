@@ -3,8 +3,8 @@ import { VscGistSecret } from "react-icons/vsc";
 import Typography from "@/components/ui/Typography";
 import useProfile from "@/hooks/use-profile";
 import useSearchBarParams from "@/hooks/use-search-bar-params";
-import { buildPath } from "@/services/openapi/mycelium-api";
 import { components } from "@/services/openapi/mycelium-schema";
+import { webhooksList } from "@/services/rpc/systemManager";
 import PaginatedRecords from "@/types/PaginatedRecords";
 import { useMemo, useState } from "react";
 import useSWR from "swr";
@@ -17,7 +17,6 @@ import ListItem from "@/components/ui/ListItem";
 import { MycRole } from "@/types/MyceliumRole";
 import { MycPermission } from "@/types/MyceliumPermission";
 import DetailsBox from "@/components/ui/DetailsBox";
-import useSuspenseError from "@/hooks/use-suspense-error";
 import { MdWebhook } from "react-icons/md";
 import { useTranslation } from "react-i18next";
 import { FaEdit, FaPlus, FaTrash } from "react-icons/fa";
@@ -30,8 +29,6 @@ type WebHook = components["schemas"]["WebHook"];
 
 export default function Webhooks() {
   const { t } = useTranslation();
-
-  const { parseHttpError } = useSuspenseError();
 
   const [isNewModalOpen, setIsNewModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -54,19 +51,11 @@ export default function Webhooks() {
       initialPageSize: 10,
     });
 
-  const memoizedUrl = useMemo(() => {
+  const swrKey = useMemo(() => {
     if (!isAuthenticated) return null;
     if (!hasEnoughPermissions) return null;
 
-    const searchParams: Record<string, string> = {};
-
-    if (skip) searchParams.skip = skip.toString();
-    if (searchTerm && searchTerm !== "") searchParams.name = searchTerm;
-    if (pageSize) searchParams.pageSize = pageSize.toString();
-
-    return buildPath("/_adm/system-manager/webhooks", {
-      query: searchParams,
-    });
+    return ["rpc", "systemManager.webhooks.list", skip, pageSize, searchTerm];
   }, [searchTerm, skip, pageSize, isAuthenticated, hasEnoughPermissions]);
 
   const {
@@ -74,18 +63,16 @@ export default function Webhooks() {
     isLoading: isLoadingWebhooks,
     mutate: mutateWebhooks,
   } = useSWR<PaginatedRecords<WebHook>>(
-    memoizedUrl,
-    async (url: string) => {
-      const token = await getAccessTokenSilently();
-
-      return await fetch(url, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
+    swrKey,
+    async () => {
+      return webhooksList(
+        {
+          skip: skip ?? undefined,
+          pageSize: pageSize ?? undefined,
+          name: searchTerm && searchTerm !== "" ? searchTerm : undefined,
         },
-      })
-        .then(parseHttpError)
-        .catch(console.error);
+        getAccessTokenSilently
+      );
     },
     {
       revalidateIfStale: true,
@@ -114,7 +101,7 @@ export default function Webhooks() {
 
     if (term !== undefined) setSearchTerm(term);
 
-    mutateWebhooks(webhooks, { rollbackOnError: true });
+    mutateWebhooks(undefined, { rollbackOnError: true });
   };
 
   const handleEditWebhookClick = (webhook: WebHook) => {
@@ -218,9 +205,7 @@ export default function Webhooks() {
               </IntroSection.Item>
 
               <IntroSection.Item prefix={t("screens.Dashboard.Webhooks.url")}>
-                <span className="uppercase">
-                  {webhook?.method}
-                </span>
+                <span className="uppercase">{webhook?.method}</span>
               </IntroSection.Item>
 
               <IntroSection.Item prefix={t("screens.Dashboard.Webhooks.url")}>

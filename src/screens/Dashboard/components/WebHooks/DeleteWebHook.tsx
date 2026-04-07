@@ -3,9 +3,8 @@
 import Button from "@/components/ui/Button";
 import Modal from "@/components/ui/Modal";
 import Typography from "@/components/ui/Typography";
-import useSuspenseError from "@/hooks/use-suspense-error";
-import { buildPath } from "@/services/openapi/mycelium-api";
 import { components } from "@/services/openapi/mycelium-schema";
+import { webhooksDelete } from "@/services/rpc/systemManager";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -23,34 +22,21 @@ export default function DeleteWebHook({ webhook, isOpen, onClose }: Props) {
 
   const { getAccessTokenSilently } = useAuth0();
 
-  const { parseHttpError } = useSuspenseError();
-
   const [isLoading, setIsLoading] = useState(false);
 
   const handleDelete = async () => {
-    setIsLoading(true);
-
-    const token = await getAccessTokenSilently();
-
     if (!webhook.id) return;
 
-    await fetch(
-      buildPath("/_adm/system-manager/webhooks/{webhook_id}", {
-        path: { webhook_id: webhook.id },
-      }),
-      {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    )
-      .then(parseHttpError)
-      .catch(console.error)
-      .finally(() => {
-        setIsLoading(false);
-        onClose();
-      });
+    setIsLoading(true);
+
+    try {
+      await webhooksDelete({ webhookId: webhook.id }, getAccessTokenSilently);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+      onClose();
+    }
   };
 
   return (

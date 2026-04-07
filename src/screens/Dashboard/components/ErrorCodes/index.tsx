@@ -2,8 +2,11 @@ import PageBody from "@/components/ui/PageBody";
 import Typography from "@/components/ui/Typography";
 import useProfile from "@/hooks/use-profile";
 import useSearchBarParams from "@/hooks/use-search-bar-params";
-import { buildPath } from "@/services/openapi/mycelium-api";
 import { components } from "@/services/openapi/mycelium-schema";
+import {
+  errorCodesList,
+  ErrorCodesListParams,
+} from "@/services/rpc/systemManager";
 import PaginatedRecords from "@/types/PaginatedRecords";
 import { useMemo } from "react";
 import useSWR from "swr";
@@ -13,7 +16,6 @@ import CopyToClipboard from "@/components/ui/CopyToClipboard";
 import ListItem from "@/components/ui/ListItem";
 import { MycRole } from "@/types/MyceliumRole";
 import { MycPermission } from "@/types/MyceliumPermission";
-import useSuspenseError from "@/hooks/use-suspense-error";
 import { MdNearbyError } from "react-icons/md";
 import { useTranslation } from "react-i18next";
 import IntroSection from "@/components/ui/IntroSection";
@@ -22,8 +24,6 @@ type ErrorCode = components["schemas"]["ErrorCode"];
 
 export default function ErrorCodes() {
   const { t } = useTranslation();
-
-  const { parseHttpError } = useSuspenseError();
 
   const {
     isLoadingUser,
@@ -41,11 +41,14 @@ export default function ErrorCodes() {
       initialPageSize: 10,
     });
 
-  const memoizedUrl = useMemo(() => {
+  const rpcParams = useMemo<ErrorCodesListParams | null>(() => {
     if (!isAuthenticated) return null;
     if (!hasEnoughPermissions) return null;
 
-    let searchParams: Record<string, string> = {};
+    const params: ErrorCodesListParams = {
+      skip: skip ?? undefined,
+      pageSize: pageSize ?? undefined,
+    };
 
     if (searchTerm && searchTerm !== "") {
       //
@@ -57,7 +60,7 @@ export default function ErrorCodes() {
       //
       if (searchTerm.match(/^#.*$/)) {
         const prefix = searchTerm.slice(1).split(" ")[0];
-        searchParams.prefix = prefix as string;
+        params.prefix = prefix as string;
       }
 
       //
@@ -68,9 +71,9 @@ export default function ErrorCodes() {
         const internalNoMatch = searchTerm.match(/internal=no/i);
 
         if (internalYesMatch) {
-          searchParams.isInternal = "true";
+          params.isInternal = true;
         } else if (internalNoMatch) {
-          searchParams.isInternal = "false";
+          params.isInternal = false;
         }
       }
 
@@ -81,36 +84,36 @@ export default function ErrorCodes() {
         const codeMatch = searchTerm.match(/code=(\d+)/i);
 
         if (codeMatch) {
-          searchParams.code = codeMatch[1] as string;
+          params.code = parseInt(codeMatch[1] as string, 10);
         }
       }
     }
 
-    if (skip) searchParams.skip = skip.toString();
-    if (pageSize) searchParams.pageSize = pageSize.toString();
-
-    return buildPath("/_adm/system-manager/error-codes", {
-      query: searchParams,
-    });
+    return params;
   }, [searchTerm, skip, pageSize, isAuthenticated, hasEnoughPermissions]);
+
+  const swrKey = useMemo(() => {
+    if (!rpcParams) return null;
+
+    return [
+      "rpc",
+      "systemManager.errorCodes.list",
+      rpcParams.skip,
+      rpcParams.pageSize,
+      rpcParams.prefix,
+      rpcParams.code,
+      rpcParams.isInternal,
+    ];
+  }, [rpcParams]);
 
   const {
     data: errorCodes,
     isLoading: isLoadingErrorCodes,
     mutate: mutateErrorCodes,
   } = useSWR<PaginatedRecords<ErrorCode>>(
-    memoizedUrl,
-    async (url: string) => {
-      const token = await getAccessTokenSilently();
-
-      return await fetch(url, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      })
-        .then(parseHttpError)
-        .catch(console.error);
+    swrKey,
+    async () => {
+      return errorCodesList(rpcParams!, getAccessTokenSilently);
     },
     {
       revalidateIfStale: true,

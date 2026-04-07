@@ -5,9 +5,8 @@ import FormField from "@/components/ui/FomField";
 import Modal from "@/components/ui/Modal";
 import Typography from "@/components/ui/Typography";
 import useProfile from "@/hooks/use-profile";
-import useSuspenseError from "@/hooks/use-suspense-error";
-import { buildPath } from "@/services/openapi/mycelium-api";
 import { components } from "@/services/openapi/mycelium-schema";
+import { webhooksCreate, webhooksUpdate } from "@/services/rpc/systemManager";
 import { MycPermission } from "@/types/MyceliumPermission";
 import { MycRole } from "@/types/MyceliumRole";
 import { Select, Textarea, TextInput } from "flowbite-react";
@@ -83,8 +82,6 @@ export default function WebhookModal({
   );
 
   const [isLoading, setIsLoading] = useState(false);
-
-  const { parseHttpError } = useSuspenseError();
 
   const {
     register,
@@ -199,35 +196,39 @@ export default function WebhookModal({
 
     setIsLoading(true);
 
-    const token = await getAccessTokenSilently();
-
-    const response = await fetch(
-      buildPath(
-        webhook
-          ? "/_adm/system-manager/webhooks/{webhook_id}"
-          : "/_adm/system-manager/webhooks",
-        {
-          path: {
-            webhook_id: webhook?.id ?? "",
+    try {
+      if (webhook) {
+        await webhooksUpdate(
+          {
+            webhookId: webhook.id ?? "",
+            name: cleanData.name,
+            description: cleanData.description,
+            secret:
+              cleanData.secret as components["schemas"]["HttpSecret"] | null,
+            isActive: undefined,
           },
-        }
-      ),
-      {
-        method: webhook ? "PATCH" : "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(cleanData),
+          getAccessTokenSilently
+        );
+      } else {
+        await webhooksCreate(
+          {
+            name: cleanData.name,
+            description: cleanData.description,
+            url: cleanData.url,
+            trigger: cleanData.trigger,
+            secret:
+              cleanData.secret as components["schemas"]["HttpSecret"] | null,
+          },
+          getAccessTokenSilently
+        );
       }
-    );
 
-    if (!response.ok) {
-      parseHttpError(response);
+      handleLocalSuccess();
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsLoading(false);
     }
-
-    handleLocalSuccess();
-    setIsLoading(false);
   };
 
   if (!hasEnoughPermissions) {
@@ -340,11 +341,11 @@ export default function WebhookModal({
               title={
                 webhook
                   ? t(
-                    "screens.Dashboard.GuestRoles.GuestRolesModal.form.permission.titleReadOnly"
-                  )
+                      "screens.Dashboard.GuestRoles.GuestRolesModal.form.permission.titleReadOnly"
+                    )
                   : t(
-                    "screens.Dashboard.GuestRoles.GuestRolesModal.form.permission.titleWrite"
-                  )
+                      "screens.Dashboard.GuestRoles.GuestRolesModal.form.permission.titleWrite"
+                    )
               }
               {...register("trigger")}
             >
@@ -528,12 +529,16 @@ export default function WebhookModal({
             {webhook
               ? isLoading
                 ? t(
-                  "screens.Dashboard.Webhooks.WebhookModal.formFields.updating"
-                )
+                    "screens.Dashboard.Webhooks.WebhookModal.formFields.updating"
+                  )
                 : t("screens.Dashboard.Webhooks.WebhookModal.formFields.update")
               : isLoading
-                ? t("screens.Dashboard.Webhooks.WebhookModal.formFields.creating")
-                : t("screens.Dashboard.Webhooks.WebhookModal.formFields.create")}
+                ? t(
+                    "screens.Dashboard.Webhooks.WebhookModal.formFields.creating"
+                  )
+                : t(
+                    "screens.Dashboard.Webhooks.WebhookModal.formFields.create"
+                  )}
           </Button>
         </form>
       </Modal.Body>
