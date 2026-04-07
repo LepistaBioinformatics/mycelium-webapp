@@ -4,22 +4,19 @@
 
 - **D1** — SWR keys for RPC use tuple form `["rpc", "method.name", ...params]` instead of URL
   strings. This keeps SWR's deduplication and revalidation working without coupling to REST URLs.
-- **D2** — `use-profile.tsx` profile fetch is NOT migrated in M1. The existing `useSWR` call
-  inside a Redux thunk (H2) must be resolved first to avoid making a bad pattern permanent.
+- **D2** — `use-profile.tsx` profile fetch was deferred from M1 (blocked by H2). Resolved in M2:
+  H2 fixed by deleting the vestigial Redux profile slice; P10 then migrated to `beginners.profile.get`.
 - **D3** — All `rpcCall` / `rpcBatch` wrappers live in `src/services/rpc/<scope>.ts`. No RPC
   logic in components.
 - **D4** — Migration is done scope by scope (P1–P9), not file by file. Each phase is
   independently buildable and committable.
+- **D5** — M4 resolved by extending `useProfile()` to re-export `logout` and `loginWithRedirect`
+  from Auth0. All 11 direct `useAuth0()` call sites now go through `use-profile.tsx`.
+  `useAuth0` is imported only in `use-profile.tsx`.
 
 ## Blockers
 
 _(none)_
-
-## Decisions
-
-- **D5** — M4 resolved by extending `useProfile()` to re-export `logout` and `loginWithRedirect`
-  from Auth0. All 11 direct `useAuth0()` call sites now go through `use-profile.tsx`.
-  `useAuth0` is imported only in `use-profile.tsx`.
 
 ## Lessons
 
