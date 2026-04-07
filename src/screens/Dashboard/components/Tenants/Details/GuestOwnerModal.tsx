@@ -2,11 +2,10 @@ import Button from "@/components/ui/Button";
 import FormField from "@/components/ui/FomField";
 import Modal from "@/components/ui/Modal";
 import Typography from "@/components/ui/Typography";
-import { TENANT_ID_HEADER } from "@/constants/http-headers";
 import useProfile from "@/hooks/use-profile";
 import useSuspenseError from "@/hooks/use-suspense-error";
-import { buildPath } from "@/services/openapi/mycelium-api";
 import { components } from "@/services/openapi/mycelium-schema";
+import { ownerGuest } from "@/services/rpc/tenantOwner";
 import { MycPermission } from "@/types/MyceliumPermission";
 import { TextInput } from "flowbite-react";
 import { useState } from "react";
@@ -80,25 +79,17 @@ export default function GuestOwnerModal({
       return;
     }
 
-    const token = await getAccessTokenSilently();
-
-    const response = await fetch(buildPath("/_adm/tenant-owner/owners"), {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        [TENANT_ID_HEADER]: tenant.id,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-
-    if (response.ok) {
+    try {
+      await ownerGuest(
+        { tenantId: tenant.id, email: data.email },
+        getAccessTokenSilently
+      );
       handleLocalSuccess();
-    } else {
-      parseHttpError(response);
+    } catch (err) {
+      parseHttpError(err as Response);
+    } finally {
+      setIsLoading(false);
     }
-
-    setIsLoading(false);
   };
 
   if (!hasEnoughPermissions) {

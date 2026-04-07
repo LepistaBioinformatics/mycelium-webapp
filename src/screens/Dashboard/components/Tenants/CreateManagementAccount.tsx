@@ -2,10 +2,9 @@ import Typography from "@/components/ui/Typography";
 import { useCallback, useState } from "react";
 import Modal from "@/components/ui/Modal";
 import { useAuth0 } from "@auth0/auth0-react";
-import { buildPath } from "@/services/openapi/mycelium-api";
-import { TENANT_ID_HEADER } from "@/constants/http-headers";
 import Button from "@/components/ui/Button";
 import useSuspenseError from "@/hooks/use-suspense-error";
+import { accountsCreateManagementAccount } from "@/services/rpc/tenantOwner";
 
 interface Props {
   isOpen: boolean;
@@ -32,27 +31,22 @@ export default function CreateManagementAccount({
   const [isCreating, setIsCreating] = useState(false);
 
   const handleCreateManagementAccount = useCallback(async () => {
-    setIsCreating(true);
-
-    const token = await getAccessTokenSilently();
-
     if (!tenantId) return;
 
-    await fetch(buildPath("/_adm/tenant-owner/accounts"), {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-        [TENANT_ID_HEADER]: tenantId,
-      },
-    })
-      .then(parseHttpError)
-      .catch(console.error)
-      .finally(() => {
-        setIsCreating(false);
-        onClose();
-      });
-  }, [tenantId, getAccessTokenSilently, onClose]);
+    setIsCreating(true);
+
+    try {
+      await accountsCreateManagementAccount(
+        { tenantId },
+        getAccessTokenSilently
+      );
+    } catch (err) {
+      parseHttpError(err as Response);
+    } finally {
+      setIsCreating(false);
+      onClose();
+    }
+  }, [tenantId, getAccessTokenSilently, onClose, parseHttpError]);
 
   return (
     <Modal open={isOpen}>

@@ -4,12 +4,11 @@ import Modal from "@/components/ui/Modal";
 import Typography from "@/components/ui/Typography";
 import useSuspenseError from "@/hooks/use-suspense-error";
 import { useState } from "react";
-import { buildPath } from "@/services/openapi/mycelium-api";
-import { TENANT_ID_HEADER } from "@/constants/http-headers";
 import Button from "@/components/ui/Button";
 import IntroSection from "@/components/ui/IntroSection";
 import Divider from "@/components/ui/Divider";
 import { useTranslation } from "react-i18next";
+import { ownerRevoke } from "@/services/rpc/tenantOwner";
 
 type Tenant = components["schemas"]["Tenant"];
 type TenantOwner = components["schemas"]["Owner"];
@@ -47,25 +46,17 @@ export default function UnguestOwner({
       return;
     }
 
-    const token = await getAccessTokenSilently();
-
-    await fetch(buildPath("/_adm/tenant-owner/owners"), {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        [TENANT_ID_HEADER]: tenant.id,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email: owner?.email,
-      }),
-    })
-      .then(parseHttpError)
-      .catch(console.error)
-      .finally(() => {
-        setIsLoading(false);
-        onSuccess();
-      });
+    try {
+      await ownerRevoke(
+        { tenantId: tenant.id, email: owner.email },
+        getAccessTokenSilently
+      );
+    } catch (err) {
+      parseHttpError(err as Response);
+    } finally {
+      setIsLoading(false);
+      onSuccess();
+    }
   };
 
   return (

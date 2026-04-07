@@ -2,12 +2,11 @@ import Button from "@/components/ui/Button";
 import FormField from "@/components/ui/FomField";
 import Modal from "@/components/ui/Modal";
 import Typography from "@/components/ui/Typography";
-import { TENANT_ID_HEADER } from "@/constants/http-headers";
 import snakeToHumanText from "@/functions/snake-to-human-text";
 import useProfile from "@/hooks/use-profile";
 import useSuspenseError from "@/hooks/use-suspense-error";
-import { buildPath } from "@/services/openapi/mycelium-api";
 import { components } from "@/services/openapi/mycelium-schema";
+import { metaCreate } from "@/services/rpc/tenantOwner";
 import { TextInput } from "flowbite-react";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -56,8 +55,6 @@ export default function EditMetadataModal({
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     setIsLoading(true);
 
-    console.log(data);
-
     if (!editMetadataKey) {
       setIsLoading(false);
       dispatchWarning("Please fill in all fields");
@@ -70,27 +67,17 @@ export default function EditMetadataModal({
       return;
     }
 
-    const token = await getAccessTokenSilently();
-
-    const response = await fetch(buildPath("/_adm/tenant-owner/meta"), {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        [TENANT_ID_HEADER]: tenantId,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        key: editMetadataKey?.toString(),
-        value: data.value,
-      }),
-    });
-
-    if (!response.ok) {
-      parseHttpError(response);
+    try {
+      await metaCreate(
+        { tenantId, key: editMetadataKey, value: data.value },
+        getAccessTokenSilently
+      );
+      onSuccess();
+    } catch (err) {
+      parseHttpError(err as Response);
+    } finally {
+      setIsLoading(false);
     }
-
-    onSuccess();
-    setIsLoading(false);
   };
 
   if (!hasEnoughPermissions) {
