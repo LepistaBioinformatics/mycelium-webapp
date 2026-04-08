@@ -8,7 +8,7 @@ Legend: ⬜ not started · 🔄 in progress · ✅ done · 🔴 blocked
 
 ## T0 — Types + auth service layer
 
-**Status:** ⬜
+\*\*Status:\*\* ✅
 
 **What:**
 1. Create `src/types/NativeAuth.ts`:
@@ -46,7 +46,7 @@ Legend: ⬜ not started · 🔄 in progress · ✅ done · 🔴 blocked
 
 ## T1 — `NativeAuthContext`
 
-**Status:** ⬜
+\*\*Status:\*\* ✅
 
 **Depends on:** T0
 
@@ -87,7 +87,7 @@ Export `NativeAuthProvider` and `useNativeAuthContext`.
 
 ## T2 — `useNativeAuth` hook
 
-**Status:** ⬜
+\*\*Status:\*\* ✅
 
 **Depends on:** T1
 
@@ -132,7 +132,7 @@ export default function useNativeAuth() {
 
 ## T3 — Login screen
 
-**Status:** ⬜
+\*\*Status:\*\* ✅
 
 **Depends on:** T0, T1
 
@@ -177,7 +177,7 @@ Add i18n keys to `src/i18n/{en,ptBr,es}/translations.json`:
 
 ## T4 — Route registration
 
-**Status:** ⬜
+\*\*Status:\*\* ✅
 
 **Depends on:** T3
 
@@ -198,7 +198,7 @@ Outside the authenticated `DASHBOARD_ROUTE` subtree so unauthenticated users can
 
 ## T5 — `use-profile.tsx` migration
 
-**Status:** ⬜
+\*\*Status:\*\* ✅
 
 **Depends on:** T2
 
@@ -219,7 +219,7 @@ Outside the authenticated `DASHBOARD_ROUTE` subtree so unauthenticated users can
 
 ## T6 — `main.tsx` migration + package cleanup
 
-**Status:** ⬜
+\*\*Status:\*\* ✅
 
 **Depends on:** T1, T5
 
@@ -249,7 +249,7 @@ Outside the authenticated `DASHBOARD_ROUTE` subtree so unauthenticated users can
 
 ## T7 — `HomePage` update
 
-**Status:** ⬜
+\*\*Status:\*\* ✅
 
 **Depends on:** T5
 
@@ -275,7 +275,7 @@ Outside the authenticated `DASHBOARD_ROUTE` subtree so unauthenticated users can
 
 ## T8 — Final gate check
 
-**Status:** ⬜
+\*\*Status:\*\* ✅
 
 **Depends on:** T4, T6, T7
 

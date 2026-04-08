@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import Typography from "@/components/ui/Typography";
-import { User } from "@auth0/auth0-react";
+import { NativeUser } from "@/types/NativeAuth";
 import useProfile from "@/hooks/use-profile";
 import { useCallback, useEffect, useState } from "react";
 import { components } from "@/services/openapi/mycelium-schema";
@@ -29,7 +29,7 @@ enum RegisteringStatus {
 }
 
 interface Props {
-  user: User | null;
+  user: NativeUser | null;
 }
 
 export default function MyceliumProfile({ user }: Props) {
@@ -58,8 +58,8 @@ export default function MyceliumProfile({ user }: Props) {
     formState: { errors },
   } = useForm<Inputs>({
     defaultValues: {
-      firstName: user?.given_name,
-      lastName: user?.family_name,
+      firstName: user?.firstName ?? undefined,
+      lastName: user?.lastName ?? undefined,
     },
   });
 
@@ -72,7 +72,8 @@ export default function MyceliumProfile({ user }: Props) {
     try {
       if (!user?.email) throw new Error("User email is required");
 
-      await accountsCreate({ name: user.email }, getAccessTokenSilently);
+      const emailStr = `${user.email.username}@${user.email.domain}`;
+      await accountsCreate({ name: emailStr }, getAccessTokenSilently);
 
       setTimeout(() => {
         setRegisteringStatus(RegisteringStatus.Finished);
@@ -233,7 +234,7 @@ export default function MyceliumProfile({ user }: Props) {
                       placeholder={t(
                         "screens.HomePage.MyceliumProfile.form.firstName.placeholder"
                       )}
-                      defaultValue={user?.given_name ?? ""}
+                      defaultValue={user?.firstName ?? ""}
                       type="text"
                       autoFocus
                     />
@@ -254,7 +255,7 @@ export default function MyceliumProfile({ user }: Props) {
                       placeholder={t(
                         "screens.HomePage.MyceliumProfile.form.lastName.placeholder"
                       )}
-                      defaultValue={user?.family_name ?? ""}
+                      defaultValue={user?.lastName ?? ""}
                       type="text"
                     />
 

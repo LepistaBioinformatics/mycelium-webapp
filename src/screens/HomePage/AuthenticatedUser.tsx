@@ -1,9 +1,9 @@
 import { useTranslation } from "react-i18next";
 import Typography from "@/components/ui/Typography";
-import { User } from "@auth0/auth0-react";
+import { NativeUser } from "@/types/NativeAuth";
 
 interface Props {
-  user: User | null;
+  user: NativeUser | null;
 }
 
 export default function AuthenticatedUser({ user }: Props) {
@@ -17,7 +17,7 @@ export default function AuthenticatedUser({ user }: Props) {
         {t("screens.HomePage.AuthenticatedUser.title")}
         <br />
         <span className="text-sm">
-        {user?.email}
+        {user?.email ? `${user.email.username}@${user.email.domain}` : ""}
         </span>
       </Typography>
     </div>

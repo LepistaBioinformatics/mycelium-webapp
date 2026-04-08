@@ -4,7 +4,7 @@ const LogoutButton = () => {
   const { logout } = useProfile();
 
   return (
-    <button onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}>
+    <button onClick={() => logout()}>
       Log Out
     </button>
   );

@@ -886,6 +886,21 @@
           "loading": "Deletando..."
         }
       }
+    },
+    "LoginPage": {
+      "emailStep": {
+        "title": "Acesse sua conta",
+        "label": "Endereço de e-mail",
+        "submit": "Enviar código"
+      },
+      "codeStep": {
+        "title": "Digite seu código",
+        "instruction": "Enviamos um código de 6 dígitos para o seu e-mail.",
+        "label": "Código de verificação",
+        "submit": "Verificar",
+        "invalidCode": "Código inválido ou expirado",
+        "back": "Voltar"
+      }
     }
   },
   "components": {

@@ -19,7 +19,7 @@ import {
 export default function HomePage() {
   const { t } = useTranslation();
 
-  const { user, isAuthenticated, isLoadingUser: isLoading, logout, getAccessTokenWithPopup } =
+  const { user, isAuthenticated, isLoadingUser: isLoading, logout, loginWithRedirect } =
     useProfile();
 
   const Container = ({ children }: BaseProps) => {
@@ -120,7 +120,7 @@ export default function HomePage() {
 
           <div className="flex flex-col gap-4 w-[100%] sm:w-[70%] mx-auto">
             <Button
-              onClick={getAccessTokenWithPopup}
+              onClick={loginWithRedirect}
               rounded
               fullWidth
               center

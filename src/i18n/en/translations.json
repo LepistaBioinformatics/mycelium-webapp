@@ -978,6 +978,21 @@
           "loading": "Deleting ..."
         }
       }
+    },
+    "LoginPage": {
+      "emailStep": {
+        "title": "Sign in to your account",
+        "label": "Email address",
+        "submit": "Send code"
+      },
+      "codeStep": {
+        "title": "Enter your code",
+        "instruction": "We sent a 6-digit code to your email address.",
+        "label": "Verification code",
+        "submit": "Verify",
+        "invalidCode": "Invalid or expired code",
+        "back": "Back"
+      }
     }
   },
   "components": {

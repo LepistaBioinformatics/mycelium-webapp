@@ -13,6 +13,11 @@
 - **D5** — M4 resolved by extending `useProfile()` to re-export `logout` and `loginWithRedirect`
   from Auth0. All 11 direct `useAuth0()` call sites now go through `use-profile.tsx`.
   `useAuth0` is imported only in `use-profile.tsx`.
+- **D6** — `NativeAuthContext` exports both provider and hook from the same file (standard context
+  pattern). The `react-refresh/only-export-components` warning is accepted as a known trade-off.
+- **D7** — `NativeUser.email` is `components["schemas"]["Email"]` = `{ username: string; domain: string }`.
+  String rendering uses `${username}@${domain}`. Comparison with `Owner.email` (plain string) converts
+  the Email object before matching.
 
 ## Blockers
 
@@ -36,6 +41,14 @@ _(none)_
 - **L6 — onSubmit dead second param** — `SearchBar.onSubmit` type is `(term?: string) => void`.
   Several screens passed a two-param handler. The second param was dead code; removing it fixes
   the `@typescript-eslint/no-unused-vars` lint error cleanly.
+- **L7 — @/contexts alias missing** — `tsconfig.app.json` had explicit path mappings for every
+  `src/` subfolder but `contexts/` was not included. Adding new top-level dirs under `src/` requires
+  adding the alias to `tsconfig.app.json` (Vite's wildcard alias covers runtime but not tsc).
+- **L8 — react-router v7** — package is `react-router`, not `react-router-dom`. Import
+  `useNavigate` from `"react-router"`.
+- **L9 — MyceliumLoginResponse.duration is string** — The spec defined `duration: number` but
+  the schema type is `duration: string`. Always use `components["schemas"]["X"]` over hand-rolled
+  types to catch gateway contract mismatches early.
 
 ## Todos
 
@@ -55,16 +68,4 @@ _(none)_
 
 ## Current Focus
 
-**M4 — Native Auth** (spec complete, not started)
-
-Spec: `.claude/specs/features/native-auth/` — 8 tasks (T0–T8)
-
-**Blocked by:** Gateway feature `magic-link-auth` (GT0–GT7 must be complete first)
-
-Key decisions made:
-- Login flow: email → magic link email → gateway HTML page shows 6-digit code → user types code in webapp → JWT issued
-- JWT stored in React state (primary) + `sessionStorage("myc-native-token")` (page reload)
-- `useNativeAuth` hook is a drop-in replacement for `useAuth0()` surface
-- Auth0 removed from webapp entirely; remains as optional external provider at gateway level
-- `NativeAuthProvider` replaces `Auth0Provider` in `main.tsx`
-- All auth consumption already centralized in `use-profile.tsx` (D5) — migration touches only that file + `main.tsx` + `HomePage`
+**M4 — Native Auth** ✅ complete (2026-04-07)

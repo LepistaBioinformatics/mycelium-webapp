@@ -6,6 +6,7 @@ import buildRoutes, { HOME_ROUTE, DASHBOARD_ROUTE } from "./constants/routes";
 import { Fragment, useMemo } from "react";
 import Profile from "./screens/Dashboard/components/Profile";
 import { useTranslation } from "react-i18next";
+import LoginPage from "@/screens/LoginPage";
 
 export default function App() {
   const { t } = useTranslation();
@@ -23,6 +24,7 @@ export default function App() {
       <BrowserRouter>
         <Routes>
           <Route path="*" element={<NotFound />} />
+          <Route path="/login" element={<LoginPage />} />
           <Route path={HOME_ROUTE.path} element={HOME_ROUTE.element} />
           <Route path={DASHBOARD_ROUTE.path} element={DASHBOARD_ROUTE.element}>
             <Route index element={<Profile />} />

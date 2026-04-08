@@ -36,16 +36,16 @@ native magic link (passwordless). Auth0 remains available as gateway-level exter
 
 Spec: `.claude/specs/features/native-auth/`
 
-**Blocked by:** Gateway magic-link-auth feature (GT0–GT7)
+✅ Complete — all tasks delivered, `@auth0/auth0-react` removed.
 
 | Task | Scope | Status |
 |---|---|---|
-| T0 | Types + auth service (`src/services/auth/magic-link.ts`) | ⬜ |
-| T1 | `NativeAuthContext` (JWT lifecycle, sessionStorage) | ⬜ |
-| T2 | `useNativeAuth` hook (drop-in for `useAuth0`) | ⬜ |
-| T3 | Login screen (`/login`) — email step + code step | ⬜ |
-| T4 | Route registration | ⬜ |
-| T5 | `use-profile.tsx` migration | ⬜ |
-| T6 | `main.tsx` migration + remove `@auth0/auth0-react` | ⬜ |
-| T7 | `HomePage` login button | ⬜ |
-| T8 | Final gate check | ⬜ |
+| T0 | Types + auth service (`src/services/auth/magic-link.ts`) | ✅ |
+| T1 | `NativeAuthContext` (JWT lifecycle, sessionStorage) | ✅ |
+| T2 | `useNativeAuth` hook (drop-in for `useAuth0`) | ✅ |
+| T3 | Login screen (`/login`) — email step + code step | ✅ |
+| T4 | Route registration | ✅ |
+| T5 | `use-profile.tsx` migration | ✅ |
+| T6 | `main.tsx` migration + remove `@auth0/auth0-react` | ✅ |
+| T7 | `HomePage` login button | ✅ |
+| T8 | Final gate check | ✅ |

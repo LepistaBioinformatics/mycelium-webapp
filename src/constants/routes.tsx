@@ -42,6 +42,15 @@ export interface AppRoute {
   children?: AppRoute[];
 }
 
+export const LOGIN_ROUTE = {
+  name: "Login",
+  path: "/login",
+  translationKey: "login",
+  element: null,
+  errorElement: <ErrorBoundary />,
+  position: -1,
+} as AppRoute;
+
 export const HOME_ROUTE = {
   name: "Home",
   path: "/",

@@ -7,7 +7,7 @@ import { components } from "@/services/openapi/mycelium-schema";
 import { profileGet } from "@/services/rpc/beginners";
 import { MycPermission } from "@/types/MyceliumPermission";
 import { MycRole } from "@/types/MyceliumRole";
-import { useAuth0 } from "@auth0/auth0-react";
+import useNativeAuth from "@/hooks/use-native-auth";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import useSuspenseError from "./use-suspense-error";
 
@@ -68,12 +68,10 @@ export default function useProfile(args?: Props) {
     isAuthenticated,
     isLoading: isLoadingUser,
     getAccessTokenSilently,
-    getAccessTokenWithPopup,
-    getIdTokenClaims,
     logout,
     loginWithRedirect,
     error,
-  } = useAuth0();
+  } = useNativeAuth();
 
   const [profile, setProfile] = useState<Profile | null>(null);
   const [isLoadingProfile, setIsLoadingProfile] = useState(false);
@@ -191,10 +189,12 @@ export default function useProfile(args?: Props) {
       try {
         parsedProfile = JSON.parse(profile);
 
+        const emailKey = `${user.email.username}@${user.email.domain}`;
+
         if (
           !parsedProfile?.owners
             .map((owner) => owner.email)
-            .includes(user.email)
+            .includes(emailKey)
         ) {
           sessionStorage.removeItem(PROFILE_KEY);
           return null;
@@ -236,7 +236,8 @@ export default function useProfile(args?: Props) {
       getAccessTokenSilently
     ).finally(() => setIsLoadingProfile(false));
 
-    if (!profile.owners.map((owner) => owner.email).includes(user.email)) {
+    const emailKey = `${user.email.username}@${user.email.domain}`;
+    if (!profile.owners.map((owner) => owner.email).includes(emailKey)) {
       return null;
     }
 
@@ -268,8 +269,6 @@ export default function useProfile(args?: Props) {
     profile,
     hasAdminPrivileges: profile?.isStaff || profile?.isManager,
     getAccessTokenSilently,
-    getAccessTokenWithPopup,
-    getIdTokenClaims,
     logout,
     loginWithRedirect,
     hasEnoughPermissions,

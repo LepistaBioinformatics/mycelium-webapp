@@ -104,7 +104,7 @@ export default function Profile() {
                       title={t("screens.Dashboard.Profile.loggedInAs.title")}
                     >
                       <div className="flex items-start sm:items-center flex-col sm:flex-row gap-3">
-                        <Typography truncate>{user?.name}</Typography>
+                        <Typography truncate>{user ? `${user.firstName ?? ""} ${user.lastName ?? ""}`.trim() : ""}</Typography>
 
                         <div className="flex items-center gap-3">
                           {profile?.isStaff && (
@@ -134,8 +134,8 @@ export default function Profile() {
                     title={t("screens.Dashboard.Profile.email.title")}
                   >
                     <span className="group/clip flex items-center gap-1">
-                      {user?.email}
-                      <CopyToClipboard text={user?.email || ""} groupHidden />
+                      {user?.email ? `${user.email.username}@${user.email.domain}` : ""}
+                      <CopyToClipboard text={user?.email ? `${user.email.username}@${user.email.domain}` : ""} groupHidden />
                     </span>
                   </IntroSection.Item>
                 </IntroSection>
