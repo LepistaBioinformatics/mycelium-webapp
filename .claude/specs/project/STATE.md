@@ -69,3 +69,9 @@ _(none)_
 ## Current Focus
 
 **M4 — Native Auth** ✅ complete (2026-04-07)
+
+**Design System — token migration** ✅ complete (2026-04-12)
+- DS-W-01 → DS-W-06 (Tailwind brand tokens, font import, CSS vars, Button, Typography, meta tag) — done in prior commit
+- All remaining components and screens migrated: 50 files, all bare `indigo-*` → `brand-violet-*`, `violet-*` → `brand-violet-*`, `lime-400/500/600/700` → `brand-lime-*`
+- `lime-100` and `lime-900` intentionally preserved (no brand equivalent in palette)
+- Gateway templates (DS-G-01 → DS-G-04) remain out of scope for webapp
