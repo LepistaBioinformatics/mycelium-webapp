@@ -3,6 +3,12 @@
 @tailwind utilities;
 
 :root {
+  --color-brand-primary: #8b5cf6;
+  --color-brand-accent: #bae6fd;
+  --color-brand-growth: #84cc16;
+  --color-brand-primary-active: #6d28d9;
+  --font-mono: 'JetBrains Mono', monospace;
+
   font-family: "Quicksand", sans-serif;
   line-height: 1.5;
   font-weight: 400;
@@ -46,12 +52,12 @@
   }
 
   .scrollbar::-webkit-scrollbar-thumb:hover {
-    background: #7ccf00;
+    background: var(--color-brand-growth);
     width: 10px;
   }
 
   .scrollbar::-webkit-scrollbar-thumb:active {
-    background: #4c0277;
+    background: var(--color-brand-primary-active);
     width: 10px;
   }
 

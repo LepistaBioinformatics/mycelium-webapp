@@ -17,15 +17,15 @@ const styles = cva("text-gray-700 dark:text-gray-50", {
     },
     intent: {
       primary:
-        "bg-violet-500 hover:bg-violet-600 dark:bg-lime-600 dark:hover:bg-lime-700 text-white",
+        "bg-brand-violet-500 hover:bg-brand-violet-600 dark:bg-brand-lime-600 dark:hover:bg-brand-lime-700 text-white",
       secondary:
         "text-white font-semibold bg-gray-500 hover:bg-gray-600 dark:bg-gray-600 dark:hover:bg-gray-700",
       warning:
         "bg-yellow-500 dark:bg-yellow-600 text-white hover:bg-yellow-600 hover:dark:bg-yellow-700 font-semibold",
       danger:
         "bg-red-500 dark:bg-red-600 text-white hover:bg-red-600 dark:hover:bg-red-700",
-      link: "!text-indigo-500 dark:text-lime-500 bg-transparent hover:bg-transparent border border-transparent hover:border-indigo-500 dark:hover:border-lime-500",
-      info: "bg-violet-500 text-white hover:bg-violet-600 dark:bg-violet-500 dark:hover:bg-violet-700",
+      link: "!text-brand-violet-500 dark:text-brand-lime-500 bg-transparent hover:bg-transparent border border-transparent hover:border-brand-violet-500 dark:hover:border-brand-lime-500",
+      info: "bg-brand-violet-500 text-white hover:bg-brand-violet-600 dark:bg-brand-violet-500 dark:hover:bg-brand-violet-700",
     },
     size: {
       xs: "py-1 px-2 text-xs",
@@ -85,6 +85,7 @@ export default function Button({
         center,
       })}
       type={type}
+      role={role}
       disabled={disabled}
       {...props}
     />

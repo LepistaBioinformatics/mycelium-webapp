@@ -20,7 +20,7 @@ const styles = cva("whitespace-normal", {
       h6: "!text-sm text-zinc-600 dark:text-zinc-300 font-semibold",
     },
     highlight: {
-      true: "!text-indigo-500 dark:!text-lime-500",
+      true: "!text-brand-violet-500 dark:!text-brand-lime-500",
     },
     isError: {
       true: "!text-red-500 !dark:text-red-500",
