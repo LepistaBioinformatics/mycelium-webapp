@@ -1,5 +1,5 @@
 import "./i18n/config";
-import { BrowserRouter, Routes, Route } from "react-router";
+import { Routes, Route } from "react-router";
 import NotFound from "./components/NotFound";
 import useProfile from "./hooks/use-profile";
 import buildRoutes, { HOME_ROUTE, DASHBOARD_ROUTE } from "./constants/routes";
@@ -21,8 +21,7 @@ export default function App() {
 
   return (
     <div id="App" className="bg-white dark:bg-zinc-900">
-      <BrowserRouter>
-        <Routes>
+      <Routes>
           <Route path="*" element={<NotFound />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path={HOME_ROUTE.path} element={HOME_ROUTE.element} />
@@ -55,8 +54,7 @@ export default function App() {
               </Fragment>
             ))}
           </Route>
-        </Routes>
-      </BrowserRouter>
+      </Routes>
     </div>
   );
 }

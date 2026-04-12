@@ -6,6 +6,7 @@ import state from "./states/store";
 import React from "react";
 import { ThemeProvider } from "./components/ThemeProvider";
 import { NativeAuthProvider } from "@/contexts/NativeAuthContext";
+import { BrowserRouter } from "react-router";
 import App from "./App";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
@@ -13,9 +14,11 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     <ReduxProvider store={state.store}>
       <PersistGate loading={null} persistor={state.persistor}>
         <ThemeProvider>
-          <NativeAuthProvider>
-            <App />
-          </NativeAuthProvider>
+          <BrowserRouter>
+            <NativeAuthProvider>
+              <App />
+            </NativeAuthProvider>
+          </BrowserRouter>
         </ThemeProvider>
       </PersistGate>
     </ReduxProvider>
