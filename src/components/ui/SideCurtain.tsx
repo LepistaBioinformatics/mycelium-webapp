@@ -59,7 +59,7 @@ function Container({
             {title}
           </Typography>
           <button onClick={handleClose || defaultHandleClose}>
-            <IoCloseSharp className="text-3xl text-indigo-500 dark:text-lime-500" />
+            <IoCloseSharp className="text-3xl text-brand-violet-500 dark:text-brand-lime-500" />
           </button>
         </div>
 

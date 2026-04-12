@@ -10,7 +10,7 @@ import LanguageSwitcher from "../LanguageSwitcher";
 import SignOutButton from "./SignOutButton";
 
 const containerStyles = cva(
-  "hidden sm:flex bg-transparent dark:bg-zinc-700 min-w-md max-h-screen overflow-y-auto scrollbar px-2 pt-2 pb-5 flex flex-col gap-8 justify-between align-middle border-r-2 border-indigo-300 dark:border-lime-700 shadow group/sidebar transition-all duration-300 ease-in-out",
+  "hidden sm:flex bg-transparent dark:bg-zinc-700 min-w-md max-h-screen overflow-y-auto scrollbar px-2 pt-2 pb-5 flex flex-col gap-8 justify-between align-middle border-r-2 border-brand-violet-300 dark:border-brand-lime-700 shadow group/sidebar transition-all duration-300 ease-in-out",
   {
     variants: {
       open: {
@@ -62,17 +62,17 @@ function Container({
         <Divider style="partial" marginY="none" thickness="sm" />
 
         <div className={buttonStyles({ open: isOpen })}>
-          <div className="flex justify-center items-center w-full text-center bg-white dark:bg-zinc-700 rounded-lg p-2 hover:bg-violet-200 dark:hover:bg-zinc-600">
+          <div className="flex justify-center items-center w-full text-center bg-white dark:bg-zinc-700 rounded-lg p-2 hover:bg-brand-violet-200 dark:hover:bg-zinc-600">
             <LanguageSwitcher />
           </div>
 
-          <div className="flex justify-center items-center w-full text-center bg-white dark:bg-zinc-700 rounded-lg p-2 hover:bg-violet-200 dark:hover:bg-zinc-600">
+          <div className="flex justify-center items-center w-full text-center bg-white dark:bg-zinc-700 rounded-lg p-2 hover:bg-brand-violet-200 dark:hover:bg-zinc-600">
             <ThemeSwitcher />
           </div>
 
           <button
             onClick={toggle}
-            className="flex justify-center items-center w-full text-center bg-white dark:bg-zinc-700 hover:bg-violet-200 dark:hover:bg-zinc-600 rounded-lg p-2"
+            className="flex justify-center items-center w-full text-center bg-white dark:bg-zinc-700 hover:bg-brand-violet-200 dark:hover:bg-zinc-600 rounded-lg p-2"
           >
             <PiSidebarSimple className="text-zinc-800 dark:text-zinc-300" />
           </button>
@@ -87,11 +87,11 @@ function Container({
 }
 
 const sidebarItemStyles = cva(
-  "flex items-center align-middle gap-2 border border-indigo-300 dark:border-lime-500 rounded-lg px-4 py-2 text-zinc-800 dark:text-lime-500 transition-all duration-300 ease-in-out hover:bg-violet-300 dark:hover:bg-zinc-600 w-full min-h-[2.5rem]",
+  "flex items-center align-middle gap-2 border border-brand-violet-300 dark:border-brand-lime-500 rounded-lg px-4 py-2 text-zinc-800 dark:text-brand-lime-500 transition-all duration-300 ease-in-out hover:bg-brand-violet-300 dark:hover:bg-zinc-600 w-full min-h-[2.5rem]",
   {
     variants: {
       active: {
-        true: "bg-violet-200 dark:bg-zinc-600",
+        true: "bg-brand-violet-200 dark:bg-zinc-600",
         false: "bg-white dark:bg-zinc-700",
       },
       open: {
@@ -135,7 +135,7 @@ function SidebarItem({
   const isActive = pathname === href;
 
   const Icon = () => (
-    <span className="text-indigo-800 dark:text-lime-500">{icon}</span>
+    <span className="text-brand-violet-800 dark:text-brand-lime-500">{icon}</span>
   );
 
   return (

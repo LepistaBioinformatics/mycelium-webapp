@@ -53,7 +53,7 @@ const boxStyles = cva("text-gray-500 dark:text-gray-50", {
   variants: {
     type: {
       highlight:
-        "bg-gray-100 dark:bg-zinc-800 shadow-md rounded-lg border-2 dark:border-indigo-900 p-4",
+        "bg-gray-100 dark:bg-zinc-800 shadow-md rounded-lg border-2 dark:border-brand-violet-900 p-4",
       discreet: "bg-transparent p-4",
     },
   },

@@ -3,7 +3,7 @@ import { cva, VariantProps } from "class-variance-authority";
 import { useTheme } from "../ThemeProvider";
 
 const themeSwitchStyles = cva(
-  "text-indigo-600 dark:text-yellow-400 text-2xl cursor-pointer",
+  "text-brand-violet-600 dark:text-yellow-400 text-2xl cursor-pointer",
   {
     variants: {
       reverseBackground: {

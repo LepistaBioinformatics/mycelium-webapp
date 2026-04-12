@@ -109,7 +109,7 @@ export default function Profile() {
                         <div className="flex items-center gap-3">
                           {profile?.isStaff && (
                             <GiWizardStaff
-                              className="inline text-indigo-500 dark:text-lime-500 hover:cursor-help p-0.5"
+                              className="inline text-brand-violet-500 dark:text-brand-lime-500 hover:cursor-help p-0.5"
                               title={t(
                                 "screens.Dashboard.Profile.loggedInAs.staff"
                               )}
@@ -117,7 +117,7 @@ export default function Profile() {
                           )}
                           {profile?.isManager && (
                             <GrUserAdmin
-                              className="inline text-indigo-500 dark:text-lime-500 hover:cursor-help p-0.5"
+                              className="inline text-brand-violet-500 dark:text-brand-lime-500 hover:cursor-help p-0.5"
                               title={t(
                                 "screens.Dashboard.Profile.loggedInAs.manager"
                               )}
@@ -168,7 +168,7 @@ export default function Profile() {
                           variant: {
                             fullWidth: {
                               active: {
-                                on: "rounded-none bg-violet-100 p-4 text-zinc-900 dark:bg-zinc-700 dark:text-white",
+                                on: "rounded-none bg-brand-violet-100 p-4 text-zinc-900 dark:bg-zinc-700 dark:text-white",
                                 off: "rounded-none bg-white hover:bg-zinc-50 hover:text-zinc-700 dark:bg-zinc-800 dark:hover:bg-zinc-700 dark:hover:text-white",
                               },
                             },

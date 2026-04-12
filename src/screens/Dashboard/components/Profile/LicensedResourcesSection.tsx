@@ -191,14 +191,14 @@ export default function LicensedResourcesSection({ licensedResources }: Props) {
           {resource.role === MycRole.TenantManager ? (
             <Link
               to={`/dashboard/tenants/${resource.tenantId}`}
-              className="text-indigo-500 dark:text-lime-500 hover:underline"
+              className="text-brand-violet-500 dark:text-brand-lime-500 hover:underline"
             >
               {resource.name}
             </Link>
           ) : (
             <Link
               to={`/dashboard/tenants/${resource.tenantId}/accounts/?accountId=${resource.id}`}
-              className="text-indigo-500 dark:text-lime-500 hover:underline"
+              className="text-brand-violet-500 dark:text-brand-lime-500 hover:underline"
             >
               {resource.name}
             </Link>
@@ -269,7 +269,7 @@ export default function LicensedResourcesSection({ licensedResources }: Props) {
                         <TbSortDescending2Filled
                           size={16}
                           title="Sort by name"
-                          className="inline-block group-hover/sort:text-indigo-500 dark:group-hover/sort:text-lime-500 cursor-pointer"
+                          className="inline-block group-hover/sort:text-brand-violet-500 dark:group-hover/sort:text-brand-lime-500 cursor-pointer"
                           onClick={() => setSortBy(SortBy.Name)}
                         />
                         <span>
@@ -326,7 +326,7 @@ export default function LicensedResourcesSection({ licensedResources }: Props) {
                             </TableCell>
                             <TableCell>
                               <accountType.Icon
-                                className="cursor-help text-indigo-500 dark:text-lime-500 text-lg"
+                                className="cursor-help text-brand-violet-500 dark:text-brand-lime-500 text-lg"
                                 title={accountType.text}
                               />
                             </TableCell>
@@ -394,7 +394,7 @@ export default function LicensedResourcesSection({ licensedResources }: Props) {
                       {resource.roles.map((role, index) => (
                         <div
                           key={index + role.role}
-                          className="border-t-[0.5px] border-indigo-100 dark:border-lime-900 p-1"
+                          className="border-t-[0.5px] border-brand-violet-100 dark:border-lime-900 p-1"
                         >
                           <IntroSection.Item
                             prefix={t(

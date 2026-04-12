@@ -47,7 +47,7 @@ const selectorStyles = cva("flex justify-around gap-2 transition-all w-full", {
 const flagStyles = cva("px-2", {
   variants: {
     selected: {
-      true: "border border-dashed border-indigo-500 dark:border-lime-500 rounded-lg",
+      true: "border border-dashed border-brand-violet-500 dark:border-brand-lime-500 rounded-lg",
     },
   },
 });

@@ -138,7 +138,7 @@ function MainHeader({ isOpen }: { isOpen: boolean }) {
 
   return (
     <div
-      className="flex justify-center font-semibold gap-2 py-2 px-4 text-indigo-600 dark:text-zinc-300 bg-white dark:bg-zinc-900 backdrop-blur-sm border border-indigo-500 dark:border-lime-500 rounded-lg truncate max-w-full"
+      className="flex justify-center font-semibold gap-2 py-2 px-4 text-brand-violet-600 dark:text-zinc-300 bg-white dark:bg-zinc-900 backdrop-blur-sm border border-brand-violet-500 dark:border-brand-lime-500 rounded-lg truncate max-w-full"
       title={tenantInfo.name}
     >
       <span className="truncate max-w-[12rem]">

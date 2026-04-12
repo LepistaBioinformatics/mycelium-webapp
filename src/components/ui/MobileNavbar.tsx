@@ -30,7 +30,7 @@ export default function MobileNavbar({ }: Props) {
     <div className={styles({})}>
       <NavbarItem
         icon={
-          <IoHomeSharp className="text-2xl text-indigo-500 dark:text-indigo-500" />
+          <IoHomeSharp className="text-2xl text-brand-violet-500 dark:text-brand-violet-500" />
         }
         label="Profile"
         href="/dashboard/profile"
@@ -38,7 +38,7 @@ export default function MobileNavbar({ }: Props) {
 
       <NavbarItem
         icon={
-          <TiThMenu className="text-2xl text-indigo-500 dark:text-indigo-500" />
+          <TiThMenu className="text-2xl text-brand-violet-500 dark:text-brand-violet-500" />
         }
         label="Menu"
         onClick={() => setIsMenuOpen(true)}
@@ -46,7 +46,7 @@ export default function MobileNavbar({ }: Props) {
 
       <NavbarItem
         icon={
-          <IoMdSettings className="text-2xl text-indigo-500 dark:text-indigo-500" />
+          <IoMdSettings className="text-2xl text-brand-violet-500 dark:text-brand-violet-500" />
         }
         label="Settings"
         onClick={() => setIsSettingsOpen(true)}
@@ -121,7 +121,7 @@ function MenuModal({
               onClick={onClose}
               className="flex items-center gap-2"
             >
-              <span className="text-2xl text-indigo-500 dark:text-lime-500">
+              <span className="text-2xl text-brand-violet-500 dark:text-brand-lime-500">
                 {route.icon}
               </span>
               <Typography>{route.name}</Typography>
@@ -154,14 +154,14 @@ function SettingsModal({
         <div className="flex flex-col gap-3 px-4 w-full">
           <div className="flex flex-col gap-2">
             <Typography>{t("Menu.subtitle")}</Typography>
-            <div className="items-center text-center bg-violet-50 dark:bg-zinc-700 rounded-full p-2 transition-all">
+            <div className="items-center text-center bg-brand-violet-50 dark:bg-zinc-700 rounded-full p-2 transition-all">
               <LanguageSwitcher horizontal keepOpen />
             </div>
           </div>
 
           <div className="flex flex-col gap-2">
             <Typography>{t("Menu.theme")}</Typography>
-            <div className="flex justify-center gap-3 items-center text-center bg-violet-50 dark:bg-zinc-700 rounded-full p-2 transition-all">
+            <div className="flex justify-center gap-3 items-center text-center bg-brand-violet-50 dark:bg-zinc-700 rounded-full p-2 transition-all">
               <ThemeSwitcher />
             </div>
           </div>

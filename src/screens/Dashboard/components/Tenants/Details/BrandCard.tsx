@@ -206,7 +206,7 @@ export default function BrandCard({ tenant, mutateTenantStatus }: Props) {
               />
 
               <MdEdit
-                className="cursor-pointer h-8 w-8 text-indigo-500 text-2xl dark:text-lime-400 hover:scale-150 transition-all duration-200 -ml-10 bg-white dark:bg-gray-800 rounded-full p-1 border border-indigo-300 dark:border-lime-700"
+                className="cursor-pointer h-8 w-8 text-brand-violet-500 text-2xl dark:text-brand-lime-400 hover:scale-150 transition-all duration-200 -ml-10 bg-white dark:bg-gray-800 rounded-full p-1 border border-brand-violet-300 dark:border-brand-lime-700"
                 onClick={() => setUpdatingBrand(true)}
               />
             </div>

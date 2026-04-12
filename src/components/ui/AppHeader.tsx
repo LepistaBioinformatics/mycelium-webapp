@@ -11,7 +11,7 @@ const appHeaderStyles = cva(
     variants: {
       discrete: {
         true: "bg-transparent",
-        false: "bg-violet-800 dark:text-white",
+        false: "bg-brand-violet-800 dark:text-white",
       },
       rounded: {
         true: "rounded-lg",

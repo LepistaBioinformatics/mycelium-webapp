@@ -309,7 +309,7 @@ export default function AccountDetails({ onClose }: Props) {
             <IoReturnDownBack
               size={32}
               title="Go back"
-              className="cursor-pointer text-indigo-500 dark:text-lime-400"
+              className="cursor-pointer text-brand-violet-500 dark:text-brand-lime-400"
               onClick={handleClose}
             />
           </div>

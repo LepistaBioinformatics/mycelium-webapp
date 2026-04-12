@@ -16,7 +16,7 @@ const styles = cva(
       intent: {
         error:
           "border-dashed border-red-500 dark:border-red-500 bg-red-50 dark:bg-red-900",
-        info: "border-dashed border-indigo-500 dark:border-indigo-500 bg-indigo-50 dark:bg-indigo-900",
+        info: "border-dashed border-brand-violet-500 dark:border-brand-violet-500 bg-brand-violet-50 dark:bg-brand-violet-900",
         success:
           "border-dashed border-green-500 dark:border-green-500 bg-green-50 dark:bg-green-900",
         warning:

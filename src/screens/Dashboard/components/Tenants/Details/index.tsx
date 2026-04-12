@@ -310,14 +310,14 @@ export default function AdvancedManagement() {
           <Section.Body>
             <Link
               to={`/dashboard/tenants/${tenantId}/accounts`}
-              className="flex gap-2 items-center align-center hover:underline text-lg text-indigo-500 dark:text-lime-500 mt-2"
+              className="flex gap-2 items-center align-center hover:underline text-lg text-brand-violet-500 dark:text-brand-lime-500 mt-2"
               title={t(
                 "screens.Dashboard.Tenants.AdvancedManagement.manageAccountsDescription"
               )}
             >
               <MdManageAccounts
                 size={24}
-                className="inline text-indigo-500 dark:text-lime-500"
+                className="inline text-brand-violet-500 dark:text-brand-lime-500"
               />
               {t("screens.Dashboard.Tenants.AdvancedManagement.manageAccounts")}
             </Link>
@@ -345,7 +345,7 @@ export default function AdvancedManagement() {
                     variant: {
                       fullWidth: {
                         active: {
-                          on: "rounded-none bg-violet-100 p-4 text-zinc-900 dark:bg-zinc-700 dark:text-white",
+                          on: "rounded-none bg-brand-violet-100 p-4 text-zinc-900 dark:bg-zinc-700 dark:text-white",
                           off: "rounded-none bg-white hover:bg-zinc-50 hover:text-zinc-700 dark:bg-zinc-800 dark:hover:bg-zinc-700 dark:hover:text-white",
                         },
                       },

@@ -55,7 +55,7 @@ export default function AboutCard({
                     <Link
                       key={index}
                       to={link.to}
-                      className="text-indigo-500 dark:text-lime-500 hover:cursor-pointer"
+                      className="text-brand-violet-500 dark:text-brand-lime-500 hover:cursor-pointer"
                     >
                       {link.label}
                     </Link>

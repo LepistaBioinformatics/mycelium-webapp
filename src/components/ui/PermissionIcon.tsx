@@ -39,7 +39,7 @@ export default function PermissionIcon({ permission, size, inline }: Props) {
     return (
       <span
         title={content}
-        className="p-1 text-indigo-800 dark:text-lime-400 cursor-help"
+        className="p-1 text-brand-violet-800 dark:text-brand-lime-400 cursor-help"
       >
         {children}
       </span>

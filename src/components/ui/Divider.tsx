@@ -3,11 +3,11 @@ import { cva, VariantProps } from "class-variance-authority";
 const styles = cva("w-full", {
   variants: {
     style: {
-      or: "flex items-center justify-between py-2 text-indigo-700 dark:text-lime-700",
+      or: "flex items-center justify-between py-2 text-brand-violet-700 dark:text-brand-lime-700",
       invisible: "border-0",
       smooth: "opacity-30",
       partial:
-        "w-48 mx-auto border-0 rounded-sm bg-violet-300 dark:bg-lime-700",
+        "w-48 mx-auto border-0 rounded-sm bg-brand-violet-300 dark:bg-brand-lime-700",
     },
     thickness: {
       sm: "h-0.5",
