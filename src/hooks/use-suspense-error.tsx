@@ -46,7 +46,7 @@ export default function useSuspenseError() {
       } else {
         dispatch(setNotification({ notification: rawError, type }));
       }
-    } catch (err) {
+    } catch {
       dispatch(setNotification({ notification: rawError, type: "error" }));
     }
 
@@ -57,7 +57,7 @@ export default function useSuspenseError() {
     return null;
   };
 
-  const parseAuth0Error = async (err: Error) => {
+  const parseAuthError = async (err: Error) => {
     dispatch(setNotification({
       notification: err.message, title: err.name, type: "error"
     }));
@@ -89,7 +89,7 @@ export default function useSuspenseError() {
 
   return {
     parseHttpError,
-    parseAuth0Error,
+    parseAuthError,
     dispacheSuccess,
     dispatchError,
     dispatchWarning,

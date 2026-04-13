@@ -1,31 +1,55 @@
 import { useTranslation } from "react-i18next";
-import Typography from "@/components/ui/Typography";
 import { NativeUser } from "@/types/NativeAuth";
 import useProfile from "@/hooks/use-profile";
 import { useCallback, useEffect, useState } from "react";
 import { components } from "@/services/openapi/mycelium-schema";
-import useSWR from "swr";
-import { buildPath } from "@/services/openapi/mycelium-api";
-import { accountsCreate } from "@/services/rpc/beginners";
-import { SubmitHandler, useForm } from "react-hook-form";
-import FormField from "@/components/ui/FomField";
+import {
+  accountsCreate,
+  accountsGet,
+  metaCreate,
+  metaUpdate,
+  profileGet,
+} from "@/services/rpc/beginners";
 import Button from "@/components/ui/Button";
+import Typography from "@/components/ui/Typography";
+import FormField from "@/components/ui/FomField";
 import { TextInput } from "flowbite-react";
 import { useNavigate } from "react-router";
-import Countdown from "react-countdown";
+import { useDispatch } from "react-redux";
+import { setNotification } from "@/states/notification.state";
 
-type Profile = components["schemas"]["Profile"];
+type Account = components["schemas"]["Account"];
 
-type Inputs = {
-  firstName: string;
-  lastName: string;
-};
+type AccountStatus = "loading" | "exists" | "missing";
 
-enum RegisteringStatus {
-  NotStarted = "not-started",
-  Account = "account",
-  Finished = "finished",
-  Error = "error",
+const META_KEYS = [
+  { key: "phone_number", labelKey: "phone", placeholder: "+1 555 000 0000" },
+  { key: "telegram_user", labelKey: "telegram", placeholder: "@username" },
+  { key: "whatsapp_user", labelKey: "whatsapp", placeholder: "+1 555 000 0000" },
+  { key: "locale", labelKey: "locale", placeholder: "en" },
+] as const;
+
+type MetaKey = (typeof META_KEYS)[number]["key"];
+
+type MetaRecord = Record<MetaKey, string>;
+type MetaBoolRecord = Record<MetaKey, boolean>;
+
+function makeMetaRecord(value: string): MetaRecord {
+  return {
+    phone_number: value,
+    telegram_user: value,
+    whatsapp_user: value,
+    locale: value,
+  };
+}
+
+function makeMetaBoolRecord(value: boolean): MetaBoolRecord {
+  return {
+    phone_number: value,
+    telegram_user: value,
+    whatsapp_user: value,
+    locale: value,
+  };
 }
 
 interface Props {
@@ -34,256 +58,227 @@ interface Props {
 
 export default function MyceliumProfile({ user }: Props) {
   const { t } = useTranslation();
-
   const navigate = useNavigate();
-
-  const [error, setError] = useState<string | null>(null);
-
+  const dispatch = useDispatch();
   const { getAccessTokenSilently } = useProfile();
 
-  const [registeringAccount, setRegisteringAccount] = useState<boolean>(false);
+  const [accountStatus, setAccountStatus] =
+    useState<AccountStatus>("loading");
+  const [account, setAccount] = useState<Account | null>(null);
+  const [isCreatingAccount, setIsCreatingAccount] = useState(false);
 
-  const [registeringStatus, setRegisteringStatus] = useState<RegisteringStatus>(
-    RegisteringStatus.NotStarted
+  const [metaValues, setMetaValues] = useState<MetaRecord>(
+    makeMetaRecord("")
   );
+  const [metaSaving, setMetaSaving] =
+    useState<MetaBoolRecord>(makeMetaBoolRecord(false));
+  const [metaSaved, setMetaSaved] =
+    useState<MetaBoolRecord>(makeMetaBoolRecord(false));
 
-  const [needsRegistration, setNeedsRegistration] = useState<
-    boolean | undefined
-  >(undefined);
+  // Check account existence via profileGet on mount
+  useEffect(() => {
+    if (!user?.email) return;
 
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors },
-  } = useForm<Inputs>({
-    defaultValues: {
-      firstName: user?.firstName ?? undefined,
-      lastName: user?.lastName ?? undefined,
-    },
-  });
+    profileGet({ withUrl: false }, getAccessTokenSilently)
+      .then(() => accountsGet(getAccessTokenSilently))
+      .then((acc) => {
+        setAccount(acc);
+        setAccountStatus("exists");
+      })
+      .catch(() => {
+        setAccountStatus("missing");
+      });
+  // getAccessTokenSilently is stable across renders (memoized in the hook)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.email]);
 
-  const firstName = watch("firstName");
-  const lastName = watch("lastName");
+  // Pre-fill meta values from account when account loads
+  useEffect(() => {
+    if (!account?.meta) return;
+    setMetaValues((prev) => ({
+      phone_number: account.meta?.phone_number ?? prev.phone_number,
+      telegram_user: account.meta?.telegram_user ?? prev.telegram_user,
+      whatsapp_user: account.meta?.whatsapp_user ?? prev.whatsapp_user,
+      locale: account.meta?.locale ?? prev.locale,
+    }));
+  }, [account]);
 
-  const handleRegisterAccount = async () => {
-    setRegisteringAccount(true);
+  const handleCreateAccount = useCallback(async () => {
+    if (!user?.email) return;
+    setIsCreatingAccount(true);
 
     try {
-      if (!user?.email) throw new Error("User email is required");
-
       const emailStr = `${user.email.username}@${user.email.domain}`;
       await accountsCreate({ name: emailStr }, getAccessTokenSilently);
 
-      setTimeout(() => {
-        setRegisteringStatus(RegisteringStatus.Finished);
-      }, 1000);
+      const [acc] = await Promise.all([
+        accountsGet(getAccessTokenSilently),
+        profileGet({ withUrl: false }, getAccessTokenSilently),
+      ]);
+
+      setAccount(acc);
+      setAccountStatus("exists");
     } catch (error) {
-      setError(error as string);
-      setRegisteringStatus(RegisteringStatus.Error);
+      dispatch(
+        setNotification({
+          notification:
+            error instanceof Error
+              ? error.message
+              : t("screens.HomePage.OnboardingChecklist.error"),
+          type: "error",
+        })
+      );
     } finally {
-      setRegisteringAccount(false);
+      setIsCreatingAccount(false);
     }
-  };
+  }, [user, getAccessTokenSilently, dispatch, t]);
 
-  /**
-   * Fetches the user profile from the backend
-   *
-   * @param url - The URL to fetch the profile from.
-   * @returns The user profile.
-   */
-  const fetcher = useCallback(
-    async (url: string) => {
-      const token = await getAccessTokenSilently();
-      if (!token) throw new Error("Token is required");
+  const handleSaveMeta = useCallback(
+    async (key: MetaKey) => {
+      setMetaSaving((prev) => ({ ...prev, [key]: true }));
+      try {
+        const isExisting = account?.meta != null && key in account.meta;
+        const value = metaValues[key];
 
-      const response = await fetch(url, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+        if (isExisting) {
+          await metaUpdate({ key, value }, getAccessTokenSilently);
+        } else {
+          await metaCreate({ key, value }, getAccessTokenSilently);
+        }
 
-      if (response.ok) {
-        return response.json() as Promise<Profile>;
+        setAccount((prev) =>
+          prev ? { ...prev, meta: { ...prev.meta, [key]: value } } : prev
+        );
+        setMetaSaved((prev) => ({ ...prev, [key]: true }));
+        setTimeout(
+          () => setMetaSaved((prev) => ({ ...prev, [key]: false })),
+          2000
+        );
+      } catch (error) {
+        dispatch(
+          setNotification({
+            notification:
+              error instanceof Error
+                ? error.message
+                : t("screens.HomePage.OnboardingChecklist.error"),
+            type: "error",
+          })
+        );
+      } finally {
+        setMetaSaving((prev) => ({ ...prev, [key]: false }));
       }
-
-      /**
-       * 401: Unauthorized
-       *
-       * User is logged in at the client application, but the backend is not
-       * aware of this.
-       */
-      if (response.status === 401) {
-        setNeedsRegistration(false);
-        return null;
-      }
-
-      /**
-       * 403: User not registered
-       *
-       * User is logged in at the client application, but not registered at the
-       * backend.
-       */
-      if (response.status === 403) {
-        setNeedsRegistration(true);
-        return null;
-      }
-
-      /**
-       * Other errors
-       *
-       * The backend is not able to process the request.
-       */
-      //parseHttpError(response);
     },
-    [getAccessTokenSilently]
+    [account, metaValues, getAccessTokenSilently, dispatch, t]
   );
-
-  const { data: profile, mutate: mutateProfile } = useSWR(
-    !needsRegistration ? buildPath("/_adm/beginners/profile") : null,
-    fetcher,
-    {
-      revalidateIfStale: true,
-      revalidateOnFocus: true,
-      revalidateOnReconnect: true,
-      revalidateOnMount: true,
-      refreshInterval: 15000,
-    }
-  );
-
-  // eslint-disable-next-line no-empty-pattern
-  const onSubmit: SubmitHandler<Inputs> = ({ }, event) => {
-    event?.preventDefault();
-
-    Promise.resolve()
-      .then(handleRegisterAccount)
-      .then(() => setRegisteringStatus(RegisteringStatus.Finished))
-      .then(() => mutateProfile())
-      .catch((error) => {
-        console.error(error);
-        setError(error as string);
-      });
-  };
-
-  const navigateToDashboard = useCallback(() => {
-    setTimeout(() => {
-      navigate("/dashboard");
-    }, 1000);
-  }, [navigate]);
-
-  useEffect(() => {
-    if (!profile) return;
-
-    if (profile.accId) navigateToDashboard();
-  }, [navigateToDashboard, profile]);
 
   if (!user) return null;
 
+  const tKey = "screens.HomePage.OnboardingChecklist";
+
   return (
-    <div className="flex flex-col gap-8 items-center justify-center align-middle h-fit">
-      {needsRegistration && (
-        <div className="mt-5 flex flex-col items-center justify-center gap-4">
-          <Typography as="h5" width="xs" center decoration="smooth">
-            {t("screens.HomePage.MyceliumProfile.title")}
-          </Typography>
+    <div className="flex flex-col gap-6 w-full max-w-sm">
+      {/* Required section */}
+      <div className="flex flex-col gap-3">
+        <Typography as="h5" decoration="smooth">
+          {t(`${tKey}.requiredSection`)}
+        </Typography>
 
-          {registeringStatus === RegisteringStatus.Finished && (
-            <>
-              <Countdown
-                date={Date.now() + 1000 * 5}
-                onComplete={navigateToDashboard}
-                renderer={({ seconds }) => (
-                  <Typography as="h5">
-                    {t("screens.HomePage.MyceliumProfile.countdown", {
-                      seconds,
-                    })}
-                  </Typography>
-                )}
-              />
-
-              <Button onClick={navigateToDashboard}>
-                {t("screens.HomePage.MyceliumProfile.forceRedirect")}
-              </Button>
-            </>
-          )}
-
-          {registeringStatus === RegisteringStatus.Error && (
-            <Typography as="h5">
-              {t("screens.HomePage.MyceliumProfile.error")}
+        <div className="flex flex-col gap-2 border rounded-lg p-4 dark:border-zinc-700">
+          {accountStatus === "loading" && (
+            <Typography decoration="smooth">
+              {t(`${tKey}.checkingAccount`)}
             </Typography>
           )}
 
-          {[RegisteringStatus.NotStarted, RegisteringStatus.Error].includes(
-            registeringStatus
-          ) && (
-              <>
-                <form
-                  onSubmit={handleSubmit(onSubmit)}
-                  className="flex flex-col items-center justify-center gap-0 w-full"
-                >
-                  <FormField
-                    label={t(
-                      "screens.HomePage.MyceliumProfile.form.firstName.label"
-                    )}
-                    title={t(
-                      "screens.HomePage.MyceliumProfile.form.firstName.title"
-                    )}
-                  >
-                    <TextInput
-                      {...register("firstName", { required: true })}
-                      placeholder={t(
-                        "screens.HomePage.MyceliumProfile.form.firstName.placeholder"
-                      )}
-                      defaultValue={user?.firstName ?? ""}
-                      type="text"
-                      autoFocus
-                    />
+          {accountStatus === "exists" && (
+            <div className="flex items-center gap-2">
+              <span className="text-green-500">&#10003;</span>
+              <Typography>{t(`${tKey}.createAccount.complete`)}</Typography>
+            </div>
+          )}
 
-                    {errors.firstName && <span>{errors.firstName.message}</span>}
-                  </FormField>
-
-                  <FormField
-                    label={t(
-                      "screens.HomePage.MyceliumProfile.form.lastName.label"
-                    )}
-                    title={t(
-                      "screens.HomePage.MyceliumProfile.form.lastName.title"
-                    )}
-                  >
-                    <TextInput
-                      {...register("lastName", { required: true })}
-                      placeholder={t(
-                        "screens.HomePage.MyceliumProfile.form.lastName.placeholder"
-                      )}
-                      defaultValue={user?.lastName ?? ""}
-                      type="text"
-                    />
-
-                    {errors.lastName && <span>{errors.lastName.message}</span>}
-                  </FormField>
-
-                  <Button
-                    type="submit"
-                    fullWidth
-                    rounded
-                    disabled={
-                      registeringAccount ||
-                      firstName === undefined ||
-                      lastName === undefined
-                    }
-                  >
-                    {registeringAccount
-                      ? t("screens.HomePage.MyceliumProfile.submitting")
-                      : t("screens.HomePage.MyceliumProfile.submit")}
-                  </Button>
-                </form>
-
-                <div className="flex flex-col items-center justify-center gap-2">
-                  {error && <span>{error.toString()}</span>}
-                </div>
-              </>
-            )}
+          {accountStatus === "missing" && (
+            <div className="flex flex-col gap-2">
+              <Typography as="h6">
+                {t(`${tKey}.createAccount.title`)}
+              </Typography>
+              <Typography as="small" decoration="smooth">
+                {t(`${tKey}.createAccount.description`)}
+              </Typography>
+              <Button
+                onClick={handleCreateAccount}
+                disabled={isCreatingAccount}
+                fullWidth
+                rounded
+              >
+                {isCreatingAccount
+                  ? t(`${tKey}.createAccount.creating`)
+                  : t(`${tKey}.createAccount.button`)}
+              </Button>
+            </div>
+          )}
         </div>
+      </div>
+
+      {/* Optional section — only visible once account exists */}
+      {accountStatus === "exists" && (
+        <div className="flex flex-col gap-3">
+          <Typography as="h5" decoration="smooth">
+            {t(`${tKey}.optionalSection`)}
+          </Typography>
+
+          <div className="flex flex-col gap-4">
+            {META_KEYS.map(({ key, labelKey, placeholder }) => (
+              <div
+                key={key}
+                className="flex flex-col gap-2 border rounded-lg p-4 dark:border-zinc-700"
+              >
+                <FormField
+                  label={t(`${tKey}.meta.${labelKey}.title`)}
+                  id={key}
+                >
+                  <TextInput
+                    id={key}
+                    type="text"
+                    placeholder={placeholder}
+                    value={metaValues[key]}
+                    onChange={(e) =>
+                      setMetaValues((prev) => ({
+                        ...prev,
+                        [key]: e.target.value,
+                      }))
+                    }
+                  />
+                </FormField>
+
+                <Button
+                  onClick={() => handleSaveMeta(key)}
+                  disabled={metaSaving[key] || metaValues[key].trim() === ""}
+                  intent="secondary"
+                  rounded
+                  fullWidth
+                >
+                  {metaSaved[key]
+                    ? t(`${tKey}.saved`)
+                    : metaSaving[key]
+                      ? t(`${tKey}.saving`)
+                      : t(`${tKey}.save`)}
+                </Button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Go to dashboard */}
+      {accountStatus === "exists" && (
+        <Button
+          onClick={() => navigate("/dashboard")}
+          fullWidth
+          rounded
+        >
+          {t(`${tKey}.goToDashboard`)}
+        </Button>
       )}
     </div>
   );

@@ -75,7 +75,7 @@ function LogoutModal({
   show: boolean;
   setShow: (show: boolean) => void;
 }) {
-  const { logout: auth0Logout } = useProfile();
+  const { logout } = useProfile();
 
   return (
     <Modal open={show}>
@@ -93,7 +93,7 @@ function LogoutModal({
             <Button intent="secondary" onClick={() => setShow(false)}>
               Cancel
             </Button>
-            <Button intent="warning" onClick={auth0Logout}>
+            <Button intent="warning" onClick={logout}>
               Logout
             </Button>
           </div>

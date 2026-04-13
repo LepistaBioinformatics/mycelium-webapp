@@ -76,11 +76,11 @@ export default function useProfile(args?: Props) {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [isLoadingProfile, setIsLoadingProfile] = useState(false);
 
-  const { parseAuth0Error } = useSuspenseError();
+  const { parseAuthError } = useSuspenseError();
 
   useEffect(() => {
-    if (error) parseAuth0Error(error);
-  }, [error, parseAuth0Error]);
+    if (error) parseAuthError(error);
+  }, [error, parseAuthError]);
 
   /**
    * Filter the licensed resources based on specific roles or permissions

@@ -40,6 +40,41 @@
         "countdown": "You will be redirected to the panel in {{seconds}} second",
         "forceRedirect": "Redirect now"
       },
+      "OnboardingChecklist": {
+        "checkingAccount": "Checking your account...",
+        "requiredSection": "Required steps",
+        "optionalSection": "Optional steps",
+        "createAccount": {
+          "title": "Create your account",
+          "description": "You need an account to access the platform.",
+          "button": "Create account",
+          "creating": "Creating...",
+          "complete": "Account created"
+        },
+        "meta": {
+          "phone": {
+            "title": "Phone number",
+            "placeholder": "+1 555 000 0000"
+          },
+          "telegram": {
+            "title": "Telegram",
+            "placeholder": "@username"
+          },
+          "whatsapp": {
+            "title": "WhatsApp",
+            "placeholder": "+1 555 000 0000"
+          },
+          "locale": {
+            "title": "Preferred language",
+            "placeholder": "e.g. en, pt-BR"
+          }
+        },
+        "save": "Save",
+        "saving": "Saving...",
+        "saved": "Saved",
+        "goToDashboard": "Go to dashboard",
+        "error": "Unexpected error"
+      },
       "UnRegisteredUser": {
         "title": "Almost there!",
         "subtitle": "Check your username",

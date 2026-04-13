@@ -2,6 +2,8 @@ import { components } from "@/services/openapi/mycelium-schema";
 import { TenantStatus } from "@/types/TenantStatus";
 import { rpcCall } from "./client";
 
+type Account = components["schemas"]["Account"];
+
 type Profile = components["schemas"]["Profile"];
 type Tenant = components["schemas"]["Tenant"];
 type CreateTokenResponse = components["schemas"]["CreateTokenResponse"];
@@ -86,6 +88,51 @@ export function profileGet(
 ): Promise<Profile> {
   return rpcCall<ProfileGetParams, Profile>(
     "beginners.profile.get",
+    params,
+    getToken
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Account (get own)
+// ---------------------------------------------------------------------------
+
+export function accountsGet(
+  getToken: () => Promise<string>
+): Promise<Account | null> {
+  return rpcCall<Record<string, never>, Account | null>(
+    "beginners.accounts.get",
+    {},
+    getToken
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Meta
+// ---------------------------------------------------------------------------
+
+export interface MetaParams {
+  key: string;
+  value: string;
+}
+
+export function metaCreate(
+  params: MetaParams,
+  getToken: () => Promise<string>
+): Promise<Record<string, string>> {
+  return rpcCall<MetaParams, Record<string, string>>(
+    "beginners.meta.create",
+    params,
+    getToken
+  );
+}
+
+export function metaUpdate(
+  params: MetaParams,
+  getToken: () => Promise<string>
+): Promise<Record<string, string>> {
+  return rpcCall<MetaParams, Record<string, string>>(
+    "beginners.meta.update",
     params,
     getToken
   );
