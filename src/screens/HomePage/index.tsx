@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, useSearchParams } from "react-router";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
@@ -32,8 +32,9 @@ export default function HomePage() {
   const { setAuth } = useNativeAuthContext();
   const { isAuthenticated, isLoadingUser, logout } = useProfile();
 
-  const [step, setStep] = useState<"email" | "code">("email");
-  const [submittedEmail, setSubmittedEmail] = useState("");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const step = (searchParams.get("step") as "email" | "code") ?? "email";
+  const submittedEmail = searchParams.get("email") ?? "";
   const [invalidCode, setInvalidCode] = useState(false);
 
   const emailForm = useForm<EmailForm>();
@@ -48,8 +49,7 @@ export default function HomePage() {
   const onSubmitEmail = async (data: EmailForm) => {
     try {
       await requestMagicLink(data.email);
-      setSubmittedEmail(data.email);
-      setStep("code");
+      setSearchParams({ step: "code", email: data.email });
     } catch (err) {
       dispatch(
         setNotification({
@@ -92,7 +92,7 @@ export default function HomePage() {
   };
 
   const handleBack = () => {
-    setStep("email");
+    setSearchParams({});
     setInvalidCode(false);
     codeForm.reset();
   };
