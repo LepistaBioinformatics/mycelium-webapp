@@ -95,7 +95,7 @@ function Container({
   );
 }
 
-const breadcrumbStyles = cva("mt-1 pb-4 flex overflow-x-auto gap-2", {
+const breadcrumbStyles = cva("mt-1 pb-4 flex overflow-x-auto scrollbar gap-2", {
   variants: {},
   defaultVariants: {},
 });
@@ -122,7 +122,7 @@ function BreadcrumbContainer({ children, ...props }: BreadcrumbProps) {
 const breadcrumbItemStyles = cva("flex whitespace-nowrap gap-2", {
   variants: {
     withHref: {
-      true: "hover:underline text-brand-violet-500 dark:text-brand-lime-500",
+      true: "hover:underline text-brand-violet-500 dark:text-brand-violet-500",
       false: "text-zinc-500",
     },
   },
@@ -238,7 +238,7 @@ function Content({
   );
 }
 
-const footerStyles = cva("mt-1 p-4 overflow-auto flex flex-col gap-5", {
+const footerStyles = cva("mt-1 p-4 overflow-auto scrollbar flex flex-col gap-5", {
   variants: {},
   defaultVariants: {},
 });

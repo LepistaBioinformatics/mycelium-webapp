@@ -99,7 +99,7 @@ export default function RegisterGuestRoleChild({
           {selectedRole && (
             <div>
               <Button
-                rounded
+               
                 fullWidth
                 disabled={isSubmitting}
                 onClick={() => registerChild(selectedRole)}

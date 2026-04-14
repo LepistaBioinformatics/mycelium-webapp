@@ -1,14 +1,15 @@
 import Card from "@/components/ui/Card";
-import IntroSection from "@/components/ui/IntroSection";
 import Typography from "@/components/ui/Typography";
 import useProfile from "@/hooks/use-profile";
 import { components } from "@/services/openapi/mycelium-schema";
-import { useMemo, useState } from "react";
-import { MdEdit } from "react-icons/md";
-import EditMetadataModal from "./EditMetadataModal";
-import { useTranslation } from "react-i18next";
-import { MycRole } from "@/types/MyceliumRole";
+import { metaCreate } from "@/services/rpc/tenantOwner";
+import { setNotification } from "@/states/notification.state";
 import { MycPermission } from "@/types/MyceliumPermission";
+import { MycRole } from "@/types/MyceliumRole";
+import { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
+import { useDispatch } from "react-redux";
 
 type Tenant = components["schemas"]["Tenant"];
 type TenantMetaKey = components["schemas"]["TenantMetaKey"];
@@ -18,336 +19,267 @@ interface Props {
   mutateTenantStatus: () => void;
 }
 
+interface LegalFormValues {
+  federal_revenue_register: string;
+  federal_revenue_register_type: string;
+  country: string;
+  state: string;
+  city: string;
+  zip_code: string;
+  address1: string;
+  address2: string;
+}
+
+const FIELD_KEYS: TenantMetaKey[] = [
+  "federal_revenue_register",
+  "federal_revenue_register_type",
+  "country",
+  "state",
+  "city",
+  "zip_code",
+  "address1",
+  "address2",
+];
+
+const REGISTER_TYPE_OPTIONS = [
+  { value: "", label: "—" },
+  { value: "CNPJ", label: "CNPJ (Brazil)" },
+  { value: "EIN", label: "EIN (USA)" },
+  { value: "VAT", label: "VAT (EU)" },
+  { value: "NIF", label: "NIF (Portugal / Spain)" },
+  { value: "CIF", label: "CIF (Spain, companies)" },
+  { value: "RFC", label: "RFC (Mexico)" },
+  { value: "ABN", label: "ABN (Australia)" },
+  { value: "TAX_ID", label: "TAX ID (generic)" },
+];
+
+// New CNPJ format (Receita Federal 2025+) supports alphanumeric characters.
+// Mask: XX.XXX.XXX/XXXX-XX — same punctuation, but chars can be A-Z or 0-9.
+function cnpjMask(raw: string): string {
+  const chars = raw
+    .replace(/[^A-Za-z0-9]/g, "")
+    .toUpperCase()
+    .slice(0, 14);
+  if (chars.length <= 2) return chars;
+  if (chars.length <= 5) return `${chars.slice(0, 2)}.${chars.slice(2)}`;
+  if (chars.length <= 8)
+    return `${chars.slice(0, 2)}.${chars.slice(2, 5)}.${chars.slice(5)}`;
+  if (chars.length <= 12)
+    return `${chars.slice(0, 2)}.${chars.slice(2, 5)}.${chars.slice(5, 8)}/${chars.slice(8)}`;
+  return `${chars.slice(0, 2)}.${chars.slice(2, 5)}.${chars.slice(5, 8)}/${chars.slice(8, 12)}-${chars.slice(12)}`;
+}
+
+const INPUT =
+  "w-full bg-transparent border-b border-zinc-300 dark:border-zinc-700 px-0 py-1.5 text-sm text-zinc-800 dark:text-zinc-200 focus:outline-none focus:border-brand-violet-500 dark:focus:border-brand-violet-400 placeholder-zinc-400 dark:placeholder-zinc-600";
+const LABEL =
+  "text-xs font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wide";
+
 export default function LegalSettings({ tenant, mutateTenantStatus }: Props) {
   const { t } = useTranslation();
+  const dispatch = useDispatch();
+  const [isSaving, setIsSaving] = useState(false);
 
-  const [isEditMetadataModalOpen, setIsEditMetadataModalOpen] = useState(false);
-  const [editMetadataKey, setEditMetadataKey] = useState<TenantMetaKey | null>(
-    null
-  );
-  const [editMetadataValue, setEditMetadataValue] = useState<string | null>(
-    null
-  );
-
-  const { hasEnoughPermissions } = useProfile({
+  const { hasEnoughPermissions, getAccessTokenSilently } = useProfile({
     tenantOwnerNeeded: [tenant.id ?? ""],
     roles: [MycRole.TenantManager],
     permissions: [MycPermission.Read],
     restrictSystemAccount: true,
   });
 
-  const handleEditMetadata = (key: TenantMetaKey, value: string) => {
-    setEditMetadataKey(key);
-    setEditMetadataValue(value);
-    setIsEditMetadataModalOpen(true);
-  };
+  const meta = (tenant.meta ?? {}) as Record<string, string>;
 
-  const handleOnSuccess = () => {
-    setIsEditMetadataModalOpen(false);
-    setEditMetadataKey(null);
-    setEditMetadataValue(null);
+  const { register, handleSubmit, reset, watch, control } =
+    useForm<LegalFormValues>({
+      defaultValues: {
+        federal_revenue_register: meta["federal_revenue_register"] ?? "",
+        federal_revenue_register_type:
+          meta["federal_revenue_register_type"] ?? "",
+        country: meta["country"] ?? "",
+        state: meta["state"] ?? "",
+        city: meta["city"] ?? "",
+        zip_code: meta["zip_code"] ?? "",
+        address1: meta["address1"] ?? "",
+        address2: meta["address2"] ?? "",
+      },
+    });
+
+  const registerType = watch("federal_revenue_register_type");
+  const isCnpj = registerType === "CNPJ";
+
+  if (!hasEnoughPermissions) return null;
+
+  const BASE =
+    "screens.Dashboard.Tenants.AdvancedManagement.legalSettingsAndPeople.legalSettings";
+
+  const onSubmit = async (values: LegalFormValues) => {
+    if (!tenant.id) return;
+
+    setIsSaving(true);
+
+    const results = await Promise.allSettled(
+      FIELD_KEYS.filter(
+        (key) => values[key as keyof LegalFormValues] !== ""
+      ).map((key) =>
+        metaCreate(
+          {
+            tenantId: tenant.id!,
+            key,
+            value: values[key as keyof LegalFormValues],
+          },
+          getAccessTokenSilently
+        )
+      )
+    );
+
+    setIsSaving(false);
+
+    const failed = results.filter((r) => r.status === "rejected");
+
+    if (failed.length > 0) {
+      dispatch(
+        setNotification({
+          type: "error",
+          notification: `${failed.length} field(s) failed to save.`,
+        })
+      );
+      return;
+    }
+
+    reset(values);
     mutateTenantStatus();
   };
-
-  const handleOnClose = () => {
-    setIsEditMetadataModalOpen(false);
-    setEditMetadataKey(null);
-    setEditMetadataValue(null);
-    mutateTenantStatus();
-  };
-
-  const frr = useMemo(() => {
-    if (!tenant?.meta) return null;
-
-    return tenant?.meta?.["federal_revenue_register"];
-  }, [tenant?.meta]);
-
-  const frrType = useMemo(() => {
-    if (!tenant?.meta) return null;
-
-    return tenant?.meta?.["federal_revenue_register_type"];
-  }, [tenant?.meta]);
-
-  const country = useMemo(() => {
-    if (!tenant?.meta) return null;
-
-    return tenant?.meta?.["country"];
-  }, [tenant?.meta]);
-
-  const state = useMemo(() => {
-    if (!tenant?.meta) return null;
-
-    return tenant?.meta?.["state"];
-  }, [tenant?.meta]);
-
-  const city = useMemo(() => {
-    if (!tenant?.meta) return null;
-
-    return tenant?.meta?.["city"];
-  }, [tenant?.meta]);
-
-  const address1 = useMemo(() => {
-    if (!tenant?.meta) return null;
-
-    return tenant?.meta?.["address1"];
-  }, [tenant?.meta]);
-
-  const address2 = useMemo(() => {
-    if (!tenant?.meta) return null;
-
-    return tenant?.meta?.["address2"];
-  }, [tenant?.meta]);
-
-  const zipCode = useMemo(() => {
-    if (!tenant?.meta) return null;
-
-    return tenant?.meta?.["zip_code"];
-  }, [tenant?.meta]);
-
-  if (!hasEnoughPermissions) {
-    return null;
-  }
-
-  const NotSet = ({
-    metadataKey,
-    value,
-  }: {
-    metadataKey: TenantMetaKey;
-    value: string;
-  }) => (
-    <MdEdit
-      className="cursor-pointer text-brand-violet-500 dark:text-brand-lime-400 hover:scale-150 transition-all duration-200"
-      title="Edit"
-      onClick={() => handleEditMetadata(metadataKey, value)}
-    />
-  );
-
-  const Set = ({
-    metaKey,
-    value,
-    children,
-  }: { metaKey: TenantMetaKey; value: string } & BaseProps) => (
-    <Typography as="span" decoration="light" width="xxs" truncate>
-      <span
-        className="lg:text-end gap-1 cursor-pointer hover:underline hover:text-brand-violet-500 dark:hover:text-brand-lime-400 transition-all duration-200"
-        onDoubleClick={() => handleEditMetadata(metaKey, value)}
-        title="Double click to edit"
-      >
-        {children}
-      </span>
-    </Typography>
-  );
 
   return (
-    <>
-      <Card padding="sm" height="adaptive" group>
-        <Card.Header>
-          <div className="flex flex-col gap-2">
-            <Typography as="h5">
-              {t(
-                "screens.Dashboard.Tenants.AdvancedManagement.legalSettingsAndPeople.legalSettings.title"
-              )}
-            </Typography>
+    <Card padding="sm" height="adaptive" group>
+      <Card.Header>
+        <div className="flex flex-col gap-2">
+          <Typography as="h5">{t(`${BASE}.title`)}</Typography>
+          <Typography as="span" decoration="smooth" width="sm">
+            {t(`${BASE}.description`)}
+          </Typography>
+        </div>
+      </Card.Header>
 
-            <Typography as="span" decoration="smooth" width="sm">
-              {t(
-                "screens.Dashboard.Tenants.AdvancedManagement.legalSettingsAndPeople.legalSettings.description"
-              )}
-            </Typography>
+      <Card.Body>
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-5">
+            {/* Register type — select with preset options */}
+            <div className="flex flex-col gap-1">
+              <label className={LABEL}>
+                {t(`${BASE}.federalRevenueRegisterType.title`)}
+              </label>
+              <select
+                {...register("federal_revenue_register_type")}
+                className={`${INPUT} cursor-pointer bg-white dark:bg-zinc-900`}
+              >
+                {REGISTER_TYPE_OPTIONS.map(({ value, label }) => (
+                  <option
+                    key={value}
+                    value={value}
+                    className="bg-white dark:bg-zinc-900"
+                  >
+                    {label}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Register number — CNPJ mask when type is CNPJ */}
+            <div className="flex flex-col gap-1">
+              <label className={LABEL}>
+                {t(`${BASE}.federalRevenueRegister.title`)}
+                {isCnpj && (
+                  <span className="ml-2 normal-case tracking-normal text-zinc-400 dark:text-zinc-500">
+                    XX.XXX.XXX/XXXX-XX
+                  </span>
+                )}
+              </label>
+              <Controller
+                name="federal_revenue_register"
+                control={control}
+                render={({ field }) => (
+                  <input
+                    {...field}
+                    className={INPUT}
+                    placeholder="—"
+                    maxLength={isCnpj ? 18 : undefined}
+                    onChange={(e) => {
+                      const value = isCnpj
+                        ? cnpjMask(e.target.value)
+                        : e.target.value;
+                      field.onChange(value);
+                    }}
+                  />
+                )}
+              />
+            </div>
+
+            <div className="flex flex-col gap-1">
+              <label className={LABEL}>{t(`${BASE}.country.title`)}</label>
+              <input
+                {...register("country")}
+                className={INPUT}
+                placeholder="—"
+              />
+            </div>
+
+            <div className="flex flex-col gap-1">
+              <label className={LABEL}>{t(`${BASE}.state.title`)}</label>
+              <input
+                {...register("state")}
+                className={INPUT}
+                placeholder="—"
+              />
+            </div>
+
+            <div className="flex flex-col gap-1">
+              <label className={LABEL}>{t(`${BASE}.city.title`)}</label>
+              <input
+                {...register("city")}
+                className={INPUT}
+                placeholder="—"
+              />
+            </div>
+
+            <div className="flex flex-col gap-1">
+              <label className={LABEL}>{t(`${BASE}.zipCode.title`)}</label>
+              <input
+                {...register("zip_code")}
+                className={INPUT}
+                placeholder="—"
+              />
+            </div>
+
+            <div className="flex flex-col gap-1 sm:col-span-2">
+              <label className={LABEL}>{t(`${BASE}.address1.title`)}</label>
+              <input
+                {...register("address1")}
+                className={INPUT}
+                placeholder="—"
+              />
+            </div>
+
+            <div className="flex flex-col gap-1 sm:col-span-2">
+              <label className={LABEL}>{t(`${BASE}.address2.title`)}</label>
+              <input
+                {...register("address2")}
+                className={INPUT}
+                placeholder="—"
+              />
+            </div>
           </div>
-        </Card.Header>
 
-        <Card.Body>
-          <IntroSection
-            prefix={t(
-              "screens.Dashboard.Tenants.AdvancedManagement.legalSettingsAndPeople.legalSettings.name.prefix"
-            )}
-            title={t(
-              "screens.Dashboard.Tenants.AdvancedManagement.legalSettingsAndPeople.legalSettings.name.title"
-            )}
-            content={tenant?.name}
-            as="h3"
-          >
-            <IntroSection.Item
-              prefix={t(
-                "screens.Dashboard.Tenants.AdvancedManagement.legalSettingsAndPeople.legalSettings.federalRevenueRegister.prefix"
-              )}
-              title={t(
-                "screens.Dashboard.Tenants.AdvancedManagement.legalSettingsAndPeople.legalSettings.federalRevenueRegister.title"
-              )}
-              fullWidth
-              linkLine
+          <div className="flex justify-end">
+            <button
+              type="submit"
+              disabled={isSaving}
+              className="px-4 py-2 text-sm font-medium text-white bg-brand-violet-500 hover:bg-brand-violet-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
-              {frr ? (
-                <Set metaKey="federal_revenue_register" value={frr ?? ""}>
-                  {frr}
-                </Set>
-              ) : (
-                <NotSet
-                  metadataKey="federal_revenue_register"
-                  value={frr ?? ""}
-                />
-              )}
-            </IntroSection.Item>
-
-            <IntroSection.Item
-              prefix={t(
-                "screens.Dashboard.Tenants.AdvancedManagement.legalSettingsAndPeople.legalSettings.federalRevenueRegisterType.prefix"
-              )}
-              title={t(
-                "screens.Dashboard.Tenants.AdvancedManagement.legalSettingsAndPeople.legalSettings.federalRevenueRegisterType.title"
-              )}
-              fullWidth
-              linkLine
-            >
-              {frrType ? (
-                <Set
-                  metaKey="federal_revenue_register_type"
-                  value={frrType ?? ""}
-                >
-                  {frrType}
-                </Set>
-              ) : (
-                <NotSet
-                  metadataKey="federal_revenue_register_type"
-                  value={frrType ?? ""}
-                />
-              )}
-            </IntroSection.Item>
-
-            <IntroSection.Item
-              prefix={t(
-                "screens.Dashboard.Tenants.AdvancedManagement.legalSettingsAndPeople.legalSettings.country.prefix"
-              )}
-              title={t(
-                "screens.Dashboard.Tenants.AdvancedManagement.legalSettingsAndPeople.legalSettings.country.title"
-              )}
-              fullWidth
-              linkLine
-            >
-              {country ? (
-                <Set metaKey="country" value={country ?? ""}>
-                  {country}
-                </Set>
-              ) : (
-                <NotSet metadataKey="country" value={country ?? ""} />
-              )}
-            </IntroSection.Item>
-
-            <IntroSection.Item
-              prefix={t(
-                "screens.Dashboard.Tenants.AdvancedManagement.legalSettingsAndPeople.legalSettings.state.prefix"
-              )}
-              title={t(
-                "screens.Dashboard.Tenants.AdvancedManagement.legalSettingsAndPeople.legalSettings.state.title"
-              )}
-              fullWidth
-              linkLine
-            >
-              {state ? (
-                <Set metaKey="state" value={state ?? ""}>
-                  {state}
-                </Set>
-              ) : (
-                <NotSet metadataKey="state" value={state ?? ""} />
-              )}
-            </IntroSection.Item>
-
-            <IntroSection.Item
-              prefix={t(
-                "screens.Dashboard.Tenants.AdvancedManagement.legalSettingsAndPeople.legalSettings.city.prefix"
-              )}
-              title={t(
-                "screens.Dashboard.Tenants.AdvancedManagement.legalSettingsAndPeople.legalSettings.city.title"
-              )}
-              fullWidth
-              linkLine
-            >
-              {city ? (
-                <Set metaKey="city" value={city ?? ""}>
-                  {city}
-                </Set>
-              ) : (
-                <NotSet metadataKey="city" value={city ?? ""} />
-              )}
-            </IntroSection.Item>
-
-            <IntroSection.Item
-              prefix={t(
-                "screens.Dashboard.Tenants.AdvancedManagement.legalSettingsAndPeople.legalSettings.zipCode.prefix"
-              )}
-              title={t(
-                "screens.Dashboard.Tenants.AdvancedManagement.legalSettingsAndPeople.legalSettings.zipCode.title"
-              )}
-              fullWidth
-              linkLine
-            >
-              {zipCode ? (
-                <Set metaKey="zip_code" value={zipCode ?? ""}>
-                  {zipCode}
-                </Set>
-              ) : (
-                <NotSet metadataKey="zip_code" value={zipCode ?? ""} />
-              )}
-            </IntroSection.Item>
-
-            <IntroSection.Item
-              prefix={t(
-                "screens.Dashboard.Tenants.AdvancedManagement.legalSettingsAndPeople.legalSettings.address1.prefix"
-              )}
-              title={t(
-                "screens.Dashboard.Tenants.AdvancedManagement.legalSettingsAndPeople.legalSettings.address1.title"
-              )}
-              fullWidth
-              linkLine
-              contentProps={{
-                className: "text-sm text-base sm:text-end w-fit",
-              }}
-            >
-              {address1 ? (
-                <Set metaKey="address1" value={address1 ?? ""}>
-                  {address1}
-                </Set>
-              ) : (
-                <NotSet metadataKey="address1" value={address1 ?? ""} />
-              )}
-            </IntroSection.Item>
-
-            <IntroSection.Item
-              prefix={t(
-                "screens.Dashboard.Tenants.AdvancedManagement.legalSettingsAndPeople.legalSettings.address2.prefix"
-              )}
-              title={t(
-                "screens.Dashboard.Tenants.AdvancedManagement.legalSettingsAndPeople.legalSettings.address2.title"
-              )}
-              fullWidth
-              linkLine
-              contentProps={{
-                className: "text-sm text-base sm:text-end w-fit",
-              }}
-            >
-              {address2 ? (
-                <Set metaKey="address2" value={address2 ?? ""}>
-                  {address2}
-                </Set>
-              ) : (
-                <NotSet metadataKey="address2" value={address2 ?? ""} />
-              )}
-            </IntroSection.Item>
-          </IntroSection>
-        </Card.Body>
-      </Card>
-
-      {tenant.id && (
-        <EditMetadataModal
-          isOpen={isEditMetadataModalOpen}
-          onClose={handleOnClose}
-          onSuccess={handleOnSuccess}
-          tenantId={tenant.id}
-          editMetadataKey={editMetadataKey}
-          editMetadataValue={editMetadataValue}
-        />
-      )}
-    </>
+              {isSaving ? t(`${BASE}.saving`) : t(`${BASE}.save`)}
+            </button>
+          </div>
+        </form>
+      </Card.Body>
+    </Card>
   );
 }

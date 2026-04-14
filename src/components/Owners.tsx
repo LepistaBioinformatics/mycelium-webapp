@@ -40,7 +40,7 @@ export default function Owners({ account }: { account: Account }) {
           return (
             <span
               key={owner.id}
-              className="flex items-center gap-2 rounded-md w-min hover:text-zinc-600 dark:hover:text-zinc-300 group group/clip whitespace-nowrap"
+              className="flex items-center gap-2 w-min hover:text-zinc-600 dark:hover:text-zinc-300 group group/clip whitespace-nowrap"
             >
               {email}
               {isSecure(owner.mfa) && <GrSecure />}

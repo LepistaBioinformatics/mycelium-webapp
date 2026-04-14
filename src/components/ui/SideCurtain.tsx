@@ -4,7 +4,7 @@ import { IoCloseSharp } from "react-icons/io5";
 import { useNavigate } from "react-router";
 
 const containerStyles = cva(
-  "fixed z-[997] right-0 top-0 bottom-0 w-full bg-zinc-600 bg-opacity-20 dark:bg-zinc-900 dark:bg-opacity-40 rounded-lg sm:rounded-l-none shadow-xl flex justify-end",
+  "fixed z-[997] right-0 top-0 bottom-0 w-full bg-zinc-600 bg-opacity-20 dark:bg-zinc-900 dark:bg-opacity-40 sm:rounded-l-none shadow-xl flex justify-end",
   {
     variants: {
       open: {
@@ -59,7 +59,7 @@ function Container({
             {title}
           </Typography>
           <button onClick={handleClose || defaultHandleClose}>
-            <IoCloseSharp className="text-3xl text-brand-violet-500 dark:text-brand-lime-500" />
+            <IoCloseSharp className="text-3xl text-brand-violet-500 dark:text-brand-violet-500" />
           </button>
         </div>
 

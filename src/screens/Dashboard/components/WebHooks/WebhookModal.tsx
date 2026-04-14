@@ -447,7 +447,7 @@ export default function WebhookModal({
                     rightIcon={() => (
                       <Button
                         intent="link"
-                        rounded
+                       
                         onClick={() => setTogglePassword(!togglePassword)}
                       >
                         {togglePassword ? <FaEye /> : <FaEyeSlash />}
@@ -499,7 +499,7 @@ export default function WebhookModal({
                     rightIcon={() => (
                       <Button
                         intent="link"
-                        rounded
+                       
                         onClick={() => setTogglePassword(!togglePassword)}
                       >
                         {togglePassword ? <FaEye /> : <FaEyeSlash />}
@@ -516,7 +516,7 @@ export default function WebhookModal({
           </section>
 
           <Button
-            rounded
+           
             type="submit"
             disabled={
               !nameWatch ||

@@ -266,7 +266,7 @@ export default function TenantDetails({ isOpen, onClose, tenant }: Props) {
 
               <div>
                 <Button
-                  rounded
+                 
                   intent="info"
                   onClick={() => setIsCreateManagementAccountModalOpen(true)}
                 >
@@ -296,7 +296,7 @@ export default function TenantDetails({ isOpen, onClose, tenant }: Props) {
 
               <div>
                 <Button
-                  rounded
+                 
                   intent="danger"
                   onClick={() => setIsDeleteModalOpen(true)}
                 >

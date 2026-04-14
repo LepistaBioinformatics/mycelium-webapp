@@ -24,7 +24,7 @@ export default function WrittenBy({ writtenBy, action }: Props) {
           className="text-blue-500 hover:underline"
           title={`Account: ${writtenBy?.id}`}
         >
-          <FaExternalLinkAlt className="inline text-brand-violet-500 dark:text-brand-lime-500" />
+          <FaExternalLinkAlt className="inline text-brand-violet-500 dark:text-brand-violet-500" />
         </Link>
       </IntroSection.Item>
     );

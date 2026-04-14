@@ -66,7 +66,6 @@ export default function Pager({
         fullWidth
         onClick={previousPage}
         size="sm"
-        rounded="full"
         intent="link"
         disabled={showPreviousPageButton}
       >
@@ -83,7 +82,6 @@ export default function Pager({
         fullWidth
         onClick={nextPage}
         size="sm"
-        rounded="full"
         intent="link"
         disabled={!showNextPageButton}
       >

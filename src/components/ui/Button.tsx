@@ -9,22 +9,16 @@ const styles = cva("text-zinc-700 dark:text-zinc-50", {
     center: {
       true: "text-center justify-center items-center",
     },
-    rounded: {
-      true: "rounded-lg",
-      full: "rounded-full",
-      left: "rounded-l-full",
-      right: "rounded-r-full",
-    },
     intent: {
       primary:
-        "bg-brand-violet-500 hover:bg-brand-violet-600 dark:bg-brand-lime-600 dark:hover:bg-brand-lime-700 text-white",
+        "bg-brand-violet-500 hover:bg-brand-violet-600 dark:bg-brand-violet-600 dark:hover:bg-brand-violet-700 text-white",
       secondary:
         "text-white font-semibold bg-zinc-500 hover:bg-zinc-600 dark:bg-zinc-600 dark:hover:bg-zinc-700",
       warning:
         "bg-yellow-500 dark:bg-yellow-600 text-white hover:bg-yellow-600 hover:dark:bg-yellow-700 font-semibold",
       danger:
         "bg-red-500 dark:bg-red-600 text-white hover:bg-red-600 dark:hover:bg-red-700",
-      link: "!text-brand-violet-500 dark:text-brand-lime-500 bg-transparent hover:bg-transparent border border-transparent hover:border-brand-violet-500 dark:hover:border-brand-lime-500",
+      link: "!text-brand-violet-500 dark:text-brand-violet-500 bg-transparent hover:bg-transparent border border-transparent hover:border-brand-violet-500 dark:hover:border-brand-violet-500",
       info: "bg-brand-violet-500 text-white hover:bg-brand-violet-600 dark:bg-brand-violet-500 dark:hover:bg-brand-violet-700",
     },
     size: {
@@ -47,7 +41,6 @@ const styles = cva("text-zinc-700 dark:text-zinc-50", {
     fullWidth: false,
     intent: "primary",
     size: "md",
-    rounded: false,
     padding: "md",
   },
 });
@@ -64,7 +57,6 @@ export default function Button({
   intent,
   size,
   role,
-  rounded,
   padding,
   onClick,
   type,
@@ -79,7 +71,6 @@ export default function Button({
         fullWidth,
         intent,
         size,
-        rounded,
         disabled,
         padding,
         center,

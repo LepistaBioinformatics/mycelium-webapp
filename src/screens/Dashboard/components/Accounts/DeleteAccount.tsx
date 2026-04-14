@@ -76,7 +76,7 @@ export default function DeleteAccount({
               intent="danger"
               onClick={handleDelete}
               disabled={isLoading}
-              rounded
+             
               fullWidth
             >
               {isLoading

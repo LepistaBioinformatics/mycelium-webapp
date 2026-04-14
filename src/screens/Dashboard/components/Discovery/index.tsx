@@ -158,7 +158,7 @@ export default function Discovery() {
 
                 <div className="flex gap-2">
                   {record?.tags?.map((tag) => (
-                    <span className="text-sm rounded-r-full border border-dashed border-brand-violet-700 dark:border-brand-violet-600 bg-brand-violet-300 dark:bg-brand-violet-900 text-brand-violet-700 dark:text-brand-violet-300 px-2 mt-2 flex flex-col gap-2">
+                    <span className="text-sm-r-full border border-dashed border-brand-violet-700 dark:border-brand-violet-600 bg-brand-violet-300 dark:bg-brand-violet-900 text-brand-violet-700 dark:text-brand-violet-300 px-2 mt-2 flex flex-col gap-2">
                       {tag}
                     </span>
                   ))}
@@ -174,7 +174,7 @@ export default function Discovery() {
                     </DetailsBox.Summary>
 
                     <DetailsBox.Content>
-                      <div className="bg-zinc-200 dark:bg-zinc-700 rounded-lg p-2 mt-2 flex flex-col gap-2">
+                      <div className="bg-zinc-200 dark:bg-zinc-700 p-2 mt-2 flex flex-col gap-2">
                         <JSONPretty
                           data={JSON.stringify(record?.parameters, null, 2)}
                           theme={JSONPrettyMon}
@@ -194,7 +194,7 @@ export default function Discovery() {
                     </DetailsBox.Summary>
 
                     <DetailsBox.Content>
-                      <div className="bg-zinc-200 dark:bg-zinc-700 rounded-lg p-2 mt-2 flex flex-col gap-2">
+                      <div className="bg-zinc-200 dark:bg-zinc-700 p-2 mt-2 flex flex-col gap-2">
                         <JSONPretty
                           data={JSON.stringify(record?.requestBody, null, 2)}
                           theme={JSONPrettyMon}
@@ -214,7 +214,7 @@ export default function Discovery() {
                     </DetailsBox.Summary>
 
                     <DetailsBox.Content>
-                      <div className="bg-zinc-200 dark:bg-zinc-700 rounded-lg p-2 mt-2 flex flex-col gap-2">
+                      <div className="bg-zinc-200 dark:bg-zinc-700 p-2 mt-2 flex flex-col gap-2">
                         <JSONPretty
                           data={JSON.stringify(record?.responses, null, 2)}
                           theme={JSONPrettyMon}
@@ -239,7 +239,7 @@ export default function Discovery() {
  */
 const OperationMethod = ({ method }: { method: string }) => {
   const style = (className: string) =>
-    `${className} text-sm text-center font-bold rounded-md px-2 mt-2 sm:mt-0 text-white border bg-opacity-50 h-fit min-w-[5rem]`;
+    `${className} text-sm text-center font-bold-md px-2 mt-2 sm:mt-0 text-white border bg-opacity-50 h-fit min-w-[5rem]`;
 
   switch (method) {
     case "GET":
@@ -368,7 +368,7 @@ const Part = ({
 }) => {
   let className = "font-bold whitespace-nowrap";
 
-  if (highlight) className += " text-brand-violet-500 dark:text-brand-lime-400 cursor-help";
+  if (highlight) className += " text-brand-violet-500 dark:text-brand-violet-400 cursor-help";
   if (isService) className += " dark:text-yellow-500";
 
   return (

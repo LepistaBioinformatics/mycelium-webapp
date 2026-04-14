@@ -1,7 +1,7 @@
 import { cva, VariantProps } from "class-variance-authority";
 
 const styles = cva(
-  "flex flex-col text-left gap-1 rounded-lg border border-l-4 border-zinc-300 dark:border-zinc-700 px-4 py-2 mx-auto w-full xl:max-w-4xl",
+  "flex flex-col text-left gap-1 border border-l-4 border-zinc-300 dark:border-zinc-700 px-4 py-2 mx-auto w-full xl:max-w-4xl",
   {
     variants: {
       _index: {

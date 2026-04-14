@@ -43,7 +43,7 @@ export function TenantOwnershipInfoTableRow({
       if (!name) return <EmptyCell />;
 
       return (
-        <TableCell className="text-brand-violet-500 dark:text-brand-lime-500 hover:underline font-semibold text-lg">
+        <TableCell className="text-brand-violet-500 dark:text-brand-violet-500 hover:underline font-semibold text-lg">
           <Link to={`/dashboard/tenants/${tenantId}`}>{name}</Link>
         </TableCell>
       );
@@ -95,7 +95,7 @@ export function TenantOwnershipInfoCard({
             <div className="flex items-center gap-2">
               <Link
                 title={t("screens.Dashboard.TenantOwnershipInfo.name")}
-                className="text-brand-violet-500 dark:text-brand-lime-500 hover:underline"
+                className="text-brand-violet-500 dark:text-brand-violet-500 hover:underline"
                 to={`/dashboard/tenants/${tenantId}`}
               >
                 {tenantName}
@@ -150,7 +150,7 @@ function TenantOwnershipInfoActions({
     <div className={styles({ direction })}>
       <Link
         to={`/dashboard/tenants/${tenantId}/accounts`}
-        className="flex flex-col items-center gap-2 p-1 rounded-lg bg-brand-violet-500 dark:bg-brand-lime-500"
+        className="flex flex-col items-center gap-2 p-1 bg-brand-violet-500 dark:bg-brand-violet-500"
         title={t("screens.Dashboard.TenantOwnershipInfo.manageAccounts")}
       >
         <MdManageAccounts

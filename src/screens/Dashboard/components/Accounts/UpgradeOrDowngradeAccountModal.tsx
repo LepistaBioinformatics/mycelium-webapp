@@ -190,7 +190,7 @@ function ConfirmButton({
           onComplete={() => setWantToConfirm(false)}
           renderer={({ seconds }) => {
             return (
-              <Button fullWidth rounded intent={intent} onClick={handleConfirm}>
+              <Button fullWidth intent={intent} onClick={handleConfirm}>
                 {t(
                   "screens.Dashboard.Accounts.UpgradeOrDowngradeAccountModal.confirm",
                   { seconds }
@@ -202,7 +202,7 @@ function ConfirmButton({
       ) : (
         <Button
           fullWidth
-          rounded
+         
           intent={intent}
           key={accountType}
           disabled={isDisabled || isLoading}

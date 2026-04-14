@@ -309,7 +309,7 @@ export default function AccountDetails({ onClose }: Props) {
             <IoReturnDownBack
               size={32}
               title="Go back"
-              className="cursor-pointer text-brand-violet-500 dark:text-brand-lime-400"
+              className="cursor-pointer text-brand-violet-500 dark:text-brand-violet-400"
               onClick={handleClose}
             />
           </div>
@@ -475,7 +475,7 @@ export default function AccountDetails({ onClose }: Props) {
               {includeInvitationsFeature && (
                 <div className="flex justify-end">
                   <Button
-                    rounded
+                   
                     onClick={() => setIsGuestToAccountModalOpen(true)}
                   >
                     {t(
@@ -546,7 +546,7 @@ export default function AccountDetails({ onClose }: Props) {
               </div>
 
               <div>
-                <Button rounded onClick={() => setIsEditModalOpen(true)}>
+                <Button onClick={() => setIsEditModalOpen(true)}>
                   {t("screens.Dashboard.Accounts.AccountDetails.edit.button")}
                 </Button>
               </div>
@@ -579,7 +579,7 @@ export default function AccountDetails({ onClose }: Props) {
 
                 <div>
                   <Button
-                    rounded
+                   
                     onClick={() => setIsUpgradeOrDowngradeModalOpen(true)}
                   >
                     {t(
@@ -614,7 +614,7 @@ export default function AccountDetails({ onClose }: Props) {
 
                     <div>
                       <Button
-                        rounded
+                       
                         onClick={() =>
                           setIsCreateConnectionStringModalOpen(true)
                         }
@@ -645,7 +645,7 @@ export default function AccountDetails({ onClose }: Props) {
 
                     <div>
                       <Button
-                        rounded
+                       
                         intent="danger"
                         onClick={() => setIsDeleteModalOpen(true)}
                       >

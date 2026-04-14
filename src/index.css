@@ -38,28 +38,46 @@
 }
 
 @layer utilities {
+  /* Reserve the scrollbar gutter at all times so layout never shifts. */
+  .scrollbar {
+    scrollbar-gutter: stable;
+    /* Firefox */
+    scrollbar-color: transparent transparent;
+    scrollbar-width: thin;
+  }
+
+  .scrollbar:hover {
+    /* Firefox — show thumb on hover */
+    scrollbar-color: #425a925d transparent;
+  }
+
+  /* WebKit — fixed size so the gutter is always reserved */
   .scrollbar::-webkit-scrollbar {
     width: 10px;
     height: 10px;
   }
 
   .scrollbar::-webkit-scrollbar-track {
-    border-radius: "50px";
+    background: transparent;
   }
 
+  /* Hidden by default — transparent preserves the space */
   .scrollbar::-webkit-scrollbar-thumb {
-    background: #425a925d;
+    background: transparent;
     border-radius: 100vh;
   }
 
-  .scrollbar::-webkit-scrollbar-thumb:hover {
-    background: var(--color-brand-growth);
-    width: 10px;
+  /* Reveal on hover */
+  .scrollbar:hover::-webkit-scrollbar-thumb {
+    background: #425a925d;
   }
 
-  .scrollbar::-webkit-scrollbar-thumb:active {
+  .scrollbar:hover::-webkit-scrollbar-thumb:hover {
+    background: var(--color-brand-growth);
+  }
+
+  .scrollbar:hover::-webkit-scrollbar-thumb:active {
     background: var(--color-brand-primary-active);
-    width: 10px;
   }
 
   .dont-break-out {

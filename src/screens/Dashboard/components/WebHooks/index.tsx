@@ -135,7 +135,6 @@ export default function Webhooks() {
           <Button
             onClick={() => setIsNewModalOpen(true)}
             size="sm"
-            rounded="full"
             intent="link"
             disabled={!hasEnoughPermissions}
           >
@@ -161,12 +160,12 @@ export default function Webhooks() {
 
                 <div className="flex gap-5">
                   <FaEdit
-                    className="cursor-pointer hover:text-brand-violet-500 dark:group-hover:text-brand-lime-400 text-zinc-500"
+                    className="cursor-pointer hover:text-brand-violet-500 dark:group-hover:text-brand-violet-400 text-zinc-500"
                     onClick={() => handleEditWebhookClick(webhook)}
                   />
 
                   <FaTrash
-                    className="cursor-pointer hover:text-brand-violet-500 dark:group-hover:text-brand-lime-400 text-zinc-500"
+                    className="cursor-pointer hover:text-brand-violet-500 dark:group-hover:text-brand-violet-400 text-zinc-500"
                     onClick={() => handleDeleteWebhookClick(webhook)}
                   />
                 </div>
@@ -225,7 +224,7 @@ export default function Webhooks() {
                   </DetailsBox.Summary>
 
                   <DetailsBox.Content>
-                    <div className="bg-zinc-200 dark:bg-zinc-800 rounded-lg p-2 -mt-4">
+                    <div className="bg-zinc-200 dark:bg-zinc-800 p-2 -mt-4">
                       <Secret secret={webhook?.secret} />
                     </div>
                   </DetailsBox.Content>

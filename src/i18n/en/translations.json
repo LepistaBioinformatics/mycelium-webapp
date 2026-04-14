@@ -167,7 +167,31 @@
       },
       "ListConnectionStringsSection": {
         "title": "Connection strings",
-        "tabName": "Connection strings"
+        "tabName": "Connection strings",
+        "empty": "No connection strings yet",
+        "emptyDescription": "Create a connection string in the Advanced Options tab",
+        "columns": {
+          "name": "Name",
+          "expires": "Expires",
+          "created": "Created",
+          "scope": "Scope",
+          "actions": "Actions"
+        },
+        "expired": "Expired",
+        "actions": {
+          "revoke": "Revoke",
+          "delete": "Delete",
+          "confirming": "Confirming...",
+          "revokeConfirm": "Revoke this token? It will expire immediately.",
+          "deleteConfirm": "Delete this token permanently? This cannot be undone."
+        },
+        "scope": {
+          "tenant": "Tenant",
+          "account": "Account",
+          "serviceAccount": "Service account",
+          "roles": "Roles",
+          "endpoint": "Endpoint"
+        }
       },
       "LicensedResourcesSection": {
         "title": "Accounts you have access",
@@ -397,7 +421,9 @@
               "address2": {
                 "title": "Address 2",
                 "prefix": "Address 2"
-              }
+              },
+              "save": "Save",
+              "saving": "Saving..."
             },
             "owners": {
               "title": "Owners",
@@ -445,10 +471,14 @@
             "brand": {
               "title": "Logo",
               "description": "Customize the Namespace logo.",
-              "registerTenantBrand": "Register logo",
-              "registerTenantBrandDescription": "This will soon bring identity to namespace.",
-              "submit": "To send",
-              "submitting": "Submitting ..."
+              "registerTenantBrand": "Change logo",
+              "registerTenantBrandDescription": "Drop an image here or click to select.",
+              "anyFormat": "Any format accepted — large images are compressed automatically.",
+              "processing": "Processing image...",
+              "original": "Original",
+              "compressed": "Compressed",
+              "submit": "Save logo",
+              "submitting": "Saving..."
             },
             "colors": {
               "title": "Colors",

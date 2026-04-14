@@ -58,7 +58,7 @@ export default function DeleteWebHook({ webhook, isOpen, onClose }: Props) {
               intent="danger"
               onClick={handleDelete}
               disabled={isLoading}
-              rounded
+             
               fullWidth
             >
               {isLoading

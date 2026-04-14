@@ -270,7 +270,7 @@ export default function CreateConnectionStringModal({
 
             <Button
               type="submit"
-              rounded
+             
               fullWidth
               disabled={
                 isSubmitting ||
@@ -301,7 +301,7 @@ export default function CreateConnectionStringModal({
               <div className="flex flex-col-reverse sm:flex-row gap-5 justify-rev sm:justify-between">
                 <Button
                   intent="warning"
-                  rounded
+                 
                   fullWidth
                   disabled={connectionString === null}
                   onClick={() => handleReset()}
@@ -313,7 +313,7 @@ export default function CreateConnectionStringModal({
                 </Button>
 
                 <Button
-                  rounded
+                 
                   fullWidth
                   disabled={copied}
                   onClick={() => {
@@ -360,7 +360,7 @@ export default function CreateConnectionStringModal({
                 {roles.map(({ role, permission }, index) => (
                   <div
                     key={index}
-                    className="flex items-center justify-between gap-8 border-t border-brand-violet-300 dark:border-brand-lime-700 px-3 py-2"
+                    className="flex items-center justify-between gap-8 border-t border-brand-violet-300 dark:border-brand-violet-700 px-3 py-2"
                   >
                     <div className="flex items-center gap-2">
                       <span>{role}</span>

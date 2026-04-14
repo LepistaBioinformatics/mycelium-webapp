@@ -50,7 +50,7 @@ export default function NotFound() {
                   </Typography>
 
                   <div className="flex justify-center">
-                    <Button onClick={routeUser} rounded intent="link">
+                    <Button onClick={routeUser} intent="link">
                       <div className="flex items-center gap-2 text-lg uppercase">
                         <RiLogoutBoxLine className="inline text-green-400" />
                         Go home

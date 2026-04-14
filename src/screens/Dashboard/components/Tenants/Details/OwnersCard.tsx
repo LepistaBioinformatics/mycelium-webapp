@@ -90,7 +90,7 @@ export default function OwnersCard({ tenant, mutateTenantStatus }: Props) {
                 </span>
                 <GoGear
                   title="Register tenant owner"
-                  className="cursor-pointer opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300 text-brand-violet-500 dark:text-brand-lime-400"
+                  className="cursor-pointer opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300 text-brand-violet-500 dark:text-brand-violet-400"
                   onClick={() => setIsGuestOwnerModalOpen(true)}
                 />
               </div>

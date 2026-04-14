@@ -84,7 +84,7 @@ export default function CreateSubscriptionManagerAccountModal({
             )}
           </Typography>
 
-          <Button onClick={onSubmit} disabled={isLoading} rounded fullWidth>
+          <Button onClick={onSubmit} disabled={isLoading} fullWidth>
             {isLoading
               ? t(
                   "screens.Dashboard.Tenants.CreateSubscriptionManagerAccountModal.creating"

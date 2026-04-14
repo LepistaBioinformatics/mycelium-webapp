@@ -1,7 +1,6 @@
 "use client";
 
 import PageBody from "@/components/ui/PageBody";
-import { TabItem, Tabs } from "flowbite-react";
 import Typography from "@/components/ui/Typography";
 import useProfile from "@/hooks/use-profile";
 import { components } from "@/services/openapi/mycelium-schema";
@@ -13,6 +12,7 @@ import getLicensedResourcesOrNull from "@/functions/get-licensed-resources-or-nu
 import ControlPanelBreadcrumbItem from "../ControlPanelBreadcrumbItem";
 import TenantOwnershipSection from "./TenantOwnershipSection";
 import LicensedResourcesSection from "./LicensedResourcesSection";
+import ListConnectionStringsSection from "./ListConnectionStringsSection";
 import { GiWizardStaff } from "react-icons/gi";
 import { GrUserAdmin } from "react-icons/gr";
 import IntroSection from "@/components/ui/IntroSection";
@@ -25,7 +25,9 @@ import Card from "@/components/ui/Card";
 import { SlOrganization } from "react-icons/sl";
 import { MdManageAccounts } from "react-icons/md";
 import { IoOptions } from "react-icons/io5";
+import { IoSettingsOutline } from "react-icons/io5";
 import { useSearchParams } from "react-router";
+import { useSWRConfig } from "swr";
 
 enum ActiveTab {
   LicensedResources = 0,
@@ -36,10 +38,41 @@ enum ActiveTab {
 
 type Profile = components["schemas"]["Profile"];
 
+interface NavItem {
+  tab: ActiveTab;
+  labelKey: string;
+  icon: React.ReactNode;
+}
+
+const NAV_ITEMS: NavItem[] = [
+  {
+    tab: ActiveTab.LicensedResources,
+    labelKey: "screens.Dashboard.LicensedResourcesSection.tabName",
+    icon: <MdManageAccounts size={16} />,
+  },
+  {
+    tab: ActiveTab.TenantOwnership,
+    labelKey: "screens.Dashboard.TenantOwnershipSection.tabName",
+    icon: <SlOrganization size={16} />,
+  },
+  {
+    tab: ActiveTab.ListConnectionStrings,
+    labelKey: "screens.Dashboard.ListConnectionStringsSection.tabName",
+    icon: <IoOptions size={16} />,
+  },
+  {
+    tab: ActiveTab.AdvancedOptions,
+    labelKey: "screens.Dashboard.AdvancedOptionsModal.tabName",
+    icon: <IoSettingsOutline size={16} />,
+  },
+];
+
 export default function Profile() {
   const { t } = useTranslation();
 
   const [searchParams, setSearchParams] = useSearchParams();
+
+  const { mutate } = useSWRConfig();
 
   const { user, profile, isLoadingUser } = useProfile();
 
@@ -76,6 +109,7 @@ export default function Profile() {
 
   const handleCreateConnectionStringModalSuccess = () => {
     setIsCreateConnectionStringModalOpen(false);
+    mutate(["rpc", "beginners.tokens.list"]);
   };
 
   return (
@@ -104,12 +138,16 @@ export default function Profile() {
                       title={t("screens.Dashboard.Profile.loggedInAs.title")}
                     >
                       <div className="flex items-start sm:items-center flex-col sm:flex-row gap-3">
-                        <Typography truncate>{user ? `${user.firstName ?? ""} ${user.lastName ?? ""}`.trim() : ""}</Typography>
+                        <Typography truncate>
+                          {user
+                            ? `${user.firstName ?? ""} ${user.lastName ?? ""}`.trim()
+                            : ""}
+                        </Typography>
 
                         <div className="flex items-center gap-3">
                           {profile?.isStaff && (
                             <GiWizardStaff
-                              className="inline text-brand-violet-500 dark:text-brand-lime-500 hover:cursor-help p-0.5"
+                              className="inline text-brand-violet-500 dark:text-brand-violet-500 hover:cursor-help p-0.5"
                               title={t(
                                 "screens.Dashboard.Profile.loggedInAs.staff"
                               )}
@@ -117,7 +155,7 @@ export default function Profile() {
                           )}
                           {profile?.isManager && (
                             <GrUserAdmin
-                              className="inline text-brand-violet-500 dark:text-brand-lime-500 hover:cursor-help p-0.5"
+                              className="inline text-brand-violet-500 dark:text-brand-violet-500 hover:cursor-help p-0.5"
                               title={t(
                                 "screens.Dashboard.Profile.loggedInAs.manager"
                               )}
@@ -134,13 +172,23 @@ export default function Profile() {
                     title={t("screens.Dashboard.Profile.email.title")}
                   >
                     <span className="group/clip flex items-center gap-1">
-                      {user?.email ? `${user.email.username}@${user.email.domain}` : ""}
-                      <CopyToClipboard text={user?.email ? `${user.email.username}@${user.email.domain}` : ""} groupHidden />
+                      {user?.email
+                        ? `${user.email.username}@${user.email.domain}`
+                        : ""}
+                      <CopyToClipboard
+                        text={
+                          user?.email
+                            ? `${user.email.username}@${user.email.domain}`
+                            : ""
+                        }
+                        groupHidden
+                      />
                     </span>
                   </IntroSection.Item>
                 </IntroSection>
               )}
             </Section.Header>
+
             <Section.Body>
               <div className="flex flex-col gap-3 w-full mt-12 h-full">
                 <div>
@@ -148,91 +196,52 @@ export default function Profile() {
                     {t("screens.Dashboard.Profile.relationship")}
                   </Typography>
                 </div>
-                <div className="flex flex-col sm:flex-row sm:flex-wrap gap-8 sm:gap-3 w-full h-full">
-                  <Tabs
-                    onActiveTabChange={(tab) => {
-                      setSearchParams({ tab: tab.toString() });
-                    }}
-                    aria-label=""
-                    variant="fullWidth"
-                    className="w-full overflow-x-auto"
-                    color="zinc"
-                    theme={{
-                      tablist: {
-                        base: "flex text-center border dark:border-none",
-                        variant: {
-                          fullWidth:
-                            "grid w-full grid-flow-col divide-x divide-zinc-200 rounded-none text-sm font-medium shadow dark:divide-zinc-700 text-zinc-500 dark:text-zinc-400",
-                        },
-                        tabitem: {
-                          variant: {
-                            fullWidth: {
-                              active: {
-                                on: "rounded-none bg-brand-violet-100 p-4 text-zinc-900 dark:bg-zinc-700 dark:text-white",
-                                off: "rounded-none bg-white hover:bg-zinc-50 hover:text-zinc-700 dark:bg-zinc-800 dark:hover:bg-zinc-700 dark:hover:text-white",
-                              },
-                            },
-                          },
-                        },
-                      },
-                    }}
-                  >
-                    <TabItem
-                      active={activeTab === ActiveTab.LicensedResources}
-                      title={
-                        <span className="whitespace-nowrap">
-                          {t(
-                            "screens.Dashboard.LicensedResourcesSection.tabName"
-                          )}
-                        </span>
-                      }
-                      icon={MdManageAccounts}
-                    >
+
+                <div className="flex flex-col sm:flex-row gap-0 w-full h-full">
+                  {/* Vertical nav — desktop left rail, mobile top bar */}
+                  <nav className="flex flex-row sm:flex-col sm:w-40 shrink-0 border-b sm:border-b-0 sm:border-r border-zinc-200 dark:border-zinc-800 overflow-x-auto sm:overflow-x-visible scrollbar">
+                    {NAV_ITEMS.map(({ tab, labelKey, icon }) => {
+                      const isActive = activeTab === tab;
+                      return (
+                        <button
+                          key={tab}
+                          onClick={() =>
+                            setSearchParams({ tab: tab.toString() })
+                          }
+                          className={[
+                            "flex items-center gap-2 px-3 py-2.5 text-sm whitespace-nowrap sm:whitespace-normal transition-colors w-full text-left",
+                            "border-b-2 sm:border-b-0 sm:border-l-2",
+                            isActive
+                              ? "border-brand-violet-500 dark:border-brand-violet-400 text-brand-violet-700 dark:text-brand-violet-300 bg-brand-violet-50 dark:bg-brand-violet-950"
+                              : "border-transparent text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-zinc-800",
+                          ].join(" ")}
+                        >
+                          <span className="shrink-0">{icon}</span>
+                          <span>{t(labelKey)}</span>
+                        </button>
+                      );
+                    })}
+                  </nav>
+
+                  {/* Tab content */}
+                  <div className="flex-1 min-w-0 pt-4 sm:pt-0 sm:pl-6">
+                    {activeTab === ActiveTab.LicensedResources && (
                       <LicensedResourcesSection
                         licensedResources={licensedResources}
                       />
-                    </TabItem>
+                    )}
 
-                    <TabItem
-                      active={activeTab === ActiveTab.TenantOwnership}
-                      title={
-                        <span className="whitespace-nowrap">
-                          {t(
-                            "screens.Dashboard.TenantOwnershipSection.tabName"
-                          )}
-                        </span>
-                      }
-                      icon={SlOrganization}
-                      className="mx-2"
-                    >
+                    {activeTab === ActiveTab.TenantOwnership && (
                       <TenantOwnershipSection
                         tenantsOwnership={tenantsOwnership}
                       />
-                    </TabItem>
+                    )}
 
-                    <TabItem
-                      active={activeTab === ActiveTab.ListConnectionStrings}
-                      title={
-                        <span className="whitespace-nowrap">
-                          {t("screens.Dashboard.ListConnectionStringsSection.tabName")}
-                        </span>
-                      }
-                      icon={IoOptions}
-                    >
-                      Content
-                    </TabItem>
+                    {activeTab === ActiveTab.ListConnectionStrings && (
+                      <ListConnectionStringsSection />
+                    )}
 
-                    <TabItem
-                      active={activeTab === ActiveTab.AdvancedOptions}
-                      title={
-                        <span className="whitespace-nowrap">
-                          {t(
-                            "screens.Dashboard.AdvancedOptionsModal.tabName"
-                          )}
-                        </span>
-                      }
-                      icon={IoOptions}
-                    >
+                    {activeTab === ActiveTab.AdvancedOptions && (
                       <Card padding="sm" width="alwaysFull" height="adaptive">
                         <Card.Header>
                           <Typography as="h5" decoration="faded">
@@ -265,10 +274,7 @@ export default function Profile() {
 
                               <div>
                                 <Button
-                                  onClick={
-                                    handleCreateConnectionStringModalOpen
-                                  }
-                                  rounded
+                                  onClick={handleCreateConnectionStringModalOpen}
                                 >
                                   {t(
                                     "screens.Dashboard.Profile.createConnectionString.button"
@@ -279,8 +285,8 @@ export default function Profile() {
                           </Banner>
                         </Card.Body>
                       </Card>
-                    </TabItem>
-                  </Tabs>
+                    )}
+                  </div>
                 </div>
               </div>
             </Section.Body>

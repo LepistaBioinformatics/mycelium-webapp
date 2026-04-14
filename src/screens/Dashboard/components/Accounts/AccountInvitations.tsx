@@ -161,7 +161,7 @@ export default function AccountInvitations({
 
                         <div>
                           <Button
-                            rounded
+                           
                             intent="warning"
                             onClick={() => setCurrentGuestUser(invitation)}
                           >
@@ -183,7 +183,7 @@ export default function AccountInvitations({
         <div className="flex justify-center">
           {showMaxInvitations ? (
             <Button
-              rounded
+             
               fullWidth
               intent="link"
               size="xs"
@@ -195,7 +195,7 @@ export default function AccountInvitations({
             </Button>
           ) : (
             <Button
-              rounded
+             
               fullWidth
               intent="link"
               size="xs"

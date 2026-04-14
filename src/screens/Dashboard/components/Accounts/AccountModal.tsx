@@ -337,7 +337,7 @@ export default function AccountModal({
                 {errors.roleDescription && <span>This field is required</span>}
               </FormField>
 
-              <Button rounded type="submit" disabled={disableSubmit}>
+              <Button type="submit" disabled={disableSubmit}>
                 {account
                   ? isLoading
                     ? t("screens.Dashboard.Accounts.AccountModal.updating")
@@ -377,7 +377,7 @@ export default function AccountModal({
                 {errors.name && <span>This field is required</span>}
               </FormField>
 
-              <Button rounded type="submit" disabled={disableSubmit}>
+              <Button type="submit" disabled={disableSubmit}>
                 {account
                   ? isLoading
                     ? t("screens.Dashboard.Accounts.AccountModal.updating")
@@ -436,7 +436,7 @@ export default function AccountModal({
 
                     <div>
                       <Button
-                        rounded
+                       
                         type="submit"
                         disabled={disableSubmit}
                         onClick={() =>
@@ -471,7 +471,7 @@ export default function AccountModal({
 
                     <div>
                       <Button
-                        rounded
+                       
                         type="submit"
                         disabled={disableSubmit}
                         onClick={() =>
@@ -506,7 +506,7 @@ export default function AccountModal({
 
                     <div>
                       <Button
-                        rounded
+                       
                         type="submit"
                         disabled={disableSubmit}
                         onClick={() =>

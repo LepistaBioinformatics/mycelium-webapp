@@ -1,12 +1,11 @@
 "use client";
 
-import { TabItem, Tabs } from "flowbite-react";
 import AuthorizedOr from "@/components/ui/AuthorizedOr";
 import PageBody from "@/components/ui/PageBody";
 import useProfile from "@/hooks/use-profile";
 import { MycPermission } from "@/types/MyceliumPermission";
 import { MycRole } from "@/types/MyceliumRole";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Link, useParams, useSearchParams } from "react-router";
 import ControlPanelBreadcrumbItem from "../../ControlPanelBreadcrumbItem";
 import { SlOrganization } from "react-icons/sl";
@@ -36,14 +35,50 @@ import CreateSubscriptionManagerAccountModal from "./CreateSubscriptionManagerAc
 import { GoLaw } from "react-icons/go";
 import { GrUserManager } from "react-icons/gr";
 import Card from "@/components/ui/Card";
+import { useEffect } from "react";
 
 enum ActiveTab {
-  LegalInformation = 0,
-  Owners = 1,
-  Managers = 2,
-  Brand = 3,
+  Brand = 0,
+  LegalInformation = 1,
+  Owners = 2,
+  Managers = 3,
   Advanced = 4,
 }
+
+interface NavItem {
+  tab: ActiveTab;
+  labelKey: string;
+  icon: React.ReactNode;
+}
+
+const NAV_ITEMS: NavItem[] = [
+  {
+    tab: ActiveTab.Brand,
+    labelKey: "screens.Dashboard.Tenants.AdvancedManagement.tabs.brand",
+    icon: <MdImagesearchRoller size={16} />,
+  },
+  {
+    tab: ActiveTab.LegalInformation,
+    labelKey:
+      "screens.Dashboard.Tenants.AdvancedManagement.tabs.legalInformation",
+    icon: <GoLaw size={16} />,
+  },
+  {
+    tab: ActiveTab.Owners,
+    labelKey: "screens.Dashboard.Tenants.AdvancedManagement.tabs.owners",
+    icon: <MdOutlineRealEstateAgent size={16} />,
+  },
+  {
+    tab: ActiveTab.Managers,
+    labelKey: "screens.Dashboard.Tenants.AdvancedManagement.tabs.managers",
+    icon: <GrUserManager size={16} />,
+  },
+  {
+    tab: ActiveTab.Advanced,
+    labelKey: "screens.Dashboard.Tenants.AdvancedManagement.tabs.advanced",
+    icon: <MdManageAccounts size={16} />,
+  },
+];
 
 export default function AdvancedManagement() {
   const { t } = useTranslation();
@@ -57,7 +92,7 @@ export default function AdvancedManagement() {
   const activeTab = useMemo(() => {
     const tab = searchParams.get("tab");
 
-    if (!tab) return ActiveTab.LegalInformation;
+    if (!tab) return ActiveTab.Brand;
 
     return parseInt(tab) as ActiveTab;
   }, [searchParams]);
@@ -310,14 +345,14 @@ export default function AdvancedManagement() {
           <Section.Body>
             <Link
               to={`/dashboard/tenants/${tenantId}/accounts`}
-              className="flex gap-2 items-center align-center hover:underline text-lg text-brand-violet-500 dark:text-brand-lime-500 mt-2"
+              className="flex gap-2 items-center align-center hover:underline text-lg text-brand-violet-500 dark:text-brand-violet-500 mt-2"
               title={t(
                 "screens.Dashboard.Tenants.AdvancedManagement.manageAccountsDescription"
               )}
             >
               <MdManageAccounts
                 size={24}
-                className="inline text-brand-violet-500 dark:text-brand-lime-500"
+                className="inline text-brand-violet-500 dark:text-brand-violet-500"
               />
               {t("screens.Dashboard.Tenants.AdvancedManagement.manageAccounts")}
             </Link>
@@ -325,115 +360,63 @@ export default function AdvancedManagement() {
         </Section>
 
         {activeTenant && (
-          <div className="flex flex-col sm:flex-row sm:flex-wrap gap-8 sm:gap-3 w-full h-full">
-            <Tabs
-              onActiveTabChange={(tab) => {
-                setSearchParams({ tab: tab.toString() });
-              }}
-              aria-label=""
-              variant="fullWidth"
-              className="w-full overflow-x-auto"
-              color="viopet"
-              theme={{
-                tablist: {
-                  base: "flex text-center border dark:border-none",
-                  variant: {
-                    fullWidth:
-                      "grid w-full grid-flow-col divide-x divide-zinc-200 rounded-none text-sm font-medium shadow dark:divide-zinc-700 text-zinc-500 dark:text-zinc-400",
-                  },
-                  tabitem: {
-                    variant: {
-                      fullWidth: {
-                        active: {
-                          on: "rounded-none bg-brand-violet-100 p-4 text-zinc-900 dark:bg-zinc-700 dark:text-white",
-                          off: "rounded-none bg-white hover:bg-zinc-50 hover:text-zinc-700 dark:bg-zinc-800 dark:hover:bg-zinc-700 dark:hover:text-white",
-                        },
-                      },
-                    },
-                  },
-                },
-              }}
-            >
-              <TabItem
-                active={activeTab === ActiveTab.LegalInformation}
-                title={
-                  <span className="whitespace-nowrap">
-                    {t(
-                      "screens.Dashboard.Tenants.AdvancedManagement.tabs.legalInformation"
-                    )}
-                  </span>
-                }
-                icon={GoLaw}
-                color="violet"
-              >
-                <LegalSettings
-                  tenant={activeTenant}
-                  mutateTenantStatus={mutateTenantStatus}
-                />
-              </TabItem>
+          <div className="flex flex-col sm:flex-row gap-0 w-full h-full">
+            {/* Vertical nav — desktop left rail, mobile top bar */}
+            <nav className="flex flex-row sm:flex-col sm:w-40 shrink-0 border-b sm:border-b-0 sm:border-r border-zinc-200 dark:border-zinc-800 overflow-x-auto sm:overflow-x-visible scrollbar">
+              {NAV_ITEMS.map(({ tab, labelKey, icon }) => {
+                const isActive = activeTab === tab;
+                return (
+                  <button
+                    key={tab}
+                    onClick={() =>
+                      setSearchParams({ tab: tab.toString() })
+                    }
+                    className={[
+                      "flex items-center gap-2 px-3 py-2.5 text-sm whitespace-nowrap sm:whitespace-normal transition-colors w-full text-left",
+                      "border-b-2 sm:border-b-0 sm:border-l-2",
+                      isActive
+                        ? "border-brand-violet-500 dark:border-brand-violet-400 text-brand-violet-700 dark:text-brand-violet-300 bg-brand-violet-50 dark:bg-brand-violet-950"
+                        : "border-transparent text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-zinc-800",
+                    ].join(" ")}
+                  >
+                    <span className="shrink-0">{icon}</span>
+                    <span>{t(labelKey)}</span>
+                  </button>
+                );
+              })}
+            </nav>
 
-              <TabItem
-                active={activeTab === ActiveTab.Owners}
-                title={
-                  <span className="whitespace-nowrap">
-                    {t(
-                      "screens.Dashboard.Tenants.AdvancedManagement.tabs.owners"
-                    )}
-                  </span>
-                }
-                icon={MdOutlineRealEstateAgent}
-              >
-                <OwnersCard
-                  tenant={activeTenant}
-                  mutateTenantStatus={mutateTenantStatus}
-                />
-              </TabItem>
-
-              <TabItem
-                active={activeTab === ActiveTab.Managers}
-                title={
-                  <span className="whitespace-nowrap">
-                    {t(
-                      "screens.Dashboard.Tenants.AdvancedManagement.tabs.managers"
-                    )}
-                  </span>
-                }
-                icon={GrUserManager}
-              >
-                <ManagersCard
-                  tenant={activeTenant}
-                  mutateTenantStatus={mutateTenantStatus}
-                />
-              </TabItem>
-
-              <TabItem
-                active={activeTab === ActiveTab.Brand}
-                title={
-                  <span className="whitespace-nowrap">
-                    {t(
-                      "screens.Dashboard.Tenants.AdvancedManagement.tabs.brand"
-                    )}
-                  </span>
-                }
-                icon={MdImagesearchRoller}
-              >
+            {/* Tab content */}
+            <div className="flex-1 min-w-0 pt-4 sm:pt-0 sm:pl-6">
+              {activeTab === ActiveTab.Brand && (
                 <BrandCard
                   tenant={activeTenant}
                   mutateTenantStatus={mutateTenantStatus}
                 />
-              </TabItem>
+              )}
 
-              <TabItem
-                active={activeTab === ActiveTab.Advanced}
-                title={
-                  <span className="whitespace-nowrap">
-                    {t(
-                      "screens.Dashboard.Tenants.AdvancedManagement.tabs.advanced"
-                    )}
-                  </span>
-                }
-                icon={MdManageAccounts}
-              >
+              {activeTab === ActiveTab.LegalInformation && (
+                <LegalSettings
+                  tenant={activeTenant}
+                  mutateTenantStatus={mutateTenantStatus}
+                />
+              )}
+
+              {activeTab === ActiveTab.Owners && (
+                <OwnersCard
+                  tenant={activeTenant}
+                  mutateTenantStatus={mutateTenantStatus}
+                />
+              )}
+
+              {activeTab === ActiveTab.Managers && (
+                <ManagersCard
+                  tenant={activeTenant}
+                  mutateTenantStatus={mutateTenantStatus}
+                />
+              )}
+
+              {activeTab === ActiveTab.Advanced && (
                 <Card padding="sm" group>
                   <Card.Header>
                     <div className="flex flex-col gap-2">
@@ -470,7 +453,6 @@ export default function AdvancedManagement() {
                           <div>
                             <Button
                               onClick={handleCreateConnectionStringModalOpen}
-                              rounded
                             >
                               {t(
                                 "screens.Dashboard.Tenants.AdvancedManagement.createConnectionString.button"
@@ -501,7 +483,6 @@ export default function AdvancedManagement() {
                               onClick={
                                 handleCreateSubscriptionManagerAccountModalOpen
                               }
-                              rounded
                             >
                               {t(
                                 "screens.Dashboard.Tenants.AdvancedManagement.createSubscriptionManagerAccount.button"
@@ -513,8 +494,8 @@ export default function AdvancedManagement() {
                     </div>
                   </Card.Body>
                 </Card>
-              </TabItem>
-            </Tabs>
+              )}
+            </div>
           </div>
         )}
       </BasePage>

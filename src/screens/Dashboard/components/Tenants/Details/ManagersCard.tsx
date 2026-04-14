@@ -110,13 +110,13 @@ export default function ManagersCard({ tenant, mutateTenantStatus }: Props) {
                   </span>
                   <GoGear
                     title="Register tenant owner"
-                    className="cursor-pointer opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300 text-brand-violet-500 dark:text-brand-lime-400"
+                    className="cursor-pointer opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300 text-brand-violet-500 dark:text-brand-violet-400"
                     onClick={() => setIsGuestToAccountModalOpen(true)}
                   />
                 </div>
 
                 <IoReload
-                  className="hidden group-hover:block text-brand-violet-500 dark:text-brand-lime-400 cursor-pointer"
+                  className="hidden group-hover:block text-brand-violet-500 dark:text-brand-violet-400 cursor-pointer"
                   style={{
                     animation: isReloading ? "spin 1s linear infinite" : "none",
                   }}
@@ -161,7 +161,7 @@ export default function ManagersCard({ tenant, mutateTenantStatus }: Props) {
 
                 <div>
                   <Button
-                    rounded
+                   
                     intent="info"
                     onClick={() => setIsCreateManagementAccountModalOpen(true)}
                   >

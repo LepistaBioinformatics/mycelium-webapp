@@ -4,7 +4,7 @@ import { Language } from "@/i18n/config";
 import { useMemo, useState } from "react";
 
 const containerStyles = cva(
-  "flex gap-3 items-center text-center rounded-full p-2 transition-all",
+  "flex gap-3 items-center text-center p-2 transition-all",
   {
     variants: {
       open: {
@@ -47,7 +47,7 @@ const selectorStyles = cva("flex justify-around gap-2 transition-all w-full", {
 const flagStyles = cva("px-2", {
   variants: {
     selected: {
-      true: "border border-dashed border-brand-violet-500 dark:border-brand-lime-500 rounded-lg",
+      true: "border border-dashed border-brand-violet-500 dark:border-brand-violet-500",
     },
   },
 });

@@ -179,7 +179,7 @@ export default function TenantModal({
           </FormField>
 
           <Button
-            rounded
+           
             type="submit"
             disabled={!nameWatch || !descriptionWatch || isLoading}
           >

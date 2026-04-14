@@ -29,7 +29,7 @@ export default function SeeMoreText({ text, maxLength = 100, props }: Props) {
             intent="link"
             size="xs"
             padding="none"
-            rounded
+           
             onClick={handleShowMore}
           >
             {showMore ? "less" : "more"}

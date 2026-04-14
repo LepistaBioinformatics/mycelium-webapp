@@ -93,7 +93,7 @@ export default function UnguestOwner({
               intent="danger"
               onClick={handleUnguest}
               disabled={isLoading}
-              rounded
+             
               fullWidth
             >
               {isLoading

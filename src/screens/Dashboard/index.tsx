@@ -35,7 +35,7 @@ export default function Dashboard() {
   return (
     <div
       id="Dashboard"
-      className="relative flex min-h-screen max-h-screen w-screen overflow-y-auto overflow-x-hidden"
+      className="relative flex min-h-screen max-h-screen w-screen overflow-y-auto overflow-x-hidden scrollbar"
     >
       {/* Layout spacer — holds the sidebar slot so content is never hidden behind it.
           Sidebar itself is absolute, so hover-expansion overlays without pushing content. */}

@@ -20,7 +20,7 @@ const styles = cva("whitespace-normal", {
       h6: "!text-sm text-zinc-600 dark:text-zinc-300 font-semibold",
     },
     highlight: {
-      true: "!text-brand-violet-500 dark:!text-brand-lime-500",
+      true: "!text-brand-violet-500 dark:!text-brand-violet-500",
     },
     isError: {
       true: "!text-red-500 !dark:text-red-500",
@@ -67,12 +67,12 @@ const styles = cva("whitespace-normal", {
       true: "truncate",
     },
     overflowX: {
-      true: "overflow-x-auto",
+      true: "overflow-x-auto scrollbar",
       visible: "overflow-x-visible",
       false: "overflow-x-hidden",
     },
     overflowY: {
-      true: "overflow-y-auto",
+      true: "overflow-y-auto scrollbar",
       visible: "overflow-y-visible",
       false: "overflow-y-hidden",
     },

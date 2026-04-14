@@ -2,7 +2,7 @@ import { cva, VariantProps } from "class-variance-authority";
 import Typography from "./Typography";
 
 const styles = cva(
-  "flex flex-col gap-4 w-full sm:max-w-4xl mx-auto border-2 border-dashed px-4 py-2 rounded-md",
+  "flex flex-col gap-4 w-full sm:max-w-4xl mx-auto border-2 border-dashed px-4 py-2",
   {
     variants: {
       event: {

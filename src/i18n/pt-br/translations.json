@@ -167,7 +167,31 @@
       },
       "ListConnectionStringsSection": {
         "title": "Strings de conexão",
-        "tabName": "Strings de conexão"
+        "tabName": "Strings de conexão",
+        "empty": "Nenhuma string de conexão ainda",
+        "emptyDescription": "Crie uma string de conexão na aba Opções Avançadas",
+        "columns": {
+          "name": "Nome",
+          "expires": "Expira em",
+          "created": "Criado em",
+          "scope": "Escopo",
+          "actions": "Ações"
+        },
+        "expired": "Expirado",
+        "actions": {
+          "revoke": "Revogar",
+          "delete": "Excluir",
+          "confirming": "Confirmando...",
+          "revokeConfirm": "Revogar este token? Ele expirará imediatamente.",
+          "deleteConfirm": "Excluir este token permanentemente? Isso não pode ser desfeito."
+        },
+        "scope": {
+          "tenant": "Namespace",
+          "account": "Conta",
+          "serviceAccount": "Conta de serviço",
+          "roles": "Papéis",
+          "endpoint": "Endpoint"
+        }
       },
       "LicensedResourcesSection": {
         "title": "Contas que você tem acesso",
@@ -302,6 +326,12 @@
             "description": "Crie uma string de conexão para o namespace. Essa string de conexão será usada para autenticar sua conta programaticamente.",
             "button": "Criar"
           },
+          "createSubscriptionManagerAccount": {
+            "cta": "Gerente de assinaturas",
+            "title": "Criar conta de gerente de assinaturas",
+            "description": "Crie uma conta de gerente de assinaturas para o namespace. Essa conta será usada para gerenciar as assinaturas do namespace.",
+            "button": "Criar"
+          },
           "name": {
             "title": "Nome do namespace",
             "prefix": "Você vê"
@@ -358,7 +388,9 @@
               "address2": {
                 "title": "Endereço 2",
                 "prefix": "Endereço 2"
-              }
+              },
+              "save": "Salvar",
+              "saving": "Salvando..."
             },
             "owners": {
               "title": "Proprietários",
@@ -406,10 +438,14 @@
             "brand": {
               "title": "Logotipo",
               "description": "Personalize o logotipo do namespace.",
-              "registerTenantBrand": "Registrar logotipo",
-              "registerTenantBrandDescription": "Essa logo trará identidade para o namespace.",
-              "submit": "Enviar",
-              "submitting": "Enviando..."
+              "registerTenantBrand": "Alterar logotipo",
+              "registerTenantBrandDescription": "Solte uma imagem aqui ou clique para selecionar.",
+              "anyFormat": "Qualquer formato aceito — imagens grandes são comprimidas automaticamente.",
+              "processing": "Processando imagem...",
+              "original": "Original",
+              "compressed": "Comprimido",
+              "submit": "Salvar logotipo",
+              "submitting": "Salvando..."
             },
             "colors": {
               "title": "Cores",

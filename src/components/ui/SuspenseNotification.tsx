@@ -15,8 +15,8 @@ const styles = cva(
   {
     variants: {
       show: {
-        true: "hidden sm:opacity-100",
-        false: "opacity-0",
+        true: "opacity-100",
+        false: "opacity-0 pointer-events-none",
       },
       intent: {
         error: "border-dashed border-red-500 dark:border-red-500",
@@ -134,7 +134,7 @@ export default function SuspenseNotification({
 }
 
 const progressBarStyles = cva(
-  "h-full flex justify-center items-center rounded-full transition-all duration-[2000ms]",
+  "h-full flex justify-center items-center transition-all duration-[2000ms]",
   {
     variants: {
       intent: {
@@ -160,7 +160,7 @@ interface ProgressBarProps
 function ProgressBar({ percent, intent }: ProgressBarProps) {
   return (
     <div
-      className={`w-[calc(100%-1rem)] mx-auto h-[2px] bg-zinc-200 dark:bg-zinc-800 rounded-full`}
+      className={`w-[calc(100%-1rem)] mx-auto h-[2px] bg-zinc-200 dark:bg-zinc-800`}
     >
       <div
         className={progressBarStyles({ intent })}

@@ -237,7 +237,7 @@ export default function GuestRolesModal({
           </FormField>
 
           <Button
-            rounded
+           
             type="submit"
             disabled={!nameWatch || !descriptionWatch || isLoading}
           >

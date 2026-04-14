@@ -54,7 +54,7 @@ export default function PermissionsOnAccount({ accountId, tenantId }: Props) {
     <div className="flex flex-wrap items-center gap-2">
       {filteredTenantsOwnership && filteredTenantsOwnership?.length > 0 && (
         <div
-          className="flex items-center gap-3 border-2 border-dashed border-brand-violet-500 dark:border-brand-lime-500 rounded-lg px-3 py-1"
+          className="flex items-center gap-3 border-2 border-dashed border-brand-violet-500 dark:border-brand-violet-500 px-3 py-1"
           title={t(
             "screens.Dashboard.Accounts.PermissionsOnAccount.inherited.title"
           )}
@@ -75,13 +75,13 @@ export default function PermissionsOnAccount({ accountId, tenantId }: Props) {
         ?.map((resource, index) => (
           <div
             key={index}
-            className="flex items-center gap-3 border border-brand-violet-500 dark:border-brand-lime-500 rounded-lg pl-3 pr-1 py-1 group"
+            className="flex items-center gap-3 border border-brand-violet-500 dark:border-brand-violet-500 pl-3 pr-1 py-1 group"
           >
             <span>{resource.role}</span>
             <span className="sm:block sm:group-hover:hidden transition-all duration-500">
               <PermissionIcon permission={resource.perm} inline />
             </span>
-            <IoMdMore className="text-2xl sm:hidden sm:group-hover:block transition-all duration-500 mx-1 text-brand-violet-500 dark:text-brand-lime-500" />
+            <IoMdMore className="text-2xl sm:hidden sm:group-hover:block transition-all duration-500 mx-1 text-brand-violet-500 dark:text-brand-violet-500" />
           </div>
         ))}
     </div>

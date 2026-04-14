@@ -127,7 +127,6 @@ export default function GuestRoles() {
           <Button
             onClick={() => setIsModalOpen(true)}
             size="sm"
-            rounded="full"
             intent="link"
             disabled={!hasEnoughPermissions}
           >
@@ -152,11 +151,11 @@ export default function GuestRoles() {
                 <Typography as="h3" title={guestRole?.name}>
                   <div className="flex items-center gap-2">
                     {guestRole.system && (
-                      <RiRobot2Line className="text-brand-violet-500 dark:text-brand-lime-500" />
+                      <RiRobot2Line className="text-brand-violet-500 dark:text-brand-violet-500" />
                     )}
                     <Typography as="h3" highlight nowrap>
                       <button
-                        className="hover:underline text-brand-violet-500 dark:text-brand-lime-400"
+                        className="hover:underline text-brand-violet-500 dark:text-brand-violet-400"
                         onClick={() => handleViewGuestRoleClick(guestRole)}
                       >
                         {guestRole?.name}

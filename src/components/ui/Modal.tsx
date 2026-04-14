@@ -75,7 +75,7 @@ function Header({ children, handleClose, ...props }: HeaderProps) {
         {children}
       </Typography>
       <button onClick={defaultHandleClose}>
-        <IoCloseSharp className="text-3xl text-brand-violet-500 dark:text-brand-lime-500" />
+        <IoCloseSharp className="text-3xl text-brand-violet-500 dark:text-brand-violet-500" />
       </button>
     </div>
   );

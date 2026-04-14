@@ -41,7 +41,7 @@ function Header({ children, ...props }: HeaderProps) {
   );
 }
 
-const bodyStyles = cva("flex flex-wrap overflow-x-auto gap-3 w-full", {
+const bodyStyles = cva("flex flex-wrap overflow-x-auto scrollbar gap-3 w-full", {
   variants: {},
 });
 

@@ -240,7 +240,7 @@ export default function GuestRoleDetails({
 
               <div>
                 <Button
-                  rounded
+                 
                   intent="info"
                   onClick={() => setIsEditModalOpen(true)}
                 >
@@ -270,7 +270,7 @@ export default function GuestRoleDetails({
 
               <div>
                 <Button
-                  rounded
+                 
                   intent="info"
                   onClick={() => setIsRegisterChildModalOpen(true)}
                 >
@@ -300,7 +300,7 @@ export default function GuestRoleDetails({
 
               <div>
                 <Button
-                  rounded
+                 
                   intent="danger"
                   onClick={() => setIsDeleteModalOpen(true)}
                 >

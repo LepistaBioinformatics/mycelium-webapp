@@ -12,14 +12,9 @@ const appHeaderStyles = cva(
         true: "bg-transparent",
         false: "bg-brand-violet-800 dark:text-white",
       },
-      rounded: {
-        true: "rounded-lg",
-        false: "rounded-none",
-      },
     },
     defaultVariants: {
       discrete: false,
-      rounded: false,
     },
   }
 );
@@ -50,7 +45,7 @@ export default function AppHeader({
             <Link to="/">Mycelium</Link>
           </Typography>
         </div>
-        <div className="flex items-center gap-8 rounded-full border border-transparent border-dashed hover:border-zinc-500 p-2">
+        <div className="flex items-center gap-8 border border-transparent border-dashed hover:border-zinc-500 p-2">
           {user && (
             <div onClick={logout} className="cursor-pointer">
               <PiSignOutBold className="text-zinc-800 dark:text-zinc-300" />

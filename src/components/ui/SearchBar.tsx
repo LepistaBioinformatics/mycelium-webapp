@@ -97,7 +97,7 @@ function Container({
                           base: "block w-full border disabled:cursor-not-allowed disabled:opacity-50 text-start sm:text-center text-lg",
                           colors: {
                             custom:
-                              "border-zinc-400 bg-brand-violet-50 text-zinc-900 focus:border-cyan-500 focus:ring-zinc-500 dark:border-zinc-900 sm:dark:border-zinc-800 dark:bg-zinc-900 sm:dark:bg-zinc-800 dark:text-white placeholder-zinc-500 dark:placeholder-zinc-400 dark:focus:border-brand-lime-500 dark:focus:ring-brand-lime-500",
+                              "border-zinc-400 bg-brand-violet-50 text-zinc-900 focus:border-cyan-500 focus:ring-zinc-500 dark:border-zinc-900 sm:dark:border-zinc-800 dark:bg-zinc-900 sm:dark:bg-zinc-800 dark:text-white placeholder-zinc-500 dark:placeholder-zinc-400 dark:focus:border-brand-violet-500 dark:focus:ring-brand-violet-500",
                           },
                           withAddon: {
                             off: "rounded-lg sm:rounded-full",
@@ -121,7 +121,7 @@ function Container({
 
       {commandPalette && (
         <details className="flex flex-col justify-start">
-          <summary className="text-xs text-left px-2 pt-2 text-brand-violet-500 dark:text-brand-lime-400 hover:cursor-pointer">
+          <summary className="text-xs text-left px-2 pt-2 text-brand-violet-500 dark:text-brand-violet-400 hover:cursor-pointer">
             {t("components.SearchBar.commandPalette.title")}
           </summary>
 
@@ -133,7 +133,7 @@ function Container({
 }
 
 const commandPaletteContentStyles = cva(
-  "flex flex-col absolute left-0 gap-8 max-h-[250px] overflow-y-auto bg-brand-violet-50 dark:bg-zinc-800 rounded-lg p-2 mt-4 border-2 border-zinc-300 dark:border-zinc-500 scrollbar w-full shadow-lg dark:shadow-zinc-900",
+  "flex flex-col absolute left-0 gap-8 max-h-[250px] overflow-y-auto bg-brand-violet-50 dark:bg-zinc-800 p-2 mt-4 border-2 border-zinc-300 dark:border-zinc-500 scrollbar w-full shadow-lg dark:shadow-zinc-900",
   {
     variants: {},
     defaultVariants: {},
@@ -155,7 +155,7 @@ const commandPaletteItemStyles = cva(
     variants: {
       disabled: {
         true: "opacity-80 cursor-not-allowed",
-        false: "hover:text-brand-violet-500 dark:hover:text-brand-lime-400",
+        false: "hover:text-brand-violet-500 dark:hover:text-brand-violet-400",
       },
     },
     defaultVariants: {
@@ -171,7 +171,7 @@ const commandPaletteItemButtonStyles = cva(
       disabled: {
         true: "opacity-50 cursor-not-allowed",
         false:
-          "hover:text-brand-violet-500 dark:hover:text-brand-lime-400 group-hover:text-brand-violet-500 dark:group-hover:text-brand-lime-400 group-hover:cursor-pointer",
+          "hover:text-brand-violet-500 dark:hover:text-brand-violet-400 group-hover:text-brand-violet-500 dark:group-hover:text-brand-violet-400 group-hover:cursor-pointer",
       },
     },
     defaultVariants: {

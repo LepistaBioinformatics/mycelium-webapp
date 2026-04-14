@@ -143,7 +143,7 @@ export default function UnInviteGuestModal({
           <div className="mt-12">
             <Button
               intent="danger"
-              rounded
+             
               fullWidth
               onClick={onSubmit}
               disabled={isSubmitting}

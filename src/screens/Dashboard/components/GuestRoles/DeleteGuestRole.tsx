@@ -64,7 +64,7 @@ export default function DeleteGuestRole({ guestRole, isOpen, onClose }: Props) {
               intent="danger"
               onClick={handleDelete}
               disabled={isLoading}
-              rounded
+             
               fullWidth
             >
               {isLoading

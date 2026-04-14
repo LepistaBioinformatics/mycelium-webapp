@@ -57,7 +57,7 @@ export default function GuestRolesInitializer({ onSuccess }: Props) {
                 </Typography>
                 <div>
                   <Button
-                    rounded
+                   
                     onClick={handleInitialize}
                     disabled={isLoading}
                   >

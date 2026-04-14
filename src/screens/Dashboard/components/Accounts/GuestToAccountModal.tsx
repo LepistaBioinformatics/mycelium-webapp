@@ -185,7 +185,7 @@ export default function GuestToAccountModal({
 
           {selectedRole && emailIsValid && account?.id && (
             <Button
-              rounded
+             
               fullWidth
               onClick={() => onSubmit({ email: watch("email") })}
               disabled={isSubmitting}

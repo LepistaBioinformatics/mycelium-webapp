@@ -7,6 +7,8 @@ type Account = components["schemas"]["Account"];
 type Profile = components["schemas"]["Profile"];
 type Tenant = components["schemas"]["Tenant"];
 type CreateTokenResponse = components["schemas"]["CreateTokenResponse"];
+type PublicConnectionStringInfo =
+  components["schemas"]["PublicConnectionStringInfo"];
 
 // ---------------------------------------------------------------------------
 // Tenants
@@ -133,6 +135,46 @@ export function metaUpdate(
 ): Promise<Record<string, string>> {
   return rpcCall<MetaParams, Record<string, string>>(
     "beginners.meta.update",
+    params,
+    getToken
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Tokens — list own
+// ---------------------------------------------------------------------------
+
+export function tokensListMy(
+  getToken: () => Promise<string>
+): Promise<PublicConnectionStringInfo[] | null> {
+  return rpcCall<Record<string, never>, PublicConnectionStringInfo[] | null>(
+    "beginners.tokens.list",
+    {},
+    getToken
+  );
+}
+
+export interface TokenActionParams {
+  tokenId: number;
+}
+
+export function tokensRevoke(
+  params: TokenActionParams,
+  getToken: () => Promise<string>
+): Promise<unknown> {
+  return rpcCall<TokenActionParams, unknown>(
+    "beginners.tokens.revoke",
+    params,
+    getToken
+  );
+}
+
+export function tokensDelete(
+  params: TokenActionParams,
+  getToken: () => Promise<string>
+): Promise<unknown> {
+  return rpcCall<TokenActionParams, unknown>(
+    "beginners.tokens.delete",
     params,
     getToken
   );

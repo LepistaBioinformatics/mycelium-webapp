@@ -84,15 +84,17 @@ export interface GuestRolesListParams {
   skip?: number;
 }
 
-export function guestRolesList(
+export async function guestRolesList(
   params: GuestRolesListParams,
   getToken: () => Promise<string>
 ): Promise<GuestRole[]> {
-  return rpcCall<GuestRolesListParams, GuestRole[]>(
-    "subscriptionsManager.guestRoles.list",
-    params,
-    getToken
-  );
+  const result = await rpcCall<
+    GuestRolesListParams,
+    GuestRole[] | PaginatedRecords<GuestRole>
+  >("subscriptionsManager.guestRoles.list", params, getToken);
+
+  if (Array.isArray(result)) return result;
+  return result.records;
 }
 
 export interface GuestRolesGetParams {

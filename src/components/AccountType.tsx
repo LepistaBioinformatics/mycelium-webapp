@@ -91,10 +91,10 @@ export default function AccountType({
     <div className="flex flex-col gap-2 mt-3">
       {Object.entries(account.accountType).map(([key, value], index) => (
         <div key={index} className="flex items-center gap-0 !text-xs -ml-1">
-          <span className="text-zinc-500 dark:text-zinc-400 uppercase bg-brand-violet-100 dark:bg-brand-violet-900 px-2 py-1 rounded-l-md">
+          <span className="text-zinc-500 dark:text-zinc-400 uppercase bg-brand-violet-100 dark:bg-brand-violet-900 px-2 py-1-l-md">
             {camelToHumanText(key)}
           </span>
-          <div className="bg-brand-violet-100 dark:bg-brand-violet-900 px-2 rounded-r-md">
+          <div className="bg-brand-violet-100 dark:bg-brand-violet-900 px-2-r-md">
             {renderedValues(value)}
           </div>
         </div>

@@ -123,7 +123,7 @@ export default function EditMetadataModal({
             {errors.value && <span>This field is required</span>}
           </FormField>
 
-          <Button rounded type="submit" disabled={isLoading}>
+          <Button type="submit" disabled={isLoading}>
             {isLoading ? "Updating..." : "Update"}
           </Button>
         </form>

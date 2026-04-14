@@ -149,7 +149,7 @@ export default function GuestOwnerModal({
             {errors.email && <span>This field is required</span>}
           </FormField>
 
-          <Button rounded type="submit" disabled={!emailWatch || isLoading}>
+          <Button type="submit" disabled={!emailWatch || isLoading}>
             {isLoading
               ? t(
                 "screens.Dashboard.Tenants.AdvancedManagement.legalSettingsAndPeople.owners.guestOwner.form.registering"

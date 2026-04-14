@@ -61,7 +61,7 @@ export default function DeleteTenant({ tenant, isOpen, onClose }: Props) {
               intent="danger"
               onClick={handleDelete}
               disabled={isLoading}
-              rounded
+             
               fullWidth
             >
               {isLoading

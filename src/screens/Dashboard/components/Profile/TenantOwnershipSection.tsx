@@ -29,7 +29,7 @@ export default function TenantOwnershipSection({ tenantsOwnership }: Props) {
 
       <Card.Body width="full">
         <div className="hidden sm:block">
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto scrollbar">
             <Table
               striped
               theme={{
@@ -89,6 +89,7 @@ export default function TenantOwnershipSection({ tenantsOwnership }: Props) {
             ?.sort((a, b) => b.since.localeCompare(a.since))
             ?.map((tenant) => (
               <TenantOwnershipInfoCard
+                key={tenant.id}
                 since={tenant.since}
                 tenantId={tenant.id}
                 tenantName={tenant.name}

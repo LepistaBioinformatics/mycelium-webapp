@@ -115,7 +115,7 @@ export default function LoginPage() {
                     type="submit"
                     fullWidth
                     center
-                    rounded
+                   
                     disabled={emailForm.formState.isSubmitting}
                   >
                     {t("screens.LoginPage.emailStep.submit")}
@@ -167,7 +167,7 @@ export default function LoginPage() {
                     type="submit"
                     fullWidth
                     center
-                    rounded
+                   
                     disabled={codeForm.formState.isSubmitting}
                   >
                     {t("screens.LoginPage.codeStep.submit")}
@@ -178,7 +178,7 @@ export default function LoginPage() {
                     intent="secondary"
                     fullWidth
                     center
-                    rounded
+                   
                     onClick={handleBack}
                   >
                     {t("screens.LoginPage.codeStep.back")}

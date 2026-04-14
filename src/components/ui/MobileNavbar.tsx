@@ -120,7 +120,7 @@ function MenuModal({
               onClick={onClose}
               className="flex items-center gap-2"
             >
-              <span className="text-2xl text-brand-violet-500 dark:text-brand-lime-500">
+              <span className="text-2xl text-brand-violet-500 dark:text-brand-violet-500">
                 {route.icon}
               </span>
               <Typography>{route.name}</Typography>
@@ -153,7 +153,7 @@ function SettingsModal({
         <div className="flex flex-col gap-3 px-4 w-full">
           <div className="flex flex-col gap-2">
             <Typography>{t("Menu.subtitle")}</Typography>
-            <div className="items-center text-center bg-brand-violet-50 dark:bg-zinc-700 rounded-full p-2 transition-all">
+            <div className="items-center text-center bg-brand-violet-50 dark:bg-zinc-700 p-2 transition-all">
               <LanguageSwitcher horizontal keepOpen />
             </div>
           </div>

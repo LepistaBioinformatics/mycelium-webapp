@@ -167,7 +167,31 @@
       },
       "ListConnectionStringsSection": {
         "title": "Cadenas de conexión",
-        "tabName": "Cadenas de conexión"
+        "tabName": "Cadenas de conexión",
+        "empty": "Aún no hay cadenas de conexión",
+        "emptyDescription": "Crea una cadena de conexión en la pestaña Opciones Avanzadas",
+        "columns": {
+          "name": "Nombre",
+          "expires": "Expira",
+          "created": "Creado",
+          "scope": "Alcance",
+          "actions": "Acciones"
+        },
+        "expired": "Expirado",
+        "actions": {
+          "revoke": "Revocar",
+          "delete": "Eliminar",
+          "confirming": "Confirmando...",
+          "revokeConfirm": "¿Revocar este token? Expirará de inmediato.",
+          "deleteConfirm": "¿Eliminar este token permanentemente? Esta acción no se puede deshacer."
+        },
+        "scope": {
+          "tenant": "Espacio de nombres",
+          "account": "Cuenta",
+          "serviceAccount": "Cuenta de servicio",
+          "roles": "Roles",
+          "endpoint": "Endpoint"
+        }
       },
       "LicensedResourcesSection": {
         "title": "Cuentas a las que tiene acceso",
@@ -302,6 +326,12 @@
             "description": "Cree una cadena de conexión para el espacio de nombres. Esta cadena de conexión se utilizará para autenticar su cuenta mediante programación.",
             "button": "Para crear"
           },
+          "createSubscriptionManagerAccount": {
+            "cta": "Gerente de suscripciones",
+            "title": "Crear cuenta de gerente de suscripciones",
+            "description": "Cree una cuenta de gerente de suscripciones para el espacio de nombres. Esta cuenta se utilizará para gestionar las suscripciones del espacio de nombres.",
+            "button": "Crear"
+          },
           "name": {
             "title": "Nombre del espacio de nombres",
             "prefix": "Verás"
@@ -358,7 +388,9 @@
               "address2": {
                 "title": "Dirección 2",
                 "prefix": "Dirección 2"
-              }
+              },
+              "save": "Guardar",
+              "saving": "Guardando..."
             },
             "owners": {
               "title": "Propietarios",
@@ -406,10 +438,14 @@
             "brand": {
               "title": "Logo",
               "description": "Personaliza el logotipo del espacio de nombres.",
-              "registerTenantBrand": "Registrar el logotipo",
-              "registerTenantBrandDescription": "Esto pronto traerá identidad al espacio de nombres.",
-              "submit": "Para enviar",
-              "submitting": "Enviando ..."
+              "registerTenantBrand": "Cambiar logotipo",
+              "registerTenantBrandDescription": "Suelta una imagen aquí o haz clic para seleccionar.",
+              "anyFormat": "Se acepta cualquier formato — las imágenes grandes se comprimen automáticamente.",
+              "processing": "Procesando imagen...",
+              "original": "Original",
+              "compressed": "Comprimido",
+              "submit": "Guardar logotipo",
+              "submitting": "Guardando..."
             },
             "colors": {
               "title": "Bandera",

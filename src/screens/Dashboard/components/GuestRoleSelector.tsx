@@ -159,7 +159,7 @@ export default function GuestRoleSelector({
         {selectedRole && !isEditing && (
           <div className="flex flex-col gap-2">
             <div onClick={() => setIsEditing(true)}>
-              <div className="flex items-center gap-2 border-2 border-zinc-300 dark:border-zinc-700 rounded-lg pb-2 bg-brand-violet-50 dark:bg-zinc-600 px-4 py-2 hover:cursor-pointer">
+              <div className="flex items-center gap-2 border-2 border-zinc-300 dark:border-zinc-700 pb-2 bg-brand-violet-50 dark:bg-zinc-600 px-4 py-2 hover:cursor-pointer">
                 {selectedRole?.name}
                 {selectedRole?.permission && (
                   <PermissionIcon permission={selectedRole?.permission} />

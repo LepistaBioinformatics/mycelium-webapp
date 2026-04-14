@@ -64,7 +64,7 @@ export default function CreateManagementAccount({
 
           <div className="flex justify-end">
             <Button
-              rounded
+             
               fullWidth
               intent="info"
               onClick={handleCreateManagementAccount}

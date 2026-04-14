@@ -191,14 +191,14 @@ export default function LicensedResourcesSection({ licensedResources }: Props) {
           {resource.role === MycRole.TenantManager ? (
             <Link
               to={`/dashboard/tenants/${resource.tenantId}`}
-              className="text-brand-violet-500 dark:text-brand-lime-500 hover:underline"
+              className="text-brand-violet-500 dark:text-brand-violet-500 hover:underline"
             >
               {resource.name}
             </Link>
           ) : (
             <Link
               to={`/dashboard/tenants/${resource.tenantId}/accounts/?accountId=${resource.id}`}
-              className="text-brand-violet-500 dark:text-brand-lime-500 hover:underline"
+              className="text-brand-violet-500 dark:text-brand-violet-500 hover:underline"
             >
               {resource.name}
             </Link>
@@ -237,7 +237,7 @@ export default function LicensedResourcesSection({ licensedResources }: Props) {
             </div>
 
             <div className="hidden sm:block">
-              <div className="overflow-x-auto">
+              <div className="overflow-x-auto scrollbar">
                 <Table
                   striped
                   theme={{
@@ -269,7 +269,7 @@ export default function LicensedResourcesSection({ licensedResources }: Props) {
                         <TbSortDescending2Filled
                           size={16}
                           title="Sort by name"
-                          className="inline-block group-hover/sort:text-brand-violet-500 dark:group-hover/sort:text-brand-lime-500 cursor-pointer"
+                          className="inline-block group-hover/sort:text-brand-violet-500 dark:group-hover/sort:text-brand-violet-500 cursor-pointer"
                           onClick={() => setSortBy(SortBy.Name)}
                         />
                         <span>
@@ -326,7 +326,7 @@ export default function LicensedResourcesSection({ licensedResources }: Props) {
                             </TableCell>
                             <TableCell>
                               <accountType.Icon
-                                className="cursor-help text-brand-violet-500 dark:text-brand-lime-500 text-lg"
+                                className="cursor-help text-brand-violet-500 dark:text-brand-violet-500 text-lg"
                                 title={accountType.text}
                               />
                             </TableCell>
@@ -351,7 +351,7 @@ export default function LicensedResourcesSection({ licensedResources }: Props) {
                               )}
                             >
                               <Button
-                                rounded
+                               
                                 intent="link"
                                 center
                                 onClick={() =>
@@ -394,7 +394,7 @@ export default function LicensedResourcesSection({ licensedResources }: Props) {
                       {resource.roles.map((role, index) => (
                         <div
                           key={index + role.role}
-                          className="border-t-[0.5px] border-brand-violet-100 dark:border-brand-lime-700 p-1"
+                          className="border-t-[0.5px] border-brand-violet-100 dark:border-brand-violet-700 p-1"
                         >
                           <IntroSection.Item
                             prefix={t(
@@ -416,7 +416,7 @@ export default function LicensedResourcesSection({ licensedResources }: Props) {
 
                           {role.verified && (
                             <span
-                              className="w-fit text-green-500 dark:text-green-400 bg-green-100 dark:bg-green-500 bg-opacity-50 dark:bg-opacity-20 rounded-full px-2 py-1 mt-1 text-xs border border-green-500 dark:border-green-400 hover:cursor-help"
+                              className="w-fit text-green-500 dark:text-green-400 bg-green-100 dark:bg-green-500 bg-opacity-50 dark:bg-opacity-20 px-2 py-1 mt-1 text-xs border border-green-500 dark:border-green-400 hover:cursor-help"
                               title="You have confirmed the invitation to this account"
                             >
                               {t(

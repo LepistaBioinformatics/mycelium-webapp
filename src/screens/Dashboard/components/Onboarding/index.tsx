@@ -360,7 +360,7 @@ export default function Onboarding() {
   const allDone = completedSteps === TOTAL_STEPS;
 
   return (
-    <div className="py-6 px-4">
+    <div className="p-1 sm:p-5">
       <PageBody.Breadcrumb>
         <ControlPanelBreadcrumbItem />
         <PageBody.Breadcrumb.Item icon={MdChecklist}>
@@ -410,7 +410,7 @@ export default function Onboarding() {
                     <Button
                       onClick={handleCreateAccount}
                       disabled={isCreatingAccount}
-                      rounded
+                     
                       size="sm"
                     >
                       {isCreatingAccount
@@ -454,7 +454,7 @@ export default function Onboarding() {
                         metaValues.locale.trim() === ""
                       }
                       intent="secondary"
-                      rounded
+                     
                       size="sm"
                     >
                       {metaSaved.locale
@@ -582,7 +582,7 @@ export default function Onboarding() {
                           onClick={() => handleSaveMeta("whatsapp_user")}
                           disabled={metaSaving.whatsapp_user}
                           intent="secondary"
-                          rounded
+                         
                           size="sm"
                         >
                           {metaSaved.whatsapp_user
@@ -600,7 +600,7 @@ export default function Onboarding() {
             {/* E — Go to dashboard */}
             {accountStatus === "exists" && (
               <div className="flex justify-center pb-8">
-                <Button rounded onClick={() => navigate("/dashboard/profile")}>
+                <Button onClick={() => navigate("/dashboard/profile")}>
                   {t(`${tKey}.goToDashboard`)}
                 </Button>
               </div>
@@ -729,7 +729,7 @@ function PhoneField({
           onClick={onSave}
           disabled={disabled || saving}
           intent="secondary"
-          rounded
+         
           size="sm"
         >
           {saved
@@ -805,7 +805,7 @@ function MetaField({
           onClick={onSave}
           disabled={disabled || saving}
           intent="secondary"
-          rounded
+         
           size="sm"
         >
           {saved
@@ -868,9 +868,9 @@ function ProgressBar({
           {pct}%
         </Typography>
       </div>
-      <div className="w-full h-2 bg-zinc-200 dark:bg-zinc-700 rounded-full overflow-hidden">
+      <div className="w-full h-2 bg-zinc-200 dark:bg-zinc-700 overflow-hidden">
         <div
-          className="h-full bg-brand-violet-500 dark:bg-brand-violet-400 rounded-full transition-all duration-500"
+          className="h-full bg-brand-violet-500 dark:bg-brand-violet-400 transition-all duration-500"
           style={{ width: `${pct}%` }}
         />
       </div>
@@ -917,10 +917,10 @@ function CompletionCard({
         </Typography>
       </div>
       <div className="flex gap-3">
-        <Button rounded intent="secondary" onClick={onEdit}>
+        <Button intent="secondary" onClick={onEdit}>
           {t(`${tKey}.edit`)}
         </Button>
-        <Button rounded onClick={onNavigate}>
+        <Button onClick={onNavigate}>
           {t(`${tKey}.goToDashboard`)}
         </Button>
       </div>
@@ -953,7 +953,7 @@ function LocaleSelect({
       value={value}
       disabled={disabled}
       onChange={(e) => onChange(e.target.value)}
-      className="block w-full rounded-lg border border-zinc-400 bg-brand-violet-50 px-3 py-2 text-zinc-900 focus:border-brand-violet-500 focus:ring-1 focus:ring-brand-violet-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-700 dark:text-white dark:focus:border-brand-violet-400 dark:focus:ring-brand-violet-400 disabled:opacity-50 disabled:cursor-not-allowed"
+      className="block w-full-lg border border-zinc-400 bg-brand-violet-50 px-3 py-2 text-zinc-900 focus:border-brand-violet-500 focus:ring-1 focus:ring-brand-violet-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-700 dark:text-white dark:focus:border-brand-violet-400 dark:focus:ring-brand-violet-400 disabled:opacity-50 disabled:cursor-not-allowed"
     >
       <option value="">{t(`${tKey}.meta.locale.placeholder`)}</option>
       {LOCALE_OPTIONS.map((opt) => (
@@ -998,7 +998,7 @@ function TimelineItem({
     <div className="relative pl-8 pb-8">
       {/* Dot */}
       <div
-        className={`absolute -left-[9px] top-1 w-4 h-4 rounded-full border-2 ${dotColor} flex items-center justify-center`}
+        className={`absolute -left-[9px] top-1 w-4 h-4 border-2 ${dotColor} flex items-center justify-center`}
       >
         {done && (
           <svg

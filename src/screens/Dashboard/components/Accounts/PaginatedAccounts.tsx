@@ -406,7 +406,7 @@ export default function PaginatedAccounts({
               <div className="flex justify-between gap-3">
                 <Typography as="h4" truncate>
                   <Link
-                    className="hover:underline text-brand-violet-500 dark:text-brand-lime-400 flex items-center gap-2"
+                    className="hover:underline text-brand-violet-500 dark:text-brand-violet-400 flex items-center gap-2"
                     to={`${location.pathname}?accountId=${account?.id}`}
                   >
                     <div className="flex items-center gap-2">
