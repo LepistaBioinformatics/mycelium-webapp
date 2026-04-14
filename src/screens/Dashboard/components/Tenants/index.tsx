@@ -1,4 +1,4 @@
-import { FaEdit, FaPlus } from "react-icons/fa";
+import { FaPlus } from "react-icons/fa";
 import Button from "@/components/ui/Button";
 import CopyToClipboard from "@/components/ui/CopyToClipboard";
 import PageBody from "@/components/ui/PageBody";
@@ -10,7 +10,6 @@ import { tenantsList } from "@/services/rpc/managers";
 import PaginatedRecords from "@/types/PaginatedRecords";
 import { useCallback, useMemo, useState } from "react";
 import useSWR from "swr";
-import EditTenantModal from "./EditTenantModal";
 import TenantModal from "./TenantModal";
 import TenantDetails from "./TenantDetails";
 import DashBoardBody from "../DashBoardBody";
@@ -19,7 +18,8 @@ import PaginatedContent from "../PaginatedContent";
 import ListItem from "@/components/ui/ListItem";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/states/store";
-import { FaGear, FaRegStar, FaStar } from "react-icons/fa6";
+import { FaRegStar, FaStar } from "react-icons/fa6";
+import { MdManageAccounts } from "react-icons/md";
 import { setTenantInfo, setTenantIsLoading } from "@/states/tenant.state";
 import { SlOrganization } from "react-icons/sl";
 import { Link } from "react-router";
@@ -33,7 +33,6 @@ export default function Tenants() {
   const { t } = useTranslation();
 
   const [isNewModalOpen, setIsNewModalOpen] = useState(false);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [currentTenant, setCurrentTenant] = useState<Tenant | null>(null);
 
@@ -136,7 +135,6 @@ export default function Tenants() {
 
   const handleCloseModal = () => {
     setIsNewModalOpen(false);
-    setIsEditModalOpen(false);
     setIsViewModalOpen(false);
     setCurrentTenant(null);
     mutateTenants(tenants, { rollbackOnError: true });
@@ -151,12 +149,6 @@ export default function Tenants() {
     Promise.resolve()
       .then(() => setCurrentTenant(tenant))
       .then(() => setIsViewModalOpen(true));
-  };
-
-  const handleEditTenantClick = (tenant: Tenant) => {
-    Promise.resolve()
-      .then(() => setCurrentTenant(tenant))
-      .then(() => setIsEditModalOpen(true));
   };
 
   return (
@@ -180,7 +172,6 @@ export default function Tenants() {
           <Button
             onClick={() => setIsNewModalOpen(true)}
             size="sm"
-            rounded="full"
             intent="link"
             disabled={!hasEnoughPermissions}
           >
@@ -208,7 +199,7 @@ export default function Tenants() {
                       title={t(
                         "screens.Dashboard.Tenants.viewTenantBasicDetails"
                       )}
-                      className="hover:underline text-brand-violet-500 dark:text-brand-lime-400 bg-transparent"
+                      className="hover:underline text-brand-violet-500 dark:text-brand-violet-400 bg-transparent"
                       onClick={() => handleViewTenantClick(tenant)}
                     >
                       {tenant?.name}
@@ -221,7 +212,7 @@ export default function Tenants() {
                       )}
                       className="cursor-pointer sm:hidden group-hover:block"
                     >
-                      <FaGear size={16} />
+                      <MdManageAccounts size={18} />
                     </Link>
                   </div>
                 </Typography>
@@ -231,10 +222,6 @@ export default function Tenants() {
                     handleClick={() => setTokenPublicInformation(tenant.id)}
                   />
                   <CopyToClipboard text={tenant?.id ?? ""} />
-                  <FaEdit
-                    className="cursor-pointer hover:text-brand-violet-500 dark:group-hover:text-brand-lime-400 text-zinc-500"
-                    onClick={() => handleEditTenantClick(tenant)}
-                  />
                 </div>
               </div>
               <Typography as="span">{tenant?.description}</Typography>
@@ -258,14 +245,6 @@ export default function Tenants() {
         onSuccess={handleSuccess}
       />
 
-      {isEditModalOpen && currentTenant && (
-        <EditTenantModal
-          isOpen={isEditModalOpen}
-          tenant={currentTenant}
-          onClose={handleCloseModal}
-          onSuccess={handleSuccess}
-        />
-      )}
     </DashBoardBody>
   );
 }
@@ -285,7 +264,7 @@ function TenantStar({
     if (isLoadingTenantInfo) return "cursor-not-allowed";
     if (tenantInfo?.id === tenantId) return "text-yellow-300";
 
-    return "text-zinc-500 group-hover:text-brand-lime-400 group-hover:block cursor-pointer";
+    return "text-zinc-500 group-hover:text-brand-violet-400 group-hover:block cursor-pointer";
   }, [isLoadingTenantInfo, tenantInfo, tenantId]);
 
   return (
