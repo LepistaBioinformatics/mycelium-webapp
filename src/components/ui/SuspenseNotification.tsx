@@ -11,7 +11,7 @@ import Countdown from "react-countdown";
 import { useMemo } from "react";
 
 const styles = cva(
-  "absolute top-1 left-1 sm:right-1 sm:left-auto w-[calc(100%-1rem)] md:w-[50%] xl:max-w-[500px] flex flex-col gap-1 z-[1000] transition-all duration-300",
+  "fixed top-1 left-1 sm:right-5 sm:left-auto w-[calc(100%-1rem)] md:w-[50%] xl:max-w-[500px] flex flex-col gap-1 z-[1000] transition-all duration-300",
   {
     variants: {
       show: {
@@ -83,9 +83,9 @@ export default function SuspenseNotification({
 
   const bannerTitle = useMemo(
     () => (
-      <div className="flex items-center gap-2">
-        {icon}
-        <h3 className="text-lg font-bold">
+      <div className="flex items-center gap-1 text-slate-500">
+        <span className="text-sm">{icon}</span>
+        <h3 className="text-sm font-bold">
           {title ??
             (response && typeof response === "object"
               ? response.code
@@ -94,6 +94,13 @@ export default function SuspenseNotification({
       </div>
     ),
     [title, icon]
+  );
+
+  const deadline = useMemo(
+    () => Date.now() + timeout,
+    // Recompute only when a new notification appears (show flips to true).
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [show, timeout]
   );
 
   const handleClose = () => {
@@ -105,7 +112,7 @@ export default function SuspenseNotification({
   return (
     show && (
       <Countdown
-        date={Date.now() + timeout}
+        date={deadline}
         renderer={({ seconds }) => (
           <div className={styles({ intent, show })}>
             <ProgressBar

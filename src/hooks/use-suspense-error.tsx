@@ -32,7 +32,7 @@ export default function useSuspenseError() {
     };
 
     //
-    // Try to parse error response as JSON. If it fails, set the error 
+    // Try to parse error response as JSON. If it fails, set the error
     // to the response text.
     //
     const rawError = await res.text();

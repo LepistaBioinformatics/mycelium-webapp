@@ -32,7 +32,7 @@ interface Props {
 export default function useTenantDetails({ tenantId, customUrl }: Props) {
   const { getAccessTokenSilently } = useProfile();
 
-  const { parseHttpError } = useSuspenseError();
+  const { parseHttpError, dispatchInfo } = useSuspenseError();
 
   // RPC path: tuple key so SWR can distinguish from other callers
   const rpcKey = useMemo(() => {
@@ -53,6 +53,9 @@ export default function useTenantDetails({ tenantId, customUrl }: Props) {
         { tenantId: id },
         getAccessTokenSilently
       );
+
+      dispatchInfo(`Tenant loaded: ${tenant.name}`);
+
       return { active: tenant };
     },
     {
@@ -60,7 +63,7 @@ export default function useTenantDetails({ tenantId, customUrl }: Props) {
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
       revalidateIfStale: false,
-      refreshInterval: 1000 * 60 * 2, // 2 minutes
+      refreshInterval: 1000 * 60 * 5, // 5 minutes
     }
   );
 

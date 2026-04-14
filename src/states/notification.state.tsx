@@ -21,6 +21,8 @@ export const clearNotification = createAction('notification/clearNotification');
 
 const notificationReducer = createReducer(initialState, (builder) => {
     builder.addCase(setNotification, (state, action: PayloadAction<NotificationState | null>) => {
+        console.log("dispatched setNotification");
+
         if (!action.payload) {
             state.title = null;
             state.notification = null;
@@ -34,6 +36,8 @@ const notificationReducer = createReducer(initialState, (builder) => {
     })
 
     builder.addCase(clearNotification, (state) => {
+        console.log("dispatched clearNotification");
+
         state.title = null;
         state.notification = null;
         state.type = "info";
