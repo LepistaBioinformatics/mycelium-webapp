@@ -23,10 +23,10 @@ export default function SignOutButton({ logout, isOpen = false }: Props) {
       </span>
       <span
         className={[
-          "whitespace-nowrap transition-all duration-300 overflow-hidden",
+          "truncate",
           isOpen
-            ? "max-w-xs opacity-100 ml-2"
-            : "max-w-0 opacity-0 ml-0 group-hover/sidebar:max-w-xs group-hover/sidebar:opacity-100 group-hover/sidebar:ml-2",
+            ? "ml-2"
+            : "hidden group-hover/sidebar:block group-hover/sidebar:ml-2",
         ].join(" ")}
       >
         {t("Menu.logout")}

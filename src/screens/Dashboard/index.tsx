@@ -35,8 +35,15 @@ export default function Dashboard() {
   return (
     <div
       id="Dashboard"
-      className="flex min-h-screen max-h-screen w-screen overflow-y-auto overflow-x-hidden"
+      className="relative flex min-h-screen max-h-screen w-screen overflow-y-auto overflow-x-hidden"
     >
+      {/* Layout spacer — holds the sidebar slot so content is never hidden behind it.
+          Sidebar itself is absolute, so hover-expansion overlays without pushing content. */}
+      <div
+        className={`hidden sm:block shrink-0 transition-all duration-300 ease-in-out ${isOpen ? "w-48" : "w-12"}`}
+        aria-hidden="true"
+      />
+
       <Sidebar
         isOpen={isOpen}
         toggle={toggle}
@@ -54,7 +61,7 @@ export default function Dashboard() {
         ))}
       </Sidebar>
 
-      <div className="flex-1 overflow-y-auto scrollbar">
+      <div className="flex-1 overflow-y-auto scrollbar pb-16 sm:pb-0">
         <Outlet />
       </div>
 
@@ -165,10 +172,10 @@ function MainHeader({ isOpen }: { isOpen: boolean }) {
       {/* Username + progress — visible when expanded */}
       <div
         className={[
-          "flex flex-col min-w-0 whitespace-nowrap transition-all duration-300 overflow-hidden",
+          "flex flex-col min-w-0",
           isOpen
-            ? "max-w-xs opacity-100 ml-2"
-            : "max-w-0 opacity-0 ml-0 group-hover/sidebar:max-w-xs group-hover/sidebar:opacity-100 group-hover/sidebar:ml-2",
+            ? "ml-2"
+            : "hidden group-hover/sidebar:flex group-hover/sidebar:ml-2",
         ].join(" ")}
       >
         <span className="text-sm font-medium text-zinc-800 dark:text-zinc-200 truncate">

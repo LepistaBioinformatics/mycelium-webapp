@@ -10,14 +10,15 @@ import SignOutButton from "./SignOutButton";
 import { useTranslation } from "react-i18next";
 import { Language } from "@/i18n/config";
 
-// Sidebar container — fixed width in both states, overflow-hidden clips text
+// Sidebar container — always absolutely positioned so hover-expansion never
+// pushes content. A matching spacer div in the parent holds the layout slot.
 const containerStyles = cva(
-  "hidden sm:flex bg-zinc-50 dark:bg-zinc-900 max-h-screen overflow-hidden pt-2 pb-5 flex-col gap-6 justify-between border-r border-zinc-200 dark:border-zinc-800 group/sidebar transition-all duration-300 ease-in-out shrink-0",
+  "hidden sm:flex bg-zinc-50 dark:bg-zinc-900 absolute top-0 left-0 h-full z-40 overflow-hidden pt-2 pb-5 flex-col gap-6 justify-between border-r border-zinc-200 dark:border-zinc-800 group/sidebar transition-all duration-300 ease-in-out",
   {
     variants: {
       open: {
         true: "w-48",
-        false: "w-12 group-hover/sidebar:w-48",
+        false: "w-12 hover:w-48",
       },
     },
     defaultVariants: { open: false },
@@ -31,20 +32,16 @@ const ROW = "flex items-center px-3 w-full min-h-[2.5rem]";
 // Icon slot — fixed size so layout never shifts
 const ICON = "shrink-0 w-4 h-4 flex items-center justify-center";
 
-// Text slot — clipped at source (max-w-0) AND zero-margin when collapsed so
-// the icon has no dead space to its right.
-const labelStyles = cva(
-  "whitespace-nowrap transition-all duration-300 overflow-hidden",
-  {
-    variants: {
-      open: {
-        true: "max-w-xs opacity-100 ml-2",
-        false:
-          "max-w-0 opacity-0 ml-0 group-hover/sidebar:max-w-xs group-hover/sidebar:opacity-100 group-hover/sidebar:ml-2",
-      },
+// Text slot — hidden (display:none) when collapsed so icons are unaffected,
+// appears instantly on hover via group-hover. truncate clips long labels.
+const labelStyles = cva("truncate", {
+  variants: {
+    open: {
+      true: "ml-2",
+      false: "hidden group-hover/sidebar:block group-hover/sidebar:ml-2",
     },
-  }
-);
+  },
+});
 
 interface ContainerProps extends BaseProps {
   isOpen: boolean;
