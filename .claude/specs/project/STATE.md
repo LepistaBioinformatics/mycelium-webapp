@@ -17,6 +17,8 @@
   pattern). The `react-refresh/only-export-components` warning is accepted as a known trade-off.
 - **D8** — `NativeAuthContext` persists both token (`myc-native-token`) and user (`myc-native-user`) to `sessionStorage`. User data must survive page reload for any component that guards on `user?.email` (e.g. Onboarding, use-profile). Restore both on mount; clear both on logout.
 - **D9** — Homepage is the auth entry point. `/login` remains for backward compatibility but both routes redirect to `/dashboard` after successful auth. `loginWithRedirect()` navigates to `/` (not `/login`).
+- **D10** — `brand-lime-*` is excluded from new components. New UI uses `brand-violet-400` for dark mode accents instead. Existing shared components (Button, Typography, Sidebar) still reference `brand-lime-*` and are pending a separate cleanup pass.
+
 - **D7** — `NativeUser.email` is `components["schemas"]["Email"]` = `{ username: string; domain: string }`.
   String rendering uses `${username}@${domain}`. Comparison with `Owner.email` (plain string) converts
   the Email object before matching.
@@ -114,3 +116,10 @@ _(none)_
 - Dashboard index replaced: `<Profile />` → `<Onboarding />` — a vertical timeline showing account creation (required) and optional meta fields (phone, Telegram, WhatsApp, locale). Steps 2–5 are locked until account exists.
 - Removed: `AuthenticatedUser.tsx`, `MyceliumProfile.tsx`, `FlowContainer.tsx` from `screens/HomePage/`.
 - Auth0-related naming cleaned up: `parseAuth0Error` → `parseAuthError`, `auth0Logout` → `logout`, `VITE_AUTH0_*` env vars removed from all `.env.*` files.
+
+**Onboarding design system alignment** ✅ complete (2026-04-13)
+- Layout changed from `PageBody` (forces `min-h-screen`) to a `max-w-2xl mx-auto` centered column — dashboard no longer occupies full viewport height.
+- Added: welcome header with initials avatar (B), progress bar (A), step descriptions (C), completion card when all steps done (D), "Go to dashboard" CTA once account exists (E), locale dropdown replacing free-text input (F).
+- Telegram + WhatsApp merged into single "Messaging accounts" step — marked done when either is set.
+- All `TextInput` fields use `color="custom"` with brand-violet theme (no raw Flowbite colors).
+- `brand-lime-*` removed from all new elements; dark mode accents use `brand-violet-400` (D10).

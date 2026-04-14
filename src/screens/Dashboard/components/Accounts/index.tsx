@@ -18,7 +18,7 @@ import { useDispatch } from "react-redux";
 import { setTenantInfo } from "@/states/tenant.state";
 import Typography from "@/components/ui/Typography";
 
-interface Props extends Pick<PaginatedAccountsProps, "restrictAccountTypeTo"> {}
+type Props = Pick<PaginatedAccountsProps, "restrictAccountTypeTo">;
 
 export default function Accounts({ restrictAccountTypeTo }: Props) {
   const { t } = useTranslation();

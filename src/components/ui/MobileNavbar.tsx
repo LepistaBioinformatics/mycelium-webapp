@@ -1,4 +1,4 @@
-import { cva, VariantProps } from "class-variance-authority";
+import { cva } from "class-variance-authority";
 import { TiThMenu } from "react-icons/ti";
 import { Link } from "react-router";
 import Modal from "./Modal";
@@ -19,9 +19,7 @@ const styles = cva(
   }
 );
 
-interface Props extends VariantProps<typeof styles> { }
-
-export default function MobileNavbar({ }: Props) {
+export default function MobileNavbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
