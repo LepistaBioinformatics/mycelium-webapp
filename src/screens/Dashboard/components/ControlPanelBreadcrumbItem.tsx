@@ -3,6 +3,6 @@ import PageBody from "@/components/ui/PageBody";
 
 export default function ControlPanelBreadcrumbItem() {
   return (
-    <PageBody.Breadcrumb.Item href="/dashboard/profile" icon={IoHomeSharp} />
+    <PageBody.Breadcrumb.Item href="/dashboard" icon={IoHomeSharp} />
   );
 }

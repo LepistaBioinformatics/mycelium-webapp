@@ -835,8 +835,13 @@
       "Onboarding": {
         "breadcrumb": "Getting started",
         "title": "Getting started",
+        "welcome": "Welcome, {{name}}",
         "subtitle": "Complete these steps to set up your account.",
+        "progress": "{{done}} of {{total}} steps complete",
         "checkingAccount": "Checking your account...",
+        "goToDashboard": "Go to dashboard",
+        "completionTitle": "Setup complete!",
+        "completionSubtitle": "Your account is ready. Head to your profile to explore what's available.",
         "createAccount": {
           "stepLabel": "Create your account",
           "description": "You need an account to access the platform.",
@@ -846,21 +851,30 @@
         },
         "meta": {
           "phone": {
-            "title": "Phone number"
+            "title": "Phone number",
+            "description": "Used for 2FA alerts and urgent notifications."
+          },
+          "messaging": {
+            "title": "Messaging accounts",
+            "description": "Connect via Telegram or WhatsApp to receive system alerts and notifications. You can register one or both."
           },
           "telegram": {
             "title": "Telegram"
           },
           "whatsapp": {
-            "title": "WhatsApp"
+            "title": "WhatsApp",
+            "sameAsPhone": "Same number as phone"
           },
           "locale": {
-            "title": "Preferred language"
+            "title": "Preferred language",
+            "description": "Sets the language for system emails and notifications.",
+            "placeholder": "Select a language"
           }
         },
         "save": "Save",
         "saving": "Saving...",
         "saved": "Saved",
+        "edit": "Edit information",
         "error": "Unexpected error"
       },
       "Webhooks": {

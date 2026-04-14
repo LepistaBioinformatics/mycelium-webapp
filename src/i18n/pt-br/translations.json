@@ -856,8 +856,13 @@
       "Onboarding": {
         "breadcrumb": "Primeiros passos",
         "title": "Primeiros passos",
+        "welcome": "Bem-vindo, {{name}}",
         "subtitle": "Conclua estas etapas para configurar sua conta.",
+        "progress": "{{done}} de {{total}} etapas concluídas",
         "checkingAccount": "Verificando sua conta...",
+        "goToDashboard": "Ir para o painel",
+        "completionTitle": "Configuração concluída!",
+        "completionSubtitle": "Sua conta está pronta. Acesse seu perfil para explorar o que está disponível.",
         "createAccount": {
           "stepLabel": "Crie sua conta",
           "description": "Você precisa de uma conta para acessar a plataforma.",
@@ -867,21 +872,30 @@
         },
         "meta": {
           "phone": {
-            "title": "Número de telefone"
+            "title": "Número de telefone",
+            "description": "Usado para alertas de 2FA e notificações urgentes."
+          },
+          "messaging": {
+            "title": "Contas de mensageiros",
+            "description": "Conecte via Telegram ou WhatsApp para receber alertas e notificações do sistema. Você pode registrar um ou ambos."
           },
           "telegram": {
             "title": "Telegram"
           },
           "whatsapp": {
-            "title": "WhatsApp"
+            "title": "WhatsApp",
+            "sameAsPhone": "Mesmo número do telefone"
           },
           "locale": {
-            "title": "Idioma preferido"
+            "title": "Idioma preferido",
+            "description": "Define o idioma para e-mails e notificações do sistema.",
+            "placeholder": "Selecione um idioma"
           }
         },
         "save": "Salvar",
         "saving": "Salvando...",
         "saved": "Salvo",
+        "edit": "Editar informações",
         "error": "Erro inesperado"
       }
     },
