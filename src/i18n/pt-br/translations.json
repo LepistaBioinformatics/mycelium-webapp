@@ -163,7 +163,9 @@
       },
       "TenantOwnershipSection": {
         "title": "Seus namespaces",
-        "tabName": "Namespaces"
+        "tabName": "Namespaces",
+        "noNamespaces": "Você ainda não é proprietário de nenhum namespace",
+        "noNamespacesDescription": "Quando você for convidado como proprietário de um namespace ele aparecerá aqui."
       },
       "ListConnectionStringsSection": {
         "title": "Strings de conexão",
@@ -196,8 +198,8 @@
       "LicensedResourcesSection": {
         "title": "Contas que você tem acesso",
         "tabName": "Compartilhado comigo",
-        "noResources": "Nenhuma conta compartilhada com você",
-        "noResourcesDescription": "Você não tem acesso a nenhuma conta",
+        "noResources": "Nenhuma conta compartilhada com você ainda",
+        "noResourcesDescription": "Quando você for convidado para uma conta ela aparecerá aqui.",
         "accountName": {
           "title": "Nome da conta",
           "system": "Conta do sistema"

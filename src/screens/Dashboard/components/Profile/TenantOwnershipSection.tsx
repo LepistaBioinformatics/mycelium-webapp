@@ -17,8 +17,6 @@ interface Props {
 export default function TenantOwnershipSection({ tenantsOwnership }: Props) {
   const { t } = useTranslation();
 
-  if (!tenantsOwnership) return null;
-
   return (
     <Card padding="sm" width="alwaysFull" height="adaptive">
       <Card.Header>
@@ -28,7 +26,19 @@ export default function TenantOwnershipSection({ tenantsOwnership }: Props) {
       </Card.Header>
 
       <Card.Body width="full">
-        <div className="hidden sm:block">
+        {(!tenantsOwnership || tenantsOwnership.length === 0) && (
+          <div className="flex flex-col gap-2 py-4">
+            <Typography decoration="smooth">
+              {t("screens.Dashboard.TenantOwnershipSection.noNamespaces")}
+            </Typography>
+            <Typography as="small" decoration="smooth" width="xs">
+              {t(
+                "screens.Dashboard.TenantOwnershipSection.noNamespacesDescription"
+              )}
+            </Typography>
+          </div>
+        )}
+        {tenantsOwnership && tenantsOwnership.length > 0 && <div className="hidden sm:block">
           <div className="overflow-x-auto scrollbar">
             <Table
               striped
@@ -82,9 +92,9 @@ export default function TenantOwnershipSection({ tenantsOwnership }: Props) {
               </TableBody>
             </Table>
           </div>
-        </div>
+        </div>}
 
-        <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3 scrollbar w-full sm:hidden">
+        {tenantsOwnership && tenantsOwnership.length > 0 && <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3 scrollbar w-full sm:hidden">
           {tenantsOwnership
             ?.sort((a, b) => b.since.localeCompare(a.since))
             ?.map((tenant) => (
@@ -95,7 +105,7 @@ export default function TenantOwnershipSection({ tenantsOwnership }: Props) {
                 tenantName={tenant.name}
               />
             ))}
-        </div>
+        </div>}
       </Card.Body>
     </Card>
   );

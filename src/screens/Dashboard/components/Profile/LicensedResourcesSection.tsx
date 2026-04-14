@@ -208,10 +208,34 @@ export default function LicensedResourcesSection({ licensedResources }: Props) {
     );
   };
 
+  if (!licensedResources || licensedResources.length === 0) {
+    return (
+      <Card padding="sm" width="alwaysFull" height="fit">
+        <Card.Header>
+          <Typography as="h5" decoration="faded">
+            {t("screens.Dashboard.LicensedResourcesSection.title")}
+          </Typography>
+        </Card.Header>
+
+        <Card.Body width="full">
+          <div className="flex flex-col gap-2 py-4">
+            <Typography decoration="smooth">
+              {t("screens.Dashboard.LicensedResourcesSection.noResources")}
+            </Typography>
+            <Typography as="small" decoration="smooth" width="xs">
+              {t(
+                "screens.Dashboard.LicensedResourcesSection.noResourcesDescription"
+              )}
+            </Typography>
+          </div>
+        </Card.Body>
+      </Card>
+    );
+  }
+
   return (
     <>
-      {licensedResources?.length && (
-        <Card padding="sm" width="alwaysFull" height="fit">
+      <Card padding="sm" width="alwaysFull" height="fit">
           <Card.Header>
             <Typography as="h5" decoration="faded">
               {t("screens.Dashboard.LicensedResourcesSection.title")}
@@ -219,23 +243,6 @@ export default function LicensedResourcesSection({ licensedResources }: Props) {
           </Card.Header>
 
           <Card.Body width="full">
-            <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3 scrollbar w-full">
-              {!licensedResources && (
-                <div className="flex flex-col gap-2">
-                  <Typography decoration="smooth">
-                    {t(
-                      "screens.Dashboard.LicensedResourcesSection.noResources"
-                    )}
-                  </Typography>
-                  <Typography as="small" decoration="smooth" width="xs">
-                    {t(
-                      "screens.Dashboard.LicensedResourcesSection.noResourcesDescription"
-                    )}
-                  </Typography>
-                </div>
-              )}
-            </div>
-
             <div className="hidden sm:block">
               <div className="overflow-x-auto scrollbar">
                 <Table
@@ -432,7 +439,6 @@ export default function LicensedResourcesSection({ licensedResources }: Props) {
             </div>
           </Card.Body>
         </Card>
-      )}
 
       {isCreateConnectionStringModalOpen && accountId && (
         <CreateConnectionStringModal

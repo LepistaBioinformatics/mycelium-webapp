@@ -163,7 +163,9 @@
       },
       "TenantOwnershipSection": {
         "title": "Tus espacios de nombres",
-        "tabName": "Espacios de nombres"
+        "tabName": "Espacios de nombres",
+        "noNamespaces": "Aún no eres propietario de ningún espacio de nombres",
+        "noNamespacesDescription": "Cuando seas invitado como propietario de un espacio de nombres aparecerá aquí."
       },
       "ListConnectionStringsSection": {
         "title": "Cadenas de conexión",
@@ -196,8 +198,8 @@
       "LicensedResourcesSection": {
         "title": "Cuentas a las que tiene acceso",
         "tabName": "Compartido conmigo",
-        "noResources": "No hay cuenta compartida contigo",
-        "noResourcesDescription": "No tiene acceso a ninguna cuenta",
+        "noResources": "Aún no hay cuentas compartidas contigo",
+        "noResourcesDescription": "Cuando seas invitado a una cuenta aparecerá aquí.",
         "accountName": {
           "title": "Nombre de cuenta",
           "system": "Cuenta del sistema"
