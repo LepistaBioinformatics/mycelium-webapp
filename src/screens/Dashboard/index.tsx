@@ -50,7 +50,6 @@ export default function Dashboard() {
             href={route.path}
             text={route.name}
             isOpen={isOpen}
-            active={route.disabled}
           />
         ))}
       </Sidebar>
@@ -133,55 +132,43 @@ function MainHeader({ isOpen }: { isOpen: boolean }) {
     : "?";
 
   const pct = Math.round((completedSteps / ONBOARDING_TOTAL) * 100);
-  const radius = 18;
-  const circumference = 2 * Math.PI * radius;
-  const offset = circumference * (1 - pct / 100);
+  const sw = 2;
+
+  // SVG ring sized to match the w-4 icon slot (16px) + px-3 sidebar rhythm
+  // Avatar fits inside the 2.5rem (40px) row height
+  const ringSize = 32;
+  const ringCx = ringSize / 2;
+  const ringR = ringCx - sw;
+  const ringCircumference = 2 * Math.PI * ringR;
+  const ringOffset = ringCircumference * (1 - pct / 100);
 
   return (
-    <div className="flex items-center gap-3 px-1 py-2 min-w-0">
-      {/* Circular progress ring + user avatar */}
-      <div className="relative flex-shrink-0 w-10 h-10">
+    <div className="flex items-center px-3 w-full min-h-[2.5rem]">
+      {/* Avatar with progress ring — same slot as nav icons */}
+      <div className="shrink-0 grid" style={{ width: ringSize, height: ringSize }}>
         <svg
-          width="40"
-          height="40"
-          viewBox="0 0 40 40"
-          className="absolute inset-0 -rotate-90"
+          width={ringSize}
+          height={ringSize}
+          viewBox={`0 0 ${ringSize} ${ringSize}`}
+          style={{ gridArea: "1/1", transform: "scaleX(-1) rotate(-90deg)" }}
         >
-          <circle
-            cx="20"
-            cy="20"
-            r={radius}
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2.5"
-            className="text-zinc-200 dark:text-zinc-700"
-          />
-          <circle
-            cx="20"
-            cy="20"
-            r={radius}
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2.5"
-            strokeDasharray={circumference}
-            strokeDashoffset={offset}
-            className="text-brand-violet-500 dark:text-brand-lime-500 transition-all duration-500"
-          />
+          <circle cx={ringCx} cy={ringCx} r={ringR} fill="none" stroke="currentColor" strokeWidth={sw} className="text-zinc-200 dark:text-zinc-700" />
+          <circle cx={ringCx} cy={ringCx} r={ringR} fill="none" stroke="currentColor" strokeWidth={sw} strokeDasharray={ringCircumference} strokeDashoffset={ringOffset} strokeLinecap="butt" className="text-brand-violet-500 dark:text-brand-violet-400 transition-all duration-500" />
         </svg>
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="w-7 h-7 rounded-full bg-brand-violet-500 dark:bg-brand-violet-400 flex items-center justify-center text-white text-xs font-bold select-none">
+        <div style={{ gridArea: "1/1" }} className="flex items-center justify-center">
+          <div className="w-5 h-5 rounded-full bg-brand-violet-500 dark:bg-brand-violet-400 flex items-center justify-center text-white text-xs font-bold select-none">
             {initials}
           </div>
         </div>
       </div>
 
-      {/* Username + completion percentage — shown when sidebar is open or hovered */}
+      {/* Username + progress — visible when expanded */}
       <div
         className={[
-          "flex flex-col min-w-0 overflow-hidden whitespace-nowrap transition-all duration-300 ease-in-out",
+          "flex flex-col min-w-0 whitespace-nowrap transition-all duration-300 overflow-hidden",
           isOpen
-            ? "opacity-100 max-w-xs"
-            : "opacity-0 max-w-0 group-hover/sidebar:opacity-100 group-hover/sidebar:max-w-xs",
+            ? "max-w-xs opacity-100 ml-2"
+            : "max-w-0 opacity-0 ml-0 group-hover/sidebar:max-w-xs group-hover/sidebar:opacity-100 group-hover/sidebar:ml-2",
         ].join(" ")}
       >
         <span className="text-sm font-medium text-zinc-800 dark:text-zinc-200 truncate">

@@ -1,40 +1,52 @@
 "use client";
 
-import { cva, VariantProps } from "class-variance-authority";
+import { cva } from "class-variance-authority";
 import { Link, useLocation } from "react-router";
 import Typography from "./Typography";
 import { PiSidebarSimple } from "react-icons/pi";
+import { TbLanguage } from "react-icons/tb";
 import Divider from "./Divider";
-import LanguageSwitcher from "../LanguageSwitcher";
 import SignOutButton from "./SignOutButton";
+import { useTranslation } from "react-i18next";
+import { Language } from "@/i18n/config";
 
+// Sidebar container — fixed width in both states, overflow-hidden clips text
 const containerStyles = cva(
-  "hidden sm:flex bg-transparent dark:bg-zinc-700 min-w-md max-h-screen overflow-y-auto scrollbar px-2 pt-2 pb-5 flex flex-col gap-8 justify-between align-middle border-r-2 border-brand-violet-300 dark:border-brand-lime-700 shadow group/sidebar transition-all duration-300 ease-in-out",
+  "hidden sm:flex bg-zinc-50 dark:bg-zinc-900 max-h-screen overflow-hidden pt-2 pb-5 flex-col gap-6 justify-between border-r border-zinc-200 dark:border-zinc-800 group/sidebar transition-all duration-300 ease-in-out shrink-0",
   {
     variants: {
       open: {
-        true: "min-w-64",
-        false: "group-hover/sidebar:min-w-64",
+        true: "w-48",
+        false: "w-12 group-hover/sidebar:w-48",
       },
     },
-    defaultVariants: {
-      open: false,
+    defaultVariants: { open: false },
+  }
+);
+
+// Row skeleton — no gap between children; gap is handled by the text span's
+// margin so it disappears completely when the text is hidden (max-w-0 + ml-0).
+const ROW = "flex items-center px-3 w-full min-h-[2.5rem]";
+
+// Icon slot — fixed size so layout never shifts
+const ICON = "shrink-0 w-4 h-4 flex items-center justify-center";
+
+// Text slot — clipped at source (max-w-0) AND zero-margin when collapsed so
+// the icon has no dead space to its right.
+const labelStyles = cva(
+  "whitespace-nowrap transition-all duration-300 overflow-hidden",
+  {
+    variants: {
+      open: {
+        true: "max-w-xs opacity-100 ml-2",
+        false:
+          "max-w-0 opacity-0 ml-0 group-hover/sidebar:max-w-xs group-hover/sidebar:opacity-100 group-hover/sidebar:ml-2",
+      },
     },
   }
 );
 
-const buttonStyles = cva("flex gap-1 w-full", {
-  variants: {
-    open: {
-      true: "flex-row",
-      false: "flex-col",
-    },
-  },
-});
-
-interface ContainerProps
-  extends BaseProps,
-  VariantProps<typeof containerStyles> {
+interface ContainerProps extends BaseProps {
   isOpen: boolean;
   toggle: () => void;
   mainHeader: React.ReactNode;
@@ -47,104 +59,110 @@ function Container({
   toggle,
   mainHeader,
   logout,
-  ...props
 }: ContainerProps) {
   return (
-    <aside className={containerStyles({ open: isOpen })} {...props}>
+    <aside className={containerStyles({ open: isOpen })}>
       <div className="flex flex-col gap-5 w-full">
         {mainHeader}
-
-        <div className="flex flex-col gap-2 w-full">{children}</div>
+        <nav className="flex flex-col gap-0.5 w-full">{children}</nav>
       </div>
 
       <div className="flex flex-col gap-2 w-full">
         <Divider style="partial" marginY="none" thickness="sm" />
 
-        <div className={buttonStyles({ open: isOpen })}>
-          <div className="flex justify-center items-center w-full text-center bg-white dark:bg-zinc-700 rounded-lg p-2 hover:bg-brand-violet-200 dark:hover:bg-zinc-600">
-            <LanguageSwitcher />
-          </div>
+        <SidebarLanguage isOpen={isOpen} />
 
-          <button
-            onClick={toggle}
-            className="flex justify-center items-center w-full text-center bg-white dark:bg-zinc-700 hover:bg-brand-violet-200 dark:hover:bg-zinc-600 rounded-lg p-2"
-          >
-            <PiSidebarSimple className="text-zinc-800 dark:text-zinc-300" />
-          </button>
-        </div>
+        <button
+          onClick={toggle}
+          title={isOpen ? "Collapse sidebar" : "Expand sidebar"}
+          className={`${ROW} border-l-2 border-transparent text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-zinc-700 dark:hover:text-zinc-200 transition-colors`}
+        >
+          <span className={ICON}>
+            <PiSidebarSimple className={isOpen ? "" : "scale-x-[-1]"} />
+          </span>
+          <span className={labelStyles({ open: isOpen })}>
+            <Typography>
+              {isOpen ? "Collapse" : "Expand"}
+            </Typography>
+          </span>
+        </button>
 
         <Divider style="partial" marginY="none" thickness="sm" />
 
-        <SignOutButton logout={logout} />
+        <SignOutButton logout={logout} isOpen={isOpen} />
       </div>
     </aside>
   );
 }
 
-const sidebarItemStyles = cva(
-  "flex items-center align-middle gap-2 border border-brand-violet-300 dark:border-brand-lime-500 rounded-lg px-4 py-2 text-zinc-800 dark:text-brand-lime-500 transition-all duration-300 ease-in-out hover:bg-brand-violet-300 dark:hover:bg-zinc-600 w-full min-h-[2.5rem]",
+const itemStyles = cva(
+  `${ROW} border-l-2 transition-colors duration-150`,
   {
     variants: {
       active: {
-        true: "bg-brand-violet-200 dark:bg-zinc-600",
-        false: "bg-white dark:bg-zinc-700",
-      },
-      open: {
-        true: "w-fit",
-        false: "group-hover/sidebar:justify-start transition-all duration-300 ease-in-out",
+        true: "bg-brand-violet-50 dark:bg-brand-violet-950 text-brand-violet-700 dark:text-brand-violet-300 border-brand-violet-500 dark:border-brand-violet-400",
+        false: "border-transparent text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-zinc-800 dark:hover:text-zinc-200",
       },
     },
-    defaultVariants: {
-      active: false,
-      open: false,
-    },
+    defaultVariants: { active: false },
   }
 );
 
-const sidebarItemTextStyles = cva("transition-all duration-300 ease-in-out whitespace-nowrap inline-block overflow-hidden flex items-center h-6", {
-  variants: {
-    open: {
-      true: "opacity-100 max-w-xs min-w-0",
-      false: "opacity-0 max-w-0 min-w-0 group-hover/sidebar:opacity-100 group-hover/sidebar:max-w-xs",
-    },
-  },
-});
-
-interface SidebarItemProps extends VariantProps<typeof sidebarItemStyles> {
+interface SidebarItemProps {
   icon: React.ReactNode;
   text: string;
   href: string;
   isOpen: boolean;
-  children?: React.ReactNode;
 }
 
-function SidebarItem({
-  icon,
-  href,
-  text,
-  isOpen,
-  children,
-  ...props
-}: SidebarItemProps) {
+function SidebarItem({ icon, href, text, isOpen }: SidebarItemProps) {
   const { pathname } = useLocation();
   const isActive = pathname === href;
 
-  const Icon = () => (
-    <span className="text-brand-violet-800 dark:text-brand-lime-500">{icon}</span>
+  return (
+    <Link to={href} title={text} className={itemStyles({ active: isActive })}>
+      <span className={ICON}>{icon}</span>
+      <span className={labelStyles({ open: isOpen })}>
+        <Typography>{text}</Typography>
+      </span>
+    </Link>
   );
+}
+
+const LANG_LABELS: Record<string, string> = {
+  [Language.EN]: "English",
+  [Language.PT_BR]: "Português",
+  [Language.ES]: "Español",
+};
+
+const ALL_LANGS = [Language.EN, Language.PT_BR, Language.ES];
+
+function SidebarLanguage({ isOpen }: { isOpen: boolean }) {
+  const { i18n } = useTranslation();
+  const current = i18n.language as Language;
 
   return (
-    <Link
-      to={href}
-      className={sidebarItemStyles({ active: isActive, open: isOpen })}
-      {...props}
+    <div
+      title="Language"
+      className={`${ROW} border-l-2 border-transparent text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-zinc-700 dark:hover:text-zinc-200 transition-colors`}
     >
-      <Icon />
-      <div className={sidebarItemTextStyles({ open: isOpen })}>
-        <Typography>{text}</Typography>
-      </div>
-      {children}
-    </Link>
+      <span className={ICON}>
+        <TbLanguage />
+      </span>
+      <span className={`${labelStyles({ open: isOpen })} flex-1 min-w-0`}>
+        <select
+          value={current}
+          onChange={(e) => i18n.changeLanguage(e.target.value)}
+          className="w-full bg-transparent text-sm text-zinc-600 dark:text-zinc-400 focus:outline-none cursor-pointer"
+        >
+          {ALL_LANGS.map((lang) => (
+            <option key={lang} value={lang}>
+              {LANG_LABELS[lang]}
+            </option>
+          ))}
+        </select>
+      </span>
+    </div>
   );
 }
 
