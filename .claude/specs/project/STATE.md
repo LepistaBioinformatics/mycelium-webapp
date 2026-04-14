@@ -102,6 +102,10 @@ _(none)_
 - Plain `lime-900` → `brand-lime-700`: fixed 2 remaining occurrences in `CreateConnectionStringModal.tsx` and `LicensedResourcesSection.tsx`.
 - `yellow-300` → `brand-lime-400` in `Tenants/index.tsx` (TenantStar hover color).
 
+**Homepage auth step URL persistence** ✅ complete (2026-04-13)
+- `step` and `submittedEmail` moved from `useState` to `useSearchParams`. Email submission writes `?step=code&email=...` to the URL; the back button calls `setSearchParams({})` to clear it.
+- Page refresh on the code entry step restores the step correctly. `invalidCode` stays in local state (transient error UI).
+
 **Auth + Onboarding flow redesign** ✅ complete (2026-04-13)
 - `HomePage` is now a proper landing page with embedded magic-link auth form (email → code). Authenticated users redirect immediately to `/dashboard`; loading state renders null to avoid form flash.
 - `LoginPage` still exists at `/login` but redirects to `/dashboard` on success (was `/`).
