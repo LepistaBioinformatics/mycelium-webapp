@@ -85,6 +85,23 @@ _(none)_
 - `lime-100` and `lime-900` intentionally preserved (no brand equivalent in palette)
 - Gateway templates (DS-G-01 → DS-G-04) remain out of scope for webapp
 
+**Homepage visual polish** ✅ complete (2026-04-13)
+- Full-page `fixed` logo background (`bg-cover`): `logo-blackwhite.png` (light, opacity 0.14) / `logo-color.png` (dark, opacity 0.18). Only hero section is transparent; features/footer use `relative z-10` with opaque backgrounds to cover the fixed layer.
+- Scroll hint arrow rendered without background wrapper — floats transparently over the hero background.
+- Auth form stripped to essentials: label and title text removed, only email input + submit button. Input: `text-2xl py-6`, border-2, `bg-white/90`, `shadow-md` (light) / neon violet glow (dark), `gap-6` spacing to button.
+- Brand name (`h1`) and tagline restored above auth form; all `as="small"` → `as="p"` site-wide on homepage for readable sizes.
+- Global font size bumped to `18px` in `:root` — all rem-based typography scales proportionally.
+- Light mode contrast improved: logo opacity raised, section borders `zinc-300`, features bg `zinc-100`, FeatureCard `shadow-md border-zinc-200`, footer border `zinc-300`.
+- New MAG logo assets committed: `logo-color.png`, `logo-blackwhite.png`, `logo-icon-square.png`, `logo-icon.png`, `logo-color-application.png`. Removed obsolete `logo-small.*`, `logo-large.svg`, `pwa-*.png`, `maskable-icon-512x512.png`.
+
+**System theme + design system color pass** ✅ complete (2026-04-13)
+- `ThemeProvider.tsx` replaced `useThemeMode()` toggle with OS-preference detection: `matchMedia('(prefers-color-scheme: dark)')` listener sets/removes the `dark` class on `document.documentElement` and passes the resolved mode to `<Flowbite>`. `tailwind.config.js` stays `darkMode: 'class'` (Flowbite requires it).
+- `ThemeSwitcher.tsx` deleted. Removed from `AppHeader`, `Sidebar`, and `MobileNavbar` (including the "Theme" settings section in mobile SettingsModal).
+- `ThemeContext` simplified: no longer exposes `toggleMode`, only `mode`.
+- `gray-*` → `zinc-*` across all 40+ files: neutral palette is now consistently zinc (no stray Tailwind `gray` scale). Affects `Typography`, `Button`, `Modal`, `Card`, `Container`, `Banner`, `IntroSection`, `ListItem`, `SideCurtain`, `SuspenseNotification`, `SearchBar`, `AccountType`, all modal form inputs (Flowbite `theme.field.input.colors.custom`), and all screen files.
+- Plain `lime-900` → `brand-lime-700`: fixed 2 remaining occurrences in `CreateConnectionStringModal.tsx` and `LicensedResourcesSection.tsx`.
+- `yellow-300` → `brand-lime-400` in `Tenants/index.tsx` (TenantStar hover color).
+
 **Auth + Onboarding flow redesign** ✅ complete (2026-04-13)
 - `HomePage` is now a proper landing page with embedded magic-link auth form (email → code). Authenticated users redirect immediately to `/dashboard`; loading state renders null to avoid form flash.
 - `LoginPage` still exists at `/login` but redirects to `/dashboard` on success (was `/`).

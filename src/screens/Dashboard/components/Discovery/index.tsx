@@ -270,7 +270,7 @@ const OperationMethod = ({ method }: { method: string }) => {
       );
     default:
       return (
-        <span className={style("bg-gray-500 border-gray-500")}>{method}</span>
+        <span className={style("bg-zinc-500 border-zinc-500")}>{method}</span>
       );
   }
 };

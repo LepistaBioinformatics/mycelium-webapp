@@ -133,7 +133,7 @@ export default function TenantDetails({ isOpen, onClose, tenant }: Props) {
                 />
               ) : (
                 <FaRegStar
-                  className="text-gray-500"
+                  className="text-zinc-500"
                   onClick={() => setTokenPublicInformation(tenant.id)}
                 />
               )}

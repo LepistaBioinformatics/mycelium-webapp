@@ -242,7 +242,7 @@ export default function LicensedResourcesSection({ licensedResources }: Props) {
                   striped
                   theme={{
                     root: {
-                      base: "w-full text-left text-sm text-gray-500 dark:text-gray-400",
+                      base: "w-full text-left text-sm text-zinc-500 dark:text-zinc-400",
                     },
                     head: {
                       cell: {
@@ -319,7 +319,7 @@ export default function LicensedResourcesSection({ licensedResources }: Props) {
                         return (
                           <TableRow
                             key={index}
-                            className="bg-white dark:border-gray-700 dark:bg-gray-800"
+                            className="bg-white dark:border-zinc-700 dark:bg-zinc-800"
                           >
                             <TableCell>
                               <HeaderHeader resource={resource} />
@@ -394,7 +394,7 @@ export default function LicensedResourcesSection({ licensedResources }: Props) {
                       {resource.roles.map((role, index) => (
                         <div
                           key={index + role.role}
-                          className="border-t-[0.5px] border-brand-violet-100 dark:border-lime-900 p-1"
+                          className="border-t-[0.5px] border-brand-violet-100 dark:border-brand-lime-700 p-1"
                         >
                           <IntroSection.Item
                             prefix={t(

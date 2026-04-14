@@ -34,7 +34,7 @@ export default function TenantOwnershipSection({ tenantsOwnership }: Props) {
               striped
               theme={{
                 root: {
-                  base: "w-full text-left text-sm text-gray-500 dark:text-gray-400",
+                  base: "w-full text-left text-sm text-zinc-500 dark:text-zinc-400",
                 },
                 head: {
                   cell: {

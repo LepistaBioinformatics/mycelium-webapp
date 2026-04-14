@@ -360,7 +360,7 @@ export default function CreateConnectionStringModal({
                 {roles.map(({ role, permission }, index) => (
                   <div
                     key={index}
-                    className="flex items-center justify-between gap-8 border-t border-brand-violet-300 dark:border-lime-900 px-3 py-2"
+                    className="flex items-center justify-between gap-8 border-t border-brand-violet-300 dark:border-brand-lime-700 px-3 py-2"
                   >
                     <div className="flex items-center gap-2">
                       <span>{role}</span>

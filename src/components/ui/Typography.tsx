@@ -28,8 +28,8 @@ const styles = cva("whitespace-normal", {
     decoration: {
       underline: "underline",
       lineThrough: "line-through",
-      smooth: "!text-gray-400 dark:!text-gray-500",
-      faded: "font-thin text-gray-600 dark:!text-gray-400",
+      smooth: "!text-zinc-400 dark:!text-zinc-500",
+      faded: "font-thin text-zinc-600 dark:!text-zinc-400",
       bold: "!font-bold",
       semibold: "!font-semibold",
       italic: "!font-italic",
@@ -44,7 +44,7 @@ const styles = cva("whitespace-normal", {
       auto: "mx-auto",
     },
     reverseBackground: {
-      true: "!text-gray-100 !dark:text-gray-200",
+      true: "!text-zinc-100 !dark:text-zinc-200",
     },
     width: {
       ...width,

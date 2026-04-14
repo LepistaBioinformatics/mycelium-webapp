@@ -165,7 +165,7 @@ const commandPaletteItemStyles = cva(
 );
 
 const commandPaletteItemButtonStyles = cva(
-  "flex flex-col sm:flex-row justify-start text-gray-700 dark:text-gray-300 items-start sm:items-center gap-1 sm:gap-3 ml-3",
+  "flex flex-col sm:flex-row justify-start text-zinc-700 dark:text-zinc-300 items-start sm:items-center gap-1 sm:gap-3 ml-3",
   {
     variants: {
       disabled: {

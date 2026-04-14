@@ -161,12 +161,12 @@ export default function Webhooks() {
 
                 <div className="flex gap-5">
                   <FaEdit
-                    className="cursor-pointer hover:text-brand-violet-500 dark:group-hover:text-brand-lime-400 text-gray-500"
+                    className="cursor-pointer hover:text-brand-violet-500 dark:group-hover:text-brand-lime-400 text-zinc-500"
                     onClick={() => handleEditWebhookClick(webhook)}
                   />
 
                   <FaTrash
-                    className="cursor-pointer hover:text-brand-violet-500 dark:group-hover:text-brand-lime-400 text-gray-500"
+                    className="cursor-pointer hover:text-brand-violet-500 dark:group-hover:text-brand-lime-400 text-zinc-500"
                     onClick={() => handleDeleteWebhookClick(webhook)}
                   />
                 </div>

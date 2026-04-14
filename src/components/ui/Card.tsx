@@ -12,7 +12,7 @@ const { width, height, padding, margin } = projectVariants;
 // ? ---------------------------------------------------------------------------
 
 const cardContainerStyles = cva(
-  "p-2 border border-gray-300 dark:border-gray-800 shadow rounded-lg text-gray-500 bg-white dark:bg-zinc-800 dark:bg-opacity-50 overflow-auto scrollbar max-h-fit lg:max-h-[80vh]",
+  "p-2 border border-zinc-300 dark:border-zinc-800 shadow rounded-lg text-zinc-500 bg-white dark:bg-zinc-800 dark:bg-opacity-50 overflow-auto scrollbar max-h-fit lg:max-h-[80vh]",
   {
     variants: {
       height,
@@ -93,7 +93,7 @@ function CardContainer({
 // ? Header Container
 // ? ---------------------------------------------------------------------------
 
-const headerStyles = cva("text-xl text-gray-800 dark:text-gray-100 py-3", {
+const headerStyles = cva("text-xl text-zinc-800 dark:text-zinc-100 py-3", {
   variants: {},
 });
 
@@ -109,7 +109,7 @@ function Header({ ...props }: HeaderCardProps) {
 // ? Body Container
 // ? ---------------------------------------------------------------------------
 
-const bodyStyles = cva("py-2 text-gray-700 dark:text-gray-300 scrollbar", {
+const bodyStyles = cva("py-2 text-zinc-700 dark:text-zinc-300 scrollbar", {
   variants: {
     flex: {
       col: "flex flex-col",

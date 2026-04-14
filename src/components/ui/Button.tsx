@@ -1,7 +1,7 @@
 import { cva, VariantProps } from "class-variance-authority";
 import { AriaRole } from "react";
 
-const styles = cva("text-gray-700 dark:text-gray-50", {
+const styles = cva("text-zinc-700 dark:text-zinc-50", {
   variants: {
     fullWidth: {
       true: "w-full",
@@ -19,7 +19,7 @@ const styles = cva("text-gray-700 dark:text-gray-50", {
       primary:
         "bg-brand-violet-500 hover:bg-brand-violet-600 dark:bg-brand-lime-600 dark:hover:bg-brand-lime-700 text-white",
       secondary:
-        "text-white font-semibold bg-gray-500 hover:bg-gray-600 dark:bg-gray-600 dark:hover:bg-gray-700",
+        "text-white font-semibold bg-zinc-500 hover:bg-zinc-600 dark:bg-zinc-600 dark:hover:bg-zinc-700",
       warning:
         "bg-yellow-500 dark:bg-yellow-600 text-white hover:bg-yellow-600 hover:dark:bg-yellow-700 font-semibold",
       danger:

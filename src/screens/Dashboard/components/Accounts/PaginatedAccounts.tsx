@@ -415,7 +415,7 @@ export default function PaginatedAccounts({
                         : account?.id?.slice(0, 8)}
                     </div>
                     {account.isSystemAccount && (
-                      <span className="text-xs text-gray-500 dark:text-gray-400">
+                      <span className="text-xs text-zinc-500 dark:text-zinc-400">
                         (Default)
                       </span>
                     )}

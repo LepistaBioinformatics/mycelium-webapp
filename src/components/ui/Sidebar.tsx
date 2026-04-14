@@ -4,7 +4,6 @@ import { cva, VariantProps } from "class-variance-authority";
 import { Link, useLocation } from "react-router";
 import Typography from "./Typography";
 import { PiSidebarSimple } from "react-icons/pi";
-import ThemeSwitcher from "./ThemeSwitcher";
 import Divider from "./Divider";
 import LanguageSwitcher from "../LanguageSwitcher";
 import SignOutButton from "./SignOutButton";
@@ -64,10 +63,6 @@ function Container({
         <div className={buttonStyles({ open: isOpen })}>
           <div className="flex justify-center items-center w-full text-center bg-white dark:bg-zinc-700 rounded-lg p-2 hover:bg-brand-violet-200 dark:hover:bg-zinc-600">
             <LanguageSwitcher />
-          </div>
-
-          <div className="flex justify-center items-center w-full text-center bg-white dark:bg-zinc-700 rounded-lg p-2 hover:bg-brand-violet-200 dark:hover:bg-zinc-600">
-            <ThemeSwitcher />
           </div>
 
           <button

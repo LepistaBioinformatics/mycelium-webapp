@@ -59,7 +59,7 @@ const introItemStyles = cva(
 );
 
 const introItemLinkLineStyles = cva(
-  "h-[1px] border-b-2 flex-1 border-dashed border-gray-300 dark:border-gray-700",
+  "h-[1px] border-b-2 flex-1 border-dashed border-zinc-300 dark:border-zinc-700",
   {
     variants: {},
   }

@@ -142,7 +142,7 @@ const progressBarStyles = cva(
         info: "bg-brand-violet-500 dark:bg-brand-violet-500",
         success: "bg-green-500 dark:bg-green-500",
         warning: "bg-yellow-500 dark:bg-yellow-500",
-        neutral: "bg-gray-400 dark:bg-gray-600",
+        neutral: "bg-zinc-400 dark:bg-zinc-600",
       },
     },
     defaultVariants: {
@@ -160,7 +160,7 @@ interface ProgressBarProps
 function ProgressBar({ percent, intent }: ProgressBarProps) {
   return (
     <div
-      className={`w-[calc(100%-1rem)] mx-auto h-[2px] bg-gray-200 dark:bg-gray-800 rounded-full`}
+      className={`w-[calc(100%-1rem)] mx-auto h-[2px] bg-zinc-200 dark:bg-zinc-800 rounded-full`}
     >
       <div
         className={progressBarStyles({ intent })}

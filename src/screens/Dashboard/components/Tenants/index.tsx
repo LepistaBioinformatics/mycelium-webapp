@@ -232,7 +232,7 @@ export default function Tenants() {
                   />
                   <CopyToClipboard text={tenant?.id ?? ""} />
                   <FaEdit
-                    className="cursor-pointer hover:text-brand-violet-500 dark:group-hover:text-brand-lime-400 text-gray-500"
+                    className="cursor-pointer hover:text-brand-violet-500 dark:group-hover:text-brand-lime-400 text-zinc-500"
                     onClick={() => handleEditTenantClick(tenant)}
                   />
                 </div>
@@ -285,7 +285,7 @@ function TenantStar({
     if (isLoadingTenantInfo) return "cursor-not-allowed";
     if (tenantInfo?.id === tenantId) return "text-yellow-300";
 
-    return "text-gray-500 group-hover:text-yellow-300 group-hover:block cursor-pointer";
+    return "text-zinc-500 group-hover:text-brand-lime-400 group-hover:block cursor-pointer";
   }, [isLoadingTenantInfo, tenantInfo, tenantId]);
 
   return (

@@ -4,7 +4,7 @@ import { IoCloseSharp } from "react-icons/io5";
 import { useNavigate } from "react-router";
 
 const containerStyles = cva(
-  "text-gray-500 dark:text-gray-50 fixed inset-0 z-[999] flex flex-col justify-center items-center bg-opacity-50 sm:bg-opacity-60 bg-black h-full sm:pt-1 sm:px-1",
+  "text-zinc-500 dark:text-zinc-50 fixed inset-0 z-[999] flex flex-col justify-center items-center bg-opacity-50 sm:bg-opacity-60 bg-black h-full sm:pt-1 sm:px-1",
   {
     variants: {
       open: {
@@ -38,7 +38,7 @@ function Container({ children, open, handleClose, ...props }: ContainerProps) {
     >
       <div
         id="modal-container-content"
-        className="bg-white dark:bg-zinc-900 sm:rounded-lg p-2 border-2 border-gray-300 dark:border-gray-700 overflow-y-auto scrollbar mb-16 sm:my-2 h-[95vh] sm:h-fit w-full sm:min-w-1/2 md:w-2/5"
+        className="bg-white dark:bg-zinc-900 sm:rounded-lg p-2 border-2 border-zinc-300 dark:border-zinc-700 overflow-y-auto scrollbar mb-16 sm:my-2 h-[95vh] sm:h-fit w-full sm:min-w-1/2 md:w-2/5"
       >
         {children}
       </div>
@@ -47,7 +47,7 @@ function Container({ children, open, handleClose, ...props }: ContainerProps) {
 }
 
 const headerStyles = cva(
-  "text-gray-500 dark:text-gray-50 flex justify-between items-center gap-8 min-h-fit p-3",
+  "text-zinc-500 dark:text-zinc-50 flex justify-between items-center gap-8 min-h-fit p-3",
   {
     variants: {},
   }
@@ -82,7 +82,7 @@ function Header({ children, handleClose, ...props }: HeaderProps) {
 }
 
 const bodyStyles = cva(
-  "text-gray-500 dark:text-gray-50 flex justify-between items-center min-h-24 p-3",
+  "text-zinc-500 dark:text-zinc-50 flex justify-between items-center min-h-24 p-3",
   {
     variants: {},
   }
