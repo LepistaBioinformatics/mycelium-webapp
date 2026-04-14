@@ -58,7 +58,7 @@ export default function LoginPage() {
         firstName: res.firstName ?? undefined,
         lastName: res.lastName ?? undefined,
       });
-      navigate("/");
+      navigate("/dashboard");
     } catch (err) {
       if (err instanceof InvalidCodeError) {
         setInvalidCode(true);

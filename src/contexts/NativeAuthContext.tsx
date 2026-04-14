@@ -9,6 +9,7 @@ import {
 import type { NativeUser } from "@/types/NativeAuth";
 
 const SESSION_KEY = "myc-native-token";
+const SESSION_USER_KEY = "myc-native-user";
 
 interface NativeAuthState {
   token: string | null;
@@ -47,20 +48,28 @@ export function NativeAuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const stored = sessionStorage.getItem(SESSION_KEY);
     if (stored && isTokenValid(stored)) {
-      setState({ token: stored, user: null, isAuthenticated: true, isLoading: false });
+      let user: NativeUser | null = null;
+      try {
+        const raw = sessionStorage.getItem(SESSION_USER_KEY);
+        if (raw) user = JSON.parse(raw) as NativeUser;
+      } catch { /* ignore malformed user cache */ }
+      setState({ token: stored, user, isAuthenticated: true, isLoading: false });
     } else {
       if (stored) sessionStorage.removeItem(SESSION_KEY);
+      sessionStorage.removeItem(SESSION_USER_KEY);
       setState((s) => ({ ...s, isLoading: false }));
     }
   }, []);
 
   const setAuth = useCallback((token: string, user: NativeUser) => {
     sessionStorage.setItem(SESSION_KEY, token);
+    sessionStorage.setItem(SESSION_USER_KEY, JSON.stringify(user));
     setState({ token, user, isAuthenticated: true, isLoading: false });
   }, []);
 
   const clearAuth = useCallback(() => {
     sessionStorage.removeItem(SESSION_KEY);
+    sessionStorage.removeItem(SESSION_USER_KEY);
     setState({ token: null, user: null, isAuthenticated: false, isLoading: false });
   }, []);
 

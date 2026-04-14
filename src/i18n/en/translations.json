@@ -1,101 +1,27 @@
 {
   "screens": {
     "HomePage": {
-      "title": "Welcome Back",
-      "AnonymousUser": {
-        "title": "Authenticate to start",
-        "button": "Click here",
-        "processing": "We are checking your email address"
+      "hero": {
+        "name": "Mycelium API Gateway",
+        "tagline": "Secure, extensible API gateway for modern applications"
       },
-      "AuthenticatedUser": {
-        "title": "How great to see him here!",
-        "loggedInAs": "You are authenticated as",
-        "checkingEmailStatus": "We are checking if you have an account",
-        "emailNotFound": "Your email was not found in our records",
-        "register": "Click to register",
-        "registering": "Registering ...",
-        "allReady": "All ready",
-        "userSuccessfullyRegistered": "Successful registered user",
-        "userAlreadyRegistered": "Already registered user",
-        "userNotRegistered": "Unregistered user"
-      },
-      "MyceliumProfile": {
-        "title": "Before continuing, confirm some information",
-        "form": {
-          "firstName": {
-            "label": "First name",
-            "title": "Name",
-            "placeholder": "Joaquim"
-          },
-          "lastName": {
-            "label": "Surname",
-            "title": "Your other names",
-            "placeholder": "José da Silva Xavier"
-          }
+      "features": {
+        "title": "Why Mycelium?",
+        "security": {
+          "title": "Security-first",
+          "description": "JWT-based authentication, magic-link login, and fine-grained role permissions out of the box."
         },
-        "submit": "Save",
-        "submitting": "Saving ...",
-        "success": "Successful registration",
-        "error": "Unexpected error when registering",
-        "countdown": "You will be redirected to the panel in {{seconds}} second",
-        "forceRedirect": "Redirect now"
-      },
-      "OnboardingChecklist": {
-        "checkingAccount": "Checking your account...",
-        "requiredSection": "Required steps",
-        "optionalSection": "Optional steps",
-        "createAccount": {
-          "title": "Create your account",
-          "description": "You need an account to access the platform.",
-          "button": "Create account",
-          "creating": "Creating...",
-          "complete": "Account created"
+        "performance": {
+          "title": "High performance",
+          "description": "Built with Rust and Actix-Web — zero-cost abstractions and async I/O for maximum throughput."
         },
-        "meta": {
-          "phone": {
-            "title": "Phone number",
-            "placeholder": "+1 555 000 0000"
-          },
-          "telegram": {
-            "title": "Telegram",
-            "placeholder": "@username"
-          },
-          "whatsapp": {
-            "title": "WhatsApp",
-            "placeholder": "+1 555 000 0000"
-          },
-          "locale": {
-            "title": "Preferred language",
-            "placeholder": "e.g. en, pt-BR"
-          }
-        },
-        "save": "Save",
-        "saving": "Saving...",
-        "saved": "Saved",
-        "goToDashboard": "Go to dashboard",
-        "error": "Unexpected error"
+        "extensibility": {
+          "title": "Extensible",
+          "description": "JSON-RPC 2.0 API, webhooks, and a Python SDK to integrate with your downstream services."
+        }
       },
-      "UnRegisteredUser": {
-        "title": "Almost there!",
-        "subtitle": "Check your username",
-        "finishRegistrationButton": "Click to finish the record",
-        "registering": "Registering ...",
-        "userSuccessfullyRegistered": "Successful registered user",
-        "allReady": "All ready",
-        "userAlreadyRegistered": "Already registered user"
-      },
-      "ValidatedUser": {
-        "checkingProfile": "We are checking your profile",
-        "userSuccessfullyValidated": "Successful validated user",
-        "allReady": "All ready",
-        "userAlreadyValidated": "Already validated user",
-        "verifiedAccount": "Verified account?",
-        "hasPrivilegedRoles": "Do you have privileged functions?",
-        "yes": "Yes",
-        "no": "No",
-        "redirectingToDashboard": "We are redirecting you to the panel",
-        "ifNotRedirectedClickHere": "If you are not redirected, click",
-        "here": "here"
+      "footer": {
+        "links": "Find us"
       }
     },
     "Dashboard": {
@@ -899,6 +825,37 @@
         "native": "Native",
         "yes": "Yes",
         "no": "No"
+      },
+      "Onboarding": {
+        "breadcrumb": "Getting started",
+        "title": "Getting started",
+        "subtitle": "Complete these steps to set up your account.",
+        "checkingAccount": "Checking your account...",
+        "createAccount": {
+          "stepLabel": "Create your account",
+          "description": "You need an account to access the platform.",
+          "button": "Create account",
+          "creating": "Creating...",
+          "complete": "Account created"
+        },
+        "meta": {
+          "phone": {
+            "title": "Phone number"
+          },
+          "telegram": {
+            "title": "Telegram"
+          },
+          "whatsapp": {
+            "title": "WhatsApp"
+          },
+          "locale": {
+            "title": "Preferred language"
+          }
+        },
+        "save": "Save",
+        "saving": "Saving...",
+        "saved": "Saved",
+        "error": "Unexpected error"
       },
       "Webhooks": {
         "title": "Webhooks",

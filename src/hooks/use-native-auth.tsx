@@ -13,7 +13,7 @@ export default function useNativeAuth() {
   );
 
   const loginWithRedirect = useCallback(
-    () => navigate("/login"),
+    () => navigate("/"),
     [navigate]
   );
 

@@ -3,10 +3,11 @@ import { Routes, Route } from "react-router";
 import NotFound from "./components/NotFound";
 import useProfile from "./hooks/use-profile";
 import buildRoutes, { HOME_ROUTE, DASHBOARD_ROUTE } from "./constants/routes";
-import { Fragment, useMemo } from "react";
-import Profile from "./screens/Dashboard/components/Profile";
+import { Fragment, lazy, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import LoginPage from "@/screens/LoginPage";
+
+const Onboarding = lazy(() => import("@/screens/Dashboard/components/Onboarding"));
 
 export default function App() {
   const { t } = useTranslation();
@@ -26,7 +27,7 @@ export default function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path={HOME_ROUTE.path} element={HOME_ROUTE.element} />
           <Route path={DASHBOARD_ROUTE.path} element={DASHBOARD_ROUTE.element}>
-            <Route index element={<Profile />} />
+            <Route index element={<Onboarding />} />
 
             {ROUTES.sort((a, b) => a.position - b.position).map((route) => (
               <Fragment key={route.path}>

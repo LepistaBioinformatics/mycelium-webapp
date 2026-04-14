@@ -1,101 +1,27 @@
 {
   "screens": {
     "HomePage": {
-      "title": "Bem-vindo de volta",
-      "AnonymousUser": {
-        "title": "Para começar, autentique-se",
-        "button": "Clique aqui",
-        "processing": "Estamos verificando seu endereço de e-mail"
+      "hero": {
+        "name": "Mycelium API Gateway",
+        "tagline": "Gateway de API seguro e extensível para aplicações modernas"
       },
-      "AuthenticatedUser": {
-        "title": "Que ótimo vê-lo aqui!",
-        "loggedInAs": "Você está autenticado como",
-        "checkingEmailStatus": "Estamos verificando se você tem uma conta",
-        "emailNotFound": "Seu e-mail não foi encontrado em nossos registros",
-        "register": "Clique para se registrar",
-        "registering": "Registrando...",
-        "allReady": "Tudo pronto",
-        "userSuccessfullyRegistered": "Usuário registrado com sucesso",
-        "userAlreadyRegistered": "Usuário já registrado",
-        "userNotRegistered": "Usuário não registrado"
-      },
-      "MyceliumProfile": {
-        "title": "Antes de continuar, confirme algumas informações",
-        "form": {
-          "firstName": {
-            "label": "Primeiro nome",
-            "title": "Nome",
-            "placeholder": "Joaquim"
-          },
-          "lastName": {
-            "label": "Sobrenome",
-            "title": "Seus outros nomes",
-            "placeholder": "José da Silva Xavier"
-          }
+      "features": {
+        "title": "Por que Mycelium?",
+        "security": {
+          "title": "Segurança em primeiro lugar",
+          "description": "Autenticação JWT, login por magic-link e permissões granulares por função prontos para uso."
         },
-        "submit": "Salvar",
-        "submitting": "Salvando...",
-        "success": "Registro realizado com sucesso",
-        "error": "Erro inesperado ao registrar",
-        "countdown": "Você será redirecionado para o painel em {{seconds}} segundos",
-        "forceRedirect": "Redirecionar agora"
-      },
-      "OnboardingChecklist": {
-        "checkingAccount": "Verificando sua conta...",
-        "requiredSection": "Etapas obrigatórias",
-        "optionalSection": "Etapas opcionais",
-        "createAccount": {
-          "title": "Crie sua conta",
-          "description": "Você precisa de uma conta para acessar a plataforma.",
-          "button": "Criar conta",
-          "creating": "Criando...",
-          "complete": "Conta criada"
+        "performance": {
+          "title": "Alto desempenho",
+          "description": "Construído com Rust e Actix-Web — abstrações de custo zero e I/O assíncrono para máxima vazão."
         },
-        "meta": {
-          "phone": {
-            "title": "Número de telefone",
-            "placeholder": "+55 11 90000-0000"
-          },
-          "telegram": {
-            "title": "Telegram",
-            "placeholder": "@usuario"
-          },
-          "whatsapp": {
-            "title": "WhatsApp",
-            "placeholder": "+55 11 90000-0000"
-          },
-          "locale": {
-            "title": "Idioma preferido",
-            "placeholder": "ex: pt-BR, en"
-          }
-        },
-        "save": "Salvar",
-        "saving": "Salvando...",
-        "saved": "Salvo",
-        "goToDashboard": "Ir para o painel",
-        "error": "Erro inesperado"
+        "extensibility": {
+          "title": "Extensível",
+          "description": "API JSON-RPC 2.0, webhooks e um SDK Python para integrar com seus serviços downstream."
+        }
       },
-      "UnRegisteredUser": {
-        "title": "Quase lá!",
-        "subtitle": "Verifique seu nome de usuário",
-        "finishRegistrationButton": "Clique para finalizar o registro",
-        "registering": "Registrando...",
-        "userSuccessfullyRegistered": "Usuário registrado com sucesso",
-        "allReady": "Tudo pronto",
-        "userAlreadyRegistered": "Usuário já registrado"
-      },
-      "ValidatedUser": {
-        "checkingProfile": "Estamos verificando seu perfil",
-        "userSuccessfullyValidated": "Usuário validado com sucesso",
-        "allReady": "Tudo pronto",
-        "userAlreadyValidated": "Usuário já validado",
-        "verifiedAccount": "Conta verificada?",
-        "hasPrivilegedRoles": "Possui funções privilegiadas?",
-        "yes": "Sim",
-        "no": "Não",
-        "redirectingToDashboard": "Estamos redirecionando você para o painel",
-        "ifNotRedirectedClickHere": "Se você não for redirecionado, clique",
-        "here": "aqui"
+      "footer": {
+        "links": "Encontre-nos"
       }
     },
     "Dashboard": {
@@ -920,6 +846,37 @@
           "button": "Deletar",
           "loading": "Deletando..."
         }
+      },
+      "Onboarding": {
+        "breadcrumb": "Primeiros passos",
+        "title": "Primeiros passos",
+        "subtitle": "Conclua estas etapas para configurar sua conta.",
+        "checkingAccount": "Verificando sua conta...",
+        "createAccount": {
+          "stepLabel": "Crie sua conta",
+          "description": "Você precisa de uma conta para acessar a plataforma.",
+          "button": "Criar conta",
+          "creating": "Criando...",
+          "complete": "Conta criada"
+        },
+        "meta": {
+          "phone": {
+            "title": "Número de telefone"
+          },
+          "telegram": {
+            "title": "Telegram"
+          },
+          "whatsapp": {
+            "title": "WhatsApp"
+          },
+          "locale": {
+            "title": "Idioma preferido"
+          }
+        },
+        "save": "Salvar",
+        "saving": "Salvando...",
+        "saved": "Salvo",
+        "error": "Erro inesperado"
       }
     },
     "LoginPage": {
