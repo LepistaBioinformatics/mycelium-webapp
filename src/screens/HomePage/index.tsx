@@ -6,16 +6,14 @@ import { useDispatch } from "react-redux";
 import { TextInput } from "flowbite-react";
 import { Link } from "react-router";
 import {
-  FaArrowAltCircleDown,
-  FaBookReader,
+  FaArrowCircleDown,
+  FaBookOpen,
   FaGithub,
   FaLinkedin,
 } from "react-icons/fa";
 import { MdSecurity, MdSpeed, MdExtension } from "react-icons/md";
 
-import Button from "@/components/ui/Button";
 import Typography from "@/components/ui/Typography";
-import FormField from "@/components/ui/FomField";
 import AppHeader from "@/components/ui/AppHeader";
 
 import { requestMagicLink, verifyMagicLink } from "@/services/auth/magic-link";
@@ -41,7 +39,6 @@ export default function HomePage() {
   const emailForm = useForm<EmailForm>();
   const codeForm = useForm<CodeForm>();
 
-  // Redirect authenticated users to dashboard once auth state is resolved
   useEffect(() => {
     if (!isLoadingUser && isAuthenticated) {
       navigate("/dashboard");
@@ -57,7 +54,9 @@ export default function HomePage() {
       dispatch(
         setNotification({
           notification:
-            err instanceof Error ? err.message : t("screens.LoginPage.emailStep.error"),
+            err instanceof Error
+              ? err.message
+              : t("screens.LoginPage.emailStep.error"),
           type: "error",
         })
       );
@@ -100,181 +99,161 @@ export default function HomePage() {
 
   const tHome = "screens.HomePage";
 
-  // While auth state is loading, render nothing to avoid flash of login form
   if (isLoadingUser) return null;
 
   return (
-    <div className="bg-white dark:bg-zinc-900 min-h-screen">
+    <div className="bg-white dark:bg-zinc-950 min-h-screen flex flex-col">
+
+      {/* Full-page logo background — light mode */}
+      <div className="fixed inset-0 z-0 dark:hidden bg-[url(/logo-blackwhite.png)] bg-center bg-cover opacity-[0.14]" />
+      {/* Full-page logo background — dark mode */}
+      <div className="fixed inset-0 z-0 hidden dark:block bg-[url(/logo-color.png)] bg-center bg-cover opacity-[0.18]" />
+
       <AppHeader discrete logout={logout} />
 
-      {/* Hero ---------------------------------------------------------------- */}
-      <section className="relative flex flex-col sm:flex-row min-h-[calc(100vh-4rem)] overflow-hidden">
-        {/* Left: brand panel */}
-        <div className="hidden sm:flex flex-col items-center justify-center w-1/2 min-h-full bg-brand-violet-600 dark:bg-zinc-800 relative overflow-hidden">
-          <div className="absolute inset-0 bg-[url(/custom/mag.png)] bg-center bg-cover opacity-20" />
-          <div className="relative z-10 flex flex-col items-center gap-6 px-12 text-center">
-            <img
-              src="/custom/home-logo-dark.png"
-              alt="Mycelium API Gateway"
-              className="rounded-full border-2 border-brand-lime-400 w-40 h-40 object-cover"
-            />
-            <Typography as="h1" decoration="bold" reverseBackground>
+      {/* ── Hero ──────────────────────────────────────────────────────────── */}
+      <section className="relative flex flex-1 items-center justify-center min-h-[calc(100vh-4rem)]">
+
+        {/* Auth panel */}
+        <div className="relative z-10 w-full max-w-md px-6 flex flex-col gap-8">
+
+          {/* Brand */}
+          <div className="flex flex-col gap-2 text-center">
+            <Typography as="h1" decoration="bold" center>
               {t(`${tHome}.hero.name`)}
             </Typography>
-            <Typography decoration="smooth" reverseBackground center>
+            <Typography as="p" decoration="smooth" center>
               {t(`${tHome}.hero.tagline`)}
             </Typography>
           </div>
-        </div>
 
-        {/* Right: auth form */}
-        <div className="flex flex-col items-center justify-center w-full sm:w-1/2 px-6 py-16 sm:py-0">
-          <div className="w-full max-w-sm flex flex-col gap-8">
-            {/* Mobile logo */}
-            <div className="flex sm:hidden flex-col items-center gap-3">
-              <img
-                src="/custom/home-logo-dark.png"
-                alt="Mycelium API Gateway"
-                className="rounded-full border-2 border-brand-violet-500 dark:border-brand-lime-500 w-20 h-20 object-cover"
+          {step === "email" && (
+            <form
+              onSubmit={emailForm.handleSubmit(onSubmitEmail)}
+              className="flex flex-col gap-6"
+            >
+              <TextInput
+                id="email"
+                type="email"
+                autoComplete="email"
+                autoFocus
+                placeholder="you@example.com"
+                className="[&_input]:text-2xl [&_input]:py-6 [&_input]:px-5 [&_input]:bg-white/90 [&_input]:dark:bg-zinc-900/90 [&_input]:border-2 [&_input]:border-zinc-400 [&_input]:dark:border-zinc-600 [&_input]:shadow-md [&_input]:dark:shadow-[0_0_24px_4px_rgba(139,92,246,0.45)] [&_input]:focus:border-brand-violet-500 [&_input]:dark:focus:border-brand-violet-400 [&_input]:focus:ring-0 [&_input]:dark:focus:shadow-[0_0_32px_8px_rgba(139,92,246,0.65)]"
+                {...emailForm.register("email", { required: true })}
               />
-              <Typography as="h3" decoration="bold" center>
-                {t(`${tHome}.hero.name`)}
-              </Typography>
-            </div>
+              <button
+                type="submit"
+                disabled={emailForm.formState.isSubmitting}
+                className="
+                  w-full py-4 px-6 text-lg font-semibold
+                  transition-all duration-200
+                  bg-brand-violet-600 hover:bg-brand-violet-700 text-white
+                  dark:bg-brand-violet-500 dark:hover:bg-brand-violet-600
+                  disabled:opacity-50 disabled:cursor-not-allowed
+                  shadow-md hover:shadow-brand-violet-500/30 hover:shadow-lg
+                  focus:outline-none focus:ring-2 focus:ring-brand-violet-500 focus:ring-offset-2
+                  dark:focus:ring-offset-zinc-900
+                "
+              >
+                {emailForm.formState.isSubmitting
+                  ? t(`${tHome}.auth.sending`)
+                  : t("screens.LoginPage.emailStep.submit")}
+              </button>
+            </form>
+          )}
 
-            {/* Auth form */}
-            <div className="flex flex-col gap-6">
-              {step === "email" && (
-                <>
-                  <div className="flex flex-col gap-1">
-                    <Typography as="h4" center>
-                      {t("screens.LoginPage.emailStep.title")}
-                    </Typography>
-                  </div>
-
-                  <form
-                    onSubmit={emailForm.handleSubmit(onSubmitEmail)}
-                    className="flex flex-col gap-4"
-                  >
-                    <FormField
-                      label={t("screens.LoginPage.emailStep.label")}
-                      id="email"
-                    >
-                      <TextInput
-                        id="email"
-                        type="email"
-                        autoComplete="email"
-                        {...emailForm.register("email", { required: true })}
-                      />
-                    </FormField>
-
-                    <Button
-                      type="submit"
-                      fullWidth
-                      center
-                      rounded
-                      disabled={emailForm.formState.isSubmitting}
-                    >
-                      {t("screens.LoginPage.emailStep.submit")}
-                    </Button>
-                  </form>
-                </>
+          {step === "code" && (
+            <form
+              onSubmit={codeForm.handleSubmit(onSubmitCode)}
+              className="flex flex-col gap-6"
+            >
+              <p className="text-sm text-center text-zinc-500 dark:text-zinc-400">
+                {t("screens.LoginPage.codeStep.instruction")}{" "}
+                <span className="text-brand-violet-600 dark:text-brand-violet-400 font-medium">
+                  {submittedEmail}
+                </span>
+              </p>
+              <TextInput
+                id="code"
+                type="text"
+                inputMode="numeric"
+                maxLength={6}
+                pattern="[0-9]{6}"
+                autoComplete="one-time-code"
+                autoFocus
+                placeholder="000000"
+                className="[&_input]:text-3xl [&_input]:tracking-[0.5em] [&_input]:text-center [&_input]:font-mono [&_input]:py-6 [&_input]:bg-white/90 [&_input]:dark:bg-zinc-900/90 [&_input]:border-2 [&_input]:border-zinc-400 [&_input]:dark:border-zinc-600 [&_input]:shadow-md [&_input]:dark:shadow-[0_0_24px_4px_rgba(139,92,246,0.45)] [&_input]:focus:border-brand-violet-500 [&_input]:dark:focus:border-brand-violet-400 [&_input]:focus:ring-0 [&_input]:dark:focus:shadow-[0_0_32px_8px_rgba(139,92,246,0.65)]"
+                {...codeForm.register("code", {
+                  required: true,
+                  pattern: /^[0-9]{6}$/,
+                })}
+              />
+              {invalidCode && (
+                <p className="text-sm text-red-500 dark:text-red-400 text-center">
+                  {t("screens.LoginPage.codeStep.invalidCode")}
+                </p>
               )}
-
-              {step === "code" && (
-                <>
-                  <div className="flex flex-col gap-1">
-                    <Typography as="h4" center>
-                      {t("screens.LoginPage.codeStep.title")}
-                    </Typography>
-                    <Typography decoration="smooth" center>
-                      {t("screens.LoginPage.codeStep.instruction")}
-                    </Typography>
-                  </div>
-
-                  <form
-                    onSubmit={codeForm.handleSubmit(onSubmitCode)}
-                    className="flex flex-col gap-4"
-                  >
-                    <FormField
-                      label={t("screens.LoginPage.codeStep.label")}
-                      id="code"
-                    >
-                      <TextInput
-                        id="code"
-                        type="text"
-                        inputMode="numeric"
-                        maxLength={6}
-                        pattern="[0-9]{6}"
-                        autoComplete="one-time-code"
-                        autoFocus
-                        {...codeForm.register("code", {
-                          required: true,
-                          pattern: /^[0-9]{6}$/,
-                        })}
-                      />
-                      {invalidCode && (
-                        <Typography as="small">
-                          <span className="text-red-500">
-                            {t("screens.LoginPage.codeStep.invalidCode")}
-                          </span>
-                        </Typography>
-                      )}
-                    </FormField>
-
-                    <Button
-                      type="submit"
-                      fullWidth
-                      center
-                      rounded
-                      disabled={codeForm.formState.isSubmitting}
-                    >
-                      {t("screens.LoginPage.codeStep.submit")}
-                    </Button>
-
-                    <Button
-                      type="button"
-                      intent="secondary"
-                      fullWidth
-                      center
-                      rounded
-                      onClick={handleBack}
-                    >
-                      {t("screens.LoginPage.codeStep.back")}
-                    </Button>
-                  </form>
-                </>
-              )}
-            </div>
-          </div>
+              <button
+                type="submit"
+                disabled={codeForm.formState.isSubmitting}
+                className="
+                  w-full py-4 px-6 text-lg font-semibold
+                  transition-all duration-200
+                  bg-brand-violet-600 hover:bg-brand-violet-700 text-white
+                  dark:bg-brand-violet-500 dark:hover:bg-brand-violet-600
+                  disabled:opacity-50 disabled:cursor-not-allowed
+                  shadow-md hover:shadow-brand-violet-500/30 hover:shadow-lg
+                  focus:outline-none focus:ring-2 focus:ring-brand-violet-500 focus:ring-offset-2
+                  dark:focus:ring-offset-zinc-900
+                "
+              >
+                {codeForm.formState.isSubmitting
+                  ? t(`${tHome}.auth.verifying`)
+                  : t("screens.LoginPage.codeStep.submit")}
+              </button>
+              <button
+                type="button"
+                onClick={handleBack}
+                className="
+                  w-full py-3 px-6 text-sm font-medium
+                  transition-colors duration-200
+                  text-zinc-500 dark:text-zinc-400
+                  hover:text-zinc-900 dark:hover:text-zinc-200
+                  focus:outline-none
+                "
+              >
+                {t("screens.LoginPage.codeStep.back")}
+              </button>
+            </form>
+          )}
         </div>
       </section>
 
-      {/* Scroll hint -------------------------------------------------------- */}
-      <div className="flex justify-center py-4 bg-white dark:bg-zinc-900">
-        <FaArrowAltCircleDown className="text-2xl animate-bounce text-zinc-400 dark:text-zinc-500" />
+      {/* ── Scroll hint ───────────────────────────────────────────────────── */}
+      <div className="flex justify-center py-6">
+        <FaArrowCircleDown className="text-xl animate-bounce text-zinc-400 dark:text-zinc-600" />
       </div>
 
-      {/* Features ----------------------------------------------------------- */}
-      <section className="bg-zinc-50 dark:bg-zinc-800 px-6 py-16">
-        <div className="max-w-4xl mx-auto flex flex-col gap-10">
-          <Typography as="h2" center decoration="smooth">
+      {/* ── Features ──────────────────────────────────────────────────────── */}
+      <section className="relative z-10 bg-zinc-100 dark:bg-zinc-900 px-6 py-20 border-t border-zinc-300 dark:border-zinc-800">
+        <div className="max-w-5xl mx-auto flex flex-col gap-12">
+          <Typography as="h2" center decoration="bold">
             {t(`${tHome}.features.title`)}
           </Typography>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
             <FeatureCard
-              icon={<MdSecurity className="text-3xl text-brand-violet-500 dark:text-brand-lime-500" />}
+              icon={<MdSecurity className="text-3xl text-brand-violet-500" />}
               title={t(`${tHome}.features.security.title`)}
               description={t(`${tHome}.features.security.description`)}
             />
             <FeatureCard
-              icon={<MdSpeed className="text-3xl text-brand-violet-500 dark:text-brand-lime-500" />}
+              icon={<MdSpeed className="text-3xl text-brand-violet-500" />}
               title={t(`${tHome}.features.performance.title`)}
               description={t(`${tHome}.features.performance.description`)}
             />
             <FeatureCard
-              icon={<MdExtension className="text-3xl text-brand-violet-500 dark:text-brand-lime-500" />}
+              icon={<MdExtension className="text-3xl text-brand-violet-500" />}
               title={t(`${tHome}.features.extensibility.title`)}
               description={t(`${tHome}.features.extensibility.description`)}
             />
@@ -282,47 +261,43 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Footer ------------------------------------------------------------- */}
-      <footer className="bg-white dark:bg-zinc-900 px-6 py-12 border-t border-zinc-100 dark:border-zinc-800">
-        <div className="max-w-4xl mx-auto flex flex-col sm:flex-row justify-between gap-8">
-          <div className="flex flex-col gap-4">
-            <Typography as="h5" decoration="smooth">
-              {t(`${tHome}.footer.links`)}
-            </Typography>
-            <div className="flex flex-col gap-3">
-              <Link
-                to="https://www.linkedin.com/showcase/mycelium-api-gateway-mag/"
-                target="_blank"
-                className="flex gap-2 items-center text-zinc-600 dark:text-zinc-400 hover:text-brand-violet-500 dark:hover:text-brand-lime-500 transition-colors"
-              >
-                <FaLinkedin /> MAG on LinkedIn
-              </Link>
-              <Link
-                to="https://github.com/LepistaBioinformatics/mycelium"
-                target="_blank"
-                className="flex gap-2 items-center text-zinc-600 dark:text-zinc-400 hover:text-brand-violet-500 dark:hover:text-brand-lime-500 transition-colors"
-              >
-                <FaGithub /> MAG on GitHub
-              </Link>
-              <Link
-                to="https://github.com/LepistaBioinformatics/mycelium-webapp"
-                target="_blank"
-                className="flex gap-2 items-center text-zinc-600 dark:text-zinc-400 hover:text-brand-violet-500 dark:hover:text-brand-lime-500 transition-colors"
-              >
-                <FaGithub /> MyWAPP on GitHub
-              </Link>
-              <Link
-                to="https://lepistabioinformatics.github.io/mycelium-docs/"
-                target="_blank"
-                className="flex gap-2 items-center text-zinc-600 dark:text-zinc-400 hover:text-brand-violet-500 dark:hover:text-brand-lime-500 transition-colors"
-              >
-                <FaBookReader /> MAG Documentation
-              </Link>
+      {/* ── Footer ────────────────────────────────────────────────────────── */}
+      <footer className="relative z-10 bg-white dark:bg-zinc-950 px-6 py-12 border-t border-zinc-300 dark:border-zinc-800">
+        <div className="max-w-5xl mx-auto flex flex-col sm:flex-row justify-between gap-8">
+          <div className="flex flex-col gap-5">
+            <div className="flex items-center gap-3">
+              <img
+                src="/logo-icon-square.png"
+                alt="MAG"
+                className="hidden dark:block w-7 h-7 object-contain"
+              />
+              <img
+                src="/logo-blackwhite.png"
+                alt="MAG"
+                className="block dark:hidden w-7 h-7 object-contain opacity-80"
+              />
+              <Typography as="p" decoration="smooth">
+                Mycelium API Gateway
+              </Typography>
+            </div>
+            <div className="flex flex-col gap-2.5">
+              <FooterLink href="https://www.linkedin.com/showcase/mycelium-api-gateway-mag/" icon={<FaLinkedin />}>
+                MAG on LinkedIn
+              </FooterLink>
+              <FooterLink href="https://github.com/LepistaBioinformatics/mycelium" icon={<FaGithub />}>
+                MAG on GitHub
+              </FooterLink>
+              <FooterLink href="https://github.com/LepistaBioinformatics/mycelium-webapp" icon={<FaGithub />}>
+                MyWAPP on GitHub
+              </FooterLink>
+              <FooterLink href="https://lepistabioinformatics.github.io/mycelium-docs/" icon={<FaBookOpen />}>
+                Documentation
+              </FooterLink>
             </div>
           </div>
 
           <div className="flex flex-col justify-end">
-            <Typography decoration="smooth">
+            <Typography as="p" decoration="smooth">
               Mycelium &copy; 2025
             </Typography>
           </div>
@@ -332,9 +307,7 @@ export default function HomePage() {
   );
 }
 
-// ---------------------------------------------------------------------------
-// FeatureCard
-// ---------------------------------------------------------------------------
+// ── FeatureCard ──────────────────────────────────────────────────────────────
 
 interface FeatureCardProps {
   icon: React.ReactNode;
@@ -344,12 +317,45 @@ interface FeatureCardProps {
 
 function FeatureCard({ icon, title, description }: FeatureCardProps) {
   return (
-    <div className="flex flex-col gap-3 p-6 bg-white dark:bg-zinc-900 rounded-xl border border-zinc-100 dark:border-zinc-700 shadow-sm">
-      {icon}
-      <Typography as="h5">{title}</Typography>
-      <Typography decoration="smooth" as="small">
-        {description}
-      </Typography>
+    <div className="
+      flex flex-col gap-4 p-6 
+      bg-white border border-zinc-200 shadow-md
+      dark:bg-zinc-950 dark:border-zinc-800
+    ">
+      <div className="
+        w-12 h-12 flex items-center justify-center
+        bg-brand-violet-50 dark:bg-brand-violet-950
+      ">
+        {icon}
+      </div>
+      <Typography as="h5" decoration="bold">{title}</Typography>
+      <Typography as="p" decoration="smooth">{description}</Typography>
     </div>
+  );
+}
+
+// ── FooterLink ───────────────────────────────────────────────────────────────
+
+interface FooterLinkProps {
+  href: string;
+  icon: React.ReactNode;
+  children: React.ReactNode;
+}
+
+function FooterLink({ href, icon, children }: FooterLinkProps) {
+  return (
+    <Link
+      to={href}
+      target="_blank"
+      className="
+        flex gap-2 items-center text-sm
+        text-zinc-500 dark:text-zinc-500
+        hover:text-brand-violet-600 dark:hover:text-brand-violet-400
+        transition-colors
+      "
+    >
+      {icon}
+      {children}
+    </Link>
   );
 }

@@ -15,6 +15,8 @@
   `useAuth0` is imported only in `use-profile.tsx`.
 - **D6** — `NativeAuthContext` exports both provider and hook from the same file (standard context
   pattern). The `react-refresh/only-export-components` warning is accepted as a known trade-off.
+- **D8** — `NativeAuthContext` persists both token (`myc-native-token`) and user (`myc-native-user`) to `sessionStorage`. User data must survive page reload for any component that guards on `user?.email` (e.g. Onboarding, use-profile). Restore both on mount; clear both on logout.
+- **D9** — Homepage is the auth entry point. `/login` remains for backward compatibility but both routes redirect to `/dashboard` after successful auth. `loginWithRedirect()` navigates to `/` (not `/login`).
 - **D7** — `NativeUser.email` is `components["schemas"]["Email"]` = `{ username: string; domain: string }`.
   String rendering uses `${username}@${domain}`. Comparison with `Owner.email` (plain string) converts
   the Email object before matching.
@@ -49,6 +51,13 @@ _(none)_
 - **L9 — MyceliumLoginResponse.duration is string** — The spec defined `duration: number` but
   the schema type is `duration: string`. Always use `components["schemas"]["X"]` over hand-rolled
   types to catch gateway contract mismatches early.
+- **L10 — NativeAuthContext user lost on reload** — `setAuth` stored the token but not the user.
+  On reload, the context restored `token` but set `user: null`. Any effect guarded on `user?.email`
+  silently skipped. Fix: persist user to a separate sessionStorage key and restore both on mount.
+- **L11 — Redirect guard needs isLoadingUser, not user** — Homepage redirect used
+  `isAuthenticated && user` which failed when user was null (pre-L10 fix). Even after the fix,
+  the correct guard is `!isLoadingUser && isAuthenticated` — decouple redirect from user object
+  presence to handle edge cases where token is valid but user deserialization fails.
 
 ## Todos
 
@@ -75,3 +84,12 @@ _(none)_
 - All remaining components and screens migrated: 50 files, all bare `indigo-*` → `brand-violet-*`, `violet-*` → `brand-violet-*`, `lime-400/500/600/700` → `brand-lime-*`
 - `lime-100` and `lime-900` intentionally preserved (no brand equivalent in palette)
 - Gateway templates (DS-G-01 → DS-G-04) remain out of scope for webapp
+
+**Auth + Onboarding flow redesign** ✅ complete (2026-04-13)
+- `HomePage` is now a proper landing page with embedded magic-link auth form (email → code). Authenticated users redirect immediately to `/dashboard`; loading state renders null to avoid form flash.
+- `LoginPage` still exists at `/login` but redirects to `/dashboard` on success (was `/`).
+- `loginWithRedirect` in `use-native-auth.tsx` now points to `/` (homepage) instead of `/login`.
+- `NativeAuthContext` now persists `user` to `sessionStorage` (`myc-native-user` key) alongside the token. Previously `user` was lost on page reload, breaking the Onboarding effect guard (`user?.email` was null).
+- Dashboard index replaced: `<Profile />` → `<Onboarding />` — a vertical timeline showing account creation (required) and optional meta fields (phone, Telegram, WhatsApp, locale). Steps 2–5 are locked until account exists.
+- Removed: `AuthenticatedUser.tsx`, `MyceliumProfile.tsx`, `FlowContainer.tsx` from `screens/HomePage/`.
+- Auth0-related naming cleaned up: `parseAuth0Error` → `parseAuthError`, `auth0Logout` → `logout`, `VITE_AUTH0_*` env vars removed from all `.env.*` files.

@@ -3,7 +3,8 @@
     "HomePage": {
       "hero": {
         "name": "Mycelium API Gateway",
-        "tagline": "API gateway seguro y extensible para aplicaciones modernas"
+        "tagline": "API gateway seguro y extensible para aplicaciones modernas",
+        "description": "Conecta. Protege. Escala. Un gateway de API resiliente y orgánico que conecta cientos de servicios con la velocidad y confiabilidad de una red neuronal."
       },
       "features": {
         "title": "¿Por qué Mycelium?",
@@ -22,6 +23,11 @@
       },
       "footer": {
         "links": "Encuéntranos"
+      },
+      "auth": {
+        "emailHint": "Ingresa tu correo para recibir un código de acceso único.",
+        "sending": "Enviando...",
+        "verifying": "Verificando..."
       }
     },
     "Dashboard": {
