@@ -1,8 +1,6 @@
 import Sidebar from "@/components/ui/Sidebar";
 import useToggleSidebar from "@/hooks/use-toggle-sidebar";
 import { Outlet } from "react-router";
-import { useSelector } from "react-redux";
-import { RootState } from "@/states/store";
 import Typography from "@/components/ui/Typography";
 import Button from "@/components/ui/Button";
 import { useEffect, useMemo, useState } from "react";
@@ -10,9 +8,10 @@ import Modal from "@/components/ui/Modal";
 import buildRoutes from "@/constants/routes";
 import useProfile from "@/hooks/use-profile";
 import AppNotifications from "@/components/AppNotifications";
-import useSuspenseError from "@/hooks/use-suspense-error";
 import MobileNavbar from "@/components/ui/MobileNavbar";
 import { useTranslation } from "react-i18next";
+import { accountsGet } from "@/services/rpc/beginners";
+import { components } from "@/services/openapi/mycelium-schema";
 
 export default function Dashboard() {
   const { t } = useTranslation();
@@ -103,47 +102,95 @@ function LogoutModal({
   );
 }
 
-/**
- * The tenant selector should exists in the main header.
- *
- * @returns
- */
-function MainHeader({ isOpen }: { isOpen: boolean }) {
-  const { tenantInfo } = useSelector((state: RootState) => state.tenant);
+type Account = components["schemas"]["Account"];
 
-  const { dispacheSuccess } = useSuspenseError();
+const ONBOARDING_TOTAL = 4;
+
+function onboardingSteps(acc: Account | null): number {
+  if (!acc) return 0;
+  const meta = (acc.meta ?? {}) as Record<string, string>;
+  return (
+    1 +
+    (meta.locale ? 1 : 0) +
+    (meta.phone_number ? 1 : 0) +
+    (meta.telegram_user || meta.whatsapp_user ? 1 : 0)
+  );
+}
+
+function MainHeader({ isOpen }: { isOpen: boolean }) {
+  const { user, getAccessTokenSilently } = useProfile();
+  const [completedSteps, setCompletedSteps] = useState(0);
 
   useEffect(() => {
-    if (tenantInfo) {
-      dispacheSuccess(`Tenant selected: ${tenantInfo.name}`);
-    }
-  }, [tenantInfo]);
+    if (!user?.email) return;
+    accountsGet(getAccessTokenSilently)
+      .then((acc) => setCompletedSteps(onboardingSteps(acc)))
+      .catch(() => {});
+  }, [user?.email, getAccessTokenSilently]);
 
-  if (!tenantInfo) {
-    return null;
-  }
+  const initials = user?.email
+    ? (user.email.username[0] ?? "?").toUpperCase()
+    : "?";
 
-  const tenantShortName = () => {
-    const splitted = tenantInfo.name.split(" ");
-
-    if (splitted.length === 1) {
-      return splitted[0]?.slice(0, 2).toUpperCase();
-    }
-
-    return splitted
-      .slice(0, 2)
-      .map((name) => name[0]?.toUpperCase())
-      .join("");
-  };
+  const pct = Math.round((completedSteps / ONBOARDING_TOTAL) * 100);
+  const radius = 18;
+  const circumference = 2 * Math.PI * radius;
+  const offset = circumference * (1 - pct / 100);
 
   return (
-    <div
-      className="flex justify-center font-semibold gap-2 py-2 px-4 text-brand-violet-600 dark:text-zinc-300 bg-white dark:bg-zinc-900 backdrop-blur-sm border border-brand-violet-500 dark:border-brand-lime-500 rounded-lg truncate max-w-full"
-      title={tenantInfo.name}
-    >
-      <span className="truncate max-w-[12rem]">
-        {isOpen ? tenantInfo.name : tenantShortName()}
-      </span>
+    <div className="flex items-center gap-3 px-1 py-2 min-w-0">
+      {/* Circular progress ring + user avatar */}
+      <div className="relative flex-shrink-0 w-10 h-10">
+        <svg
+          width="40"
+          height="40"
+          viewBox="0 0 40 40"
+          className="absolute inset-0 -rotate-90"
+        >
+          <circle
+            cx="20"
+            cy="20"
+            r={radius}
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            className="text-zinc-200 dark:text-zinc-700"
+          />
+          <circle
+            cx="20"
+            cy="20"
+            r={radius}
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeDasharray={circumference}
+            strokeDashoffset={offset}
+            className="text-brand-violet-500 dark:text-brand-lime-500 transition-all duration-500"
+          />
+        </svg>
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="w-7 h-7 rounded-full bg-brand-violet-500 dark:bg-brand-violet-400 flex items-center justify-center text-white text-xs font-bold select-none">
+            {initials}
+          </div>
+        </div>
+      </div>
+
+      {/* Username + completion percentage — shown when sidebar is open or hovered */}
+      <div
+        className={[
+          "flex flex-col min-w-0 overflow-hidden whitespace-nowrap transition-all duration-300 ease-in-out",
+          isOpen
+            ? "opacity-100 max-w-xs"
+            : "opacity-0 max-w-0 group-hover/sidebar:opacity-100 group-hover/sidebar:max-w-xs",
+        ].join(" ")}
+      >
+        <span className="text-sm font-medium text-zinc-800 dark:text-zinc-200 truncate">
+          {user?.email?.username ?? "…"}
+        </span>
+        <span className="text-xs text-zinc-500 dark:text-zinc-400">
+          {pct}%
+        </span>
+      </div>
     </div>
   );
 }
