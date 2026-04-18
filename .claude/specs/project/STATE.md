@@ -79,6 +79,11 @@ _(none)_
 
 ## Current Focus
 
+**M3 — Test Coverage** ✅ complete (2026-04-18)
+- vitest + jsdom configured (`vitest.config.ts`, `src/test/setup.ts`)
+- 25 unit tests: RPC client (9), beginners wrappers (4), use-profile hook (12)
+- `yarn test` passes; `yarn build` and `yarn lint` clean
+
 **M4 — Native Auth** ✅ complete (2026-04-07)
 
 **Design System — token migration** ✅ complete (2026-04-12)
