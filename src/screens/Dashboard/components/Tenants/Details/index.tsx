@@ -22,11 +22,13 @@ import OwnersCard from "./OwnersCard";
 import ManagersCard from "./ManagersCard";
 import BrandCard from "./BrandCard";
 import LegalSettings from "./LegalSettings";
+import TelegramConfigCard from "./TelegramConfigCard";
 import { useTranslation } from "react-i18next";
 import {
   MdImagesearchRoller,
   MdManageAccounts,
   MdOutlineRealEstateAgent,
+  MdOutlineIntegrationInstructions,
 } from "react-icons/md";
 import CreateConnectionStringModal from "../../CreateConnectionStringModal";
 import Banner from "@/components/ui/Banner";
@@ -43,6 +45,7 @@ enum ActiveTab {
   Owners = 2,
   Managers = 3,
   Advanced = 4,
+  Integrations = 5,
 }
 
 interface NavItem {
@@ -77,6 +80,11 @@ const NAV_ITEMS: NavItem[] = [
     tab: ActiveTab.Advanced,
     labelKey: "screens.Dashboard.Tenants.AdvancedManagement.tabs.advanced",
     icon: <MdManageAccounts size={16} />,
+  },
+  {
+    tab: ActiveTab.Integrations,
+    labelKey: "screens.Dashboard.Tenants.AdvancedManagement.tabs.integrations",
+    icon: <MdOutlineIntegrationInstructions size={16} />,
   },
 ];
 
@@ -414,6 +422,10 @@ export default function AdvancedManagement() {
                   tenant={activeTenant}
                   mutateTenantStatus={mutateTenantStatus}
                 />
+              )}
+
+              {activeTab === ActiveTab.Integrations && activeTenant && (
+                <TelegramConfigCard tenant={activeTenant} />
               )}
 
               {activeTab === ActiveTab.Advanced && (

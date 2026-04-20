@@ -230,6 +230,33 @@
         },
         "verified": "Verified"
       },
+      "TelegramConfig": {
+        "title": "Telegram Integration",
+        "description": "Configure your Telegram bot credentials to enable Telegram-based authentication for this tenant.",
+        "botToken": {
+          "label": "Bot Token",
+          "placeholder": "Enter your Telegram bot token"
+        },
+        "webhookSecret": {
+          "label": "Webhook Secret",
+          "placeholder": "Enter your webhook secret (min. 8 characters)"
+        },
+        "save": "Save",
+        "saving": "Saving...",
+        "saved": "Credentials saved",
+        "error": "Failed to save credentials"
+      },
+      "TelegramIdentity": {
+        "tabName": "Identity",
+        "title": "Telegram Identity",
+        "linked": "Linked",
+        "notLinked": "Not linked",
+        "description": "Your Telegram account linked to this identity.",
+        "unlink": "Unlink",
+        "unlinking": "Unlinking...",
+        "unlinked": "Telegram identity unlinked",
+        "error": "Failed to unlink Telegram identity"
+      },
       "TenantBasicInfo": {
         "from": {
           "title": "The namepace to which the account belongs: {{tenantId}}",
@@ -350,7 +377,8 @@
             "owners": "Owners",
             "managers": "Managers",
             "brand": "Brand",
-            "advanced": "Advanced"
+            "advanced": "Advanced",
+            "integrations": "Integrations"
           },
           "advanced": {
             "title": "Advanced"

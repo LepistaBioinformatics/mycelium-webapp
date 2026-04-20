@@ -214,6 +214,33 @@
         },
         "verified": "Verificado"
       },
+      "TelegramConfig": {
+        "title": "Integración con Telegram",
+        "description": "Configure las credenciales de su bot de Telegram para habilitar la autenticación vía Telegram en este namespace.",
+        "botToken": {
+          "label": "Token del Bot",
+          "placeholder": "Ingrese el token de su bot de Telegram"
+        },
+        "webhookSecret": {
+          "label": "Secreto del Webhook",
+          "placeholder": "Ingrese el secreto del webhook (mín. 8 caracteres)"
+        },
+        "save": "Guardar",
+        "saving": "Guardando...",
+        "saved": "Credenciales guardadas",
+        "error": "Error al guardar las credenciales"
+      },
+      "TelegramIdentity": {
+        "tabName": "Identidad",
+        "title": "Identidad de Telegram",
+        "linked": "Vinculado",
+        "notLinked": "No vinculado",
+        "description": "Tu cuenta de Telegram vinculada a esta identidad.",
+        "unlink": "Desvincular",
+        "unlinking": "Desvinculando...",
+        "unlinked": "Identidad de Telegram desvinculada",
+        "error": "Error al desvincular la identidad de Telegram"
+      },
       "TenantBasicInfo": {
         "from": {
           "title": "El namepace al que pertenece la cuenta: {{tenantId}}",
@@ -322,6 +349,14 @@
           "breadcrumb": "Espacios de nombres",
           "manageAccounts": "Ver Cuentas",
           "manageAccountsDescription": "Haga clic aquí para ver las cuentas registradas en el espacio de nombres.",
+          "tabs": {
+            "legalInformation": "Información Legal",
+            "owners": "Propietarios",
+            "managers": "Gerentes",
+            "brand": "Marca",
+            "advanced": "Avanzado",
+            "integrations": "Integraciones"
+          },
           "createConnectionString": {
             "cta": "Opciones avanzadas",
             "title": "Crear cadena de conexión para el espacio de nombres",

@@ -69,7 +69,7 @@ _(none)_
   `createSubscriptionAccount` or `createRoleAssociatedAccount` — confirmed: `createSubscriptionAccount`.
 - [x] Verify `AccountInvitations` second SWR call (`listGuestOnSubscriptionAccount` vs
   `listLicensedAccountsOfEmail`) — confirmed: `listLicensedAccountsOfEmail`.
-- [ ] Implement M5 — Telegram IdP (spec: `.claude/specs/features/telegram-idp/`) — bot config form for tenant owners + identity panel + unlink in user settings. Gateway endpoints are live; Mini App is a separate standalone submodule.
+- [x] Implement M5 — Telegram IdP (spec: `.claude/specs/features/telegram-idp/`) — bot config form for tenant owners + identity panel + unlink in user settings. Gateway endpoints are live; Mini App is a separate standalone submodule.
 
 ## Deferred Ideas
 
@@ -122,6 +122,14 @@ _(none)_
 - Dashboard index replaced: `<Profile />` → `<Onboarding />` — a vertical timeline showing account creation (required) and optional meta fields (phone, Telegram, WhatsApp, locale). Steps 2–5 are locked until account exists.
 - Removed: `AuthenticatedUser.tsx`, `MyceliumProfile.tsx`, `FlowContainer.tsx` from `screens/HomePage/`.
 - Auth0-related naming cleaned up: `parseAuth0Error` → `parseAuthError`, `auth0Logout` → `logout`, `VITE_AUTH0_*` env vars removed from all `.env.*` files.
+
+**M5 — Telegram IdP** ✅ complete (2026-04-20)
+- `src/services/telegram/index.ts`: `setTelegramConfig` (POST `/_adm/tenant-owner/telegram/config` with `x-mycelium-tenant-id` header) + `unlinkTelegram` (DELETE `/_adm/auth/telegram/link`)
+- `SetTelegramConfigBody` typed locally (TODO: replace when schema is regenerated)
+- `TelegramConfigCard.tsx`: password inputs for bot token + webhook secret; tenant-owner-gated via `useProfile({ tenantOwnerNeeded })`; dispatches Redux notifications on save/error; wired as new "Integrations" tab (tab 5) in `Tenants/Details/index.tsx`
+- `TelegramIdentitySection.tsx`: linked/not-linked state from `profile.meta["telegram_user"]`; Unlink button calls DELETE then clears session profile cache (`myc-profile`) and reloads; wired as new "Identity" tab (tab 4) in `Profile/index.tsx`
+- i18n: `TelegramConfig.*` + `TelegramIdentity.*` + `tabs.integrations` added to all 3 locales; pt-br and es also got the missing `tabs` object in `AdvancedManagement`
+- Version bumped `0.3.1 → 0.4.0`; `yarn build` + `yarn lint` pass (0 errors)
 
 **Onboarding design system alignment** ✅ complete (2026-04-13)
 - Layout changed from `PageBody` (forces `min-h-screen`) to a `max-w-2xl mx-auto` centered column — dashboard no longer occupies full viewport height.

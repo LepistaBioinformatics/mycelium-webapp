@@ -13,6 +13,7 @@ import ControlPanelBreadcrumbItem from "../ControlPanelBreadcrumbItem";
 import TenantOwnershipSection from "./TenantOwnershipSection";
 import LicensedResourcesSection from "./LicensedResourcesSection";
 import ListConnectionStringsSection from "./ListConnectionStringsSection";
+import TelegramIdentitySection from "./TelegramIdentitySection";
 import { GiWizardStaff } from "react-icons/gi";
 import { GrUserAdmin } from "react-icons/gr";
 import IntroSection from "@/components/ui/IntroSection";
@@ -26,6 +27,7 @@ import { SlOrganization } from "react-icons/sl";
 import { MdManageAccounts } from "react-icons/md";
 import { IoOptions } from "react-icons/io5";
 import { IoSettingsOutline } from "react-icons/io5";
+import { MdOutlineLinkOff } from "react-icons/md";
 import { useSearchParams } from "react-router";
 import { useSWRConfig } from "swr";
 
@@ -34,6 +36,7 @@ enum ActiveTab {
   TenantOwnership = 1,
   ListConnectionStrings = 2,
   AdvancedOptions = 3,
+  TelegramIdentity = 4,
 }
 
 type Profile = components["schemas"]["Profile"];
@@ -64,6 +67,11 @@ const NAV_ITEMS: NavItem[] = [
     tab: ActiveTab.AdvancedOptions,
     labelKey: "screens.Dashboard.AdvancedOptionsModal.tabName",
     icon: <IoSettingsOutline size={16} />,
+  },
+  {
+    tab: ActiveTab.TelegramIdentity,
+    labelKey: "screens.Dashboard.TelegramIdentity.tabName",
+    icon: <MdOutlineLinkOff size={16} />,
   },
 ];
 
@@ -239,6 +247,10 @@ export default function Profile() {
 
                     {activeTab === ActiveTab.ListConnectionStrings && (
                       <ListConnectionStringsSection />
+                    )}
+
+                    {activeTab === ActiveTab.TelegramIdentity && (
+                      <TelegramIdentitySection profile={profile} />
                     )}
 
                     {activeTab === ActiveTab.AdvancedOptions && (

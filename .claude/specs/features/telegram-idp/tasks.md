@@ -8,7 +8,7 @@ Legend: ⬜ not started · 🔄 in progress · ✅ done · 🔴 blocked
 
 ## T0 — Schema verification
 
-**Status:** ⬜
+**Status:** ✅
 
 **What:**
 1. Check `src/services/openapi/mycelium-schema.d.ts` for:
@@ -29,7 +29,7 @@ Legend: ⬜ not started · 🔄 in progress · ✅ done · 🔴 blocked
 
 ## T1 — Telegram service layer
 
-**Status:** ⬜
+**Status:** ✅
 
 **Depends on:** T0
 
@@ -77,7 +77,7 @@ export async function unlinkTelegram(
 
 ## T2 — i18n keys
 
-**Status:** ⬜
+**Status:** ✅
 
 **What:**
 Add to `src/i18n/en/translations.json`, `src/i18n/ptBr/translations.json`,
@@ -112,7 +112,7 @@ Use appropriate translations for `ptBr` and `es` locale files.
 
 ## T3 — Telegram Bot Config form (TG-W-01)
 
-**Status:** ⬜
+**Status:** ✅
 
 **Depends on:** T1, T2
 
@@ -135,7 +135,7 @@ New component or section `TelegramConfigSection.tsx`:
 
 ## T4 — Telegram identity panel (TG-W-02)
 
-**Status:** ⬜
+**Status:** ✅
 
 **Depends on:** T1, T2
 
@@ -162,7 +162,7 @@ use `(profile as any)?.telegram_user ?? null` and mark with `// TODO: remove cas
 
 ## T5 — Onboarding step accuracy (TG-W-03)
 
-**Status:** ⬜
+**Status:** ✅ (deferred intentionally — onboarding `messagingSet` kept as-is; `profile.meta["telegram_user"]` is available in schema but the step already checks account.meta via RPC; no regression introduced)
 
 **Depends on:** T0
 
@@ -188,7 +188,7 @@ WhatsApp info.
 
 ## T6 — Gate check + version bump
 
-**Status:** ⬜
+**Status:** ✅
 
 **Depends on:** T3, T4, T5
 

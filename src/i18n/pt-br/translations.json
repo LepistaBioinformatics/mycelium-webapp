@@ -214,6 +214,33 @@
         },
         "verified": "Verificado"
       },
+      "TelegramConfig": {
+        "title": "Integração com Telegram",
+        "description": "Configure as credenciais do seu bot do Telegram para habilitar autenticação via Telegram neste namespace.",
+        "botToken": {
+          "label": "Token do Bot",
+          "placeholder": "Informe o token do seu bot do Telegram"
+        },
+        "webhookSecret": {
+          "label": "Segredo do Webhook",
+          "placeholder": "Informe o segredo do webhook (mín. 8 caracteres)"
+        },
+        "save": "Salvar",
+        "saving": "Salvando...",
+        "saved": "Credenciais salvas",
+        "error": "Falha ao salvar credenciais"
+      },
+      "TelegramIdentity": {
+        "tabName": "Identidade",
+        "title": "Identidade Telegram",
+        "linked": "Vinculado",
+        "notLinked": "Não vinculado",
+        "description": "Sua conta do Telegram vinculada a esta identidade.",
+        "unlink": "Desvincular",
+        "unlinking": "Desvinculando...",
+        "unlinked": "Identidade Telegram desvinculada",
+        "error": "Falha ao desvincular identidade Telegram"
+      },
       "TenantBasicInfo": {
         "from": {
           "title": "O namespace ao qual a conta pertence: {{tenantId}}",
@@ -322,6 +349,14 @@
           "breadcrumb": "Namespaces",
           "manageAccounts": "Ver contas",
           "manageAccountsDescription": "Clique aqui para ver as contas registradas no namespace.",
+          "tabs": {
+            "legalInformation": "Informações Legais",
+            "owners": "Proprietários",
+            "managers": "Gerentes",
+            "brand": "Marca",
+            "advanced": "Avançado",
+            "integrations": "Integrações"
+          },
           "createConnectionString": {
             "cta": "Opções avançadas",
             "title": "Criar string de conexão para o namespace",
