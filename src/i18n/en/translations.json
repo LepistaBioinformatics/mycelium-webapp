@@ -255,7 +255,8 @@
         "unlink": "Unlink",
         "unlinking": "Unlinking...",
         "unlinked": "Telegram identity unlinked",
-        "error": "Failed to unlink Telegram identity"
+        "error": "Failed to unlink Telegram identity",
+        "comingSoon": "Coming soon"
       },
       "TenantBasicInfo": {
         "from": {

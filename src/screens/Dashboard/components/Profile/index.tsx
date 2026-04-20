@@ -13,7 +13,7 @@ import ControlPanelBreadcrumbItem from "../ControlPanelBreadcrumbItem";
 import TenantOwnershipSection from "./TenantOwnershipSection";
 import LicensedResourcesSection from "./LicensedResourcesSection";
 import ListConnectionStringsSection from "./ListConnectionStringsSection";
-import TelegramIdentitySection from "./TelegramIdentitySection";
+import IdentitySection from "./IdentitySection";
 import { GiWizardStaff } from "react-icons/gi";
 import { GrUserAdmin } from "react-icons/gr";
 import IntroSection from "@/components/ui/IntroSection";
@@ -250,7 +250,7 @@ export default function Profile() {
                     )}
 
                     {activeTab === ActiveTab.TelegramIdentity && (
-                      <TelegramIdentitySection profile={profile} />
+                      <IdentitySection profile={profile} />
                     )}
 
                     {activeTab === ActiveTab.AdvancedOptions && (

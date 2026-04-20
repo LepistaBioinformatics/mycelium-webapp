@@ -127,8 +127,9 @@ _(none)_
 - `src/services/telegram/index.ts`: `setTelegramConfig` (POST `/_adm/tenant-owner/telegram/config` with `x-mycelium-tenant-id` header) + `unlinkTelegram` (DELETE `/_adm/auth/telegram/link`)
 - `SetTelegramConfigBody` typed locally (TODO: replace when schema is regenerated)
 - `TelegramConfigCard.tsx`: password inputs for bot token + webhook secret; tenant-owner-gated via `useProfile({ tenantOwnerNeeded })`; dispatches Redux notifications on save/error; wired as new "Integrations" tab (tab 5) in `Tenants/Details/index.tsx`
-- `TelegramIdentitySection.tsx`: linked/not-linked state from `profile.meta["telegram_user"]`; Unlink button calls DELETE then clears session profile cache (`myc-profile`) and reloads; wired as new "Identity" tab (tab 4) in `Profile/index.tsx`
-- i18n: `TelegramConfig.*` + `TelegramIdentity.*` + `tabs.integrations` added to all 3 locales; pt-br and es also got the missing `tabs` object in `AdvancedManagement`
+- `TelegramIdentitySection.tsx`: linked/not-linked state from `profile.meta["telegram_user"]`; Unlink button calls DELETE then clears session profile cache (`myc-profile`) and reloads
+- `IdentitySection.tsx`: wraps `TelegramIdentitySection` + coming-soon cards for WhatsApp, Discord, Slack; wired as "Identity" tab (tab 4) in `Profile/index.tsx`
+- i18n: `TelegramConfig.*` + `TelegramIdentity.*` (incl. `comingSoon`) + `tabs.integrations` added to all 3 locales
 - Version bumped `0.3.1 → 0.4.0`; `yarn build` + `yarn lint` pass (0 errors)
 
 **Onboarding design system alignment** ✅ complete (2026-04-13)

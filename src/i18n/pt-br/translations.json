@@ -239,7 +239,8 @@
         "unlink": "Desvincular",
         "unlinking": "Desvinculando...",
         "unlinked": "Identidade Telegram desvinculada",
-        "error": "Falha ao desvincular identidade Telegram"
+        "error": "Falha ao desvincular identidade Telegram",
+        "comingSoon": "Em breve"
       },
       "TenantBasicInfo": {
         "from": {
