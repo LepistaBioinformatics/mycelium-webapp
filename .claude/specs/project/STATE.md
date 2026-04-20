@@ -69,6 +69,7 @@ _(none)_
   `createSubscriptionAccount` or `createRoleAssociatedAccount` — confirmed: `createSubscriptionAccount`.
 - [x] Verify `AccountInvitations` second SWR call (`listGuestOnSubscriptionAccount` vs
   `listLicensedAccountsOfEmail`) — confirmed: `listLicensedAccountsOfEmail`.
+- [ ] Implement M5 — Telegram IdP (spec: `.claude/specs/features/telegram-idp/`) — bot config form for tenant owners + identity panel + unlink in user settings. Gateway endpoints are live; Mini App is a separate standalone submodule.
 
 ## Deferred Ideas
 
