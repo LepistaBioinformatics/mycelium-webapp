@@ -78,6 +78,14 @@ _(none)_
 
 - M3 (Test Coverage) deferred in favor of M4 (Native Auth) — user prioritized auth replacement.
 
+**M5.1 — Telegram IdP gaps** ✅ complete (2026-04-26)
+- `TelegramConfigCard`: webhook URL field (read-only + copy button) always visible — admin can copy `${MYCELIUM_API_URL}/auth/telegram/webhook/{tenantId}` to register with BotFather
+- `services/telegram/index.ts`: `linkTelegram(initData, getToken)` added — calls `POST /_adm/auth/telegram/link` with `{ initData }` body; ready for Mini App use
+- `TelegramIdentitySection`: unlinked state now shows `linkHint` text; `isLinked` guarded by JSON parse — legacy raw-string values no longer show as "Linked"
+- `Onboarding`: removed free-text `telegram_user` MetaField (was storing unverified strings that broke `login_via_telegram` lookup); replaced with informational hint; `messagingSet` now only tracks `whatsapp_user`; removed unused `MetaField` component
+- i18n: `webhookUrl.{label,copy,copied}` under `TelegramConfig`; `linkHint` under `TelegramIdentity` and onboarding `meta.telegram` — all 3 locales
+- Version bumped `0.4.0 → 0.5.0`; `yarn build` + `yarn lint` pass (0 errors)
+
 ## Current Focus
 
 **M3 — Test Coverage** ✅ complete (2026-04-18)

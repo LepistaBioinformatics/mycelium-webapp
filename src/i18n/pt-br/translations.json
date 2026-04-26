@@ -225,6 +225,11 @@
           "label": "Segredo do Webhook",
           "placeholder": "Informe o segredo do webhook (mín. 8 caracteres)"
         },
+        "webhookUrl": {
+          "label": "URL do Webhook",
+          "copy": "Copiar",
+          "copied": "Copiado!"
+        },
         "save": "Salvar",
         "saving": "Salvando...",
         "saved": "Credenciais salvas",
@@ -240,7 +245,8 @@
         "unlinking": "Desvinculando...",
         "unlinked": "Identidade Telegram desvinculada",
         "error": "Falha ao desvincular identidade Telegram",
-        "comingSoon": "Em breve"
+        "comingSoon": "Em breve",
+        "linkHint": "Para vincular sua conta do Telegram, abra o Mini App no Telegram."
       },
       "TenantBasicInfo": {
         "from": {
@@ -954,7 +960,8 @@
             "description": "Conecte via Telegram ou WhatsApp para receber alertas e notificações do sistema. Você pode registrar um ou ambos."
           },
           "telegram": {
-            "title": "Telegram"
+            "title": "Telegram",
+            "linkHint": "Para vincular sua conta do Telegram, abra o Mini App no Telegram."
           },
           "whatsapp": {
             "title": "WhatsApp",

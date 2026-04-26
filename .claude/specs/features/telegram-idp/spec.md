@@ -2,7 +2,7 @@
 
 **Milestone:** M5 — Telegram IdP
 **Scope:** Webapp (React/TypeScript)
-**Status:** Planned
+**Status:** M5 complete (2026-04-20) · M5.1 gaps in progress
 **Depends on:** Gateway M3 Telegram IdP (complete — all 5 REST endpoints live)
 
 ---
@@ -141,8 +141,99 @@ Add to all 3 locale files (`src/i18n/{en,ptBr,es}/translations.json`):
 
 ## Out of Scope
 
-- `POST /auth/telegram/link` — requires `initData` from Telegram client; Mini App only
+- `POST /auth/telegram/link` called from webapp — requires `initData` from Telegram Mini App client context; the service wrapper is added for completeness but the UI is informational only
 - `POST /auth/telegram/login/{tenantId}` — public login flow; Mini App only
-- `POST /auth/telegram/webhook/{tenantId}` — server-to-server; no webapp UI needed
 - Telegram Login Widget on the homepage (adds third-party JS; deferred)
 - Reading back stored bot credentials (gateway never returns secrets)
+- Displaying telegram username in the identity panel (T8 bonus — deferred unless explicitly requested)
+
+---
+
+## M5.1 Gap Requirements
+
+These requirements were identified after M5 shipped. They are needed for the Telegram IDP
+configuration to work end-to-end.
+
+### TG-W-04 — Webhook URL in TelegramConfigCard
+
+**Where:** `src/screens/Dashboard/components/Tenants/Details/TelegramConfigCard.tsx`
+**Who:** Tenant Owner (already gated)
+
+Without this, the admin cannot complete Telegram configuration: after saving bot credentials
+they have no way to know the webhook URL to register with BotFather.
+
+**URL format:**
+```
+${MYCELIUM_API_URL}/auth/telegram/webhook/${tenant.id}
+```
+Note: no `/_adm/` prefix — this is a public endpoint.
+
+**Behaviour:**
+- Always visible in the card (not only after save)
+- Read-only text field displaying the full webhook URL
+- Copy-to-clipboard button next to the field
+- After click: button label switches to "Copied!" for 2 s then reverts (local state, no external deps)
+
+**Acceptance Criteria:**
+1. WHEN the TelegramConfigCard renders THEN the webhook URL field SHALL be visible immediately
+2. WHEN the user clicks "Copy" THEN the URL SHALL be written to `navigator.clipboard` and the button label SHALL change to the "copied" i18n key
+3. WHEN 2 seconds elapse after copy THEN the button label SHALL revert to "copy"
+4. WHEN `yarn build` runs THEN it SHALL pass with zero new errors
+
+---
+
+### TG-W-05 — linkTelegram service function + informational UI
+
+**Service layer:** `src/services/telegram/index.ts`
+
+Add `linkTelegram(initData: string, getToken: () => Promise<string>): Promise<void>`:
+- `POST /_adm/auth/telegram/link` with body `{ initData }` and `Authorization: Bearer <token>`
+- Throws on non-2xx
+
+This function exists for the Telegram Mini App to call. The webapp itself cannot generate
+`initData` without the Telegram client context.
+
+**UI layer:** `src/screens/Dashboard/components/Profile/TelegramIdentitySection.tsx`
+
+When unlinked, the existing "Not linked" text should be accompanied by an informational note
+explaining how to link. No button that calls the endpoint — just a visible hint.
+
+**Behaviour:**
+- Unlinked state: show `{t("TelegramIdentity.linkHint")}` below the "Not linked" label
+- Text: "To link your Telegram account, open the [app name] Mini App on Telegram"
+- No SDK dependency; no third-party JS
+
+**Acceptance Criteria:**
+1. WHEN `linkTelegram` is called with a valid `initData` string THEN it SHALL call `POST /_adm/auth/telegram/link` with the correct body and auth header
+2. WHEN the identity section renders with an unlinked profile THEN the hint text SHALL be visible
+3. WHEN `yarn build` runs THEN it SHALL pass with zero new errors
+
+---
+
+### TG-W-06 — Onboarding cleanup + identity panel safety
+
+**Problem:**
+The onboarding Step 4 saves a raw string (e.g. `"@myhandle"`) into `account.meta["telegram_user"]`
+via generic RPC. The `TelegramIdentitySection` checks `!!profile.meta["telegram_user"]` and shows
+"Linked" — but the gateway's `login_via_telegram` looks up accounts by parsing `meta["telegram_user"]`
+as JSON `{ id: number; username?: string }`. A raw string breaks the lookup silently.
+
+**Onboarding fix (`src/screens/Dashboard/components/Onboarding/index.tsx`):**
+- Remove the `MetaField` for `telegram_user` (the free-text `@username` input)
+- Replace with an informational paragraph: `{t("onboarding.meta.telegram.linkHint")}`
+- Update `messagingSet` to: `!!(meta?.whatsapp_user)` only (telegram no longer manually settable)
+- Remove `telegram_user` from `MetaKey` union type, `metaValues`, `metaSaving`, `metaSaved` state
+- Remove `telegram_user` from the account meta restore block
+
+**Identity panel safety (`src/screens/Dashboard/components/Profile/TelegramIdentitySection.tsx`):**
+- Before checking `isLinked`, attempt to parse `profile.meta["telegram_user"]` as JSON
+- `isLinked = true` only when the parsed value has a numeric `id` field (i.e., was set by the gateway's link endpoint)
+- If the value exists but is not valid JSON or has no `id`, treat as not linked (backward compat for existing manual entries)
+
+**Acceptance Criteria:**
+1. WHEN the onboarding renders THEN there SHALL be no free-text input for `telegram_user`
+2. WHEN `meta.whatsapp_user` is set THEN the messaging step SHALL be marked done
+3. WHEN `meta.whatsapp_user` is unset (regardless of `telegram_user`) THEN the step SHALL NOT be done
+4. WHEN `profile.meta["telegram_user"]` is a raw string (legacy) THEN `TelegramIdentitySection` SHALL show "Not linked"
+5. WHEN `profile.meta["telegram_user"]` is `{"id":123,"username":"foo"}` THEN it SHALL show "Linked"
+6. WHEN `yarn build` + `yarn lint` run THEN both SHALL pass with zero new errors

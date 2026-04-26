@@ -25,7 +25,20 @@ export default function TelegramIdentitySection({ profile }: Props) {
 
   const { getAccessTokenSilently } = useProfile();
 
-  const isLinked = !!profile?.meta?.["telegram_user"];
+  const isLinked = (() => {
+    try {
+      const raw = profile?.meta?.["telegram_user"];
+      if (!raw) return false;
+      const parsed = JSON.parse(raw) as unknown;
+      return (
+        typeof parsed === "object" &&
+        parsed !== null &&
+        typeof (parsed as Record<string, unknown>).id === "number"
+      );
+    } catch {
+      return false;
+    }
+  })();
 
   const handleUnlink = async () => {
     setIsUnlinking(true);
@@ -77,6 +90,12 @@ export default function TelegramIdentitySection({ profile }: Props) {
               </Button>
             )}
           </div>
+
+          {!isLinked && (
+            <Typography as="small" decoration="smooth">
+              {t(`${BASE}.linkHint`)}
+            </Typography>
+          )}
         </div>
       </Card.Body>
     </Card>

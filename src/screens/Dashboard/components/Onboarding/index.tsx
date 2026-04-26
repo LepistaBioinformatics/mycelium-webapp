@@ -162,7 +162,7 @@ function parsePhone(value: string): { code: string; localDigits: string } {
   return { code: "55", localDigits: allDigits };
 }
 
-type MetaKey = "phone_number" | "telegram_user" | "whatsapp_user" | "locale";
+type MetaKey = "phone_number" | "whatsapp_user" | "locale";
 type MetaRecord = Record<MetaKey, string>;
 type MetaBoolRecord = Record<MetaKey, boolean>;
 
@@ -186,7 +186,6 @@ const TEXT_INPUT_THEME = {
 function makeMetaRecord(value: string): MetaRecord {
   return {
     phone_number: value,
-    telegram_user: value,
     whatsapp_user: value,
     locale: value,
   };
@@ -195,7 +194,6 @@ function makeMetaRecord(value: string): MetaRecord {
 function makeMetaBoolRecord(value: boolean): MetaBoolRecord {
   return {
     phone_number: value,
-    telegram_user: value,
     whatsapp_user: value,
     locale: value,
   };
@@ -248,7 +246,6 @@ export default function Onboarding() {
     if (!account?.meta) return;
     setMetaValues((prev) => ({
       phone_number: account.meta?.phone_number ?? prev.phone_number,
-      telegram_user: account.meta?.telegram_user ?? prev.telegram_user,
       whatsapp_user: account.meta?.whatsapp_user ?? prev.whatsapp_user,
       locale: account.meta?.locale ?? prev.locale,
     }));
@@ -348,7 +345,7 @@ export default function Onboarding() {
 
   const meta = account?.meta as Record<string, string> | undefined;
   const phoneSet = !!(meta?.phone_number);
-  const messagingSet = !!(meta?.telegram_user) || !!(meta?.whatsapp_user);
+  const messagingSet = !!(meta?.whatsapp_user);
   const localeSet = !!(meta?.locale);
 
   const completedSteps =
@@ -507,21 +504,14 @@ export default function Onboarding() {
                     {t(`${tKey}.meta.messaging.description`)}
                   </Typography>
 
-                  <MetaField
-                    metaKey="telegram_user"
-                    placeholder="@username"
-                    value={metaValues.telegram_user}
-                    savedValue={meta?.telegram_user ?? ""}
-                    saving={metaSaving.telegram_user}
-                    saved={metaSaved.telegram_user}
-                    disabled={accountStatus !== "exists"}
-                    label={t(`${tKey}.meta.telegram.title`)}
-                    onChange={(val) =>
-                      setMetaValues((prev) => ({ ...prev, telegram_user: val }))
-                    }
-                    onSave={() => handleSaveMeta("telegram_user")}
-                    tKey={tKey}
-                  />
+                  <div className="flex flex-col gap-1">
+                    <Typography as="small" decoration="faded">
+                      {t(`${tKey}.meta.telegram.title`)}
+                    </Typography>
+                    <Typography as="small" decoration="smooth">
+                      {t(`${tKey}.meta.telegram.linkHint`)}
+                    </Typography>
+                  </div>
 
                   <div className="flex flex-col gap-2">
                     <label className="flex items-center gap-2 cursor-pointer select-none">
@@ -723,82 +713,6 @@ function PhoneField({
             />
           </div>
         </div>
-      </FormField>
-      {!hideSave && isDirty && (
-        <Button
-          onClick={onSave}
-          disabled={disabled || saving}
-          intent="secondary"
-         
-          size="sm"
-        >
-          {saved
-            ? t(`${tKey}.saved`)
-            : saving
-              ? t(`${tKey}.saving`)
-              : t(`${tKey}.save`)}
-        </Button>
-      )}
-    </div>
-  );
-}
-
-// ---------------------------------------------------------------------------
-// MetaField — reusable text input + save button pair
-// ---------------------------------------------------------------------------
-
-interface MetaFieldProps {
-  metaKey: MetaKey;
-  placeholder: string;
-  value: string;
-  savedValue: string;
-  saving: boolean;
-  saved: boolean;
-  disabled: boolean;
-  label: string;
-  description?: string;
-  hideSave?: boolean;
-  onChange: (val: string) => void;
-  onSave: () => void;
-  tKey: string;
-}
-
-function MetaField({
-  metaKey,
-  placeholder,
-  value,
-  savedValue,
-  saving,
-  saved,
-  disabled,
-  label,
-  description,
-  hideSave,
-  onChange,
-  onSave,
-  tKey,
-}: MetaFieldProps) {
-  const { t } = useTranslation();
-  const isDirty = value.trim() !== "" && value !== savedValue;
-
-  return (
-    <div className="flex flex-col gap-2">
-      {description && (
-        <Typography as="small" decoration="smooth">
-          {description}
-        </Typography>
-      )}
-      <FormField label={label} id={metaKey}>
-        <TextInput
-          id={metaKey}
-          type="text"
-          placeholder={placeholder}
-          value={value}
-          disabled={disabled}
-          color="custom"
-          theme={TEXT_INPUT_THEME}
-          onChange={(e) => onChange(e.target.value)}
-        />
       </FormField>
       {!hideSave && isDirty && (
         <Button

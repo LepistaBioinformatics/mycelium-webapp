@@ -37,3 +37,19 @@ export async function unlinkTelegram(
   });
   if (!res.ok) throw new Error(await res.text());
 }
+
+export async function linkTelegram(
+  initData: string,
+  getToken: () => Promise<string>,
+): Promise<void> {
+  const token = await getToken();
+  const res = await fetch(`${MYCELIUM_API_URL}/_adm/auth/telegram/link`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ initData }),
+  });
+  if (!res.ok) throw new Error(await res.text());
+}

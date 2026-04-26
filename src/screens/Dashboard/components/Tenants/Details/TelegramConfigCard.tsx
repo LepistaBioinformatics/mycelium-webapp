@@ -2,12 +2,13 @@ import Card from "@/components/ui/Card";
 import Typography from "@/components/ui/Typography";
 import Button from "@/components/ui/Button";
 import useProfile from "@/hooks/use-profile";
+import { MYCELIUM_API_URL } from "@/services/openapi/mycelium-api";
 import { components } from "@/services/openapi/mycelium-schema";
 import { setTelegramConfig } from "@/services/telegram";
 import { setNotification } from "@/states/notification.state";
 import { MycPermission } from "@/types/MyceliumPermission";
 import { MycRole } from "@/types/MyceliumRole";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
@@ -34,6 +35,17 @@ export default function TelegramConfigCard({ tenant }: Props) {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const [isSaving, setIsSaving] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const copyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const webhookUrl = `${MYCELIUM_API_URL}/auth/telegram/webhook/${tenant.id}`;
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(webhookUrl);
+    setCopied(true);
+    if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+    copyTimerRef.current = setTimeout(() => setCopied(false), 2000);
+  };
 
   const { hasEnoughPermissions, getAccessTokenSilently } = useProfile({
     tenantOwnerNeeded: [tenant.id ?? ""],
@@ -86,7 +98,26 @@ export default function TelegramConfigCard({ tenant }: Props) {
       </Card.Header>
 
       <Card.Body>
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
+        <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-1">
+            <label className={LABEL}>{t(`${BASE}.webhookUrl.label`)}</label>
+            <div className="flex items-center gap-2">
+              <input
+                type="text"
+                readOnly
+                value={webhookUrl}
+                className={`${INPUT} flex-1 cursor-text select-all`}
+              />
+              <Button type="button" size="xs" onClick={handleCopy}>
+                {copied
+                  ? t(`${BASE}.webhookUrl.copied`)
+                  : t(`${BASE}.webhookUrl.copy`)}
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6 mt-4">
           <div className="flex flex-col gap-1">
             <label className={LABEL}>{t(`${BASE}.botToken.label`)}</label>
             <input

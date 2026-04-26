@@ -241,6 +241,11 @@
           "label": "Webhook Secret",
           "placeholder": "Enter your webhook secret (min. 8 characters)"
         },
+        "webhookUrl": {
+          "label": "Webhook URL",
+          "copy": "Copy",
+          "copied": "Copied!"
+        },
         "save": "Save",
         "saving": "Saving...",
         "saved": "Credentials saved",
@@ -256,7 +261,8 @@
         "unlinking": "Unlinking...",
         "unlinked": "Telegram identity unlinked",
         "error": "Failed to unlink Telegram identity",
-        "comingSoon": "Coming soon"
+        "comingSoon": "Coming soon",
+        "linkHint": "To link your Telegram account, open the Mini App on Telegram."
       },
       "TenantBasicInfo": {
         "from": {
@@ -920,7 +926,8 @@
             "description": "Connect via Telegram or WhatsApp to receive system alerts and notifications. You can register one or both."
           },
           "telegram": {
-            "title": "Telegram"
+            "title": "Telegram",
+            "linkHint": "To link your Telegram account, open the Mini App on Telegram."
           },
           "whatsapp": {
             "title": "WhatsApp",
