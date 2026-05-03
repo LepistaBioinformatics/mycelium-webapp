@@ -19,7 +19,7 @@
     "flowbite-react": "^0.10.2",
     "i18next": "^25.2.1",
     "isbot": "^5",
-    "postcss": "^8.5.1",
+    "postcss": "^8.5.10",
     "react": "^19.0.0",
     "react-countdown": "^2.3.6",
     "react-dom": "^19.0.0",
