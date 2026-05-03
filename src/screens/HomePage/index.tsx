@@ -21,6 +21,7 @@ import { setNotification } from "@/states/notification.state";
 import { useNativeAuthContext } from "@/contexts/NativeAuthContext";
 import { InvalidCodeError } from "@/types/NativeAuth";
 import useProfile from "@/hooks/use-profile";
+import { useAppConfig } from "@/hooks/use-app-config";
 
 type EmailForm = { email: string };
 type CodeForm = { code: string };
@@ -31,6 +32,7 @@ export default function HomePage() {
   const dispatch = useDispatch();
   const { setAuth } = useNativeAuthContext();
   const { isAuthenticated, isLoadingUser, logout } = useProfile();
+  const { appConfig } = useAppConfig();
 
   const [searchParams, setSearchParams] = useSearchParams();
   const step = (searchParams.get("step") as "email" | "code") ?? "email";
@@ -120,7 +122,7 @@ export default function HomePage() {
           {/* Brand */}
           <div className="flex flex-col gap-2 text-center">
             <Typography as="h1" decoration="bold" center>
-              {t(`${tHome}.hero.name`)}
+              {appConfig?.domainName ?? t(`${tHome}.hero.name`)}
             </Typography>
             <Typography as="p" decoration="smooth" center>
               {t(`${tHome}.hero.tagline`)}
@@ -277,7 +279,7 @@ export default function HomePage() {
                 className="block dark:hidden w-7 h-7 object-contain opacity-80"
               />
               <Typography as="p" decoration="smooth">
-                Mycelium API Gateway
+                {appConfig?.domainName ?? t(`${tHome}.hero.name`)}
               </Typography>
             </div>
             <div className="flex flex-col gap-2.5">
@@ -298,7 +300,7 @@ export default function HomePage() {
 
           <div className="flex flex-col justify-end">
             <Typography as="p" decoration="smooth">
-              Mycelium &copy; 2025
+              {appConfig?.domainName ?? t(`${tHome}.hero.name`)} &copy; 2025
             </Typography>
           </div>
         </div>
