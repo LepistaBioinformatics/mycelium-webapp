@@ -2,7 +2,7 @@
 
 **Milestone:** M5 — Telegram IdP
 **Scope:** Webapp (React/TypeScript)
-**Status:** M5 complete (2026-04-20) · M5.1 gaps in progress
+**Status:** M5 complete (2026-04-20) · M5.1 complete (2026-04-20)
 **Depends on:** Gateway M3 Telegram IdP (complete — all 5 REST endpoints live)
 
 ---
