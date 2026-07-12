@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/LepistaBioinformatics/mycelium-webapp/compare/v1.0.0...v1.1.0) (2026-07-12)
+
+
+### Features
+
+* tenant/profile overview tabs, mobile UX fixes, design system audit ([0a3c4bc](https://github.com/LepistaBioinformatics/mycelium-webapp/commit/0a3c4bcc4901edcf6542c8a287602e7b397fd866))
+
 # 1.0.0 (2026-07-12)
 
 
