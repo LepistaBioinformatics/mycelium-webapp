@@ -474,7 +474,7 @@ export default function AdvancedManagement() {
                         </div>
                       </Banner>
 
-                      <Banner intent="warning" width="full">
+                      <Banner intent="info" width="full">
                         <div className="flex justify-between gap-2 my-5">
                           <div className="flex flex-col gap-2">
                             <Typography as="h4" decoration="semibold">

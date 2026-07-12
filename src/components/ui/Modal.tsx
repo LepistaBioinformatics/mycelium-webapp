@@ -38,7 +38,7 @@ function Container({ children, open, handleClose, ...props }: ContainerProps) {
     >
       <div
         id="modal-container-content"
-        className="bg-white dark:bg-zinc-900 sm:rounded-lg p-2 border-2 border-zinc-300 dark:border-zinc-700 overflow-y-auto scrollbar mb-16 sm:my-2 h-[95vh] sm:h-fit w-full sm:min-w-1/2 md:w-2/5"
+        className="bg-white dark:bg-brand-950 sm:rounded-lg p-2 border border-brand-600 shadow-sm dark:shadow-none overflow-y-auto scrollbar mb-16 sm:my-2 h-[95vh] sm:h-fit w-full sm:min-w-1/2 md:w-2/5"
       >
         {children}
       </div>

@@ -48,20 +48,20 @@ export default function TenantOwnershipSection({ tenantsOwnership }: Props) {
                 },
                 head: {
                   cell: {
-                    base: "bg-zinc-50 px-6 py-3 group-first/head:first:rounded-tl-lg group-first/head:last:rounded-tr-lg dark:bg-zinc-700",
+                    base: "bg-zinc-50 px-6 py-3 group-first/head:first:rounded-tl-lg group-first/head:last:rounded-tr-lg dark:bg-brand-900",
                   },
                 },
                 body: {
-                  base: "bg-zinc-50 dark:bg-zinc-700",
+                  base: "bg-zinc-50 dark:bg-brand-900",
                   cell: {
-                    base: "bg-zinc-50 dark:bg-zinc-800 group-hover/row:bg-zinc-100 dark:group-hover/row:bg-zinc-900 px-6 py-4 group-first/body:group-first/row:first:rounded-tl-lg group-first/body:group-first/row:last:rounded-tr-lg group-last/body:group-last/row:first:rounded-bl-lg group-last/body:group-last/row:last:rounded-br-lg",
+                    base: "bg-zinc-50 dark:bg-brand-950 group-hover/row:bg-zinc-100 dark:group-hover/row:bg-brand-900 px-6 py-4 group-first/body:group-first/row:first:rounded-tl-lg group-first/body:group-first/row:last:rounded-tr-lg group-last/body:group-last/row:first:rounded-bl-lg group-last/body:group-last/row:last:rounded-br-lg",
                   },
                 },
                 row: {
                   base: "group/row bg-transparent",
-                  hovered: "hover:bg-zinc-100 dark:hover:bg-zinc-800",
+                  hovered: "hover:bg-zinc-100 dark:hover:bg-brand-900",
                   striped:
-                    "odd:bg-white even:bg-zinc-50 odd:dark:bg-zinc-800 even:dark:bg-zinc-700",
+                    "odd:bg-white even:bg-zinc-50 odd:dark:bg-brand-950 even:dark:bg-brand-900",
                 },
               }}
             >

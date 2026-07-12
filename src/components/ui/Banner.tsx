@@ -9,18 +9,18 @@ import { IoClose } from "react-icons/io5";
 const { width } = projectVariants;
 
 const styles = cva(
-  "px-2 py-1 text-left text-sm border-[0.5px] shadow-lg dark:text-zinc-100 text-zinc-800 bg-white dark:bg-zinc-800 w-full sm:max-w-4xl",
+  "px-2 py-1 text-left text-sm rounded-lg border dark:text-zinc-100 text-zinc-800 bg-white dark:bg-brand-950 w-full sm:max-w-4xl",
   {
     variants: {
       width,
       intent: {
         error:
-          "border-dashed border-red-500 dark:border-red-500 bg-red-50 dark:bg-red-900",
-        info: "border-dashed border-brand-violet-500 dark:border-brand-violet-500 bg-brand-violet-50 dark:bg-brand-violet-900",
+          "border-red-500 dark:border-red-500 bg-red-50 dark:bg-red-900",
+        info: "border-brand-600 dark:border-brand-400 bg-brand-50 dark:bg-brand-900",
         success:
-          "border-dashed border-green-500 dark:border-green-500 bg-green-50 dark:bg-green-900",
+          "border-green-500 dark:border-green-500 bg-green-50 dark:bg-green-900",
         warning:
-          "border-dashed border-yellow-500 dark:border-yellow-500 bg-yellow-50 dark:bg-yellow-900",
+          "border-yellow-500 dark:border-yellow-500 bg-yellow-50 dark:bg-yellow-900",
       },
     },
     defaultVariants: {

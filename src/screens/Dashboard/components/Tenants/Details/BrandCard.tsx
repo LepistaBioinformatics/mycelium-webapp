@@ -228,7 +228,7 @@ export default function BrandCard({ tenant, mutateTenantStatus }: Props) {
               <img
                 src={brandTag.meta?.base64Logo}
                 alt="Brand logo"
-                className="w-32 h-32 object-contain border border-zinc-200 dark:border-zinc-700"
+                className="w-32 h-32 object-contain rounded-lg border border-zinc-200 dark:border-zinc-700"
               />
               <button
                 onClick={() => setUpdatingBrand(true)}
@@ -266,10 +266,10 @@ export default function BrandCard({ tenant, mutateTenantStatus }: Props) {
                 onDrop={handleDrop}
                 onClick={() => inputRef.current?.click()}
                 className={[
-                  "flex flex-col items-center justify-center gap-2 border-2 border-dashed px-6 py-10 cursor-pointer transition-colors",
+                  "flex flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-brand-600 px-6 py-10 cursor-pointer transition-colors",
                   dragOver
-                    ? "border-brand-violet-500 bg-brand-violet-50 dark:bg-brand-violet-950"
-                    : "border-zinc-300 dark:border-zinc-700 hover:border-brand-violet-400 dark:hover:border-brand-violet-600 hover:bg-zinc-50 dark:hover:bg-zinc-800/50",
+                    ? "bg-brand-violet-50 dark:bg-brand-violet-950"
+                    : "hover:border-brand-violet-400 dark:hover:border-brand-violet-600 hover:bg-zinc-50 dark:hover:bg-zinc-800/50",
                 ].join(" ")}
               >
                 <span className="text-sm text-zinc-500 dark:text-zinc-400">
@@ -307,7 +307,7 @@ export default function BrandCard({ tenant, mutateTenantStatus }: Props) {
                     <img
                       src={preview}
                       alt="Preview"
-                      className="w-32 h-32 object-contain border border-zinc-200 dark:border-zinc-700"
+                      className="w-32 h-32 object-contain rounded-lg border border-zinc-200 dark:border-zinc-700"
                     />
 
                     {sizeInfo && (

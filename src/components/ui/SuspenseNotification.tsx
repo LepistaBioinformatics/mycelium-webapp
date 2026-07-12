@@ -19,10 +19,10 @@ const styles = cva(
         false: "opacity-0 pointer-events-none",
       },
       intent: {
-        error: "border-dashed border-red-500 dark:border-red-500",
-        info: "border-dashed border-brand-violet-500 dark:border-brand-violet-500",
-        success: "border-dashed border-green-500 dark:border-green-500",
-        warning: "border-dashed border-yellow-500 dark:border-yellow-500",
+        error: "",
+        info: "",
+        success: "",
+        warning: "",
       },
     },
   }

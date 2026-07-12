@@ -104,7 +104,7 @@ export default function HomePage() {
   if (isLoadingUser) return null;
 
   return (
-    <div className="bg-white dark:bg-zinc-950 min-h-screen flex flex-col">
+    <div className="bg-white dark:bg-brand-950 min-h-screen flex flex-col">
 
       {/* Full-page logo background — light mode */}
       <div className="fixed inset-0 z-0 dark:hidden bg-[url(/logo-blackwhite.png)] bg-center bg-cover opacity-[0.14]" />
@@ -140,21 +140,20 @@ export default function HomePage() {
                 autoComplete="email"
                 autoFocus
                 placeholder="you@example.com"
-                className="[&_input]:text-2xl [&_input]:py-6 [&_input]:px-5 [&_input]:bg-white/90 [&_input]:dark:bg-zinc-900/90 [&_input]:border-2 [&_input]:border-zinc-400 [&_input]:dark:border-zinc-600 [&_input]:shadow-md [&_input]:dark:shadow-[0_0_24px_4px_rgba(139,92,246,0.45)] [&_input]:focus:border-brand-violet-500 [&_input]:dark:focus:border-brand-violet-400 [&_input]:focus:ring-0 [&_input]:dark:focus:shadow-[0_0_32px_8px_rgba(139,92,246,0.65)]"
+                className="[&_input]:text-2xl [&_input]:py-6 [&_input]:px-5 [&_input]:rounded-lg [&_input]:bg-white/90 [&_input]:dark:bg-brand-950/90 [&_input]:border-2 [&_input]:border-brand-600 [&_input]:shadow-neo [&_input]:focus:border-infra-400 [&_input]:focus:ring-0 [&_input]:focus:shadow-neo-hover"
                 {...emailForm.register("email", { required: true })}
               />
               <button
                 type="submit"
                 disabled={emailForm.formState.isSubmitting}
                 className="
-                  w-full py-4 px-6 text-lg font-semibold
-                  transition-all duration-200
-                  bg-brand-violet-600 hover:bg-brand-violet-700 text-white
-                  dark:bg-brand-violet-500 dark:hover:bg-brand-violet-600
+                  w-full py-4 px-6 text-lg font-mono uppercase tracking-wide
+                  rounded-lg border border-brand-600 transition-all duration-200
+                  bg-brand-800 hover:bg-brand-700 text-white
                   disabled:opacity-50 disabled:cursor-not-allowed
-                  shadow-md hover:shadow-brand-violet-500/30 hover:shadow-lg
-                  focus:outline-none focus:ring-2 focus:ring-brand-violet-500 focus:ring-offset-2
-                  dark:focus:ring-offset-zinc-900
+                  shadow-neo hover:shadow-neo-hover hover:-translate-x-0.5 hover:-translate-y-0.5
+                  focus:outline-none focus:ring-2 focus:ring-infra-400 focus:ring-offset-2
+                  dark:focus:ring-offset-brand-950
                 "
               >
                 {emailForm.formState.isSubmitting
@@ -184,7 +183,7 @@ export default function HomePage() {
                 autoComplete="one-time-code"
                 autoFocus
                 placeholder="000000"
-                className="[&_input]:text-3xl [&_input]:tracking-[0.5em] [&_input]:text-center [&_input]:font-mono [&_input]:py-6 [&_input]:bg-white/90 [&_input]:dark:bg-zinc-900/90 [&_input]:border-2 [&_input]:border-zinc-400 [&_input]:dark:border-zinc-600 [&_input]:shadow-md [&_input]:dark:shadow-[0_0_24px_4px_rgba(139,92,246,0.45)] [&_input]:focus:border-brand-violet-500 [&_input]:dark:focus:border-brand-violet-400 [&_input]:focus:ring-0 [&_input]:dark:focus:shadow-[0_0_32px_8px_rgba(139,92,246,0.65)]"
+                className="[&_input]:text-3xl [&_input]:tracking-[0.5em] [&_input]:text-center [&_input]:font-mono [&_input]:py-6 [&_input]:rounded-lg [&_input]:bg-white/90 [&_input]:dark:bg-brand-950/90 [&_input]:border-2 [&_input]:border-brand-600 [&_input]:shadow-neo [&_input]:focus:border-infra-400 [&_input]:focus:ring-0 [&_input]:focus:shadow-neo-hover"
                 {...codeForm.register("code", {
                   required: true,
                   pattern: /^[0-9]{6}$/,
@@ -199,14 +198,13 @@ export default function HomePage() {
                 type="submit"
                 disabled={codeForm.formState.isSubmitting}
                 className="
-                  w-full py-4 px-6 text-lg font-semibold
-                  transition-all duration-200
-                  bg-brand-violet-600 hover:bg-brand-violet-700 text-white
-                  dark:bg-brand-violet-500 dark:hover:bg-brand-violet-600
+                  w-full py-4 px-6 text-lg font-mono uppercase tracking-wide
+                  rounded-lg border border-brand-600 transition-all duration-200
+                  bg-brand-800 hover:bg-brand-700 text-white
                   disabled:opacity-50 disabled:cursor-not-allowed
-                  shadow-md hover:shadow-brand-violet-500/30 hover:shadow-lg
-                  focus:outline-none focus:ring-2 focus:ring-brand-violet-500 focus:ring-offset-2
-                  dark:focus:ring-offset-zinc-900
+                  shadow-neo hover:shadow-neo-hover hover:-translate-x-0.5 hover:-translate-y-0.5
+                  focus:outline-none focus:ring-2 focus:ring-infra-400 focus:ring-offset-2
+                  dark:focus:ring-offset-brand-950
                 "
               >
                 {codeForm.formState.isSubmitting
@@ -237,7 +235,7 @@ export default function HomePage() {
       </div>
 
       {/* ── Features ──────────────────────────────────────────────────────── */}
-      <section className="relative z-10 bg-zinc-100 dark:bg-zinc-900 px-6 py-20 border-t border-zinc-300 dark:border-zinc-800">
+      <section className="relative z-10 bg-zinc-100 dark:bg-brand-900 px-6 py-20 border-t border-brand-600">
         <div className="max-w-5xl mx-auto flex flex-col gap-12">
           <Typography as="h2" center decoration="bold">
             {t(`${tHome}.features.title`)}
@@ -264,7 +262,7 @@ export default function HomePage() {
       </section>
 
       {/* ── Footer ────────────────────────────────────────────────────────── */}
-      <footer className="relative z-10 bg-white dark:bg-zinc-950 px-6 py-12 border-t border-zinc-300 dark:border-zinc-800">
+      <footer className="relative z-10 bg-white dark:bg-brand-950 px-6 py-12 border-t border-brand-600">
         <div className="max-w-5xl mx-auto flex flex-col sm:flex-row justify-between gap-8">
           <div className="flex flex-col gap-5">
             <div className="flex items-center gap-3">
@@ -320,9 +318,9 @@ interface FeatureCardProps {
 function FeatureCard({ icon, title, description }: FeatureCardProps) {
   return (
     <div className="
-      flex flex-col gap-4 p-6 
-      bg-white border border-zinc-200 shadow-md
-      dark:bg-zinc-950 dark:border-zinc-800
+      flex flex-col gap-4 p-6
+      rounded-lg bg-white border border-brand-600 shadow-neo
+      dark:bg-brand-950
     ">
       <div className="
         w-12 h-12 flex items-center justify-center

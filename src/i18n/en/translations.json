@@ -34,7 +34,6 @@
       "Profile": {
         "title": "Profile",
         "loading": "Carrying profile ...",
-        "relationship": "Manage your account",
         "loggedInAs": {
           "prefix": "User",
           "title": "Your name",
@@ -93,6 +92,17 @@
           },
           "copied": "Copied",
           "reset": "Reset"
+        },
+        "decoded": {
+          "summary": "What's inside this connection string?",
+          "decodeError": "Could not decode this connection string",
+          "fields": {
+            "tenant": "Tenant",
+            "account": "Account",
+            "serviceAccount": "Service account",
+            "roles": "Roles",
+            "expiresAt": "Expires at"
+          }
         }
       },
       "AboutCard": {
@@ -917,25 +927,15 @@
           "complete": "Account created"
         },
         "meta": {
-          "phone": {
-            "title": "Phone number",
-            "description": "Used for 2FA alerts and urgent notifications."
-          },
-          "messaging": {
-            "title": "Messaging accounts",
-            "description": "Connect via Telegram or WhatsApp to receive system alerts and notifications. You can register one or both."
-          },
           "telegram": {
             "title": "Telegram",
-            "linkHint": "To link your Telegram account, open the Mini App on Telegram."
-          },
-          "whatsapp": {
-            "title": "WhatsApp",
-            "sameAsPhone": "Same number as phone"
+            "linkHint": "Optional — connect Telegram to sign in and receive notifications through the bot.",
+            "linkedHint": "Telegram is connected.",
+            "button": "Connect Telegram"
           },
           "locale": {
             "title": "Preferred language",
-            "description": "Sets the language for system emails and notifications.",
+            "description": "Sets the language for the dashboard and system emails.",
             "placeholder": "Select a language"
           }
         },

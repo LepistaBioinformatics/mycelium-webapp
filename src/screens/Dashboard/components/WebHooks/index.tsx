@@ -224,7 +224,7 @@ export default function Webhooks() {
                   </DetailsBox.Summary>
 
                   <DetailsBox.Content>
-                    <div className="bg-zinc-200 dark:bg-zinc-800 p-2 -mt-4">
+                    <div className="bg-zinc-200 dark:bg-brand-900 p-2 -mt-4">
                       <Secret secret={webhook?.secret} />
                     </div>
                   </DetailsBox.Content>
