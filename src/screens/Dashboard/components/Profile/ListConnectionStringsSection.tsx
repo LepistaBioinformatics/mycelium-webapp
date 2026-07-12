@@ -109,7 +109,7 @@ function ConnectionStringRow({ token, onAction }: RowProps) {
   const expired = isExpired(token.expiration);
 
   return (
-    <TableRow className="bg-white dark:bg-zinc-800">
+    <TableRow className="bg-white dark:bg-brand-950">
       <TableCell className="font-medium text-zinc-900 dark:text-white whitespace-nowrap">
         <div className="flex items-center gap-2">
           {token.name}
@@ -261,7 +261,15 @@ export default function ListConnectionStringsSection() {
 
           {!isLoading && tokens && tokens.length > 0 && (
             <div className="overflow-x-auto scrollbar w-full">
-              <Table>
+              <Table
+                theme={{
+                  head: {
+                    cell: {
+                      base: "bg-zinc-50 px-6 py-3 group-first/head:first:rounded-tl-lg group-first/head:last:rounded-tr-lg dark:bg-brand-900",
+                    },
+                  },
+                }}
+              >
                 <TableHead>
                   <TableHeadCell>
                     {t(

@@ -33,7 +33,7 @@ function ComingSoonCard({ icon, name }: ComingSoonCardProps) {
       </Card.Header>
 
       <Card.Body width="full">
-        <span className="text-xs font-medium text-zinc-400 dark:text-zinc-500 bg-zinc-100 dark:bg-zinc-800 px-2 py-0.5">
+        <span className="text-xs font-medium text-zinc-400 dark:text-zinc-500 bg-zinc-100 dark:bg-brand-900 px-2 py-0.5">
           {t(`${BASE}.comingSoon`)}
         </span>
       </Card.Body>

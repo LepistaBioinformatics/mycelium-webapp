@@ -34,7 +34,6 @@
       "Profile": {
         "title": "Perfil",
         "loading": "Carregando perfil...",
-        "relationship": "Contas compartilhadas",
         "loggedInAs": {
           "prefix": "Usuário",
           "title": "Seu nome",
@@ -93,6 +92,17 @@
           },
           "copied": "Copiado",
           "reset": "Reset"
+        },
+        "decoded": {
+          "summary": "O que tem dentro dessa string de conexão?",
+          "decodeError": "Não foi possível decodificar essa string de conexão",
+          "fields": {
+            "tenant": "Tenant",
+            "account": "Conta",
+            "serviceAccount": "Conta de serviço",
+            "roles": "Papéis",
+            "expiresAt": "Expira em"
+          }
         }
       },
       "AboutCard": {
@@ -357,6 +367,7 @@
           "manageAccounts": "Ver contas",
           "manageAccountsDescription": "Clique aqui para ver as contas registradas no namespace.",
           "tabs": {
+            "notifications": "Notificações",
             "legalInformation": "Informações Legais",
             "owners": "Proprietários",
             "managers": "Gerentes",
@@ -432,6 +443,39 @@
               "address2": {
                 "title": "Endereço 2",
                 "prefix": "Endereço 2"
+              },
+              "province": {
+                "title": "Província",
+                "prefix": "Província"
+              },
+              "legalName": {
+                "title": "Razão social",
+                "prefix": "Razão social"
+              },
+              "tradingName": {
+                "title": "Nome fantasia",
+                "prefix": "Nome fantasia"
+              },
+              "contactPerson": {
+                "title": "Pessoa de contato",
+                "prefix": "Pessoa de contato"
+              },
+              "notifications": {
+                "title": "Notificações",
+                "description": "Personaliza os e-mails de notificação enviados aos convidados desse tenant."
+              },
+              "websiteUrl": {
+                "title": "URL do site",
+                "description": "Usado como link nos e-mails de notificação enviados aos convidados desse tenant."
+              },
+              "supportEmail": {
+                "title": "E-mail de suporte",
+                "description": "Exibido como o endereço de contato nos e-mails de notificação enviados aos convidados desse tenant."
+              },
+              "locale": {
+                "title": "Idioma das notificações",
+                "description": "Idioma usado nos e-mails de notificação enviados aos convidados desse tenant.",
+                "placeholder": "Selecione um idioma"
               },
               "save": "Salvar",
               "saving": "Salvando..."
@@ -951,25 +995,15 @@
           "complete": "Conta criada"
         },
         "meta": {
-          "phone": {
-            "title": "Número de telefone",
-            "description": "Usado para alertas de 2FA e notificações urgentes."
-          },
-          "messaging": {
-            "title": "Contas de mensageiros",
-            "description": "Conecte via Telegram ou WhatsApp para receber alertas e notificações do sistema. Você pode registrar um ou ambos."
-          },
           "telegram": {
             "title": "Telegram",
-            "linkHint": "Para vincular sua conta do Telegram, abra o Mini App no Telegram."
-          },
-          "whatsapp": {
-            "title": "WhatsApp",
-            "sameAsPhone": "Mesmo número do telefone"
+            "linkHint": "Opcional — conecte o Telegram para entrar e receber notificações pelo bot.",
+            "linkedHint": "Telegram conectado.",
+            "button": "Conectar Telegram"
           },
           "locale": {
             "title": "Idioma preferido",
-            "description": "Define o idioma para e-mails e notificações do sistema.",
+            "description": "Define o idioma do painel e dos e-mails do sistema.",
             "placeholder": "Selecione um idioma"
           }
         },

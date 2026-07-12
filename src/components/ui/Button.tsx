@@ -1,7 +1,9 @@
 import { cva, VariantProps } from "class-variance-authority";
 import { AriaRole } from "react";
 
-const styles = cva("text-zinc-700 dark:text-zinc-50", {
+const styles = cva(
+  "rounded-lg border font-mono tracking-wide transition-all text-zinc-700 dark:text-zinc-50",
+  {
   variants: {
     fullWidth: {
       true: "w-full",
@@ -10,16 +12,21 @@ const styles = cva("text-zinc-700 dark:text-zinc-50", {
       true: "text-center justify-center items-center",
     },
     intent: {
+      // Dark violet surface + violet border. Cyan #64C5EB is too light for a
+      // solid fill under white text (WCAG), so the accent lives in the border.
+      // Subtle shadow only — the hard-offset `shadow-neo` treatment is reserved
+      // for marketing surfaces (HomePage), it reads as too heavy repeated across
+      // a dense admin UI.
       primary:
-        "bg-brand-violet-500 hover:bg-brand-violet-600 dark:bg-brand-violet-600 dark:hover:bg-brand-violet-700 text-white",
+        "uppercase bg-brand-800 hover:bg-brand-700 text-white border-brand-600 shadow-sm dark:shadow-none",
       secondary:
-        "text-white font-semibold bg-zinc-500 hover:bg-zinc-600 dark:bg-zinc-600 dark:hover:bg-zinc-700",
+        "uppercase text-white font-semibold bg-zinc-600 hover:bg-zinc-700 border-zinc-500",
       warning:
-        "bg-yellow-500 dark:bg-yellow-600 text-white hover:bg-yellow-600 hover:dark:bg-yellow-700 font-semibold",
+        "uppercase bg-yellow-500 dark:bg-yellow-600 text-white hover:bg-yellow-600 hover:dark:bg-yellow-700 border-yellow-600 font-semibold",
       danger:
-        "bg-red-500 dark:bg-red-600 text-white hover:bg-red-600 dark:hover:bg-red-700",
-      link: "!text-brand-violet-500 dark:text-brand-violet-500 bg-transparent hover:bg-transparent border border-transparent hover:border-brand-violet-500 dark:hover:border-brand-violet-500",
-      info: "bg-brand-violet-500 text-white hover:bg-brand-violet-600 dark:bg-brand-violet-500 dark:hover:bg-brand-violet-700",
+        "uppercase bg-red-500 dark:bg-red-600 text-white hover:bg-red-600 dark:hover:bg-red-700 border-red-600",
+      link: "!text-brand-600 dark:!text-brand-300 bg-transparent hover:bg-transparent border-transparent hover:border-brand-600 dark:hover:border-brand-300",
+      info: "uppercase bg-infra-600 hover:bg-infra-700 text-white border-infra-700",
     },
     size: {
       xs: "py-1 px-2 text-xs",

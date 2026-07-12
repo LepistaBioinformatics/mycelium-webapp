@@ -34,7 +34,6 @@
       "Profile": {
         "title": "Perfil",
         "loading": "Carrying Perfil ...",
-        "relationship": "Cuentas compartidas",
         "loggedInAs": {
           "prefix": "Usuario",
           "title": "Su nombre",
@@ -93,6 +92,17 @@
           },
           "copied": "Copiado",
           "reset": "Reset"
+        },
+        "decoded": {
+          "summary": "¿Qué hay dentro de esta cadena de conexión?",
+          "decodeError": "No se pudo decodificar esta cadena de conexión",
+          "fields": {
+            "tenant": "Inquilino",
+            "account": "Cuenta",
+            "serviceAccount": "Cuenta de servicio",
+            "roles": "Roles",
+            "expiresAt": "Expira en"
+          }
         }
       },
       "AboutCard": {
@@ -357,6 +367,7 @@
           "manageAccounts": "Ver Cuentas",
           "manageAccountsDescription": "Haga clic aquí para ver las cuentas registradas en el espacio de nombres.",
           "tabs": {
+            "notifications": "Notificaciones",
             "legalInformation": "Información Legal",
             "owners": "Propietarios",
             "managers": "Gerentes",
@@ -432,6 +443,39 @@
               "address2": {
                 "title": "Dirección 2",
                 "prefix": "Dirección 2"
+              },
+              "province": {
+                "title": "Provincia",
+                "prefix": "Provincia"
+              },
+              "legalName": {
+                "title": "Razón social",
+                "prefix": "Razón social"
+              },
+              "tradingName": {
+                "title": "Nombre comercial",
+                "prefix": "Nombre comercial"
+              },
+              "contactPerson": {
+                "title": "Persona de contacto",
+                "prefix": "Persona de contacto"
+              },
+              "notifications": {
+                "title": "Notificaciones",
+                "description": "Personaliza los correos de notificación enviados a los invitados de este tenant."
+              },
+              "websiteUrl": {
+                "title": "URL del sitio web",
+                "description": "Se usa como enlace en los correos de notificación enviados a los invitados de este tenant."
+              },
+              "supportEmail": {
+                "title": "Correo de soporte",
+                "description": "Se muestra como la dirección de contacto en los correos de notificación enviados a los invitados de este tenant."
+              },
+              "locale": {
+                "title": "Idioma de notificaciones",
+                "description": "Idioma usado en los correos de notificación enviados a los invitados de este tenant.",
+                "placeholder": "Selecciona un idioma"
               },
               "save": "Guardar",
               "saving": "Guardando..."
@@ -951,25 +995,15 @@
           "complete": "Cuenta creada"
         },
         "meta": {
-          "phone": {
-            "title": "Número de teléfono",
-            "description": "Usado para alertas de 2FA y notificaciones urgentes."
-          },
-          "messaging": {
-            "title": "Cuentas de mensajería",
-            "description": "Conéctate vía Telegram o WhatsApp para recibir alertas y notificaciones del sistema. Puedes registrar uno o ambos."
-          },
           "telegram": {
             "title": "Telegram",
-            "linkHint": "Para vincular tu cuenta de Telegram, abre el Mini App en Telegram."
-          },
-          "whatsapp": {
-            "title": "WhatsApp",
-            "sameAsPhone": "Mismo número que el teléfono"
+            "linkHint": "Opcional — conecta Telegram para iniciar sesión y recibir notificaciones por el bot.",
+            "linkedHint": "Telegram está conectado.",
+            "button": "Conectar Telegram"
           },
           "locale": {
             "title": "Idioma preferido",
-            "description": "Establece el idioma para correos y notificaciones del sistema.",
+            "description": "Establece el idioma del panel y de los correos del sistema.",
             "placeholder": "Selecciona un idioma"
           }
         },

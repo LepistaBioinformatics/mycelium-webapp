@@ -46,7 +46,18 @@ const textInputTheme = {
     input: {
       colors: {
         custom:
-          "border-zinc-400 bg-brand-violet-50 text-zinc-900 focus:border-cyan-500 focus:ring-zinc-500 dark:border-zinc-600 dark:bg-zinc-700 dark:text-white placeholder-zinc-500  dark:placeholder-zinc-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500",
+          "border-brand-600 bg-brand-violet-50 text-zinc-900 focus:border-infra-400 focus:ring-zinc-500 dark:bg-brand-950 dark:text-white placeholder-zinc-500 dark:placeholder-zinc-400 dark:focus:border-brand-violet-500 dark:focus:ring-brand-violet-500",
+      },
+    },
+  },
+};
+
+const selectTheme = {
+  field: {
+    select: {
+      colors: {
+        custom:
+          "border-brand-600 bg-brand-violet-50 text-zinc-900 focus:border-infra-400 focus:ring-zinc-500 dark:bg-brand-950 dark:text-white placeholder-zinc-500 dark:placeholder-zinc-400 dark:focus:border-brand-violet-500 dark:focus:ring-brand-violet-500",
       },
     },
   },
@@ -291,7 +302,7 @@ export default function WebhookModal({
               theme={{
                 colors: {
                   custom:
-                    "border-zinc-400 bg-brand-violet-50 text-zinc-900 focus:border-cyan-500 focus:ring-zinc-500 dark:border-zinc-600 dark:bg-zinc-700 dark:text-white placeholder-zinc-500  dark:placeholder-zinc-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500",
+                    "border-brand-600 bg-brand-violet-50 text-zinc-900 focus:border-infra-400 focus:ring-zinc-500 dark:bg-brand-950 dark:text-white placeholder-zinc-500 dark:placeholder-zinc-400 dark:focus:border-brand-violet-500 dark:focus:ring-brand-violet-500",
                 },
               }}
               {...register("description")}
@@ -335,6 +346,8 @@ export default function WebhookModal({
             <Select
               id="trigger"
               sizing="lg"
+              color="custom"
+              theme={selectTheme}
               disabled={!!webhook}
               required
               defaultValue={undefined}
@@ -374,6 +387,8 @@ export default function WebhookModal({
           >
             <Select
               sizing="lg"
+              color="custom"
+              theme={selectTheme}
               defaultValue={undefined}
               onChange={(e) => setSecretType(e.target.value as Secret)}
             >

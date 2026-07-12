@@ -13,7 +13,7 @@ import { Language } from "@/i18n/config";
 // Sidebar container — always absolutely positioned so hover-expansion never
 // pushes content. A matching spacer div in the parent holds the layout slot.
 const containerStyles = cva(
-  "hidden sm:flex bg-zinc-50 dark:bg-zinc-900 absolute top-0 left-0 h-full z-40 overflow-hidden pt-2 pb-5 flex-col gap-6 justify-between border-r border-zinc-200 dark:border-zinc-800 group/sidebar transition-all duration-300 ease-in-out",
+  "hidden sm:flex bg-zinc-50 dark:bg-brand-950 absolute top-0 left-0 h-full z-40 overflow-hidden pt-2 pb-5 flex-col gap-6 justify-between border-r border-zinc-200 dark:border-brand-900 group/sidebar transition-all duration-300 ease-in-out",
   {
     variants: {
       open: {

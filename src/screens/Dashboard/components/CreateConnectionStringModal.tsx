@@ -1,5 +1,6 @@
 import Button from "@/components/ui/Button";
 import CopyToClipboard from "@/components/ui/CopyToClipboard";
+import DetailsBox from "@/components/ui/DetailsBox";
 import Divider from "@/components/ui/Divider";
 import FormField from "@/components/ui/FomField";
 import Modal from "@/components/ui/Modal";
@@ -10,11 +11,49 @@ import useSuspenseError from "@/hooks/use-suspense-error";
 import { tokensCreate } from "@/services/rpc/beginners";
 import { MycPermission } from "@/types/MyceliumPermission";
 import { Select, Spinner, TextInput } from "flowbite-react";
-import { ComponentProps, useState } from "react";
+import { ComponentProps, useMemo, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { FaCheck, FaCopy, FaTimes } from "react-icons/fa";
 import { RiCheckboxBlankLine, RiCheckboxLine } from "react-icons/ri";
+
+// Mirrors the gateway's `ConnectionStringBean::to_string()` format
+// (core/src/domain/dtos/token/connection_string/connection_string_beans.rs):
+// standard-base64 of `key=value;key=value;...`. Keys we surface to the user;
+// `sig`/`kvr` are internal HMAC integrity metadata, not scope, so they're
+// omitted from the decoded view.
+const SCOPE_LABEL_KEYS: Record<string, string> = {
+  tid: "tenant",
+  aid: "account",
+  sid: "serviceAccount",
+  rls: "roles",
+  edt: "expiresAt",
+};
+
+function decodeConnectionString(
+  value: string
+): { key: string; label: string; value: string }[] | null {
+  try {
+    const decoded = atob(value);
+    return decoded
+      .split(";")
+      .map((piece) => piece.trim())
+      .filter((piece) => piece.length > 0)
+      .map((piece) => {
+        const eq = piece.indexOf("=");
+        return {
+          key: eq === -1 ? piece : piece.slice(0, eq),
+          value: eq === -1 ? "" : piece.slice(eq + 1),
+        };
+      })
+      .flatMap(({ key, value }) => {
+        const label = SCOPE_LABEL_KEYS[key];
+        return label ? [{ key, label, value }] : [];
+      });
+  } catch {
+    return null;
+  }
+}
 
 type PermissionedRole = {
   role: string;
@@ -33,6 +72,17 @@ interface Props {
 type Inputs = {
   name: string;
   expiration: number;
+};
+
+const INPUT_COLORS =
+  "border-brand-600 bg-brand-violet-50 text-zinc-900 focus:border-infra-400 focus:ring-zinc-500 dark:bg-brand-950 dark:text-white placeholder-zinc-500 dark:placeholder-zinc-400 dark:focus:border-brand-violet-500 dark:focus:ring-brand-violet-500";
+
+const INPUT_THEME = {
+  field: { input: { colors: { custom: INPUT_COLORS } } },
+};
+
+const SELECT_THEME = {
+  field: { select: { colors: { custom: INPUT_COLORS } } },
 };
 
 enum Expiration {
@@ -227,6 +277,8 @@ export default function CreateConnectionStringModal({
                   autoFocus
                   type="text"
                   required
+                  color="custom"
+                  theme={INPUT_THEME}
                   disabled={isSubmitting || connectionString !== null || copied}
                   placeholder={t(
                     "screens.Dashboard.AdvancedOptionsModal.form.name.placeholder"
@@ -250,6 +302,8 @@ export default function CreateConnectionStringModal({
               >
                 <Select
                   id="expiration"
+                  color="custom"
+                  theme={SELECT_THEME}
                   disabled={isSubmitting || connectionString !== null || copied}
                   {...register("expiration")}
                 >
@@ -296,7 +350,14 @@ export default function CreateConnectionStringModal({
             <div className="flex flex-col gap-5">
               <Divider thickness="sm" />
 
-              <TextInput value={connectionString} disabled />
+              <TextInput
+                value={connectionString}
+                color="custom"
+                theme={INPUT_THEME}
+                disabled
+              />
+
+              <DecodedConnectionString value={connectionString} />
 
               <div className="flex flex-col-reverse sm:flex-row gap-5 justify-rev sm:justify-between">
                 <Button
@@ -342,7 +403,7 @@ export default function CreateConnectionStringModal({
           )}
 
           {roles && roles.length > 0 && (
-            <div className="rounded-lg bg-zinc-100 dark:bg-zinc-800 px-2 flex flex-col gap-5 justify-between group/clip py-2">
+            <div className="rounded-lg border border-brand-600 px-2 flex flex-col gap-5 justify-between group/clip py-2">
               <div className="flex sm:flex-col gap-3">
                 <Typography as="h5">
                   {t(
@@ -384,7 +445,7 @@ export default function CreateConnectionStringModal({
           )}
 
           {accountId && (
-            <div className="rounded-lg bg-zinc-100 dark:bg-zinc-800 px-2 flex flex-col justify-between group/clip">
+            <div className="rounded-lg border border-brand-600 px-2 flex flex-col justify-between group/clip">
               <div className="flex sm:flex-col gap-1">
                 <Typography as="h5">
                   {t("screens.Dashboard.AdvancedOptionsModal.accountId")}
@@ -405,7 +466,7 @@ export default function CreateConnectionStringModal({
           )}
 
           {tenantId && (
-            <div className="rounded-lg bg-zinc-100 dark:bg-zinc-800 px-2 flex flex-col justify-between group/clip">
+            <div className="rounded-lg border border-brand-600 px-2 flex flex-col justify-between group/clip">
               <div className="flex sm:flex-col gap-3">
                 <Typography as="h5">
                   {t("screens.Dashboard.AdvancedOptionsModal.tenantId")}
@@ -427,5 +488,49 @@ export default function CreateConnectionStringModal({
         </div>
       </Modal.Body>
     </Modal>
+  );
+}
+
+function DecodedConnectionString({ value }: { value: string }) {
+  const { t } = useTranslation();
+
+  const parts = useMemo(() => decodeConnectionString(value), [value]);
+
+  return (
+    <DetailsBox>
+      <DetailsBox.Summary>
+        <Typography as="span">
+          {t("screens.Dashboard.AdvancedOptionsModal.decoded.summary")}
+        </Typography>
+      </DetailsBox.Summary>
+
+      <DetailsBox.Content>
+        {!parts && (
+          <Typography as="small" isError>
+            {t("screens.Dashboard.AdvancedOptionsModal.decoded.decodeError")}
+          </Typography>
+        )}
+
+        {parts && parts.length > 0 && (
+          <ul className="flex flex-col divide-y divide-zinc-200 dark:divide-brand-900 rounded-lg border border-brand-600 overflow-hidden">
+            {parts.map(({ key, label, value }) => (
+              <li
+                key={key}
+                className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-3 px-3 py-2 bg-zinc-50 dark:bg-brand-900/40"
+              >
+                <span className="font-mono text-[10px] uppercase tracking-wider text-zinc-500 dark:text-zinc-400 sm:w-40 sm:shrink-0">
+                  {t(
+                    `screens.Dashboard.AdvancedOptionsModal.decoded.fields.${label}`
+                  )}
+                </span>
+                <span className="font-mono text-xs text-zinc-700 dark:text-zinc-200 break-all flex-1">
+                  {value}
+                </span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </DetailsBox.Content>
+    </DetailsBox>
   );
 }

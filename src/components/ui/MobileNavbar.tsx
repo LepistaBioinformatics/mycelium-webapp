@@ -13,7 +13,7 @@ import LanguageSwitcher from "../LanguageSwitcher";
 import SignOutButton from "./SignOutButton";
 
 const styles = cva(
-  "sm:hidden h-16 z-[999] fixed bottom-0 left-0 right-0 bg-white dark:bg-zinc-900 flex items-center justify-around px-4 border-t-2 border-zinc-200 dark:border-zinc-800",
+  "sm:hidden h-16 z-[999] fixed bottom-0 left-0 right-0 bg-white dark:bg-brand-950 flex items-center justify-around px-4 border-t-2 border-zinc-200 dark:border-brand-900",
   {
     variants: {},
   }
@@ -151,7 +151,7 @@ function SettingsModal({
         <div className="flex flex-col gap-3 px-4 w-full">
           <div className="flex flex-col gap-2">
             <Typography>{t("Menu.subtitle")}</Typography>
-            <div className="items-center text-center bg-brand-violet-50 dark:bg-zinc-700 p-2 transition-all">
+            <div className="items-center text-center rounded-lg bg-brand-violet-50 dark:bg-brand-900 p-2 transition-all">
               <LanguageSwitcher horizontal keepOpen />
             </div>
           </div>

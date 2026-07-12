@@ -78,7 +78,7 @@ export default function OwnersCard({ tenant, mutateTenantStatus }: Props) {
 
   return (
     <>
-      <Card padding="sm" height="adaptive" group>
+      <Card padding="sm" height="adaptive" group scroll={false}>
         <Card.Header>
           <div className="flex flex-col gap-2">
             <Typography as="h5">

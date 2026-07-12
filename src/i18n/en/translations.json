@@ -34,7 +34,6 @@
       "Profile": {
         "title": "Profile",
         "loading": "Carrying profile ...",
-        "relationship": "Manage your account",
         "loggedInAs": {
           "prefix": "User",
           "title": "Your name",
@@ -93,6 +92,17 @@
           },
           "copied": "Copied",
           "reset": "Reset"
+        },
+        "decoded": {
+          "summary": "What's inside this connection string?",
+          "decodeError": "Could not decode this connection string",
+          "fields": {
+            "tenant": "Tenant",
+            "account": "Account",
+            "serviceAccount": "Service account",
+            "roles": "Roles",
+            "expiresAt": "Expires at"
+          }
         }
       },
       "AboutCard": {
@@ -380,6 +390,7 @@
           "manageAccounts": "See accounts",
           "manageAccountsDescription": "Click here to see the accounts recorded in Namespace.",
           "tabs": {
+            "notifications": "Notifications",
             "legalInformation": "Legal Information",
             "owners": "Owners",
             "managers": "Managers",
@@ -458,6 +469,39 @@
               "address2": {
                 "title": "Address 2",
                 "prefix": "Address 2"
+              },
+              "province": {
+                "title": "Province",
+                "prefix": "Province"
+              },
+              "legalName": {
+                "title": "Legal name",
+                "prefix": "Legal name"
+              },
+              "tradingName": {
+                "title": "Trading name",
+                "prefix": "Trading name"
+              },
+              "contactPerson": {
+                "title": "Contact person",
+                "prefix": "Contact person"
+              },
+              "notifications": {
+                "title": "Notifications",
+                "description": "Personalizes notification emails sent to this tenant's guests."
+              },
+              "websiteUrl": {
+                "title": "Website URL",
+                "description": "Used as the link in notification emails sent to this tenant's guests."
+              },
+              "supportEmail": {
+                "title": "Support email",
+                "description": "Shown as the contact address in notification emails sent to this tenant's guests."
+              },
+              "locale": {
+                "title": "Notification language",
+                "description": "Language used for notification emails sent to this tenant's guests.",
+                "placeholder": "Select a language"
               },
               "save": "Save",
               "saving": "Saving..."
@@ -917,25 +961,15 @@
           "complete": "Account created"
         },
         "meta": {
-          "phone": {
-            "title": "Phone number",
-            "description": "Used for 2FA alerts and urgent notifications."
-          },
-          "messaging": {
-            "title": "Messaging accounts",
-            "description": "Connect via Telegram or WhatsApp to receive system alerts and notifications. You can register one or both."
-          },
           "telegram": {
             "title": "Telegram",
-            "linkHint": "To link your Telegram account, open the Mini App on Telegram."
-          },
-          "whatsapp": {
-            "title": "WhatsApp",
-            "sameAsPhone": "Same number as phone"
+            "linkHint": "Optional — connect Telegram to sign in and receive notifications through the bot.",
+            "linkedHint": "Telegram is connected.",
+            "button": "Connect Telegram"
           },
           "locale": {
             "title": "Preferred language",
-            "description": "Sets the language for system emails and notifications.",
+            "description": "Sets the language for the dashboard and system emails.",
             "placeholder": "Select a language"
           }
         },

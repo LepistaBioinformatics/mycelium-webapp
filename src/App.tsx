@@ -3,9 +3,10 @@ import { Routes, Route } from "react-router";
 import NotFound from "./components/NotFound";
 import useProfile from "./hooks/use-profile";
 import buildRoutes, { HOME_ROUTE, DASHBOARD_ROUTE } from "./constants/routes";
-import { Fragment, lazy, useMemo } from "react";
+import { Fragment, lazy, Suspense, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import LoginPage from "@/screens/LoginPage";
+import { HorizontalLoadingBar } from "@/components/ui/HorizontalLoadingBar";
 
 const Onboarding = lazy(() => import("@/screens/Dashboard/components/Onboarding"));
 
@@ -21,13 +22,20 @@ export default function App() {
   }, [profile, t]);
 
   return (
-    <div id="App" className="bg-white dark:bg-zinc-900">
+    <div id="App" className="bg-white dark:bg-brand-950">
       <Routes>
           <Route path="*" element={<NotFound />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path={HOME_ROUTE.path} element={HOME_ROUTE.element} />
           <Route path={DASHBOARD_ROUTE.path} element={DASHBOARD_ROUTE.element}>
-            <Route index element={<Onboarding />} />
+            <Route
+              index
+              element={
+                <Suspense fallback={<HorizontalLoadingBar isLoading />}>
+                  <Onboarding />
+                </Suspense>
+              }
+            />
 
             {ROUTES.sort((a, b) => a.position - b.position).map((route) => (
               <Fragment key={route.path}>

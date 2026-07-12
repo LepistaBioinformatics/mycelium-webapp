@@ -1,6 +1,6 @@
 import { cva, VariantProps } from "class-variance-authority";
 
-const containerStyles = cva("", {
+const containerStyles = cva("rounded-lg border border-brand-600 px-4", {
   variants: {
     open: {
       true: "open",
@@ -45,7 +45,7 @@ function Container({
 }
 
 const summaryStyles = cva(
-  "cursor-pointer border-t-[0.1px] border-opacity-20 dark:border-opacity-20 border-brand-violet-400 dark:border-brand-violet-600 sm:hover:border-brand-violet-400 dark:sm:hover:border-brand-violet-400 px-0 hover:px-2 transition-all duration-300 py-1 hover:bg-brand-violet-50 dark:hover:bg-zinc-800 text-brand-violet-500 dark:text-brand-violet-400 list-none",
+  "cursor-pointer border-opacity-20 dark:border-opacity-20 border-brand-violet-400 dark:border-brand-violet-600 sm:hover:border-brand-violet-400 dark:sm:hover:border-brand-violet-400 px-0 hover:px-2 transition-all duration-300 py-1 hover:bg-brand-violet-50 dark:hover:bg-brand-900 text-brand-violet-500 dark:text-brand-violet-400 list-none",
   {
     variants: {
       marginTop: {

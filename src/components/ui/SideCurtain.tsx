@@ -4,7 +4,7 @@ import { IoCloseSharp } from "react-icons/io5";
 import { useNavigate } from "react-router";
 
 const containerStyles = cva(
-  "fixed z-[997] right-0 top-0 bottom-0 w-full bg-zinc-600 bg-opacity-20 dark:bg-zinc-900 dark:bg-opacity-40 sm:rounded-l-none shadow-xl flex justify-end",
+  "fixed z-[997] right-0 top-0 bottom-0 w-full bg-zinc-600 bg-opacity-20 dark:bg-zinc-900 dark:bg-opacity-40 flex justify-end",
   {
     variants: {
       open: {
@@ -52,9 +52,9 @@ function Container({
     >
       <div
         id="side-curtain-content"
-        className="flex flex-col w-full sm:w-[70%] xl:w-1/2 sm:mb-16 h-[92vh] sm:h-screen overflow-y-auto bg-white dark:bg-zinc-900 px-2 border-2 border-zinc-300 dark:border-zinc-700 scrollbar"
+        className="flex flex-col w-full sm:w-[70%] xl:w-1/2 sm:mb-16 h-[92vh] sm:h-screen overflow-y-auto bg-white dark:bg-brand-950 px-2 border border-brand-600 shadow-sm dark:shadow-none sm:rounded-l-lg scrollbar"
       >
-        <div className="flex justify-between items-center gap-2 w-full py-3 sticky top-0 bg-white dark:bg-zinc-900">
+        <div className="flex justify-between items-center gap-2 w-full py-3 sticky top-0 bg-white dark:bg-brand-950">
           <Typography as="h4" decoration="smooth">
             {title}
           </Typography>

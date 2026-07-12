@@ -239,7 +239,7 @@ export default function Discovery() {
  */
 const OperationMethod = ({ method }: { method: string }) => {
   const style = (className: string) =>
-    `${className} text-sm text-center font-bold-md px-2 mt-2 sm:mt-0 text-white border bg-opacity-50 h-fit min-w-[5rem]`;
+    `${className} text-sm text-center font-bold-md px-2 mt-2 sm:mt-0 text-white border rounded-full bg-opacity-50 h-fit min-w-[5rem]`;
 
   switch (method) {
     case "GET":

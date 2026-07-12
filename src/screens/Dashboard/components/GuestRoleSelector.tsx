@@ -159,7 +159,7 @@ export default function GuestRoleSelector({
         {selectedRole && !isEditing && (
           <div className="flex flex-col gap-2">
             <div onClick={() => setIsEditing(true)}>
-              <div className="flex items-center gap-2 border-2 border-zinc-300 dark:border-zinc-700 pb-2 bg-brand-violet-50 dark:bg-zinc-600 px-4 py-2 hover:cursor-pointer">
+              <div className="flex items-center gap-2 rounded-lg border border-brand-600 pb-2 bg-brand-violet-50 dark:bg-brand-900 px-4 py-2 hover:cursor-pointer">
                 {selectedRole?.name}
                 {selectedRole?.permission && (
                   <PermissionIcon permission={selectedRole?.permission} />
@@ -190,7 +190,7 @@ export default function GuestRoleSelector({
                     input: {
                       colors: {
                         custom:
-                          "border-zinc-400 bg-brand-violet-50 text-zinc-900 focus:border-cyan-500 focus:ring-zinc-500 dark:border-zinc-600 dark:bg-zinc-700 dark:text-white placeholder-zinc-500  dark:placeholder-zinc-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500",
+                          "border-brand-600 bg-brand-violet-50 text-zinc-900 focus:border-infra-400 focus:ring-zinc-500 dark:bg-brand-950 dark:text-white placeholder-zinc-500 dark:placeholder-zinc-400 dark:focus:border-infra-400 dark:focus:ring-infra-400",
                       },
                     },
                   },
@@ -212,7 +212,7 @@ export default function GuestRoleSelector({
               </Typography>
             )}
 
-            <div className="flex flex-col mt-2 shadow-lg relative">
+            <div className="flex flex-col mt-2 rounded-lg border border-brand-600 shadow-sm dark:shadow-none bg-white dark:bg-brand-950 relative">
               {guestRolesData
                 ?.sort(
                   (a, b) =>
@@ -238,7 +238,7 @@ export default function GuestRoleSelector({
 }
 
 const selectionItemStyles = cva(
-  "flex gap-0 bg-brand-violet-50 dark:bg-zinc-800 p-2 border-t-2 border-t-brand-violet-200 dark:border-t-zinc-700 hover:bg-brand-violet-100 dark:hover:bg-zinc-700",
+  "flex gap-0 bg-brand-violet-50 dark:bg-brand-900 p-2 border-t border-t-brand-violet-200 dark:border-t-brand-700 hover:bg-brand-violet-100 dark:hover:bg-brand-800",
   {
     variants: {
       active: {

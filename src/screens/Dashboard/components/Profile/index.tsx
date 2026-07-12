@@ -84,6 +84,21 @@ export default function Profile() {
 
   const { user, profile, isLoadingUser } = useProfile();
 
+  const principalOwner = useMemo(() => {
+    if (!profile?.owners || profile.owners.length === 0) return null;
+    return (
+      profile.owners.find((owner) => owner.isPrincipal) ??
+      profile.owners[0] ??
+      null
+    );
+  }, [profile?.owners]);
+
+  const displayName = useMemo(() => {
+    const firstName = principalOwner?.firstName ?? user?.firstName ?? "";
+    const lastName = principalOwner?.lastName ?? user?.lastName ?? "";
+    return `${firstName} ${lastName}`.trim();
+  }, [principalOwner, user]);
+
   const activeTab = useMemo(() => {
     const tab = searchParams.get("tab");
 
@@ -146,11 +161,7 @@ export default function Profile() {
                       title={t("screens.Dashboard.Profile.loggedInAs.title")}
                     >
                       <div className="flex items-start sm:items-center flex-col sm:flex-row gap-3">
-                        <Typography truncate>
-                          {user
-                            ? `${user.firstName ?? ""} ${user.lastName ?? ""}`.trim()
-                            : ""}
-                        </Typography>
+                        <Typography truncate>{displayName}</Typography>
 
                         <div className="flex items-center gap-3">
                           {profile?.isStaff && (
@@ -196,113 +207,103 @@ export default function Profile() {
                 </IntroSection>
               )}
             </Section.Header>
+          </Section>
 
-            <Section.Body>
-              <div className="flex flex-col gap-3 w-full mt-12 h-full">
-                <div>
-                  <Typography decoration="smooth" as="h3">
-                    {t("screens.Dashboard.Profile.relationship")}
-                  </Typography>
-                </div>
+          <div className="flex flex-col sm:flex-row gap-0 w-full h-full">
+            {/* Vertical nav — desktop left rail, mobile top bar */}
+            <nav className="flex flex-row sm:flex-col sm:w-40 shrink-0 border-b sm:border-b-0 sm:border-r border-zinc-200 dark:border-zinc-800 overflow-x-auto sm:overflow-x-visible scrollbar">
+              {NAV_ITEMS.map(({ tab, labelKey, icon }) => {
+                const isActive = activeTab === tab;
+                return (
+                  <button
+                    key={tab}
+                    onClick={() =>
+                      setSearchParams({ tab: tab.toString() })
+                    }
+                    className={[
+                      "flex items-center gap-2 px-3 py-2.5 text-sm whitespace-nowrap sm:whitespace-normal transition-colors w-full text-left",
+                      "border-b-2 sm:border-b-0 sm:border-l-2",
+                      isActive
+                        ? "border-brand-violet-500 dark:border-brand-violet-400 text-brand-violet-700 dark:text-brand-violet-300 bg-brand-violet-50 dark:bg-brand-violet-950"
+                        : "border-transparent text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-zinc-800",
+                    ].join(" ")}
+                  >
+                    <span className="shrink-0">{icon}</span>
+                    <span>{t(labelKey)}</span>
+                  </button>
+                );
+              })}
+            </nav>
 
-                <div className="flex flex-col sm:flex-row gap-0 w-full h-full">
-                  {/* Vertical nav — desktop left rail, mobile top bar */}
-                  <nav className="flex flex-row sm:flex-col sm:w-40 shrink-0 border-b sm:border-b-0 sm:border-r border-zinc-200 dark:border-zinc-800 overflow-x-auto sm:overflow-x-visible scrollbar">
-                    {NAV_ITEMS.map(({ tab, labelKey, icon }) => {
-                      const isActive = activeTab === tab;
-                      return (
-                        <button
-                          key={tab}
-                          onClick={() =>
-                            setSearchParams({ tab: tab.toString() })
-                          }
-                          className={[
-                            "flex items-center gap-2 px-3 py-2.5 text-sm whitespace-nowrap sm:whitespace-normal transition-colors w-full text-left",
-                            "border-b-2 sm:border-b-0 sm:border-l-2",
-                            isActive
-                              ? "border-brand-violet-500 dark:border-brand-violet-400 text-brand-violet-700 dark:text-brand-violet-300 bg-brand-violet-50 dark:bg-brand-violet-950"
-                              : "border-transparent text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-zinc-800",
-                          ].join(" ")}
-                        >
-                          <span className="shrink-0">{icon}</span>
-                          <span>{t(labelKey)}</span>
-                        </button>
-                      );
-                    })}
-                  </nav>
+            {/* Tab content */}
+            <div className="flex-1 min-w-0 pt-4 sm:pt-0 sm:pl-6">
+              {activeTab === ActiveTab.LicensedResources && (
+                <LicensedResourcesSection
+                  licensedResources={licensedResources}
+                />
+              )}
 
-                  {/* Tab content */}
-                  <div className="flex-1 min-w-0 pt-4 sm:pt-0 sm:pl-6">
-                    {activeTab === ActiveTab.LicensedResources && (
-                      <LicensedResourcesSection
-                        licensedResources={licensedResources}
-                      />
-                    )}
+              {activeTab === ActiveTab.TenantOwnership && (
+                <TenantOwnershipSection
+                  tenantsOwnership={tenantsOwnership}
+                />
+              )}
 
-                    {activeTab === ActiveTab.TenantOwnership && (
-                      <TenantOwnershipSection
-                        tenantsOwnership={tenantsOwnership}
-                      />
-                    )}
+              {activeTab === ActiveTab.ListConnectionStrings && (
+                <ListConnectionStringsSection />
+              )}
 
-                    {activeTab === ActiveTab.ListConnectionStrings && (
-                      <ListConnectionStringsSection />
-                    )}
+              {activeTab === ActiveTab.TelegramIdentity && (
+                <IdentitySection profile={profile} />
+              )}
 
-                    {activeTab === ActiveTab.TelegramIdentity && (
-                      <IdentitySection profile={profile} />
-                    )}
+              {activeTab === ActiveTab.AdvancedOptions && (
+                <Card padding="sm" width="alwaysFull" height="adaptive">
+                  <Card.Header>
+                    <Typography as="h5" decoration="faded">
+                      {t(
+                        "screens.Dashboard.LicensedResourcesSection.title"
+                      )}
+                    </Typography>
+                  </Card.Header>
 
-                    {activeTab === ActiveTab.AdvancedOptions && (
-                      <Card padding="sm" width="alwaysFull" height="adaptive">
-                        <Card.Header>
-                          <Typography as="h5" decoration="faded">
+                  <Card.Body width="full">
+                    <Banner intent="warning">
+                      <div className="flex flex-col sm:flex-row justify-between gap-2 my-5">
+                        <div className="flex flex-col gap-2">
+                          <Typography as="h4" decoration="semibold">
                             {t(
-                              "screens.Dashboard.LicensedResourcesSection.title"
+                              "screens.Dashboard.Profile.createConnectionString.title"
                             )}
                           </Typography>
-                        </Card.Header>
 
-                        <Card.Body width="full">
-                          <Banner intent="warning">
-                            <div className="flex flex-col sm:flex-row justify-between gap-2 my-5">
-                              <div className="flex flex-col gap-2">
-                                <Typography as="h4" decoration="semibold">
-                                  {t(
-                                    "screens.Dashboard.Profile.createConnectionString.title"
-                                  )}
-                                </Typography>
+                          <Typography
+                            decoration="smooth"
+                            as="p"
+                            width="md"
+                          >
+                            {t(
+                              "screens.Dashboard.Profile.createConnectionString.description"
+                            )}
+                          </Typography>
+                        </div>
 
-                                <Typography
-                                  decoration="smooth"
-                                  as="p"
-                                  width="md"
-                                >
-                                  {t(
-                                    "screens.Dashboard.Profile.createConnectionString.description"
-                                  )}
-                                </Typography>
-                              </div>
-
-                              <div>
-                                <Button
-                                  onClick={handleCreateConnectionStringModalOpen}
-                                >
-                                  {t(
-                                    "screens.Dashboard.Profile.createConnectionString.button"
-                                  )}
-                                </Button>
-                              </div>
-                            </div>
-                          </Banner>
-                        </Card.Body>
-                      </Card>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </Section.Body>
-          </Section>
+                        <div>
+                          <Button
+                            onClick={handleCreateConnectionStringModalOpen}
+                          >
+                            {t(
+                              "screens.Dashboard.Profile.createConnectionString.button"
+                            )}
+                          </Button>
+                        </div>
+                      </div>
+                    </Banner>
+                  </Card.Body>
+                </Card>
+              )}
+            </div>
+          </div>
         </PageBody.Content>
       </PageBody>
 

@@ -110,17 +110,14 @@ function LogoutModal({
 
 type Account = components["schemas"]["Account"];
 
-const ONBOARDING_TOTAL = 4;
+// Mirrors Onboarding's required steps: account + locale. `telegram_user` is
+// an optional, uncounted extra there too (see Onboarding/index.tsx).
+const ONBOARDING_TOTAL = 2;
 
 function onboardingSteps(acc: Account | null): number {
   if (!acc) return 0;
   const meta = (acc.meta ?? {}) as Record<string, string>;
-  return (
-    1 +
-    (meta.locale ? 1 : 0) +
-    (meta.phone_number ? 1 : 0) +
-    (meta.telegram_user || meta.whatsapp_user ? 1 : 0)
-  );
+  return 1 + (meta.locale ? 1 : 0);
 }
 
 function MainHeader({ isOpen }: { isOpen: boolean }) {
