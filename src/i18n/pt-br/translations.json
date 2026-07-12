@@ -34,6 +34,19 @@
       "Profile": {
         "title": "Perfil",
         "loading": "Carregando perfil...",
+        "Overview": {
+          "tabName": "Visão geral",
+          "licensedResourcesCount_one": "{{count}} recurso",
+          "licensedResourcesCount_other": "{{count}} recursos",
+          "noLicensedResources": "Nenhum recurso",
+          "tenantsCount_one": "{{count}} namespace",
+          "tenantsCount_other": "{{count}} namespaces",
+          "noTenants": "Não é proprietário",
+          "manage": "Gerenciar",
+          "telegramLinked": "Vinculado",
+          "telegramNotLinked": "Não vinculado",
+          "contactInfoFieldsFilled": "{{count}}/{{total}} campos preenchidos"
+        },
         "loggedInAs": {
           "prefix": "Usuário",
           "title": "Seu nome",
@@ -49,6 +62,38 @@
         "email": {
           "prefix": "E-mail",
           "title": "Seu e-mail"
+        },
+        "personalInfo": {
+          "phoneNumber": "Telefone",
+          "emergencyContactName": "Contato de emergência",
+          "emergencyContactPhone": "Telefone de emergência"
+        },
+        "ContactInfoSection": {
+          "tabName": "Informações de contato",
+          "title": "Informações de contato",
+          "description": "Mantenha esses dados atualizados para que possamos te contatar caso seja necessário.",
+          "fullName": {
+            "title": "Nome completo",
+            "placeholder": "Seu nome completo"
+          },
+          "phoneNumber": {
+            "title": "Telefone"
+          },
+          "jobTitle": {
+            "title": "Cargo",
+            "placeholder": "ex: Líder de Infraestrutura"
+          },
+          "emergencyContactName": {
+            "title": "Nome do contato de emergência",
+            "description": "Alguém que possamos contatar em seu nome, se necessário.",
+            "placeholder": "Nome completo"
+          },
+          "emergencyContactPhone": {
+            "title": "Telefone do contato de emergência"
+          },
+          "save": "Salvar",
+          "saving": "Salvando...",
+          "error": "Alguns campos falharam ao salvar"
         }
       },
       "AdvancedOptionsModal": {
@@ -323,6 +368,7 @@
             "title": "Nome do namespace",
             "prefix": "Você vê",
             "viewTenantAdvancedDetails": "Ver detalhes avançados do namespace",
+            "viewDetailsButton": "Ver detalhes",
             "makeTenantFavorite": "Favoritar namespace"
           },
           "description": {
@@ -367,6 +413,7 @@
           "manageAccounts": "Ver contas",
           "manageAccountsDescription": "Clique aqui para ver as contas registradas no namespace.",
           "tabs": {
+            "overview": "Visão geral",
             "notifications": "Notificações",
             "legalInformation": "Informações Legais",
             "owners": "Proprietários",
@@ -374,6 +421,17 @@
             "brand": "Marca",
             "advanced": "Avançado",
             "integrations": "Integrações"
+          },
+          "overview": {
+            "configured": "Configurado",
+            "notConfigured": "Não configurado",
+            "fieldsFilled": "{{count}}/{{total}} campos preenchidos",
+            "ownersCount_one": "{{count}} proprietário",
+            "ownersCount_other": "{{count}} proprietários",
+            "noOwners": "Nenhum proprietário",
+            "managerConfigured": "Gerente definido",
+            "managerNotConfigured": "Nenhum gerente definido",
+            "manageIntegration": "Gerenciar integração"
           },
           "createConnectionString": {
             "cta": "Opções avançadas",
@@ -414,7 +472,8 @@
               },
               "federalRevenueRegister": {
                 "title": "CNPJ",
-                "prefix": "Registro de Receita Federal"
+                "prefix": "Registro de Receita Federal",
+                "invalidCnpj": "CNPJ inválido — confira os dígitos e tente novamente"
               },
               "federalRevenueRegisterType": {
                 "title": "Tipo de Registro de Receita Federal",
@@ -533,13 +592,19 @@
               "original": "Original",
               "compressed": "Comprimido",
               "submit": "Salvar logotipo",
-              "submitting": "Salvando..."
-            },
-            "colors": {
-              "title": "Cores",
-              "description": "Personalize as cores do namespace.",
-              "submit": "Enviar",
-              "submitting": "Enviando..."
+              "submitting": "Salvando...",
+              "identity": {
+                "title": "Identidade da marca",
+                "description": "Defina as cores e a tipografia usadas para personalizar a identidade deste tenant.",
+                "primaryColor": "Cor primária",
+                "secondaryColor": "Cor secundária",
+                "accentColor": "Cor de destaque",
+                "invalidHex": "Informe uma cor hexadecimal válida (ex: #9260C4)",
+                "headingFontFamily": "Fonte de título",
+                "bodyFontFamily": "Fonte de texto",
+                "save": "Salvar identidade",
+                "saving": "Salvando..."
+              }
             }
           }
         }
@@ -557,6 +622,11 @@
         },
         "AccountInvitations": {
           "noInvitations": "Nenhuma conta de gerenciamento registrada",
+          "search": {
+            "placeholder": "Buscar por e-mail...",
+            "noResults": "Nenhum compartilhamento corresponde à busca",
+            "truncated": "Mostrando os primeiros {{count}} compartilhamentos. Refine sua busca para reduzir os resultados."
+          },
           "email": {
             "title": "E-mail convidado"
           },
@@ -579,9 +649,7 @@
               "desctiption": "Remover o convite irá remover os acessos do usuário convidado.",
               "confirm": "Prosseguir"
             }
-          },
-          "showAll": "Mostrar todos",
-          "showLess": "Mostrar menos"
+          }
         },
         "AccountDetails": {
           "title": "Detalhes da conta",
@@ -1033,14 +1101,20 @@
   "components": {
     "SearchBar": {
       "placeholder": "Pesquise resultados...",
+      "clear": "Limpar busca",
       "commandPalette": {
-        "title": "Comandos"
+        "title": "Filtros"
       }
     },
     "Pager": {
       "records": "{{number}} resultados",
       "prev": "Anterior",
       "next": "Próximo"
+    },
+    "RequiredContactInfoBanner": {
+      "title": "Complete suas informações de contato",
+      "description": "Como sua conta tem privilégios elevados, precisamos de uma forma de te contatar caso algo exija sua atenção.",
+      "button": "Completar agora"
     },
     "WrittenBy": {
       "created_by": {

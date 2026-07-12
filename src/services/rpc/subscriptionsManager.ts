@@ -1,6 +1,6 @@
 import { components } from "@/services/openapi/mycelium-schema";
 import PaginatedRecords from "@/types/PaginatedRecords";
-import { rpcCall } from "./client";
+import { rpcBatch, rpcCall } from "./client";
 
 type Account = components["schemas"]["Account"];
 type GuestRole = components["schemas"]["GuestRole"];
@@ -37,6 +37,51 @@ export function accountsList(
     params,
     getToken
   );
+}
+
+// The gateway's `subscriptionsManager.accounts.list` accepts a single
+// `accountType` per call (no "all types" option) — see
+// core/use_cases/.../list_accounts_by_type.rs. To show every allowed type in
+// one list, fire one batched request per type and merge client-side. Since
+// each type is paginated independently server-side, the merged `count`/page
+// are best-effort (sorted by createdAt, sliced to pageSize) rather than a
+// true global pagination.
+export async function accountsListMerged(
+  accountTypes: string[],
+  params: AccountsListParams,
+  getToken: () => Promise<string>
+): Promise<PaginatedRecords<Account>> {
+  const requests = accountTypes.map((accountType, id) => ({
+    method: "subscriptionsManager.accounts.list",
+    params: { ...params, accountType },
+    id,
+  }));
+
+  const results = await rpcBatch(requests, getToken);
+
+  const records: Account[] = [];
+  let count = 0;
+
+  for (const result of results) {
+    if ("error" in result) continue;
+    const page = result.result as PaginatedRecords<Account>;
+    records.push(...(page.records ?? []));
+    count += page.count ?? 0;
+  }
+
+  records.sort(
+    (a, b) =>
+      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  );
+
+  const pageSize = params.pageSize ?? records.length;
+
+  return {
+    records: records.slice(0, pageSize),
+    count,
+    size: pageSize,
+    skip: params.skip ?? 0,
+  };
 }
 
 export interface AccountsGetParams {

@@ -1,7 +1,7 @@
 "use client";
 
 import PageBody from "@/components/ui/PageBody";
-import { Dropdown, DropdownItem } from "flowbite-react";
+import Dropdown from "@/components/ui/Dropdown";
 import { useEffect, useMemo, useState } from "react";
 import AccountModal, { AccountModalProps } from "./AccountModal";
 import AccountDetails from "./AccountDetails";
@@ -110,11 +110,9 @@ export default function Accounts({ restrictAccountTypeTo }: Props) {
                   className="text-2xl"
                 />
               }
-              color="gray"
-              arrowIcon={false}
               dismissOnClick={false}
             >
-              <div className="flex flex-col gap-0 text-start px-4 py-3">
+              <Dropdown.Header>
                 <Typography
                   as="span"
                   decoration="faded"
@@ -126,8 +124,8 @@ export default function Accounts({ restrictAccountTypeTo }: Props) {
                     "screens.Dashboard.Accounts.accountType.tenantScoped.title"
                   )}
                 </Typography>
-              </div>
-              <DropdownItem
+              </Dropdown.Header>
+              <Dropdown.Item
                 disabled={!shouldCreateAccount}
                 onClick={() => handleOpenModal("subscription")}
               >
@@ -149,9 +147,9 @@ export default function Accounts({ restrictAccountTypeTo }: Props) {
                     )}
                   </Typography>
                 </div>
-              </DropdownItem>
+              </Dropdown.Item>
 
-              <DropdownItem
+              <Dropdown.Item
                 disabled={!shouldCreateAccount}
                 onClick={() => handleOpenModal("roleAssociated")}
               >
@@ -173,9 +171,9 @@ export default function Accounts({ restrictAccountTypeTo }: Props) {
                     )}
                   </Typography>
                 </div>
-              </DropdownItem>
+              </Dropdown.Item>
 
-              <DropdownItem
+              <Dropdown.Item
                 disabled={!hasAdminPrivileges}
                 onClick={() => handleOpenModal("systemScoped")}
               >
@@ -191,7 +189,7 @@ export default function Accounts({ restrictAccountTypeTo }: Props) {
                     )}
                   </Typography>
                 </div>
-              </DropdownItem>
+              </Dropdown.Item>
             </Dropdown>
           </div>
         }

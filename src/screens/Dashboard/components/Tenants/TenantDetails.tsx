@@ -1,21 +1,17 @@
 import Button from "@/components/ui/Button";
 import SideCurtain from "@/components/ui/SideCurtain";
-import Typography from "@/components/ui/Typography";
 import { formatDDMMYY } from "@/functions/format-dd-mm-yy";
 import useProfile from "@/hooks/use-profile";
 import { tenantsGetPublicInfo } from "@/services/rpc/beginners";
 import { components } from "@/services/openapi/mycelium-schema";
 import { useCallback, useMemo, useState } from "react";
-import DeleteTenant from "./DeleteTenant";
 import { useDispatch, useSelector } from "react-redux";
 import { FaRegStar, FaStar } from "react-icons/fa";
 import { RootState } from "@/states/store";
 import { setTenantInfo } from "@/states/tenant.state";
-import Banner from "@/components/ui/Banner";
-import CreateManagementAccount from "./CreateManagementAccount";
 import DetailsBox from "@/components/ui/DetailsBox";
 import CopyToClipboard from "@/components/ui/CopyToClipboard";
-import { Link } from "react-router";
+import { useNavigate } from "react-router";
 import IntroSection from "@/components/ui/IntroSection";
 import { useTranslation } from "react-i18next";
 import { MdManageAccounts } from "react-icons/md";
@@ -31,24 +27,18 @@ interface Props {
 enum OpenedSection {
   Details,
   AssociatedAccounts,
-  AdvancedActions,
 }
 
 export default function TenantDetails({ isOpen, onClose, tenant }: Props) {
   const { t } = useTranslation();
+
+  const navigate = useNavigate();
 
   const { profile, getAccessTokenSilently } = useProfile();
 
   const [openedSection, setOpenedSection] = useState<OpenedSection>(
     OpenedSection.Details
   );
-
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-
-  const [
-    isCreateManagementAccountModalOpen,
-    setIsCreateManagementAccountModalOpen,
-  ] = useState(false);
 
   const { tenantInfo } = useSelector((state: RootState) => state.tenant);
 
@@ -139,15 +129,6 @@ export default function TenantDetails({ isOpen, onClose, tenant }: Props) {
               )}
             </span>
 
-            <Link
-              to={`/dashboard/tenants/${tenant.id}`}
-              title={t(
-                "screens.Dashboard.Tenants.TenantDetails.name.viewTenantAdvancedDetails"
-              )}
-              className="cursor-pointer"
-            >
-              <MdManageAccounts size={24} />
-            </Link>
           </div>
         }
         title={t("screens.Dashboard.Tenants.TenantDetails.name.title")}
@@ -233,94 +214,21 @@ export default function TenantDetails({ isOpen, onClose, tenant }: Props) {
                 <CopyToClipboard text={tenant.id ?? ""} groupHidden />
               </span>
             </IntroSection.Item>
+
+            <Button
+              fullWidth
+              onClick={() => navigate(`/dashboard/tenants/${tenant.id}`)}
+            >
+              <span className="flex items-center justify-center gap-2">
+                <MdManageAccounts size={18} />
+                {t(
+                  "screens.Dashboard.Tenants.TenantDetails.name.viewDetailsButton"
+                )}
+              </span>
+            </Button>
           </div>
         </DetailsBox.Content>
       </DetailsBox>
-
-      <DetailsBox
-        open={openedSection === OpenedSection.AdvancedActions}
-        onToggle={(state) =>
-          handleToggleSection(OpenedSection.AdvancedActions, state)
-        }
-      >
-        <DetailsBox.Summary>
-          {t("screens.Dashboard.Tenants.TenantDetails.advancedActions")}
-        </DetailsBox.Summary>
-
-        <DetailsBox.Content minHeight="50">
-          <Banner intent="info">
-            <div className="flex justify-between gap-2 my-5">
-              <div className="flex flex-col gap-2">
-                <Typography as="span">
-                  {t(
-                    "screens.Dashboard.Tenants.TenantDetails.createManagementAccount.title"
-                  )}
-                </Typography>
-
-                <Typography as="small" decoration="smooth">
-                  {t(
-                    "screens.Dashboard.Tenants.TenantDetails.createManagementAccount.description"
-                  )}
-                </Typography>
-              </div>
-
-              <div>
-                <Button
-                 
-                  intent="info"
-                  onClick={() => setIsCreateManagementAccountModalOpen(true)}
-                >
-                  {t(
-                    "screens.Dashboard.Tenants.TenantDetails.createManagementAccount.button"
-                  )}
-                </Button>
-              </div>
-            </div>
-          </Banner>
-
-          <Banner intent="error">
-            <div className="flex justify-between gap-2 my-5">
-              <div className="flex flex-col gap-2">
-                <Typography as="span">
-                  {t(
-                    "screens.Dashboard.Tenants.TenantDetails.deleteTenant.title"
-                  )}
-                </Typography>
-
-                <Typography as="small" decoration="smooth">
-                  {t(
-                    "screens.Dashboard.Tenants.TenantDetails.deleteTenant.description"
-                  )}
-                </Typography>
-              </div>
-
-              <div>
-                <Button
-                 
-                  intent="danger"
-                  onClick={() => setIsDeleteModalOpen(true)}
-                >
-                  {t(
-                    "screens.Dashboard.Tenants.TenantDetails.deleteTenant.button"
-                  )}
-                </Button>
-              </div>
-            </div>
-          </Banner>
-        </DetailsBox.Content>
-      </DetailsBox>
-
-      <CreateManagementAccount
-        isOpen={isCreateManagementAccountModalOpen}
-        tenantId={tenant.id}
-        onClose={() => setIsCreateManagementAccountModalOpen(false)}
-      />
-
-      <DeleteTenant
-        tenant={tenant}
-        isOpen={isDeleteModalOpen}
-        onClose={() => setIsDeleteModalOpen(false)}
-      />
     </SideCurtain>
   );
 }

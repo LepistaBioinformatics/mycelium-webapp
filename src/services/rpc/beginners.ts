@@ -76,6 +76,22 @@ export function accountsCreate(
   );
 }
 
+export interface AccountsUpdateNameParams {
+  accountId: string;
+  name: string;
+}
+
+export function accountsUpdateName(
+  params: AccountsUpdateNameParams,
+  getToken: () => Promise<string>
+): Promise<Account> {
+  return rpcCall<AccountsUpdateNameParams, Account>(
+    "beginners.accounts.updateName",
+    params,
+    getToken
+  );
+}
+
 // ---------------------------------------------------------------------------
 // Profile
 // ---------------------------------------------------------------------------

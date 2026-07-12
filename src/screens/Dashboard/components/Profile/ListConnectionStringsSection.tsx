@@ -46,7 +46,7 @@ interface ScopeBadgesProps {
 }
 
 const BADGE_CLASS =
-  "inline-block px-1.5 py-0.5 text-xs border border-zinc-300 dark:border-zinc-600 text-zinc-600 dark:text-zinc-300 bg-zinc-50 dark:bg-zinc-800";
+  "inline-block rounded-lg px-1.5 py-0.5 text-xs border border-zinc-300 dark:border-zinc-600 text-zinc-600 dark:text-zinc-300 bg-zinc-50 dark:bg-zinc-800";
 
 function ScopeBadges({ scope }: ScopeBadgesProps) {
   const { t } = useTranslation();
@@ -114,7 +114,7 @@ function ConnectionStringRow({ token, onAction }: RowProps) {
         <div className="flex items-center gap-2">
           {token.name}
           {expired && (
-            <span className="inline-block px-1.5 py-0.5 text-xs border border-red-300 dark:border-red-700 text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20">
+            <span className="inline-block rounded-lg px-1.5 py-0.5 text-xs border border-red-300 dark:border-red-700 text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20">
               {t("screens.Dashboard.ListConnectionStringsSection.expired")}
             </span>
           )}
@@ -132,23 +132,25 @@ function ConnectionStringRow({ token, onAction }: RowProps) {
       <TableCell className="whitespace-nowrap">
         <div className="flex items-center gap-2">
           {!expired && (
-            <button
+            <Button
+              size="xs"
+              intent="warning"
               onClick={() => onAction(token, "revoke")}
-              className="text-xs px-2 py-1 border border-amber-400 dark:border-amber-600 text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 hover:bg-amber-100 dark:hover:bg-amber-900/40"
             >
               {t(
                 "screens.Dashboard.ListConnectionStringsSection.actions.revoke"
               )}
-            </button>
+            </Button>
           )}
-          <button
+          <Button
+            size="xs"
+            intent="danger"
             onClick={() => onAction(token, "delete")}
-            className="text-xs px-2 py-1 border border-red-400 dark:border-red-600 text-red-700 dark:text-red-400 bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/40"
           >
             {t(
               "screens.Dashboard.ListConnectionStringsSection.actions.delete"
             )}
-          </button>
+          </Button>
         </div>
       </TableCell>
     </TableRow>

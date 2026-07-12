@@ -1,16 +1,39 @@
 import Card from "@/components/ui/Card";
+import Divider from "@/components/ui/Divider";
+import FormField from "@/components/ui/FomField";
 import { MdClose, MdEdit } from "react-icons/md";
 import Typography from "@/components/ui/Typography";
 import Button from "@/components/ui/Button";
 import { components } from "@/services/openapi/mycelium-schema";
 import { useCallback, useMemo, useRef, useState } from "react";
-import { TenantTagTypes } from "@/types/TenantTagTypes";
+import { TenantTagMeta, TenantTagTypes } from "@/types/TenantTagTypes";
 import { tagsCreate, tagsUpdate } from "@/services/rpc/tenantManager";
 import useSuspenseError from "@/hooks/use-suspense-error";
 import useProfile from "@/hooks/use-profile";
 import { MycRole } from "@/types/MyceliumRole";
 import { MycPermission } from "@/types/MyceliumPermission";
 import { useTranslation } from "react-i18next";
+import { useForm } from "react-hook-form";
+
+const HEX_COLOR_PATTERN = /^#(?:[0-9a-fA-F]{3}){1,2}$/;
+
+const FONT_SUGGESTIONS = [
+  "Bricolage Grotesque",
+  "Hanken Grotesk",
+  "Space Mono",
+  "Inter",
+  "Roboto",
+  "Open Sans",
+  "Lato",
+  "Montserrat",
+  "Poppins",
+  "Source Sans Pro",
+  "IBM Plex Sans",
+  "Georgia",
+  "Arial",
+  "Helvetica",
+  "Verdana",
+];
 
 type Tenant = components["schemas"]["Tenant"];
 
@@ -111,6 +134,83 @@ export default function BrandCard({ tenant, mutateTenantStatus }: Props) {
     return tenant.tags.find((tag) => tag.value === TenantTagTypes.Brand) ?? null;
   }, [tenant]);
 
+  const brandMeta = brandTag?.meta as TenantTagMeta | undefined;
+
+  const [isSavingIdentity, setIsSavingIdentity] = useState(false);
+
+  const {
+    register: registerIdentity,
+    handleSubmit: handleIdentitySubmit,
+    reset: resetIdentity,
+    watch: watchIdentity,
+    formState: { errors: identityErrors },
+  } = useForm<TenantTagMeta>({
+    defaultValues: {
+      primaryColor: brandMeta?.primaryColor ?? "",
+      secondaryColor: brandMeta?.secondaryColor ?? "",
+      accentColor: brandMeta?.accentColor ?? "",
+      headingFontFamily: brandMeta?.headingFontFamily ?? "",
+      bodyFontFamily: brandMeta?.bodyFontFamily ?? "",
+    },
+  });
+
+  const onSubmitIdentity = useCallback(
+    async (values: TenantTagMeta) => {
+      if (!tenant.id) return;
+
+      setIsSavingIdentity(true);
+
+      const meta: Record<string, string> = {
+        ...(brandTag?.meta as Record<string, string> | undefined),
+      };
+
+      (Object.entries(values) as [string, string | undefined][]).forEach(
+        ([key, value]) => {
+          if (value) meta[key] = value;
+          else delete meta[key];
+        }
+      );
+
+      try {
+        if (brandTag?.id) {
+          await tagsUpdate(
+            {
+              tenantId: tenant.id,
+              tagId: brandTag.id,
+              value: TenantTagTypes.Brand,
+              meta,
+            },
+            getAccessTokenSilently
+          );
+        } else {
+          await tagsCreate(
+            {
+              tenantId: tenant.id,
+              value: TenantTagTypes.Brand,
+              meta,
+            },
+            getAccessTokenSilently
+          );
+        }
+
+        resetIdentity(values);
+      } catch (err) {
+        dispatchError(err instanceof Error ? err.message : String(err));
+      } finally {
+        setIsSavingIdentity(false);
+        mutateTenantStatus();
+      }
+    },
+    [
+      tenant.id,
+      brandTag,
+      getAccessTokenSilently,
+      dispatchError,
+      mutateTenantStatus,
+      resetIdentity,
+    ]
+  );
+
   const handleFile = useCallback(async (file: File | null | undefined) => {
     if (!file) return;
     if (!file.type.startsWith("image/")) return;
@@ -148,7 +248,13 @@ export default function BrandCard({ tenant, mutateTenantStatus }: Props) {
 
     setIsUploading(true);
 
-    const meta: Record<string, string> = { base64Logo: preview };
+    // Spread existing brand meta first — tagsCreate/tagsUpdate replace the
+    // whole meta map, so omitting this would silently drop any colors/fonts
+    // already saved via the Brand Identity section below.
+    const meta: Record<string, string> = {
+      ...(brandTag?.meta as Record<string, string> | undefined),
+      base64Logo: preview,
+    };
 
     try {
       if (updatingBrand && brandTag?.id) {
@@ -230,18 +336,18 @@ export default function BrandCard({ tenant, mutateTenantStatus }: Props) {
                 alt="Brand logo"
                 className="w-32 h-32 object-contain rounded-lg border border-zinc-200 dark:border-zinc-700"
               />
-              <button
+              <Button
+                intent="link"
+                padding="none"
                 onClick={() => setUpdatingBrand(true)}
-                className="flex items-center gap-1.5 text-sm text-brand-violet-500 dark:text-brand-violet-400 hover:underline"
-                title={t(
-                  "screens.Dashboard.Tenants.AdvancedManagement.customization.brand.registerTenantBrand"
-                )}
               >
-                <MdEdit size={16} />
-                {t(
-                  "screens.Dashboard.Tenants.AdvancedManagement.customization.brand.registerTenantBrand"
-                )}
-              </button>
+                <span className="flex items-center gap-1.5">
+                  <MdEdit size={16} />
+                  {t(
+                    "screens.Dashboard.Tenants.AdvancedManagement.customization.brand.registerTenantBrand"
+                  )}
+                </span>
+              </Button>
             </div>
           )}
 
@@ -354,6 +460,132 @@ export default function BrandCard({ tenant, mutateTenantStatus }: Props) {
               )}
             </div>
           )}
+
+          <Divider thickness="sm" />
+
+          {/* Brand identity — hex colors + typography */}
+          <form
+            onSubmit={handleIdentitySubmit(onSubmitIdentity)}
+            className="flex flex-col gap-4"
+          >
+            <div className="flex flex-col gap-1">
+              <Typography as="h6">
+                {t(
+                  "screens.Dashboard.Tenants.AdvancedManagement.customization.brand.identity.title"
+                )}
+              </Typography>
+              <Typography as="small" decoration="smooth" width="sm">
+                {t(
+                  "screens.Dashboard.Tenants.AdvancedManagement.customization.brand.identity.description"
+                )}
+              </Typography>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-x-6 gap-y-4">
+              {(
+                [
+                  ["primaryColor", "primaryColor"],
+                  ["secondaryColor", "secondaryColor"],
+                  ["accentColor", "accentColor"],
+                ] as const
+              ).map(([field, labelKey]) => (
+                <div key={field} className="flex flex-col gap-1">
+                  <FormField
+                    id={field}
+                    label={t(
+                      `screens.Dashboard.Tenants.AdvancedManagement.customization.brand.identity.${labelKey}`
+                    )}
+                  >
+                    <div className="flex items-center gap-2">
+                      <span
+                        className="w-6 h-6 shrink-0 rounded-lg border border-zinc-300 dark:border-zinc-700"
+                        style={{
+                          backgroundColor: HEX_COLOR_PATTERN.test(
+                            watchIdentity(field) ?? ""
+                          )
+                            ? watchIdentity(field)
+                            : "transparent",
+                        }}
+                      />
+                      <input
+                        id={field}
+                        className="rounded-lg border border-brand-600 bg-brand-violet-50 px-2 py-1.5 text-sm text-zinc-900 focus:border-brand-violet-500 focus:ring-1 focus:ring-brand-violet-500 focus:outline-none dark:bg-brand-950 dark:text-white dark:focus:border-brand-violet-400 dark:focus:ring-brand-violet-400 w-full"
+                        placeholder="#9260C4"
+                        {...registerIdentity(field, {
+                          pattern: {
+                            value: HEX_COLOR_PATTERN,
+                            message: t(
+                              "screens.Dashboard.Tenants.AdvancedManagement.customization.brand.identity.invalidHex"
+                            ),
+                          },
+                        })}
+                      />
+                    </div>
+                  </FormField>
+                  {identityErrors[field] && (
+                    <span className="text-xs text-red-500 dark:text-red-400">
+                      {identityErrors[field]?.message}
+                    </span>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4">
+              <FormField
+                id="headingFontFamily"
+                label={t(
+                  "screens.Dashboard.Tenants.AdvancedManagement.customization.brand.identity.headingFontFamily"
+                )}
+              >
+                <input
+                  id="headingFontFamily"
+                  list="brand-font-suggestions"
+                  className="rounded-lg border border-brand-600 bg-brand-violet-50 px-2 py-1.5 text-sm text-zinc-900 focus:border-brand-violet-500 focus:ring-1 focus:ring-brand-violet-500 focus:outline-none dark:bg-brand-950 dark:text-white dark:focus:border-brand-violet-400 dark:focus:ring-brand-violet-400 w-full"
+                  placeholder="Bricolage Grotesque"
+                  {...registerIdentity("headingFontFamily")}
+                />
+              </FormField>
+
+              <FormField
+                id="bodyFontFamily"
+                label={t(
+                  "screens.Dashboard.Tenants.AdvancedManagement.customization.brand.identity.bodyFontFamily"
+                )}
+              >
+                <input
+                  id="bodyFontFamily"
+                  list="brand-font-suggestions"
+                  className="rounded-lg border border-brand-600 bg-brand-violet-50 px-2 py-1.5 text-sm text-zinc-900 focus:border-brand-violet-500 focus:ring-1 focus:ring-brand-violet-500 focus:outline-none dark:bg-brand-950 dark:text-white dark:focus:border-brand-violet-400 dark:focus:ring-brand-violet-400 w-full"
+                  placeholder="Hanken Grotesk"
+                  {...registerIdentity("bodyFontFamily")}
+                />
+              </FormField>
+
+              <datalist id="brand-font-suggestions">
+                {FONT_SUGGESTIONS.map((font) => (
+                  <option key={font} value={font} />
+                ))}
+              </datalist>
+            </div>
+
+            <div className="flex justify-end">
+              <Button
+                intent="secondary"
+                size="sm"
+                type="submit"
+                disabled={isSavingIdentity}
+              >
+                {isSavingIdentity
+                  ? t(
+                      "screens.Dashboard.Tenants.AdvancedManagement.customization.brand.identity.saving"
+                    )
+                  : t(
+                      "screens.Dashboard.Tenants.AdvancedManagement.customization.brand.identity.save"
+                    )}
+              </Button>
+            </div>
+          </form>
         </div>
       </Card.Body>
     </Card>

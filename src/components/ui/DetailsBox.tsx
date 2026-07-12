@@ -1,4 +1,5 @@
 import { cva, VariantProps } from "class-variance-authority";
+import { createContext, useContext, useState } from "react";
 
 const containerStyles = cva("rounded-lg border border-brand-600 px-4", {
   variants: {
@@ -19,6 +20,25 @@ const containerStyles = cva("rounded-lg border border-brand-600 px-4", {
 
 type State = "open" | "closed";
 
+interface DetailsBoxContextValue {
+  isOpen: boolean;
+  toggle: () => void;
+}
+
+const DetailsBoxContext = createContext<DetailsBoxContextValue | null>(null);
+
+function useDetailsBoxContext() {
+  const context = useContext(DetailsBoxContext);
+
+  if (!context) {
+    throw new Error(
+      "DetailsBox.Summary and DetailsBox.Content must be rendered inside a DetailsBox"
+    );
+  }
+
+  return context;
+}
+
 interface ContainerProps
   extends BaseProps,
   VariantProps<typeof containerStyles> {
@@ -32,20 +52,26 @@ function Container({
   centralized,
   ...props
 }: ContainerProps) {
+  const [internalOpen, setInternalOpen] = useState(open ?? false);
+  const isOpen = open ?? internalOpen;
+
+  const toggle = () => {
+    const next = !isOpen;
+    if (open === undefined) setInternalOpen(next);
+    onToggle?.(next ? "open" : "closed");
+  };
+
   return (
-    <details
-      open={open ?? false}
-      onToggle={(e) => onToggle?.(e.nativeEvent.newState as State)}
-      className={containerStyles({ open, centralized })}
-      {...props}
-    >
-      {children}
-    </details>
+    <div className={containerStyles({ open: isOpen, centralized })} {...props}>
+      <DetailsBoxContext.Provider value={{ isOpen, toggle }}>
+        {children}
+      </DetailsBoxContext.Provider>
+    </div>
   );
 }
 
 const summaryStyles = cva(
-  "cursor-pointer border-opacity-20 dark:border-opacity-20 border-brand-violet-400 dark:border-brand-violet-600 sm:hover:border-brand-violet-400 dark:sm:hover:border-brand-violet-400 px-0 hover:px-2 transition-all duration-300 py-1 hover:bg-brand-violet-50 dark:hover:bg-brand-900 text-brand-violet-500 dark:text-brand-violet-400 list-none",
+  "w-full text-left cursor-pointer border-opacity-20 dark:border-opacity-20 border-brand-violet-400 dark:border-brand-violet-600 sm:hover:border-brand-violet-400 dark:sm:hover:border-brand-violet-400 px-0 hover:px-2 transition-all duration-300 py-1 hover:bg-brand-violet-50 dark:hover:bg-brand-900 text-brand-violet-500 dark:text-brand-violet-400",
   {
     variants: {
       marginTop: {
@@ -90,10 +116,18 @@ function Summary({
   marginBottom,
   ...props
 }: SummaryProps) {
+  const { isOpen, toggle } = useDetailsBoxContext();
+
   return (
-    <summary className={summaryStyles({ marginTop, marginBottom })} {...props}>
+    <button
+      type="button"
+      aria-expanded={isOpen}
+      onClick={toggle}
+      className={summaryStyles({ marginTop, marginBottom })}
+      {...props}
+    >
       {children}
-    </summary>
+    </button>
   );
 }
 
@@ -121,9 +155,19 @@ const contentStyles = cva("flex flex-col gap-8 py-5 px-0", {
 interface ContentProps extends BaseProps, VariantProps<typeof contentStyles> { }
 
 function Content({ children, minHeight, ...props }: ContentProps) {
+  const { isOpen } = useDetailsBoxContext();
+
   return (
-    <div className={contentStyles({ minHeight })} {...props}>
-      {children}
+    <div
+      aria-hidden={!isOpen}
+      className={`grid transition-[grid-template-rows] duration-300 ease-in-out motion-reduce:transition-none ${isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+        }`}
+    >
+      <div className="overflow-hidden">
+        <div className={contentStyles({ minHeight })} {...props}>
+          {children}
+        </div>
+      </div>
     </div>
   );
 }

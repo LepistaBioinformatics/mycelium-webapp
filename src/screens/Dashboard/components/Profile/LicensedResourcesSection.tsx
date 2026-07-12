@@ -423,7 +423,7 @@ export default function LicensedResourcesSection({ licensedResources }: Props) {
 
                           {role.verified && (
                             <span
-                              className="w-fit text-green-500 dark:text-green-400 bg-green-100 dark:bg-green-500 bg-opacity-50 dark:bg-opacity-20 px-2 py-1 mt-1 text-xs border border-green-500 dark:border-green-400 hover:cursor-help"
+                              className="w-fit rounded-lg text-green-500 dark:text-green-400 bg-green-100 dark:bg-green-500 bg-opacity-50 dark:bg-opacity-20 px-2 py-1 mt-1 text-xs border border-green-500 dark:border-green-400 hover:cursor-help"
                               title="You have confirmed the invitation to this account"
                             >
                               {t(

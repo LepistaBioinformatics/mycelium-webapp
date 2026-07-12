@@ -1,25 +1,40 @@
 import { GoUnverified } from "react-icons/go";
+import { MdDeleteOutline } from "react-icons/md";
 import Typography from "@/components/ui/Typography";
 import { formatDDMMYY } from "@/functions/format-dd-mm-yy";
 import useProfile from "@/hooks/use-profile";
+import useSearchBarParams from "@/hooks/use-search-bar-params";
 import { components } from "@/services/openapi/mycelium-schema";
 import {
   guestsListGuestOnSubscriptionAccount,
   guestRolesGet,
 } from "@/services/rpc/subscriptionsManager";
-import { Fragment, useMemo, useState } from "react";
+import { useMemo } from "react";
 import useSWR from "swr";
 import { RootState } from "@/states/store";
 import { useSelector } from "react-redux";
-import Banner from "@/components/ui/Banner";
-import Button from "@/components/ui/Button";
 import formatEmail from "@/functions/format-email";
 import PermissionIcon from "@/components/ui/PermissionIcon";
-import DetailsBox from "@/components/ui/DetailsBox";
+import Pager from "@/components/ui/Pager";
+import SearchBar from "@/components/ui/SearchBar";
 import PaginatedRecords from "@/types/PaginatedRecords";
-import IntroSection from "@/components/ui/IntroSection";
 import { useTranslation } from "react-i18next";
-import ListItem from "@/components/ui/ListItem";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeadCell,
+  TableRow,
+} from "flowbite-react";
+
+// The gateway's `guests.listGuestOnSubscriptionAccount` RPC method only
+// accepts `pageSize`/`skip` — no email/search filter (verified against
+// `ListGuestOnSubscriptionAccountParams` in the gateway's Rust source).
+// While searching, we fetch a larger flat batch instead of the current
+// page and filter it client-side, since there is no server-side filter to
+// delegate to.
+const SEARCH_BATCH_SIZE = 200;
 
 type Account = components["schemas"]["Account"];
 type GuestUser = components["schemas"]["GuestUser"];
@@ -31,8 +46,33 @@ interface Props {
   setCurrentGuestUser: (guestUser: GuestUser) => void;
 }
 
+const TABLE_THEME = {
+  root: {
+    base: "w-full text-left text-sm text-zinc-500 dark:text-zinc-400",
+  },
+  head: {
+    cell: {
+      base: "bg-zinc-50 px-3 py-2 group-first/head:first:rounded-tl-lg group-first/head:last:rounded-tr-lg dark:bg-brand-900",
+    },
+  },
+  body: {
+    base: "bg-zinc-50 dark:bg-brand-900",
+    cell: {
+      base: "bg-zinc-50 dark:bg-brand-950 group-hover/row:bg-zinc-100 dark:group-hover/row:bg-brand-900 px-3 py-2 group-first/body:group-first/row:first:rounded-tl-lg group-first/body:group-first/row:last:rounded-tr-lg group-last/body:group-last/row:first:rounded-bl-lg group-last/body:group-last/row:last:rounded-br-lg",
+    },
+  },
+  row: {
+    base: "group/row bg-transparent",
+    hovered: "hover:bg-zinc-100 dark:hover:bg-brand-900",
+    striped:
+      "odd:bg-white even:bg-zinc-50 odd:dark:bg-brand-950 even:dark:bg-brand-900",
+  },
+};
+
 /**
  * Invitations
+ *
+ * Compact, paginated table of guests the account has been shared with.
  *
  * @param account - The account object
  * @param tenantId - The tenant id
@@ -45,10 +85,17 @@ export default function AccountInvitations({
 }: Props) {
   const { t } = useTranslation();
 
-  const pageSize = 2;
-  const [showMaxInvitations, setShowMaxInvitations] = useState<boolean>(false);
+  const { skip, pageSize, setSkip, searchTerm, setSearchTerm } =
+    useSearchBarParams({
+      initialPageSize: 10,
+    });
 
   const { getAccessTokenSilently } = useProfile();
+
+  const isSearching = !!searchTerm?.trim();
+
+  const effectiveSkip = isSearching ? 0 : skip;
+  const effectivePageSize = isSearching ? SEARCH_BATCH_SIZE : pageSize;
 
   const swrKey = useMemo(() => {
     if (!account.id || !tenantId) return null;
@@ -63,17 +110,26 @@ export default function AccountInvitations({
       "roleAssociated" in accountType ||
       "actorAssociated" in accountType
     ) {
-      return `rpc:subscriptionsManager.guests.listGuestOnSubscriptionAccount:${account.id}:${tenantId}`;
+      return `rpc:subscriptionsManager.guests.listGuestOnSubscriptionAccount:${account.id}:${tenantId}:${effectiveSkip}:${effectivePageSize}`;
     }
 
     return null;
-  }, [account.id, account.accountType, tenantId]);
+  }, [account.id, account.accountType, tenantId, effectiveSkip, effectivePageSize]);
 
-  const { data: invitations, isLoading } = useSWR<PaginatedRecords<GuestUser>>(
+  const {
+    data: invitations,
+    isLoading,
+    mutate,
+  } = useSWR<PaginatedRecords<GuestUser>>(
     swrKey,
     async () =>
       guestsListGuestOnSubscriptionAccount(
-        { tenantId: tenantId!, accountId: account.id! },
+        {
+          tenantId: tenantId!,
+          accountId: account.id!,
+          skip: effectiveSkip,
+          pageSize: effectivePageSize,
+        },
         getAccessTokenSilently
       ) as unknown as Promise<PaginatedRecords<GuestUser>>,
     {
@@ -84,9 +140,22 @@ export default function AccountInvitations({
     }
   );
 
+  const filteredInvitations = useMemo(() => {
+    if (!invitations) return invitations;
+    if (!isSearching) return invitations;
+
+    const term = searchTerm!.trim().toLowerCase();
+    const records =
+      invitations.records?.filter((invitation) =>
+        formatEmail(invitation.email)?.toLowerCase().includes(term)
+      ) ?? [];
+
+    return { ...invitations, records, count: records.length };
+  }, [invitations, isSearching, searchTerm]);
+
   if (isLoading) return <div>Loading...</div>;
 
-  if (!invitations || invitations.count === 0) {
+  if (!invitations || (invitations.count === 0 && !isSearching)) {
     return (
       <Typography as="span" decoration="smooth">
         {t("screens.Dashboard.Accounts.AccountInvitations.noInvitations")}
@@ -94,136 +163,132 @@ export default function AccountInvitations({
     );
   }
 
+  const searchWasTruncated =
+    isSearching && invitations.count > SEARCH_BATCH_SIZE;
+
   return (
     <div className="flex flex-col gap-2">
-      <div className="flex flex-col gap-3">
-        {invitations?.records
-          ?.slice(0, showMaxInvitations ? invitations.count : pageSize)
-          ?.map((invitation) => (
-            <Fragment key={invitation.id}>
-              <ListItem>
-                <IntroSection
-                  content={
-                    <div className="flex flex-nowrap justify-between items-center mb-1">
+      <SearchBar
+        term={searchTerm ?? undefined}
+        onSubmit={(term) => {
+          setSkip(0);
+          setSearchTerm(term ?? "");
+        }}
+        placeholder={t(
+          "screens.Dashboard.Accounts.AccountInvitations.search.placeholder"
+        )}
+        sticky={false}
+      />
+
+      {searchWasTruncated && (
+        <Typography as="small" decoration="smooth">
+          {t("screens.Dashboard.Accounts.AccountInvitations.search.truncated", {
+            count: SEARCH_BATCH_SIZE,
+          })}
+        </Typography>
+      )}
+
+      {filteredInvitations?.records?.length === 0 ? (
+        <Typography as="span" decoration="smooth">
+          {t("screens.Dashboard.Accounts.AccountInvitations.search.noResults")}
+        </Typography>
+      ) : (
+        <div className="overflow-x-auto scrollbar">
+          <Table theme={TABLE_THEME} striped>
+            <TableHead>
+              <TableHeadCell>
+                {t("screens.Dashboard.Accounts.AccountInvitations.email.title")}
+              </TableHeadCell>
+              <TableHeadCell>
+                {t("screens.Dashboard.Accounts.AccountInvitations.role.title")}
+              </TableHeadCell>
+              <TableHeadCell>
+                {t(
+                  "screens.Dashboard.Accounts.AccountInvitations.permission.prefix"
+                )}
+              </TableHeadCell>
+              <TableHeadCell>
+                {t(
+                  "screens.Dashboard.Accounts.AccountInvitations.invitedAt.prefix"
+                )}
+              </TableHeadCell>
+              <TableHeadCell>
+                <span className="sr-only">
+                  {t(
+                    "screens.Dashboard.Accounts.AccountInvitations.actions.title"
+                  )}
+                </span>
+              </TableHeadCell>
+            </TableHead>
+
+            <TableBody className="divide-y divide-zinc-200 dark:divide-brand-900">
+              {filteredInvitations?.records?.map((invitation) => (
+                <TableRow key={invitation.id}>
+                  <TableCell className="whitespace-nowrap">
+                    <div className="flex items-center gap-2">
                       {!invitation.wasVerified && (
                         <GoUnverified
-                          className="text-red-500 mr-2"
+                          className="text-red-500 shrink-0"
                           title="Invitation was not verified by the guest user"
                         />
                       )}
-                      <span>{formatEmail(invitation.email)}</span>
+                      <span className="text-zinc-800 dark:text-zinc-200">
+                        {formatEmail(invitation.email)}
+                      </span>
                     </div>
-                  }
-                  title={t(
-                    "screens.Dashboard.Accounts.AccountInvitations.email.title"
-                  )}
-                  as="h4"
-                >
-                  <Invitation guestRole={invitation.guestRole}>
-                    <IntroSection.Item
-                      prefix={t(
-                        "screens.Dashboard.Accounts.AccountInvitations.invitedAt.prefix"
-                      )}
+                  </TableCell>
+
+                  <InvitationRoleCells guestRole={invitation.guestRole} />
+
+                  <TableCell className="whitespace-nowrap">
+                    {formatDDMMYY(new Date(invitation.created), true)}
+                  </TableCell>
+
+                  <TableCell className="whitespace-nowrap text-right">
+                    <button
+                      type="button"
+                      onClick={() => setCurrentGuestUser(invitation)}
                       title={t(
-                        "screens.Dashboard.Accounts.AccountInvitations.invitedAt.title"
+                        "screens.Dashboard.Accounts.AccountInvitations.actions.uninvite.confirm"
                       )}
+                      className="text-red-500 hover:text-red-600 dark:hover:text-red-400 transition-colors"
                     >
-                      {formatDDMMYY(new Date(invitation.created), true)}
-                    </IntroSection.Item>
-                  </Invitation>
-                </IntroSection>
-
-                <DetailsBox>
-                  <DetailsBox.Summary>
-                    <Typography as="small">
-                      {t(
-                        "screens.Dashboard.Accounts.AccountInvitations.actions.title"
-                      )}
-                    </Typography>
-                  </DetailsBox.Summary>
-
-                  <DetailsBox.Content>
-                    <Banner intent="warning">
-                      <div className="flex justify-between gap-2 my-5">
-                        <div className="flex flex-col gap-2">
-                          <Typography as="span">
-                            {t(
-                              "screens.Dashboard.Accounts.AccountInvitations.actions.uninvite.title"
-                            )}
-                          </Typography>
-
-                          <Typography as="small" decoration="smooth">
-                            {t(
-                              "screens.Dashboard.Accounts.AccountInvitations.actions.uninvite.desctiption"
-                            )}
-                          </Typography>
-                        </div>
-
-                        <div>
-                          <Button
-                           
-                            intent="warning"
-                            onClick={() => setCurrentGuestUser(invitation)}
-                          >
-                            {t(
-                              "screens.Dashboard.Accounts.AccountInvitations.actions.uninvite.confirm"
-                            )}
-                          </Button>
-                        </div>
-                      </div>
-                    </Banner>
-                  </DetailsBox.Content>
-                </DetailsBox>
-              </ListItem>
-            </Fragment>
-          ))}
-      </div>
-
-      {invitations.count > pageSize && (
-        <div className="flex justify-center">
-          {showMaxInvitations ? (
-            <Button
-             
-              fullWidth
-              intent="link"
-              size="xs"
-              onClick={() => setShowMaxInvitations(false)}
-            >
-              <Typography as="small" decoration="underline">
-                {t("screens.Dashboard.Accounts.AccountInvitations.showLess")}
-              </Typography>
-            </Button>
-          ) : (
-            <Button
-             
-              fullWidth
-              intent="link"
-              size="xs"
-              onClick={() => setShowMaxInvitations(true)}
-            >
-              <Typography as="small" decoration="underline">
-                {t("screens.Dashboard.Accounts.AccountInvitations.showAll")}
-              </Typography>
-            </Button>
-          )}
+                      <MdDeleteOutline size={18} />
+                    </button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
         </div>
+      )}
+
+      {!isSearching && (
+        <Pager
+          records={invitations}
+          mutation={mutate}
+          skip={skip}
+          setSkip={setSkip}
+          pageSize={pageSize}
+        />
       )}
     </div>
   );
 }
 
 /**
- * Invitation
+ * InvitationRoleCells
+ *
+ * Resolves the guest role (name + permission) for a single invitation row
+ * and renders it as the "role" and "permission" table cells.
  *
  * @param guestRole - The guest role of the invitation
- * @returns The invitation component
  */
-function Invitation({
+function InvitationRoleCells({
   guestRole,
-  children,
-}: { guestRole: GuestUser["guestRole"] } & BaseProps) {
-  const { t } = useTranslation();
-
+}: {
+  guestRole: GuestUser["guestRole"];
+}) {
   const { getAccessTokenSilently } = useProfile();
 
   const { tenantInfo } = useSelector((state: RootState) => state.tenant);
@@ -259,12 +324,6 @@ function Invitation({
   );
 
   const invitationRecord: GuestRole | undefined = useMemo(() => {
-    //
-    // If the local invitation record is an object, return it
-    //
-    // The local invitation record is an object indicates that the invitation
-    // has been self-contained in the invitation record as a guest role field.
-    //
     if (
       typeof localInvitationRecord === "object" &&
       localInvitationRecord !== null
@@ -272,50 +331,29 @@ function Invitation({
       return localInvitationRecord;
     }
 
-    //
-    // Otherwise, if the remote invitation record is an object, return it
-    //
-    // The remote invitation record is an object indicates that the invitation
-    // has been correctly fetched from the remote API.
-    //
     if (typeof remoteInvitationRecord === "object")
       return remoteInvitationRecord;
 
-    //
-    // Otherwise, return undefined
-    //
-    // This indicates that the invitation record is not found.
-    //
     return undefined;
   }, [localInvitationRecord, remoteInvitationRecord]);
 
-  if (!invitationRecord) return null;
+  if (!invitationRecord) {
+    return (
+      <>
+        <TableCell />
+        <TableCell />
+      </>
+    );
+  }
 
   return (
     <>
-      <IntroSection.Item
-        prefix={t("screens.Dashboard.Accounts.AccountInvitations.role.title", {
-          roleDescription: invitationRecord.description,
-        })}
-        title={t("screens.Dashboard.Accounts.AccountInvitations.role.prefix", {
-          roleDescription: invitationRecord.description,
-        })}
-      >
+      <TableCell className="whitespace-nowrap">
         {invitationRecord.name}
-      </IntroSection.Item>
-
-      {children}
-
-      <IntroSection.Item
-        prefix={t(
-          "screens.Dashboard.Accounts.AccountInvitations.permission.prefix"
-        )}
-        title={t(
-          "screens.Dashboard.Accounts.AccountInvitations.permission.title"
-        )}
-      >
-        <PermissionIcon permission={invitationRecord.permission} />
-      </IntroSection.Item>
+      </TableCell>
+      <TableCell className="whitespace-nowrap">
+        <PermissionIcon permission={invitationRecord.permission} inline />
+      </TableCell>
     </>
   );
 }

@@ -14,6 +14,7 @@ import TenantOwnershipSection from "./TenantOwnershipSection";
 import LicensedResourcesSection from "./LicensedResourcesSection";
 import ListConnectionStringsSection from "./ListConnectionStringsSection";
 import IdentitySection from "./IdentitySection";
+import ContactInfoSection from "./ContactInfoSection";
 import { GiWizardStaff } from "react-icons/gi";
 import { GrUserAdmin } from "react-icons/gr";
 import IntroSection from "@/components/ui/IntroSection";
@@ -23,23 +24,23 @@ import CreateConnectionStringModal from "../CreateConnectionStringModal";
 import Button from "@/components/ui/Button";
 import Banner from "@/components/ui/Banner";
 import Card from "@/components/ui/Card";
+import VerticalTabNav from "@/components/ui/VerticalTabNav";
 import { SlOrganization } from "react-icons/sl";
 import { MdManageAccounts } from "react-icons/md";
 import { IoOptions } from "react-icons/io5";
 import { IoSettingsOutline } from "react-icons/io5";
 import { MdOutlineLinkOff } from "react-icons/md";
+import { MdContactPhone } from "react-icons/md";
+import { MdOutlineDashboard } from "react-icons/md";
 import { useSearchParams } from "react-router";
-import { useSWRConfig } from "swr";
-
-enum ActiveTab {
-  LicensedResources = 0,
-  TenantOwnership = 1,
-  ListConnectionStrings = 2,
-  AdvancedOptions = 3,
-  TelegramIdentity = 4,
-}
+import useSWR, { useSWRConfig } from "swr";
+import { accountsGet } from "@/services/rpc/beginners";
+import HoldToReveal from "@/components/ui/HoldToReveal";
+import Overview from "./Overview";
+import { ActiveTab } from "./active-tab";
 
 type Profile = components["schemas"]["Profile"];
+type Account = components["schemas"]["Account"];
 
 interface NavItem {
   tab: ActiveTab;
@@ -48,6 +49,11 @@ interface NavItem {
 }
 
 const NAV_ITEMS: NavItem[] = [
+  {
+    tab: ActiveTab.Overview,
+    labelKey: "screens.Dashboard.Profile.Overview.tabName",
+    icon: <MdOutlineDashboard size={16} />,
+  },
   {
     tab: ActiveTab.LicensedResources,
     labelKey: "screens.Dashboard.LicensedResourcesSection.tabName",
@@ -73,6 +79,11 @@ const NAV_ITEMS: NavItem[] = [
     labelKey: "screens.Dashboard.TelegramIdentity.tabName",
     icon: <MdOutlineLinkOff size={16} />,
   },
+  {
+    tab: ActiveTab.ContactInfo,
+    labelKey: "screens.Dashboard.Profile.ContactInfoSection.tabName",
+    icon: <MdContactPhone size={16} />,
+  },
 ];
 
 export default function Profile() {
@@ -82,7 +93,16 @@ export default function Profile() {
 
   const { mutate } = useSWRConfig();
 
-  const { user, profile, isLoadingUser } = useProfile();
+  const { user, profile, isLoadingUser, getAccessTokenSilently } =
+    useProfile();
+
+  const { data: account } = useSWR<Account | null>(
+    "rpc:beginners.accounts.get",
+    () => accountsGet(getAccessTokenSilently),
+    { revalidateOnFocus: false, revalidateOnReconnect: false }
+  );
+
+  const contactInfo = (account?.meta ?? {}) as Record<string, string>;
 
   const principalOwner = useMemo(() => {
     if (!profile?.owners || profile.owners.length === 0) return null;
@@ -94,17 +114,27 @@ export default function Profile() {
   }, [profile?.owners]);
 
   const displayName = useMemo(() => {
+    // account.name defaults to the user's email at signup (see
+    // Onboarding/index.tsx's accountsCreate call) — only treat it as a
+    // registered display name once it's been edited away from that default.
+    const email = user?.email
+      ? `${user.email.username}@${user.email.domain}`
+      : "";
+    if (account?.name && account.name !== email) return account.name;
+
     const firstName = principalOwner?.firstName ?? user?.firstName ?? "";
     const lastName = principalOwner?.lastName ?? user?.lastName ?? "";
     return `${firstName} ${lastName}`.trim();
-  }, [principalOwner, user]);
+  }, [account?.name, principalOwner, user]);
 
   const activeTab = useMemo(() => {
     const tab = searchParams.get("tab");
 
-    if (!tab) return ActiveTab.LicensedResources;
+    if (!tab || !Object.values(ActiveTab).includes(tab as ActiveTab)) {
+      return ActiveTab.Overview;
+    }
 
-    return parseInt(tab) as ActiveTab;
+    return tab as ActiveTab;
   }, [searchParams]);
 
   const tenantsOwnership = useMemo(
@@ -204,39 +234,65 @@ export default function Profile() {
                       />
                     </span>
                   </IntroSection.Item>
+
+                  {contactInfo.phone_number && (
+                    <IntroSection.Item
+                      prefix={t(
+                        "screens.Dashboard.Profile.personalInfo.phoneNumber"
+                      )}
+                    >
+                      <HoldToReveal value={contactInfo.phone_number} />
+                    </IntroSection.Item>
+                  )}
+
+                  {contactInfo.emergency_contact_name && (
+                    <IntroSection.Item
+                      prefix={t(
+                        "screens.Dashboard.Profile.personalInfo.emergencyContactName"
+                      )}
+                    >
+                      <HoldToReveal
+                        value={contactInfo.emergency_contact_name}
+                      />
+                    </IntroSection.Item>
+                  )}
+
+                  {contactInfo.emergency_contact_phone && (
+                    <IntroSection.Item
+                      prefix={t(
+                        "screens.Dashboard.Profile.personalInfo.emergencyContactPhone"
+                      )}
+                    >
+                      <HoldToReveal
+                        value={contactInfo.emergency_contact_phone}
+                      />
+                    </IntroSection.Item>
+                  )}
                 </IntroSection>
               )}
             </Section.Header>
           </Section>
 
           <div className="flex flex-col sm:flex-row gap-0 w-full h-full">
-            {/* Vertical nav — desktop left rail, mobile top bar */}
-            <nav className="flex flex-row sm:flex-col sm:w-40 shrink-0 border-b sm:border-b-0 sm:border-r border-zinc-200 dark:border-zinc-800 overflow-x-auto sm:overflow-x-visible scrollbar">
-              {NAV_ITEMS.map(({ tab, labelKey, icon }) => {
-                const isActive = activeTab === tab;
-                return (
-                  <button
-                    key={tab}
-                    onClick={() =>
-                      setSearchParams({ tab: tab.toString() })
-                    }
-                    className={[
-                      "flex items-center gap-2 px-3 py-2.5 text-sm whitespace-nowrap sm:whitespace-normal transition-colors w-full text-left",
-                      "border-b-2 sm:border-b-0 sm:border-l-2",
-                      isActive
-                        ? "border-brand-violet-500 dark:border-brand-violet-400 text-brand-violet-700 dark:text-brand-violet-300 bg-brand-violet-50 dark:bg-brand-violet-950"
-                        : "border-transparent text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-zinc-800",
-                    ].join(" ")}
-                  >
-                    <span className="shrink-0">{icon}</span>
-                    <span>{t(labelKey)}</span>
-                  </button>
-                );
-              })}
-            </nav>
+            <VerticalTabNav
+              items={NAV_ITEMS}
+              activeTab={activeTab}
+              onSelect={(tab) => setSearchParams({ tab })}
+              t={t}
+            />
 
             {/* Tab content */}
             <div className="flex-1 min-w-0 pt-4 sm:pt-0 sm:pl-6">
+              {activeTab === ActiveTab.Overview && (
+                <Overview
+                  profile={profile}
+                  contactInfo={contactInfo}
+                  licensedResourcesCount={licensedResources?.length ?? 0}
+                  tenantsOwnershipCount={tenantsOwnership?.length ?? 0}
+                  onNavigate={(tab) => setSearchParams({ tab })}
+                />
+              )}
+
               {activeTab === ActiveTab.LicensedResources && (
                 <LicensedResourcesSection
                   licensedResources={licensedResources}
@@ -256,6 +312,8 @@ export default function Profile() {
               {activeTab === ActiveTab.TelegramIdentity && (
                 <IdentitySection profile={profile} />
               )}
+
+              {activeTab === ActiveTab.ContactInfo && <ContactInfoSection />}
 
               {activeTab === ActiveTab.AdvancedOptions && (
                 <Card padding="sm" width="alwaysFull" height="adaptive">
