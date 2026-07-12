@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/LepistaBioinformatics/mycelium-webapp/compare/v1.1.0...v1.1.1) (2026-07-12)
+
+
+### Bug Fixes
+
+* **docker:** bump builder image to node:22-alpine ([776336d](https://github.com/LepistaBioinformatics/mycelium-webapp/commit/776336db80a62f0ae0430a89db5d06f7a19f0156))
+
 # [1.1.0](https://github.com/LepistaBioinformatics/mycelium-webapp/compare/v1.0.0...v1.1.0) (2026-07-12)
 
 
