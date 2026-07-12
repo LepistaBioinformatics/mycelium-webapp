@@ -161,6 +161,83 @@
   user's visual re-check before commit.
 - Version bumped `0.8.0 → 0.8.1`. `yarn build` + `yarn lint` pass (0 errors). Still pending:
   user's visual re-check before commit.
+- **D25** — Evaluated `/dashboard` Onboarding's collected metadata against `AccountMetaKey`
+  (`core/src/domain/dtos/account/meta.rs`, gateway source of truth): only 4 known keys exist
+  (`phone_number`, `telegram_user`, `whatsapp_user`, `locale`) plus a free `custom:*` bucket.
+  Traced consumption — `phone_number`/`whatsapp_user` are stored but **never read anywhere** in
+  the gateway (no SMS, no WhatsApp notification); `locale` only drives client-side i18n;
+  `telegram_user` has a real backend integration (alternate login via the bot,
+  `core/src/use_cases/gateway/telegram/*`). Per user decision: removed the phone/WhatsApp steps
+  entirely from `Onboarding/index.tsx` (dead `COUNTRY_CODES`/`formatLocal`/`buildPhone`/
+  `parsePhone`/`PhoneField` deleted); `TOTAL_STEPS` now 2 (account + locale); Telegram demoted
+  to an optional, uncounted `TimelineItem` that links out to the existing Identity tab
+  (`/dashboard/profile?tab=4`) instead of re-implementing linking inline — reuses
+  `TelegramIdentitySection`'s own `isLinked` JSON-parse guard (`isTelegramLinked` helper) to
+  avoid the legacy-raw-string bug already fixed there. Also fixed `Dashboard/index.tsx`'s
+  sidebar avatar progress-ring (`onboardingSteps`/`ONBOARDING_TOTAL`), which duplicated the
+  same 4-step count and would otherwise have gone out of sync.
+- **D26** — Same gap analysis for tenant metadata (`TenantMetaKey`,
+  `core/src/domain/dtos/tenant/meta.rs`): 15 known keys exist, but `LegalSettings.tsx`
+  (Tenant Details → Legal Information, the closest thing to a "tenant onboarding" screen —
+  tenant creation itself only collects name+description) only implemented 8 of them.
+  `website_url`, `support_email`, and tenant-level `locale` are **actively read by
+  `dispatch_notification`** (`core/src/use_cases/support/dispatch_notification.rs`) to
+  personalize outgoing notification emails sent to that tenant's guests (injects
+  `domain_url`/`support_email` template vars, picks the email locale) — a real functional gap,
+  not cosmetic. `province`, `legal_name`, `trading_name`, `contact_person` have no backend
+  consumption but fit naturally alongside the legal-identity fields already collected. Per user
+  decision, added all 7 missing fields to `LegalSettings.tsx`: `province` next to `state`;
+  `legal_name`/`trading_name`/`contact_person` after the address fields; a new "Notifications"
+  section for `website_url`/`support_email`/`locale`. The locale dropdown uses
+  `en-us`/`pt-br`/`es` (lowercase, matching the gateway's `templates/{locale}/` folder names —
+  confirmed by reading `dispatch_notification`'s template-path fallback logic), which is a
+  **different value format** from the account-level locale (`en`/`pt-BR`/`es`) used in
+  Onboarding — don't conflate the two when touching either.
+- Version bumped `0.9.0 → 0.9.1`. `yarn build` + `yarn lint` pass (0 errors).
+- Committed on branch `feat/design-system-and-onboarding-cleanup` (both the webapp submodule and
+  the monorepo pointer) per explicit user request — not on `main`, not pushed.
+- **D27** — Tenant Details UX follow-ups (all committed to the working tree, not yet to git):
+  split `LegalSettings.tsx`'s form into two `Card`s, then per a later user correction split
+  further into a dedicated `NotificationsCard.tsx` with its own tab — `ActiveTab.Notifications`
+  is now `0` (first in nav), and every other tab enum value shifted +1 (`?tab=N` bookmarks from
+  before this change now point at the wrong tab; accepted since there's no documented URL
+  stability contract). Also fixed a real bug found via user report: `Card`'s base style had an
+  unconditional `overflow-auto max-h-fit lg:max-h-[80vh]` that clipped/scrolled tall tab content
+  (Legal Information, now Notifications) instead of letting the page scroll. Added a `scroll`
+  variant to `Card` (`scroll={true}` default, preserves existing behavior everywhere) and set
+  `scroll={false}` on every Tenant Details tab-content `Card` (Brand, Legal Information,
+  Notifications, Owners, Managers, Advanced, Integrations) so they always show full content.
+- **D28** — Implemented CI + automated releases per user request, after an upfront credentials
+  investigation (requested before implementing, to decide if static release binaries were worth
+  generating): the *only* build-time env var is `VITE_MYCELIUM_API_URL`
+  (`src/services/openapi/mycelium-api.ts`) — not a secret (public API endpoint), but Vite bakes
+  it into the bundle at build time, and no `.env*` file is committed (all gitignored), so a CI
+  build with no env config produces a broken bundle pointing at `undefined`. Presented 3 options;
+  user chose **no static binary** — semantic-release manages version bump (Conventional Commits)
+  + changelog + GitHub Release (tag + notes only; GitHub's automatic source zip/tarball on every
+  release covers "download the project"). Added: `.releaserc.json` (commit-analyzer,
+  release-notes-generator, changelog, npm with `npmPublish:false` — repo is `private:true`, git,
+  github plugins); `.github/workflows/ci.yml` (lint+build+test on every push/PR, using a
+  placeholder `VITE_MYCELIUM_API_URL` just to prove the build compiles); `.github/workflows/
+  release.yml` (same gate + `npx semantic-release` on push to `main`); `.env.example`
+  (previously didn't exist) + a new README "Getting Started" section documenting the
+  clone-configure-build flow. Installed `semantic-release` + 6 official plugins as
+  devDependencies (`yarn add -D`, confirmed via `npx semantic-release --dry-run --no-ci` that all
+  plugins load and it correctly recognizes non-main branches as no-ops). Updated
+  `.claude/rules/versioning.md` (monorepo root): semantic-release now owns `version` in
+  `package.json` on `main` — manual bumps in commits are no longer done (this session's own
+  `0.9.1` stays as the last manual bump; no further manual bumps going forward, including on this
+  branch, since the whole point is Conventional Commit messages driving the next automated bump
+  once merged).
+- **D29** — User asked to also trigger `release.yml` on PR merge into `main`, not just push.
+  Note: merging a PR into `main` (any strategy — merge/squash/rebase) already fires a `push`
+  event on `main`, so this was already covered — but added an explicit `pull_request: types:
+  [closed]` trigger anyway, gated by `github.event.pull_request.merged == true` (closed-without-
+  merge must not release). Pinned `checkout` to `ref: main` for this trigger, since
+  `refs/pull/<n>/merge` (actions/checkout's default ref for `pull_request` events) can lag or
+  disappear once the PR is closed. Trade-off: both triggers fire on the same merge, so the job
+  runs twice — the second run finds nothing new since the last tag and no-ops harmlessly
+  (semantic-release is idempotent), it just costs an extra CI run per merge.
 
 ## Blockers
 

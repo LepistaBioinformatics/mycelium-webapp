@@ -203,7 +203,7 @@ export default function BrandCard({ tenant, mutateTenantStatus }: Props) {
   const showUploader = !brandTag || updatingBrand;
 
   return (
-    <Card padding="sm" group>
+    <Card padding="sm" group scroll={false}>
       <Card.Header>
         <div className="flex flex-col gap-2">
           <Typography as="h6">

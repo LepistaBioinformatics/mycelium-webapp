@@ -12,7 +12,7 @@ const { width, height, padding, margin } = projectVariants;
 // ? ---------------------------------------------------------------------------
 
 const cardContainerStyles = cva(
-  "p-2 rounded-lg border border-brand-600 shadow-sm dark:shadow-none text-zinc-500 bg-white dark:bg-brand-950 overflow-auto scrollbar max-h-fit lg:max-h-[80vh]",
+  "p-2 rounded-lg border border-brand-600 shadow-sm dark:shadow-none text-zinc-500 bg-white dark:bg-brand-950",
   {
     variants: {
       height,
@@ -45,6 +45,13 @@ const cardContainerStyles = cva(
       group: {
         true: "group",
       },
+      // Signature containers with unbounded content (long forms, e.g.
+      // Tenant Details' tabs) opt out with scroll={false} — show
+      // everything, let the page scroll instead of clipping internally.
+      scroll: {
+        true: "overflow-auto scrollbar max-h-fit lg:max-h-[80vh]",
+        false: "",
+      },
     },
     defaultVariants: {
       ...projectDefaultVariants,
@@ -52,6 +59,7 @@ const cardContainerStyles = cva(
       padding: "md",
       textAlign: "left",
       group: false,
+      scroll: true,
     },
   }
 );
@@ -69,6 +77,7 @@ function CardContainer({
   dashed,
   flex1,
   group,
+  scroll,
   ...props
 }: CardContainerProps) {
   return (
@@ -83,6 +92,7 @@ function CardContainer({
         dashed,
         flex1,
         group,
+        scroll,
       })}
       {...props}
     />

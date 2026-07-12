@@ -390,6 +390,7 @@
           "manageAccounts": "See accounts",
           "manageAccountsDescription": "Click here to see the accounts recorded in Namespace.",
           "tabs": {
+            "notifications": "Notifications",
             "legalInformation": "Legal Information",
             "owners": "Owners",
             "managers": "Managers",
@@ -468,6 +469,39 @@
               "address2": {
                 "title": "Address 2",
                 "prefix": "Address 2"
+              },
+              "province": {
+                "title": "Province",
+                "prefix": "Province"
+              },
+              "legalName": {
+                "title": "Legal name",
+                "prefix": "Legal name"
+              },
+              "tradingName": {
+                "title": "Trading name",
+                "prefix": "Trading name"
+              },
+              "contactPerson": {
+                "title": "Contact person",
+                "prefix": "Contact person"
+              },
+              "notifications": {
+                "title": "Notifications",
+                "description": "Personalizes notification emails sent to this tenant's guests."
+              },
+              "websiteUrl": {
+                "title": "Website URL",
+                "description": "Used as the link in notification emails sent to this tenant's guests."
+              },
+              "supportEmail": {
+                "title": "Support email",
+                "description": "Shown as the contact address in notification emails sent to this tenant's guests."
+              },
+              "locale": {
+                "title": "Notification language",
+                "description": "Language used for notification emails sent to this tenant's guests.",
+                "placeholder": "Select a language"
               },
               "save": "Save",
               "saving": "Saving..."

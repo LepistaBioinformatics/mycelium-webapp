@@ -22,6 +22,7 @@ import OwnersCard from "./OwnersCard";
 import ManagersCard from "./ManagersCard";
 import BrandCard from "./BrandCard";
 import LegalSettings from "./LegalSettings";
+import NotificationsCard from "./NotificationsCard";
 import TelegramConfigCard from "./TelegramConfigCard";
 import { useTranslation } from "react-i18next";
 import {
@@ -29,6 +30,7 @@ import {
   MdManageAccounts,
   MdOutlineRealEstateAgent,
   MdOutlineIntegrationInstructions,
+  MdNotificationsNone,
 } from "react-icons/md";
 import CreateConnectionStringModal from "../../CreateConnectionStringModal";
 import Banner from "@/components/ui/Banner";
@@ -40,12 +42,13 @@ import Card from "@/components/ui/Card";
 import { useEffect } from "react";
 
 enum ActiveTab {
-  Brand = 0,
-  LegalInformation = 1,
-  Owners = 2,
-  Managers = 3,
-  Advanced = 4,
-  Integrations = 5,
+  Notifications = 0,
+  Brand = 1,
+  LegalInformation = 2,
+  Owners = 3,
+  Managers = 4,
+  Advanced = 5,
+  Integrations = 6,
 }
 
 interface NavItem {
@@ -55,6 +58,11 @@ interface NavItem {
 }
 
 const NAV_ITEMS: NavItem[] = [
+  {
+    tab: ActiveTab.Notifications,
+    labelKey: "screens.Dashboard.Tenants.AdvancedManagement.tabs.notifications",
+    icon: <MdNotificationsNone size={16} />,
+  },
   {
     tab: ActiveTab.Brand,
     labelKey: "screens.Dashboard.Tenants.AdvancedManagement.tabs.brand",
@@ -396,6 +404,13 @@ export default function AdvancedManagement() {
 
             {/* Tab content */}
             <div className="flex-1 min-w-0 pt-4 sm:pt-0 sm:pl-6">
+              {activeTab === ActiveTab.Notifications && (
+                <NotificationsCard
+                  tenant={activeTenant}
+                  mutateTenantStatus={mutateTenantStatus}
+                />
+              )}
+
               {activeTab === ActiveTab.Brand && (
                 <BrandCard
                   tenant={activeTenant}
@@ -429,7 +444,7 @@ export default function AdvancedManagement() {
               )}
 
               {activeTab === ActiveTab.Advanced && (
-                <Card padding="sm" group>
+                <Card padding="sm" group scroll={false}>
                   <Card.Header>
                     <div className="flex flex-col gap-2">
                       <Typography as="h6">
