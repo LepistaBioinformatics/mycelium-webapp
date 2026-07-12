@@ -59,6 +59,7 @@ export default function Pager({
   };
 
   if (records?.count === 0 || !records?.records) return null;
+  if (records.count <= pageSize) return null;
 
   return (
     <div className="flex justify-between mx-auto w-full xl:max-w-4xl z-1">

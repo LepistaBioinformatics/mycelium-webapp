@@ -8,6 +8,7 @@ import Modal from "@/components/ui/Modal";
 import buildRoutes from "@/constants/routes";
 import useProfile from "@/hooks/use-profile";
 import AppNotifications from "@/components/AppNotifications";
+import RequiredContactInfoBanner from "@/components/RequiredContactInfoBanner";
 import MobileNavbar from "@/components/ui/MobileNavbar";
 import { useTranslation } from "react-i18next";
 import { accountsGet } from "@/services/rpc/beginners";
@@ -62,6 +63,7 @@ export default function Dashboard() {
       </Sidebar>
 
       <div className="flex-1 overflow-y-auto scrollbar pb-16 sm:pb-0">
+        <RequiredContactInfoBanner />
         <Outlet />
       </div>
 

@@ -2,6 +2,7 @@ import { cva, VariantProps } from "class-variance-authority";
 import Typography from "./Typography";
 import { IoCloseSharp } from "react-icons/io5";
 import { useNavigate } from "react-router";
+import { createPortal } from "react-dom";
 
 const containerStyles = cva(
   "fixed z-[997] right-0 top-0 bottom-0 w-full bg-zinc-600 bg-opacity-20 dark:bg-zinc-900 dark:bg-opacity-40 flex justify-end",
@@ -38,7 +39,12 @@ function Container({
     navigate(-1);
   };
 
-  return (
+  // Portaled to document.body — nesting this fixed overlay inside the
+  // dashboard's scrollable containers makes some mobile browsers paint it
+  // relative to the scrolled ancestor instead of the real viewport, cutting
+  // off content (e.g. the Shares tab search box) until the page is scrolled
+  // back to the top.
+  return createPortal(
     <div
       id="side-curtain"
       className={containerStyles({ open })}
@@ -67,7 +73,8 @@ function Container({
           {children}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
 

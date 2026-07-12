@@ -2,6 +2,7 @@ import { cva, VariantProps } from "class-variance-authority";
 import Typography from "./Typography";
 import { IoCloseSharp } from "react-icons/io5";
 import { useNavigate } from "react-router";
+import { createPortal } from "react-dom";
 
 const containerStyles = cva(
   "text-zinc-500 dark:text-zinc-50 fixed inset-0 z-[999] flex flex-col justify-center items-center bg-opacity-50 sm:bg-opacity-60 bg-black h-full sm:pt-1 sm:px-1",
@@ -25,7 +26,11 @@ interface ContainerProps
 }
 
 function Container({ children, open, handleClose, ...props }: ContainerProps) {
-  return (
+  // Portaled to document.body — nesting this fixed overlay inside the
+  // dashboard's scrollable containers makes some mobile browsers paint it
+  // relative to the scrolled ancestor instead of the real viewport, cutting
+  // off content until the page is scrolled back to the top.
+  return createPortal(
     <main
       id="modal-container"
       className={containerStyles({ open })}
@@ -42,7 +47,8 @@ function Container({ children, open, handleClose, ...props }: ContainerProps) {
       >
         {children}
       </div>
-    </main>
+    </main>,
+    document.body
   );
 }
 

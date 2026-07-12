@@ -3,6 +3,7 @@ import useSearchBarParams from "@/hooks/use-search-bar-params";
 import { components } from "@/services/openapi/mycelium-schema";
 import {
   accountsList,
+  accountsListMerged,
   AccountsListParams,
 } from "@/services/rpc/subscriptionsManager";
 import { useEffect, useMemo } from "react";
@@ -238,14 +239,16 @@ export default function PaginatedAccounts({
       if (simpleText && !params?.actor) params.term = simpleText;
     }
 
-    if (restrictAccountTypeTo) {
-      const { accountType: accountTypeParam } = params;
-
-      if (!accountTypeParam) {
-        params.accountType = restrictAccountTypeTo.at(0) as string;
-      } else if (!restrictAccountTypeTo.includes(accountTypeParam as never)) {
-        params.accountType = restrictAccountTypeTo.at(0) as string;
-      }
+    // Only pin a single accountType here when the search text explicitly
+    // asked for one *and* it's within what this screen allows. Otherwise
+    // leave it unset — `effectiveAccountTypes` below decides whether to
+    // merge every type in `restrictAccountTypeTo` or fetch unrestricted.
+    if (
+      restrictAccountTypeTo &&
+      params.accountType &&
+      !restrictAccountTypeTo.includes(params.accountType as never)
+    ) {
+      delete params.accountType;
     }
 
     return params;
@@ -259,14 +262,25 @@ export default function PaginatedAccounts({
     hasEnoughPermissions,
   ]);
 
+  // The gateway's accounts-list endpoint takes one accountType per call (see
+  // accountsListMerged's comment) — so "show every allowed type" means
+  // batching one request per type and merging client-side, unless the
+  // command box already narrowed to a single explicit type.
+  const effectiveAccountTypes = useMemo(() => {
+    if (rpcParams?.accountType) return [rpcParams.accountType];
+    if (restrictAccountTypeTo) return restrictAccountTypeTo as string[];
+    return null;
+  }, [rpcParams, restrictAccountTypeTo]);
+
   const swrKey = useMemo(() => {
     if (!rpcParams) return null;
     return [
       "rpc",
       "subscriptionsManager.accounts.list",
       JSON.stringify(rpcParams),
+      JSON.stringify(effectiveAccountTypes),
     ] as const;
-  }, [rpcParams]);
+  }, [rpcParams, effectiveAccountTypes]);
 
   const {
     data: accounts,
@@ -274,10 +288,24 @@ export default function PaginatedAccounts({
     mutate: mutateAccounts,
   } = useSWR<PaginatedRecords<Account>>(
     swrKey,
-    () =>
-      accountsList(rpcParams!, getAccessTokenSilently) as unknown as Promise<
-        PaginatedRecords<Account>
-      >,
+    () => {
+      if (!effectiveAccountTypes) {
+        return accountsList(rpcParams!, getAccessTokenSilently);
+      }
+
+      if (effectiveAccountTypes.length > 1) {
+        return accountsListMerged(
+          effectiveAccountTypes,
+          rpcParams!,
+          getAccessTokenSilently
+        );
+      }
+
+      return accountsList(
+        { ...rpcParams!, accountType: effectiveAccountTypes[0] },
+        getAccessTokenSilently
+      );
+    },
     {
       revalidateIfStale: true,
       revalidateOnFocus: false,

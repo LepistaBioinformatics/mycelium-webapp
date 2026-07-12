@@ -1,3 +1,4 @@
+import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 import Typography from "@/components/ui/Typography";
 import useProfile from "@/hooks/use-profile";
@@ -10,9 +11,9 @@ import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
+import { LEGAL_FIELD_KEYS as FIELD_KEYS } from "./legal-field-keys";
 
 type Tenant = components["schemas"]["Tenant"];
-type TenantMetaKey = components["schemas"]["TenantMetaKey"];
 
 interface Props {
   tenant: Tenant;
@@ -33,21 +34,6 @@ interface LegalFormValues {
   trading_name: string;
   contact_person: string;
 }
-
-const FIELD_KEYS: TenantMetaKey[] = [
-  "federal_revenue_register",
-  "federal_revenue_register_type",
-  "country",
-  "state",
-  "province",
-  "city",
-  "zip_code",
-  "address1",
-  "address2",
-  "legal_name",
-  "trading_name",
-  "contact_person",
-];
 
 const REGISTER_TYPE_OPTIONS = [
   { value: "", label: "—" },
@@ -77,6 +63,37 @@ function cnpjMask(raw: string): string {
   return `${chars.slice(0, 2)}.${chars.slice(2, 5)}.${chars.slice(5, 8)}/${chars.slice(8, 12)}-${chars.slice(12)}`;
 }
 
+// Alphanumeric CNPJ check-digit algorithm (Receita Federal / SERPRO, in
+// effect from 2026): mod-11 over ASCII-48 character values (digits keep
+// their value 0-9; letters A-Z map to 17-42), same weight sequences as the
+// legacy purely-numeric CNPJ. The 2 trailing check digits are always
+// numeric; only the 12 base characters may be letters.
+function cnpjCharValue(char: string): number {
+  return char.charCodeAt(0) - 48;
+}
+
+function cnpjCheckDigit(base: string, weights: number[]): number {
+  const sum = base
+    .split("")
+    .reduce((acc, char, i) => acc + cnpjCharValue(char) * (weights[i] ?? 0), 0);
+  const remainder = sum % 11;
+  return remainder < 2 ? 0 : 11 - remainder;
+}
+
+function isValidCnpj(raw: string): boolean {
+  const clean = raw.replace(/[^A-Za-z0-9]/g, "").toUpperCase();
+  if (!/^[A-Z0-9]{12}[0-9]{2}$/.test(clean)) return false;
+
+  const base = clean.slice(0, 12);
+  const dv1 = cnpjCheckDigit(base, [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]);
+  const dv2 = cnpjCheckDigit(
+    base + dv1,
+    [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]
+  );
+
+  return clean.slice(12) === `${dv1}${dv2}`;
+}
+
 const INPUT =
   "w-full bg-transparent border-b border-zinc-300 dark:border-zinc-700 px-0 py-1.5 text-sm text-zinc-800 dark:text-zinc-200 focus:outline-none focus:border-brand-violet-500 dark:focus:border-brand-violet-400 placeholder-zinc-400 dark:placeholder-zinc-600";
 const LABEL =
@@ -96,8 +113,14 @@ export default function LegalSettings({ tenant, mutateTenantStatus }: Props) {
 
   const meta = (tenant.meta ?? {}) as Record<string, string>;
 
-  const { register, handleSubmit, reset, watch, control } =
-    useForm<LegalFormValues>({
+  const {
+    register,
+    handleSubmit,
+    reset,
+    watch,
+    control,
+    formState: { errors },
+  } = useForm<LegalFormValues>({
       defaultValues: {
         federal_revenue_register: meta["federal_revenue_register"] ?? "",
         federal_revenue_register_type:
@@ -212,6 +235,15 @@ export default function LegalSettings({ tenant, mutateTenantStatus }: Props) {
               <Controller
                 name="federal_revenue_register"
                 control={control}
+                rules={{
+                  validate: (value) =>
+                    !isCnpj ||
+                    !value ||
+                    isValidCnpj(value) ||
+                    (t(
+                      `${BASE}.federalRevenueRegister.invalidCnpj`
+                    ) as string),
+                }}
                 render={({ field }) => (
                   <input
                     {...field}
@@ -227,6 +259,11 @@ export default function LegalSettings({ tenant, mutateTenantStatus }: Props) {
                   />
                 )}
               />
+              {errors.federal_revenue_register && (
+                <span className="text-xs text-red-500 dark:text-red-400">
+                  {errors.federal_revenue_register.message}
+                </span>
+              )}
             </div>
 
             <div className="flex flex-col gap-1">
@@ -323,13 +360,9 @@ export default function LegalSettings({ tenant, mutateTenantStatus }: Props) {
       </Card>
 
       <div className="flex justify-end">
-        <button
-          type="submit"
-          disabled={isSaving}
-          className="px-4 py-2 text-sm font-medium text-white bg-brand-violet-500 hover:bg-brand-violet-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-        >
+        <Button type="submit" disabled={isSaving}>
           {isSaving ? t(`${BASE}.saving`) : t(`${BASE}.save`)}
-        </button>
+        </Button>
       </div>
     </form>
   );

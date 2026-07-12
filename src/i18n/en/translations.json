@@ -34,6 +34,19 @@
       "Profile": {
         "title": "Profile",
         "loading": "Carrying profile ...",
+        "Overview": {
+          "tabName": "Overview",
+          "licensedResourcesCount_one": "{{count}} resource",
+          "licensedResourcesCount_other": "{{count}} resources",
+          "noLicensedResources": "No resources",
+          "tenantsCount_one": "{{count}} namespace",
+          "tenantsCount_other": "{{count}} namespaces",
+          "noTenants": "Not an owner",
+          "manage": "Manage",
+          "telegramLinked": "Linked",
+          "telegramNotLinked": "Not linked",
+          "contactInfoFieldsFilled": "{{count}}/{{total}} fields filled"
+        },
         "loggedInAs": {
           "prefix": "User",
           "title": "Your name",
@@ -49,6 +62,38 @@
         "email": {
           "prefix": "E-mail",
           "title": "Your email"
+        },
+        "personalInfo": {
+          "phoneNumber": "Phone",
+          "emergencyContactName": "Emergency contact",
+          "emergencyContactPhone": "Emergency phone"
+        },
+        "ContactInfoSection": {
+          "tabName": "Contact Info",
+          "title": "Contact information",
+          "description": "Keep these details up to date so you can be reached if something needs your attention.",
+          "fullName": {
+            "title": "Full name",
+            "placeholder": "Your full name"
+          },
+          "phoneNumber": {
+            "title": "Phone number"
+          },
+          "jobTitle": {
+            "title": "Job title",
+            "placeholder": "e.g. Infrastructure Lead"
+          },
+          "emergencyContactName": {
+            "title": "Emergency contact name",
+            "description": "Someone we can reach on your behalf if needed.",
+            "placeholder": "Full name"
+          },
+          "emergencyContactPhone": {
+            "title": "Emergency contact phone"
+          },
+          "save": "Save",
+          "saving": "Saving...",
+          "error": "Some fields failed to save"
         }
       },
       "AdvancedOptionsModal": {
@@ -339,6 +384,7 @@
             "title": "Namespace name",
             "prefix": "You see",
             "viewTenantAdvancedDetails": "See advanced details of namepace",
+            "viewDetailsButton": "View details",
             "makeTenantFavorite": "Favorite namespace"
           },
           "description": {
@@ -390,6 +436,7 @@
           "manageAccounts": "See accounts",
           "manageAccountsDescription": "Click here to see the accounts recorded in Namespace.",
           "tabs": {
+            "overview": "Overview",
             "notifications": "Notifications",
             "legalInformation": "Legal Information",
             "owners": "Owners",
@@ -397,6 +444,17 @@
             "brand": "Brand",
             "advanced": "Advanced",
             "integrations": "Integrations"
+          },
+          "overview": {
+            "configured": "Configured",
+            "notConfigured": "Not configured",
+            "fieldsFilled": "{{count}}/{{total}} fields filled",
+            "ownersCount_one": "{{count}} owner",
+            "ownersCount_other": "{{count}} owners",
+            "noOwners": "No owners",
+            "managerConfigured": "Manager assigned",
+            "managerNotConfigured": "No manager assigned",
+            "manageIntegration": "Manage integration"
           },
           "advanced": {
             "title": "Advanced"
@@ -440,7 +498,8 @@
               },
               "federalRevenueRegister": {
                 "title": "IRS Registration",
-                "prefix": "IRS REGISTRATION"
+                "prefix": "IRS REGISTRATION",
+                "invalidCnpj": "Invalid CNPJ — check the digits and try again"
               },
               "federalRevenueRegisterType": {
                 "title": "Type of federal revenue registration",
@@ -559,13 +618,19 @@
               "original": "Original",
               "compressed": "Compressed",
               "submit": "Save logo",
-              "submitting": "Saving..."
-            },
-            "colors": {
-              "title": "Colors",
-              "description": "Customize the colors of Namespace.",
-              "submit": "To send",
-              "submitting": "Submitting ..."
+              "submitting": "Saving...",
+              "identity": {
+                "title": "Brand identity",
+                "description": "Set the colors and typography used to personalize this tenant's identity.",
+                "primaryColor": "Primary color",
+                "secondaryColor": "Secondary color",
+                "accentColor": "Accent color",
+                "invalidHex": "Enter a valid hex color (e.g. #9260C4)",
+                "headingFontFamily": "Heading font",
+                "bodyFontFamily": "Body font",
+                "save": "Save identity",
+                "saving": "Saving..."
+              }
             }
           }
         }
@@ -601,6 +666,11 @@
         },
         "AccountInvitations": {
           "noInvitations": "No registered management account",
+          "search": {
+            "placeholder": "Search by email...",
+            "noResults": "No shares match your search",
+            "truncated": "Showing the first {{count}} shares. Refine your search to narrow the results."
+          },
           "email": {
             "title": "Invited Email"
           },
@@ -623,9 +693,7 @@
               "desctiption": "Removing the invitation will remove the accesses from the invited user.",
               "confirm": "Proceed"
             }
-          },
-          "showAll": "Show all",
-          "showLess": "Less"
+          }
         },
         "AccountDetails": {
           "title": "Account Details",
@@ -1112,14 +1180,20 @@
   "components": {
     "SearchBar": {
       "placeholder": "Search results ...",
+      "clear": "Clear search",
       "commandPalette": {
-        "title": "Commands"
+        "title": "Filters"
       }
     },
     "Pager": {
       "records": "{{number}} results",
       "prev": "Previous",
       "next": "Next"
+    },
+    "RequiredContactInfoBanner": {
+      "title": "Complete your contact information",
+      "description": "Because your account has elevated privileges, we need a way to reach you if something needs your attention.",
+      "button": "Complete now"
     },
     "WrittenBy": {
       "created_by": {

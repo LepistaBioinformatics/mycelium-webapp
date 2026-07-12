@@ -238,6 +238,105 @@
   disappear once the PR is closed. Trade-off: both triggers fire on the same merge, so the job
   runs twice — the second run finds nothing new since the last tag and no-ops harmlessly
   (semantic-release is idempotent), it just costs an extra CI run per merge.
+- **D30** — Implemented 3 features via `/tlc-spec-driven`, researched in parallel first (3
+  background Explore agents) since none had an obvious answer in the codebase:
+  1. **Alphanumeric CNPJ validation** — confirmed via web search (SERPRO/Receita Federal, IN
+     2.229/2024) the mod-11 check-digit algorithm: character value = ASCII code − 48 (digits
+     keep 0-9, letters A-Z → 17-42), same weight sequences as the legacy numeric CNPJ
+     (`[5,4,3,2,9,8,7,6,5,4,3,2]` then `[6,5,4,3,2,9,8,7,6,5,4,3,2]`), remainder<2→0 else 11−
+     remainder. Verified against the official worked example (`AB12CD34EFGH` → `83`) and a
+     known-valid legacy numeric CNPJ (`11444777000161`) via a throwaway node script — both
+     pass. `LegalSettings.tsx` had `cnpjMask` (formatting only) but zero validation anywhere
+     in the stack (webapp or gateway — the gateway stores `federal_revenue_register` as an
+     unvalidated free string). Added `isValidCnpj`, wired as an RHF `Controller` `rules.validate`
+     on the field (only enforced when `isCnpj`), blocking submit with an inline error.
+  2. **Brand identity (colors + typography)** — research found no dedicated `BrandTag`/brand
+     schema in the gateway; the existing logo is just a generic `Tag` (`value: "brand"`) with a
+     `meta: HashMap<String,String>` map (webapp-local convention, typed via
+     `TenantTagTypes.tsx`'s `TenantTagMeta`, not the OpenAPI schema). Extended `TenantTagMeta`
+     with `primaryColor`/`secondaryColor`/`accentColor` (hex, validated) and
+     `headingFontFamily`/`bodyFontFamily` (freeform text + a `<datalist>` of suggestions incl.
+     this app's own DS fonts). **Important fix**: `BrandCard.tsx`'s logo-save (`handleSave`) built
+     `meta` from scratch (`{ base64Logo: preview }`) — since `tagsCreate`/`tagsUpdate` replace
+     the whole meta map, saving a new logo would have silently wiped any previously-saved
+     identity fields (and vice versa). Fixed both save paths to spread the existing
+     `brandTag?.meta` first. Found and removed an orphaned, never-referenced
+     `customization.colors` i18n block in all 3 locales — a planned-but-never-built predecessor
+     to this exact feature.
+  3. **Account-type filtering** — research found `subscriptionsManager.accounts.list` (both
+     TS `AccountsListParams` and the Rust `ListAccountsByTypeParams`/`list_accounts_by_type`
+     use-case/`AccountFetching::list` trait) hardcode **one** `accountType` per call — the
+     endpoint has no "all types" option, contrary to the user's assumption. Also found
+     `restrictAccountTypeTo` in `routes.tsx` already splits the 7 valid types correctly with no
+     gap/overlap (4 for `/dashboard/accounts`, 3 for tenant accounts) — the actual bug was that
+     only `.at(0)` of the allowed list was ever queried. Per user's explicit choice (merge over
+     widen-filter), added `accountsListMerged()` (`subscriptionsManager.ts`) — batches one
+     `subscriptionsManager.accounts.list` request per allowed type via `rpcBatch` (one network
+     round-trip), merges records, sorts by `createdAt` desc, slices to `pageSize`. Known,
+     accepted trade-off: cross-type pagination is best-effort (each type's own
+     skip/pageSize window gets merged and re-sliced, not a true global offset) since the
+     backend has no batch-aware pagination — flagged to the user before implementing.
+     `PaginatedAccounts.tsx` still supports narrowing to one explicit type via the command box
+     (e.g. `/manager`) unchanged; merging only kicks in when no explicit type is typed.
+- Not committed yet — this is new, untested work; per `commit-validation.md`, waiting for the
+  user to test before committing (unlike D28/D29, no explicit "commit + PR" request this time).
+- **D31** — Modernized `SearchBar.tsx`'s command palette (via `/frontend-design`). It was a
+  native `<details>/<summary>` disclosure — plain text trigger, no auto-close on selection (the
+  explicit bug reported), no click-outside/Escape. Kept the existing Lepista DS tokens (didn't
+  invent a new palette/type system — this is an internal dashboard control, not a new page) but
+  converted to a controlled `useState` disclosure: trigger is now an icon+label+chevron pill
+  (`MdTune` + font-mono uppercase label + `MdKeyboardArrowDown` that rotates on open),
+  click-outside and Escape close it, and a `CommandPaletteCloseContext` lets
+  `CommandPaletteItem` close the panel on selection automatically — no changes needed in either
+  consumer (`PaginatedAccounts.tsx`, `DashBoardBody.tsx`), since context flows through the
+  render tree regardless of where the JSX was authored. Item rows restyled with the command
+  shown as a small monospace "kbd"-style tag instead of trailing plain text. Renamed the
+  i18n label `commandPalette.title` from "Commands"/"Comandos" to "Filters"/"Filtros" (all 3
+  locales) — describes what the control does, not what it's implemented as. Subtle
+  fade/scale-in transition on open, `motion-reduce:transition-none` respected.
+- **D32** — Modernized the search input itself (same `SearchBar.tsx`, used by 6 list screens:
+  Tenants, GuestRoles, PaginatedAccounts, WebHooks, Discovery, ErrorCodes — only
+  `PaginatedAccounts` has the filter panel from D31, the rest are plain search). Added a left
+  search icon (`IoSearchOutline`) and a right clear button (`IoCloseCircle`, shown only when
+  there's a term) using Flowbite's `icon`/`rightIcon` `TextInput` props — confirmed this is
+  already the established pattern in the app (`WebhookModal.tsx`'s password-visibility toggle
+  uses the same `rightIcon={() => <Button onClick=.../>}` shape, and `index.css` already has a
+  global `[data-testid="right-icon"] { pointer-events: unset }` override for exactly this).
+  Removed the `text-start sm:text-center` center-aligned text on larger screens (unusual for a
+  search field, made the cursor jump oddly while typing) and the dead `<div
+  className="rounded-full">` wrapper around the form (vestigial, didn't match the input's own
+  `rounded-lg`). Switched the field's own radius to `rounded-full` (clean pill search,
+  consistent whether or not the filter trigger is present below it). Added a `clear` i18n key
+  (all 3 locales) for the clear button's `aria-label`.
+- **D33** — User flagged app-wide radius inconsistency (list items, tables, boxes, inputs,
+  text) and asked to follow the DS rule literally: "Radius: small and consistent — `rounded-lg`
+  (~8px)" + "Status badges: flat sharp chips ... never glassy pills." Audited every `rounded*`
+  class in the webapp (`grep -rhoE "rounded[a-zA-Z0-9_-]*"`) plus every bordered/bg chip missing
+  a radius class entirely. Findings:
+  - **D32's own regression**: the search-bar pill (`rounded-full`) I'd just added contradicted
+    this rule outright — reverted to `rounded-lg` (container variant, `TextInput` theme,
+    command-palette item rows, and the command "kbd" tag, which were `rounded-md`/bare
+    `rounded`/`rounded-full` — now all `rounded-lg`).
+  - **My own earlier mistake**: `Discovery/index.tsx`'s HTTP method badge got `rounded-full`
+    during the D23 sweep (misread as "pill" without checking this literal rule) — fixed to
+    `rounded-lg`.
+  - **3 pre-existing broken Tailwind classes**, unrelated to any work this session — literal
+    dead CSS (typo'd, no effect at all), found only because they showed up as "missing radius"
+    in the audit: `Onboarding/index.tsx`'s locale `<select>` had `w-full-lg` (not a real
+    utility — no width applied); `Discovery/index.tsx`'s tag chip had `text-sm-r-full` (no
+    size/radius applied); `AccountType.tsx`'s split badge had `py-1-l-md`/`px-2-r-md` (missing
+    the `rounded-` prefix entirely). All fixed to valid classes with `rounded-l-lg`/`rounded-
+    r-lg`/`rounded-lg` as appropriate.
+  - Added `rounded-lg` to ~10 more chips/badges/buttons that had a full border+bg "box" look
+    but zero radius (`PermissionsOnAccount.tsx`, `ListConnectionStringsSection.tsx` ×4,
+    `LicensedResourcesSection.tsx`, `IdentitySection.tsx`, `CopyToClipboard.tsx`'s
+    `focus:rounded-md` → `focus:rounded-lg`).
+  - **Left as `rounded-full` (legitimate exception, not a violation)**: 3 fixed-size circular
+    avatars (`Dashboard/index.tsx` sidebar avatar, `Onboarding/index.tsx` welcome + completion
+    avatars — all `w-N h-N` squares meant to render as circles) and the Onboarding timeline dot
+    (`w-4 h-4` with `rounded-lg` added — at that exact size, an 8px radius on a 16px box *is*
+    a circle, so no visual change, now consistent with the token instead of being unrounded).
+    Table corner classes (`rounded-tl-lg` etc.) were already all `-lg` — no fix needed there.
 
 ## Blockers
 
@@ -415,3 +514,21 @@ _(none)_
 - Telegram + WhatsApp merged into single "Messaging accounts" step — marked done when either is set.
 - All `TextInput` fields use `color="custom"` with brand-violet theme (no raw Flowbite colors).
 - `brand-lime-*` removed from all new elements; dark mode accents use `brand-violet-400` (D10).
+
+**Account Shares tab — pagination, compact table, filter** ✅ complete (2026-07-12)
+- Root cause: `AccountInvitations.tsx` (the "Shares" tab of the account-details panel) did fake client-side pagination (`.slice(0, pageSize)` + "Show all"/"Show less"), never sending `skip`/`pageSize` to the RPC call — even though `guestsListGuestOnSubscriptionAccount`'s wrapper already supported them.
+- Fixed: real server-side pagination via `useSearchBarParams`/`Pager`; card-list replaced with a compact themed `<Table>` (brand-tiered dark surfaces, matching `LicensedResourcesSection.tsx`'s theme convention); removed the redundant inline confirm banner — the delete button now calls the same `setCurrentGuestUser` callback that already opens `UnInviteGuestModal`.
+- Removed dead i18n keys `AccountInvitations.showAll`/`showLess` (all 3 locales).
+- Filter box added on top: verified the gateway's `ListGuestOnSubscriptionAccountParams` (Rust) has no email/search param at any layer (RPC params → use case → `GuestUserFetching::list` trait) — server-side filtering would need a cross-repo change, not done here. Client-side fallback instead: while a search term is active, fetch a flat batch of up to `SEARCH_BATCH_SIZE = 200` and filter by email in-memory; truncation notice shown if the account has more than 200 total shares; `Pager` hides while searching.
+- `SearchBar.tsx` gained a `sticky` variant (default `true`, preserves existing page-level usage) so it can be embedded inline inside a tab instead of only as a page-level sticky header.
+- `Pager.tsx`: now returns `null` when `records.count <= pageSize` — previously always rendered the prev/next row (with disabled buttons) even for single-page results. Applies app-wide (shared component).
+- `DetailsBox.tsx`: replaced native `<details>/<summary>` with a `div`/`button` disclosure driven by React context (`DetailsBoxContext`), since the browser's native open/close toggle is abrupt and can't be animated. Content now animates via a CSS `grid-template-rows: 0fr → 1fr` transition (`duration-300`, `motion-reduce:transition-none`) — the standard JS-free accordion technique. Same controlled (`open`/`onToggle`)/uncontrolled API preserved for all 7 existing call sites.
+
+**Required contact info for privileged accounts** ✅ complete (2026-07-12)
+- Feature: accounts with elevated privileges (staff, manager, a `TenantManager` licensed resource, or ownership of any tenant) are nudged — via a dismissible banner, not a hard block (user's explicit choice) — to fill in Full Name, Phone, Emergency Contact (name + phone), and Job Title, so someone can be reached if something needs their attention.
+- Gateway (`mycelium-api-gateway`, Rust): added `EmergencyContactName`, `EmergencyContactPhone`, `JobTitle` variants to `AccountMetaKey` (`core/src/domain/dtos/account/meta.rs`) — `Display`/`FromStr` arms only, since `meta` is a schema-less JSONB `HashMap<String,String>` column (no diesel/migration changes needed). Verified no exhaustive `match` on `AccountMetaKey` exists anywhere else in the gateway (grepped all adapters/use-cases) — adding variants was compile-safe. `cargo fmt`/`cargo build --workspace`/`cargo test --workspace --all` all pass.
+- "Full name" reuses the existing top-level `Account.name` field (self-service, per user's choice) rather than a new meta key — wired via the gateway's already-existing self-service `beginners.accounts.updateName` RPC method (`update_own_account_name` use case, enforces `account_id == profile.acc_id`), newly wrapped as `accountsUpdateName` in `src/services/rpc/beginners.ts` (was unwrapped before, webapp had no caller).
+- `src/functions/is-privileged-account.ts` (new): `profile.isStaff || profile.isManager || getTenantsOwnershipOrNull(...) !== null || licensedResources.records.some(r => r.role.includes(MycRole.TenantManager))`.
+- `src/screens/Dashboard/components/Profile/ContactInfoSection.tsx` (new): new "Contact Info" tab (tab 5) in `Profile/index.tsx`, self-service form for all 5 fields; per-field `metaCreate` vs `metaUpdate` chosen by whether the key already exists in `account.meta` (mirrors `Onboarding.tsx`'s established pattern — these two beginners-scope endpoints are NOT idempotent, unlike `tenantOwner.meta.create` used elsewhere).
+- `src/components/RequiredContactInfoBanner.tsx` (new): rendered above `<Outlet />` in `Dashboard/index.tsx` (shell-level, all routes). Dismiss persisted in `localStorage` (`myc-contact-info-banner-dismissed`) — closing it hides it for good, per user's explicit "banner dispensável" choice; banner also auto-hides once all 5 fields are filled, independent of dismiss state.
+- i18n: `screens.Dashboard.Profile.ContactInfoSection.*` and `components.RequiredContactInfoBanner.*` added to all 3 locales.

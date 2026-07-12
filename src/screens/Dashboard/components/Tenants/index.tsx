@@ -22,7 +22,7 @@ import { FaRegStar, FaStar } from "react-icons/fa6";
 import { MdManageAccounts } from "react-icons/md";
 import { setTenantInfo, setTenantIsLoading } from "@/states/tenant.state";
 import { SlOrganization } from "react-icons/sl";
-import { Link } from "react-router";
+import { useNavigate } from "react-router";
 import { useTranslation } from "react-i18next";
 import { MycRole } from "@/types/MyceliumRole";
 import { MycPermission } from "@/types/MyceliumPermission";
@@ -31,6 +31,8 @@ type Tenant = components["schemas"]["Tenant"];
 
 export default function Tenants() {
   const { t } = useTranslation();
+
+  const navigate = useNavigate();
 
   const [isNewModalOpen, setIsNewModalOpen] = useState(false);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
@@ -205,15 +207,17 @@ export default function Tenants() {
                       {tenant?.name}
                     </button>
 
-                    <Link
-                      to={`/dashboard/tenants/${tenant.id}`}
-                      title={t(
-                        "screens.Dashboard.Tenants.viewTenantAdvancedDetails"
-                      )}
-                      className="cursor-pointer sm:hidden group-hover:block"
+                    <Button
+                      size="sm"
+                      onClick={() => navigate(`/dashboard/tenants/${tenant.id}`)}
                     >
-                      <MdManageAccounts size={18} />
-                    </Link>
+                      <span className="flex items-center gap-1.5">
+                        <MdManageAccounts size={16} />
+                        {t(
+                          "screens.Dashboard.Tenants.TenantDetails.name.viewDetailsButton"
+                        )}
+                      </span>
+                    </Button>
                   </div>
                 </Typography>
                 <div className="flex gap-5">

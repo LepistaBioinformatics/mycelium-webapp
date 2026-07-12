@@ -31,25 +31,21 @@ import {
   MdOutlineRealEstateAgent,
   MdOutlineIntegrationInstructions,
   MdNotificationsNone,
+  MdOutlineDashboard,
 } from "react-icons/md";
 import CreateConnectionStringModal from "../../CreateConnectionStringModal";
 import Banner from "@/components/ui/Banner";
 import Button from "@/components/ui/Button";
 import CreateSubscriptionManagerAccountModal from "./CreateSubscriptionManagerAccountModal";
+import CreateManagementAccount from "../CreateManagementAccount";
+import DeleteTenant from "../DeleteTenant";
 import { GoLaw } from "react-icons/go";
 import { GrUserManager } from "react-icons/gr";
 import Card from "@/components/ui/Card";
+import VerticalTabNav from "@/components/ui/VerticalTabNav";
+import Overview from "./Overview";
+import { ActiveTab } from "./active-tab";
 import { useEffect } from "react";
-
-enum ActiveTab {
-  Notifications = 0,
-  Brand = 1,
-  LegalInformation = 2,
-  Owners = 3,
-  Managers = 4,
-  Advanced = 5,
-  Integrations = 6,
-}
 
 interface NavItem {
   tab: ActiveTab;
@@ -58,6 +54,11 @@ interface NavItem {
 }
 
 const NAV_ITEMS: NavItem[] = [
+  {
+    tab: ActiveTab.Overview,
+    labelKey: "screens.Dashboard.Tenants.AdvancedManagement.tabs.overview",
+    icon: <MdOutlineDashboard size={16} />,
+  },
   {
     tab: ActiveTab.Notifications,
     labelKey: "screens.Dashboard.Tenants.AdvancedManagement.tabs.notifications",
@@ -108,9 +109,11 @@ export default function AdvancedManagement() {
   const activeTab = useMemo(() => {
     const tab = searchParams.get("tab");
 
-    if (!tab) return ActiveTab.Brand;
+    if (!tab || !Object.values(ActiveTab).includes(tab as ActiveTab)) {
+      return ActiveTab.Overview;
+    }
 
-    return parseInt(tab) as ActiveTab;
+    return tab as ActiveTab;
   }, [searchParams]);
 
   const tenantId = useMemo(() => {
@@ -151,6 +154,23 @@ export default function AdvancedManagement() {
 
   const handleCreateSubscriptionManagerAccountModalSuccess = () => {
     setIsCreateSubscriptionManagerAccountModalOpen(false);
+  };
+
+  const [
+    isCreateManagementAccountModalOpen,
+    setIsCreateManagementAccountModalOpen,
+  ] = useState(false);
+
+  const [isDeleteTenantModalOpen, setIsDeleteTenantModalOpen] =
+    useState(false);
+
+  const handleDeleteTenantModalClose = () => {
+    setIsDeleteTenantModalOpen(false);
+    // Re-checks tenant status on close (cancel or actual delete) — if it was
+    // deleted, this flips tenantStatus to "unknown" and the existing
+    // deleted-tenant screen below takes over, instead of waiting up to 2min
+    // for the next scheduled refresh.
+    mutateTenantStatus();
   };
 
   const {
@@ -377,33 +397,22 @@ export default function AdvancedManagement() {
 
         {activeTenant && (
           <div className="flex flex-col sm:flex-row gap-0 w-full h-full">
-            {/* Vertical nav — desktop left rail, mobile top bar */}
-            <nav className="flex flex-row sm:flex-col sm:w-40 shrink-0 border-b sm:border-b-0 sm:border-r border-zinc-200 dark:border-zinc-800 overflow-x-auto sm:overflow-x-visible scrollbar">
-              {NAV_ITEMS.map(({ tab, labelKey, icon }) => {
-                const isActive = activeTab === tab;
-                return (
-                  <button
-                    key={tab}
-                    onClick={() =>
-                      setSearchParams({ tab: tab.toString() })
-                    }
-                    className={[
-                      "flex items-center gap-2 px-3 py-2.5 text-sm whitespace-nowrap sm:whitespace-normal transition-colors w-full text-left",
-                      "border-b-2 sm:border-b-0 sm:border-l-2",
-                      isActive
-                        ? "border-brand-violet-500 dark:border-brand-violet-400 text-brand-violet-700 dark:text-brand-violet-300 bg-brand-violet-50 dark:bg-brand-violet-950"
-                        : "border-transparent text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-zinc-800",
-                    ].join(" ")}
-                  >
-                    <span className="shrink-0">{icon}</span>
-                    <span>{t(labelKey)}</span>
-                  </button>
-                );
-              })}
-            </nav>
+            <VerticalTabNav
+              items={NAV_ITEMS}
+              activeTab={activeTab}
+              onSelect={(tab) => setSearchParams({ tab })}
+              t={t}
+            />
 
             {/* Tab content */}
             <div className="flex-1 min-w-0 pt-4 sm:pt-0 sm:pl-6">
+              {activeTab === ActiveTab.Overview && (
+                <Overview
+                  tenant={activeTenant}
+                  onNavigate={(tab) => setSearchParams({ tab })}
+                />
+              )}
+
               {activeTab === ActiveTab.Notifications && (
                 <NotificationsCard
                   tenant={activeTenant}
@@ -518,6 +527,66 @@ export default function AdvancedManagement() {
                           </div>
                         </div>
                       </Banner>
+
+                      <Banner intent="info" width="full">
+                        <div className="flex justify-between gap-2 my-5">
+                          <div className="flex flex-col gap-2">
+                            <Typography as="h4" decoration="semibold">
+                              {t(
+                                "screens.Dashboard.Tenants.TenantDetails.createManagementAccount.title"
+                              )}
+                            </Typography>
+
+                            <Typography decoration="smooth" as="p" width="md">
+                              {t(
+                                "screens.Dashboard.Tenants.TenantDetails.createManagementAccount.description"
+                              )}
+                            </Typography>
+                          </div>
+
+                          <div>
+                            <Button
+                              intent="info"
+                              onClick={() =>
+                                setIsCreateManagementAccountModalOpen(true)
+                              }
+                            >
+                              {t(
+                                "screens.Dashboard.Tenants.TenantDetails.createManagementAccount.button"
+                              )}
+                            </Button>
+                          </div>
+                        </div>
+                      </Banner>
+
+                      <Banner intent="error" width="full">
+                        <div className="flex justify-between gap-2 my-5">
+                          <div className="flex flex-col gap-2">
+                            <Typography as="h4" decoration="semibold">
+                              {t(
+                                "screens.Dashboard.Tenants.TenantDetails.deleteTenant.title"
+                              )}
+                            </Typography>
+
+                            <Typography decoration="smooth" as="p" width="md">
+                              {t(
+                                "screens.Dashboard.Tenants.TenantDetails.deleteTenant.description"
+                              )}
+                            </Typography>
+                          </div>
+
+                          <div>
+                            <Button
+                              intent="danger"
+                              onClick={() => setIsDeleteTenantModalOpen(true)}
+                            >
+                              {t(
+                                "screens.Dashboard.Tenants.TenantDetails.deleteTenant.button"
+                              )}
+                            </Button>
+                          </div>
+                        </div>
+                      </Banner>
                     </div>
                   </Card.Body>
                 </Card>
@@ -539,6 +608,20 @@ export default function AdvancedManagement() {
         onClose={handleCreateSubscriptionManagerAccountModalClose}
         onSuccess={handleCreateSubscriptionManagerAccountModalSuccess}
       />
+
+      <CreateManagementAccount
+        isOpen={isCreateManagementAccountModalOpen}
+        tenantId={tenantId}
+        onClose={() => setIsCreateManagementAccountModalOpen(false)}
+      />
+
+      {activeTenant && (
+        <DeleteTenant
+          tenant={activeTenant}
+          isOpen={isDeleteTenantModalOpen}
+          onClose={handleDeleteTenantModalClose}
+        />
+      )}
     </>
   );
 }

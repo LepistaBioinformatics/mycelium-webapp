@@ -19,6 +19,7 @@ import PageBody from "@/components/ui/PageBody";
 import ControlPanelBreadcrumbItem from "../ControlPanelBreadcrumbItem";
 import { MdChecklist } from "react-icons/md";
 import { FaTelegramPlane } from "react-icons/fa";
+import { ActiveTab } from "../Profile/active-tab";
 
 type Account = components["schemas"]["Account"];
 type AccountStatus = "loading" | "exists" | "missing";
@@ -327,7 +328,11 @@ export default function Onboarding() {
                       <Button
                         intent="secondary"
                         size="sm"
-                        onClick={() => navigate("/dashboard/profile?tab=4")}
+                        onClick={() =>
+                          navigate(
+                            `/dashboard/profile?tab=${ActiveTab.TelegramIdentity}`
+                          )
+                        }
                       >
                         <span className="inline-flex items-center gap-2">
                           <FaTelegramPlane />
@@ -489,7 +494,7 @@ function LocaleSelect({
       value={value}
       disabled={disabled}
       onChange={(e) => onChange(e.target.value)}
-      className="block w-full-lg border border-brand-600 bg-brand-violet-50 px-3 py-2 text-zinc-900 focus:border-brand-violet-500 focus:ring-1 focus:ring-brand-violet-500 focus:outline-none dark:bg-brand-950 dark:text-white dark:focus:border-brand-violet-400 dark:focus:ring-brand-violet-400 disabled:opacity-50 disabled:cursor-not-allowed"
+      className="block w-full rounded-lg border border-brand-600 bg-brand-violet-50 px-3 py-2 text-zinc-900 focus:border-brand-violet-500 focus:ring-1 focus:ring-brand-violet-500 focus:outline-none dark:bg-brand-950 dark:text-white dark:focus:border-brand-violet-400 dark:focus:ring-brand-violet-400 disabled:opacity-50 disabled:cursor-not-allowed"
     >
       <option value="">{t(`${tKey}.meta.locale.placeholder`)}</option>
       {LOCALE_OPTIONS.map((opt) => (
@@ -534,7 +539,7 @@ function TimelineItem({
     <div className="relative pl-8 pb-8">
       {/* Dot */}
       <div
-        className={`absolute -left-[9px] top-1 w-4 h-4 border-2 ${dotColor} flex items-center justify-center`}
+        className={`absolute -left-[9px] top-1 w-4 h-4 rounded-lg border-2 ${dotColor} flex items-center justify-center`}
       >
         {done && (
           <svg

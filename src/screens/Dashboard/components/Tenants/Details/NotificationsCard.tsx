@@ -1,3 +1,4 @@
+import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 import Typography from "@/components/ui/Typography";
 import useProfile from "@/hooks/use-profile";
@@ -177,13 +178,9 @@ export default function NotificationsCard({
       </Card>
 
       <div className="flex justify-end">
-        <button
-          type="submit"
-          disabled={isSaving}
-          className="px-4 py-2 text-sm font-medium text-white bg-brand-violet-500 hover:bg-brand-violet-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-        >
+        <Button type="submit" disabled={isSaving}>
           {isSaving ? t(`${BASE}.saving`) : t(`${BASE}.save`)}
-        </button>
+        </Button>
       </div>
     </form>
   );
