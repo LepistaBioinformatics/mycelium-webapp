@@ -1,3 +1,10 @@
+## [1.1.2](https://github.com/LepistaBioinformatics/mycelium-webapp/compare/v1.1.1...v1.1.2) (2026-07-13)
+
+
+### Bug Fixes
+
+* **ui:** prevent modal click from closing parent SideCurtain ([07d358b](https://github.com/LepistaBioinformatics/mycelium-webapp/commit/07d358b61ca20fe79052fcc356b152e2a604471d)), closes [#side-curtain-content](https://github.com/LepistaBioinformatics/mycelium-webapp/issues/side-curtain-content) [#modal-container](https://github.com/LepistaBioinformatics/mycelium-webapp/issues/modal-container)
+
 ## [1.1.1](https://github.com/LepistaBioinformatics/mycelium-webapp/compare/v1.1.0...v1.1.1) (2026-07-12)
 
 
