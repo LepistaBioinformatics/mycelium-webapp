@@ -50,8 +50,17 @@ function Container({
       className={containerStyles({ open })}
       {...props}
       onClick={(e: any) => {
-        // Dispatch handleClick if the click is outside the div with id side-curtain-content
-        if (!e.target.closest("#side-curtain-content")) {
+        // Dispatch handleClick if the click is outside the div with id
+        // side-curtain-content. Also treat #modal-container as "inside":
+        // Modal is portaled to document.body, so a click there wouldn't
+        // match closest() above even when the modal is logically nested
+        // inside this SideCurtain. Modal.tsx already stops propagation on
+        // its own clicks, so this is defense-in-depth for any future
+        // overlay that forgets to.
+        if (
+          !e.target.closest("#side-curtain-content") &&
+          !e.target.closest("#modal-container")
+        ) {
           handleClose?.();
         }
       }}

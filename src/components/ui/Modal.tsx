@@ -36,6 +36,12 @@ function Container({ children, open, handleClose, ...props }: ContainerProps) {
       className={containerStyles({ open })}
       {...props}
       onClick={(e: any) => {
+        // Stop the click from bubbling to an ancestor SideCurtain's
+        // outside-click handler: Modal is portaled to document.body, so in
+        // the DOM its content is a sibling of #side-curtain, not a
+        // descendant — SideCurtain's closest() check can't see it and would
+        // otherwise close both overlays on any click inside the modal.
+        e.stopPropagation();
         if (!e.target.closest("#modal-container-content")) {
           handleClose?.();
         }
