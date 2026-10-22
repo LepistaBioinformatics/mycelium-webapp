@@ -6,6 +6,8 @@ import buildRoutes, { HOME_ROUTE, DASHBOARD_ROUTE } from "./constants/routes";
 import { Fragment, lazy, Suspense, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import LoginPage from "@/screens/LoginPage";
+import HostedLoginCallback from "@/screens/HostedLoginCallback";
+import { HOSTED_LOGIN_CALLBACK_PATH } from "@/services/auth/hosted-login";
 import { HorizontalLoadingBar } from "@/components/ui/HorizontalLoadingBar";
 
 const Onboarding = lazy(() => import("@/screens/Dashboard/components/Onboarding"));
@@ -26,6 +28,10 @@ export default function App() {
       <Routes>
           <Route path="*" element={<NotFound />} />
           <Route path="/login" element={<LoginPage />} />
+          <Route
+            path={HOSTED_LOGIN_CALLBACK_PATH}
+            element={<HostedLoginCallback />}
+          />
           <Route path={HOME_ROUTE.path} element={HOME_ROUTE.element} />
           <Route path={DASHBOARD_ROUTE.path} element={DASHBOARD_ROUTE.element}>
             <Route

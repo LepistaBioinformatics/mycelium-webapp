@@ -22,6 +22,7 @@ import { useNativeAuthContext } from "@/contexts/NativeAuthContext";
 import { InvalidCodeError } from "@/types/NativeAuth";
 import useProfile from "@/hooks/use-profile";
 import { useAppConfig } from "@/hooks/use-app-config";
+import useHostedLogin from "@/hooks/use-hosted-login";
 
 type EmailForm = { email: string };
 type CodeForm = { code: string };
@@ -33,6 +34,7 @@ export default function HomePage() {
   const { setAuth } = useNativeAuthContext();
   const { isAuthenticated, isLoadingUser, logout } = useProfile();
   const { appConfig } = useAppConfig();
+  const { isHostedLogin, isRedirecting, signIn } = useHostedLogin();
 
   const [searchParams, setSearchParams] = useSearchParams();
   const step = (searchParams.get("step") as "email" | "code") ?? "email";
@@ -129,7 +131,28 @@ export default function HomePage() {
             </Typography>
           </div>
 
-          {step === "email" && (
+          {isHostedLogin && (
+            <button
+              type="button"
+              onClick={signIn}
+              disabled={isRedirecting}
+              className="
+                w-full py-4 px-6 text-lg font-mono uppercase tracking-wide
+                rounded-lg border border-brand-600 transition-all duration-200
+                bg-brand-800 hover:bg-brand-700 text-white
+                disabled:opacity-50 disabled:cursor-not-allowed
+                shadow-neo hover:shadow-neo-hover hover:-translate-x-0.5 hover:-translate-y-0.5
+                focus:outline-none focus:ring-2 focus:ring-infra-400 focus:ring-offset-2
+                dark:focus:ring-offset-brand-950
+              "
+            >
+              {isRedirecting
+                ? t("screens.HostedLogin.redirecting")
+                : t("screens.HostedLogin.signIn")}
+            </button>
+          )}
+
+          {!isHostedLogin && step === "email" && (
             <form
               onSubmit={emailForm.handleSubmit(onSubmitEmail)}
               className="flex flex-col gap-6"
@@ -163,7 +186,7 @@ export default function HomePage() {
             </form>
           )}
 
-          {step === "code" && (
+          {!isHostedLogin && step === "code" && (
             <form
               onSubmit={codeForm.handleSubmit(onSubmitCode)}
               className="flex flex-col gap-6"

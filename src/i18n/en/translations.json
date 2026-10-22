@@ -1175,6 +1175,17 @@
         "invalidCode": "Invalid or expired code",
         "back": "Back"
       }
+    },
+    "HostedLogin": {
+      "signIn": "Sign in",
+      "redirecting": "Redirecting to sign in…",
+      "startError": "Could not start the sign-in. Try again.",
+      "callback": {
+        "signingIn": "Signing you in…",
+        "failed": "Sign-in failed",
+        "failedDetail": "The sign-in link is invalid, expired, or was opened in another browser.",
+        "retry": "Try again"
+      }
     }
   },
   "components": {

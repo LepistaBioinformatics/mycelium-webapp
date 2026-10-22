@@ -1096,6 +1096,17 @@
         "invalidCode": "Código inválido o expirado",
         "back": "Atrás"
       }
+    },
+    "HostedLogin": {
+      "signIn": "Iniciar sesión",
+      "redirecting": "Redirigiendo al inicio de sesión…",
+      "startError": "No se pudo iniciar el inicio de sesión. Inténtalo de nuevo.",
+      "callback": {
+        "signingIn": "Iniciando sesión…",
+        "failed": "No se pudo iniciar sesión",
+        "failedDetail": "El enlace de acceso no es válido, expiró o se abrió en otro navegador.",
+        "retry": "Intentar de nuevo"
+      }
     }
   },
   "components": {
