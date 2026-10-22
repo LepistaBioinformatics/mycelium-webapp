@@ -1139,6 +1139,12 @@
     },
     "Skeleton": {
       "loading": "Cargando…"
+    },
+    "GatewayUnavailableOverlay": {
+      "title": "Servicio no disponible",
+      "description": "No podemos comunicarnos con la API de Mycelium en este momento. El portal queda en pausa para no mostrar información incorrecta y se reanuda en cuanto vuelva la conexión.",
+      "retry": "Intentar ahora",
+      "retrying": "Comprobando…"
     }
   },
   "Menu": {

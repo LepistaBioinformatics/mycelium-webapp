@@ -17,6 +17,7 @@ import FormField from "@/components/ui/FomField";
 import { useDispatch } from "react-redux";
 import { setNotification } from "@/states/notification.state";
 import useProfile, { invalidateProfile } from "@/hooks/use-profile";
+import useGatewayHealth from "@/hooks/use-gateway-health";
 import PageBody from "@/components/ui/PageBody";
 import ControlPanelBreadcrumbItem from "../ControlPanelBreadcrumbItem";
 import { MdChecklist } from "react-icons/md";
@@ -79,6 +80,7 @@ export default function Onboarding() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { user, getAccessTokenSilently } = useProfile();
+  const { isGatewayDown } = useGatewayHealth();
 
   const [accountStatus, setAccountStatus] = useState<AccountStatus>("loading");
   const [account, setAccount] = useState<Account | null>(null);
@@ -107,11 +109,15 @@ export default function Onboarding() {
           setAccountStatus("missing");
         }
       })
-      .catch(() => {
+      .catch((error) => {
+        // fetch() rejects with TypeError when the gateway is unreachable:
+        // that says nothing about the account, so keep "loading" (the
+        // unavailable overlay covers the screen) and retry once it is back.
+        if (error instanceof TypeError) return;
         setAccountStatus("missing");
       });
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user?.email]);
+  }, [user?.email, isGatewayDown]);
 
   useEffect(() => {
     if (!account?.meta) return;
