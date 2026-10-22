@@ -208,13 +208,13 @@ export default function LegalSettings({ tenant, mutateTenantStatus }: Props) {
               </label>
               <select
                 {...register("federal_revenue_register_type")}
-                className={`${INPUT} cursor-pointer bg-white dark:bg-brand-950`}
+                className={`${INPUT} cursor-pointer bg-white dark:bg-surface-950`}
               >
                 {REGISTER_TYPE_OPTIONS.map(({ value, label }) => (
                   <option
                     key={value}
                     value={value}
-                    className="bg-white dark:bg-brand-950"
+                    className="bg-white dark:bg-surface-950"
                   >
                     {label}
                   </option>

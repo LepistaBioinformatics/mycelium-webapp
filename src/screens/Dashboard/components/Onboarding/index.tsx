@@ -436,7 +436,7 @@ function CompletionCard({
 
   return (
     <div className="flex flex-col items-center gap-6 py-12 text-center">
-      <div className="w-16 h-16 rounded-full bg-brand-violet-100 dark:bg-brand-900 flex items-center justify-center">
+      <div className="w-16 h-16 rounded-full bg-brand-violet-100 dark:bg-surface-900 flex items-center justify-center">
         <svg
           className="w-8 h-8 text-brand-violet-500 dark:text-brand-violet-400"
           fill="none"
@@ -494,7 +494,7 @@ function LocaleSelect({
       value={value}
       disabled={disabled}
       onChange={(e) => onChange(e.target.value)}
-      className="block w-full rounded-lg border border-brand-600 bg-brand-violet-50 px-3 py-2 text-zinc-900 focus:border-brand-violet-500 focus:ring-1 focus:ring-brand-violet-500 focus:outline-none dark:bg-brand-950 dark:text-white dark:focus:border-brand-violet-400 dark:focus:ring-brand-violet-400 disabled:opacity-50 disabled:cursor-not-allowed"
+      className="block w-full rounded-lg border border-brand-600 bg-brand-violet-50 px-3 py-2 text-zinc-900 focus:border-brand-violet-500 focus:ring-1 focus:ring-brand-violet-500 focus:outline-none dark:bg-surface-950 dark:text-white dark:focus:border-brand-violet-400 dark:focus:ring-brand-violet-400 disabled:opacity-50 disabled:cursor-not-allowed"
     >
       <option value="">{t(`${tKey}.meta.locale.placeholder`)}</option>
       {LOCALE_OPTIONS.map((opt) => (
@@ -533,7 +533,7 @@ function TimelineItem({
       ? "bg-zinc-300 dark:bg-zinc-600 border-zinc-300 dark:border-zinc-600 animate-pulse"
       : disabled
         ? "bg-zinc-200 dark:bg-zinc-700 border-zinc-200 dark:border-zinc-700"
-        : "bg-white dark:bg-brand-950 border-brand-violet-400 dark:border-brand-violet-500";
+        : "bg-white dark:bg-surface-950 border-brand-violet-400 dark:border-brand-violet-500";
 
   return (
     <div className="relative pl-8 pb-8">

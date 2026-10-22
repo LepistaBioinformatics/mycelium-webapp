@@ -5,8 +5,8 @@ const styles = cva(
   {
     variants: {
       _index: {
-        even: "bg-white dark:bg-brand-950",
-        odd: "bg-zinc-50 dark:bg-brand-900",
+        even: "bg-white dark:bg-surface-950",
+        odd: "bg-zinc-50 dark:bg-surface-900",
       },
     },
     defaultVariants: {},

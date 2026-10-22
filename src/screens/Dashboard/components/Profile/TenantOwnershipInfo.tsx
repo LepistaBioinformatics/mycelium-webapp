@@ -54,7 +54,7 @@ export function TenantOwnershipInfoTableRow({
   const Container = ({ children }: BaseProps) => (
     <TableRow
       key={index}
-      className="bg-white dark:border-brand-900 dark:bg-brand-950"
+      className="bg-white dark:border-brand-900 dark:bg-surface-950"
     >
       {children}
       <ActionsCell />

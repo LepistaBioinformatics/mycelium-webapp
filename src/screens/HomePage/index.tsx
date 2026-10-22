@@ -104,7 +104,7 @@ export default function HomePage() {
   if (isLoadingUser) return null;
 
   return (
-    <div className="bg-white dark:bg-brand-950 min-h-screen flex flex-col">
+    <div className="bg-white dark:bg-surface-950 min-h-screen flex flex-col">
 
       {/* Full-page logo background — light mode */}
       <div className="fixed inset-0 z-0 dark:hidden bg-[url(/logo-blackwhite.png)] bg-center bg-cover opacity-[0.14]" />
@@ -140,7 +140,7 @@ export default function HomePage() {
                 autoComplete="email"
                 autoFocus
                 placeholder="you@example.com"
-                className="[&_input]:text-2xl [&_input]:py-6 [&_input]:px-5 [&_input]:rounded-lg [&_input]:bg-white/90 [&_input]:dark:bg-brand-950/90 [&_input]:border-2 [&_input]:border-brand-600 [&_input]:shadow-neo [&_input]:focus:border-infra-400 [&_input]:focus:ring-0 [&_input]:focus:shadow-neo-hover"
+                className="[&_input]:text-2xl [&_input]:py-6 [&_input]:px-5 [&_input]:rounded-lg [&_input]:bg-white/90 [&_input]:dark:bg-surface-950/90 [&_input]:border-2 [&_input]:border-brand-600 [&_input]:shadow-neo [&_input]:focus:border-infra-400 [&_input]:focus:ring-0 [&_input]:focus:shadow-neo-hover"
                 {...emailForm.register("email", { required: true })}
               />
               <button
@@ -183,7 +183,7 @@ export default function HomePage() {
                 autoComplete="one-time-code"
                 autoFocus
                 placeholder="000000"
-                className="[&_input]:text-3xl [&_input]:tracking-[0.5em] [&_input]:text-center [&_input]:font-mono [&_input]:py-6 [&_input]:rounded-lg [&_input]:bg-white/90 [&_input]:dark:bg-brand-950/90 [&_input]:border-2 [&_input]:border-brand-600 [&_input]:shadow-neo [&_input]:focus:border-infra-400 [&_input]:focus:ring-0 [&_input]:focus:shadow-neo-hover"
+                className="[&_input]:text-3xl [&_input]:tracking-[0.5em] [&_input]:text-center [&_input]:font-mono [&_input]:py-6 [&_input]:rounded-lg [&_input]:bg-white/90 [&_input]:dark:bg-surface-950/90 [&_input]:border-2 [&_input]:border-brand-600 [&_input]:shadow-neo [&_input]:focus:border-infra-400 [&_input]:focus:ring-0 [&_input]:focus:shadow-neo-hover"
                 {...codeForm.register("code", {
                   required: true,
                   pattern: /^[0-9]{6}$/,
@@ -235,7 +235,7 @@ export default function HomePage() {
       </div>
 
       {/* ── Features ──────────────────────────────────────────────────────── */}
-      <section className="relative z-10 bg-zinc-100 dark:bg-brand-900 px-6 py-20 border-t border-brand-600">
+      <section className="relative z-10 bg-zinc-100 dark:bg-surface-900 px-6 py-20 border-t border-brand-600">
         <div className="max-w-5xl mx-auto flex flex-col gap-12">
           <Typography as="h2" center decoration="bold">
             {t(`${tHome}.features.title`)}
@@ -262,7 +262,7 @@ export default function HomePage() {
       </section>
 
       {/* ── Footer ────────────────────────────────────────────────────────── */}
-      <footer className="relative z-10 bg-white dark:bg-brand-950 px-6 py-12 border-t border-brand-600">
+      <footer className="relative z-10 bg-white dark:bg-surface-950 px-6 py-12 border-t border-brand-600">
         <div className="max-w-5xl mx-auto flex flex-col sm:flex-row justify-between gap-8">
           <div className="flex flex-col gap-5">
             <div className="flex items-center gap-3">
@@ -320,7 +320,7 @@ function FeatureCard({ icon, title, description }: FeatureCardProps) {
     <div className="
       flex flex-col gap-4 p-6
       rounded-lg bg-white border border-brand-600 shadow-neo
-      dark:bg-brand-950
+      dark:bg-surface-950
     ">
       <div className="
         w-12 h-12 flex items-center justify-center

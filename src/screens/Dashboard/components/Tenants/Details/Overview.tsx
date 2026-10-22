@@ -121,7 +121,7 @@ export default function Overview({ tenant, onNavigate }: Props) {
           key={tile.tab}
           type="button"
           onClick={() => onNavigate(tile.tab)}
-          className="flex flex-col gap-1 text-left p-3 rounded-lg border border-brand-600 shadow-sm dark:shadow-none bg-white dark:bg-brand-950 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors"
+          className="flex flex-col gap-1 text-left p-3 rounded-lg border border-brand-600 shadow-sm dark:shadow-none bg-white dark:bg-surface-950 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors"
         >
           <div className="flex items-center gap-2">
             {tile.icon}

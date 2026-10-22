@@ -509,7 +509,7 @@ export default function BrandCard({ tenant, mutateTenantStatus }: Props) {
                       />
                       <input
                         id={field}
-                        className="rounded-lg border border-brand-600 bg-brand-violet-50 px-2 py-1.5 text-sm text-zinc-900 focus:border-brand-violet-500 focus:ring-1 focus:ring-brand-violet-500 focus:outline-none dark:bg-brand-950 dark:text-white dark:focus:border-brand-violet-400 dark:focus:ring-brand-violet-400 w-full"
+                        className="rounded-lg border border-brand-600 bg-brand-violet-50 px-2 py-1.5 text-sm text-zinc-900 focus:border-brand-violet-500 focus:ring-1 focus:ring-brand-violet-500 focus:outline-none dark:bg-surface-950 dark:text-white dark:focus:border-brand-violet-400 dark:focus:ring-brand-violet-400 w-full"
                         placeholder="#9260C4"
                         {...registerIdentity(field, {
                           pattern: {
@@ -541,7 +541,7 @@ export default function BrandCard({ tenant, mutateTenantStatus }: Props) {
                 <input
                   id="headingFontFamily"
                   list="brand-font-suggestions"
-                  className="rounded-lg border border-brand-600 bg-brand-violet-50 px-2 py-1.5 text-sm text-zinc-900 focus:border-brand-violet-500 focus:ring-1 focus:ring-brand-violet-500 focus:outline-none dark:bg-brand-950 dark:text-white dark:focus:border-brand-violet-400 dark:focus:ring-brand-violet-400 w-full"
+                  className="rounded-lg border border-brand-600 bg-brand-violet-50 px-2 py-1.5 text-sm text-zinc-900 focus:border-brand-violet-500 focus:ring-1 focus:ring-brand-violet-500 focus:outline-none dark:bg-surface-950 dark:text-white dark:focus:border-brand-violet-400 dark:focus:ring-brand-violet-400 w-full"
                   placeholder="Bricolage Grotesque"
                   {...registerIdentity("headingFontFamily")}
                 />
@@ -556,7 +556,7 @@ export default function BrandCard({ tenant, mutateTenantStatus }: Props) {
                 <input
                   id="bodyFontFamily"
                   list="brand-font-suggestions"
-                  className="rounded-lg border border-brand-600 bg-brand-violet-50 px-2 py-1.5 text-sm text-zinc-900 focus:border-brand-violet-500 focus:ring-1 focus:ring-brand-violet-500 focus:outline-none dark:bg-brand-950 dark:text-white dark:focus:border-brand-violet-400 dark:focus:ring-brand-violet-400 w-full"
+                  className="rounded-lg border border-brand-600 bg-brand-violet-50 px-2 py-1.5 text-sm text-zinc-900 focus:border-brand-violet-500 focus:ring-1 focus:ring-brand-violet-500 focus:outline-none dark:bg-surface-950 dark:text-white dark:focus:border-brand-violet-400 dark:focus:ring-brand-violet-400 w-full"
                   placeholder="Hanken Grotesk"
                   {...registerIdentity("bodyFontFamily")}
                 />

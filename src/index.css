@@ -3,12 +3,82 @@
 @tailwind utilities;
 
 :root {
-  /* Lepista DS — brand violet + infra (cyan) accent. */
-  --color-brand-primary: #9260c4;
-  --color-brand-primary-active: #512d6e;
-  --color-brand-accent: #abe1f5;
-  --color-brand-growth: #22c55e;
-  --color-infra-400: #64C5EB;
+  /* ---------------------------------------------------------------------
+   * Color palette — the single source of truth for every color in the app.
+   * Tailwind classes (`bg-brand-600`, `dark:bg-surface-950/90`, ...) read
+   * these variables (tailwind.config.js), so changing a value here changes
+   * it across the whole portal. Values are space-separated RGB channels so
+   * Tailwind's opacity modifiers keep working; the hex is in the comment.
+   * ------------------------------------------------------------------- */
+
+  /* brand — Lepista DS brand violet — lab identity (borders, filled buttons, highlights). */
+  --color-brand-50: 243 237 249; /* #f3edf9 */
+  --color-brand-100: 228 212 242; /* #e4d4f2 */
+  --color-brand-200: 203 173 231; /* #cbade7 */
+  --color-brand-300: 172 125 214; /* #ac7dd6 */
+  --color-brand-400: 146 96 196; /* #9260c4 */
+  --color-brand-500: 123 73 160; /* #7b49a0 */
+  --color-brand-600: 102 58 136; /* #663a88 */
+  --color-brand-700: 81 45 110; /* #512d6e */
+  --color-brand-800: 61 33 84; /* #3d2154 */
+  --color-brand-900: 42 21 58; /* #2a153a */
+  --color-brand-950: 18 10 25; /* #120a19 */
+  --color-brand-975: 13 7 19; /* #0d0713 */
+
+  /* surface — Neutral dark-mode backgrounds. Tiers: base 950, nested/alternate 900, hover 800. */
+  --color-surface-700: 54 54 59; /* #36363b */
+  --color-surface-800: 39 39 43; /* #27272b */
+  --color-surface-900: 27 27 31; /* #1b1b1f */
+  --color-surface-950: 18 18 20; /* #121214 */
+  --color-surface-975: 12 12 14; /* #0c0c0e */
+
+  /* infra — Infrastructure / Mycelium accent (cyan) — this app's group accent. */
+  --color-infra-50: 238 249 253; /* #eef9fd */
+  --color-infra-100: 213 240 250; /* #d5f0fa */
+  --color-infra-200: 171 225 245; /* #abe1f5 */
+  --color-infra-300: 128 210 240; /* #80d2f0 */
+  --color-infra-400: 100 197 235; /* #64c5eb */
+  --color-infra-500: 59 168 212; /* #3ba8d4 */
+  --color-infra-600: 45 136 173; /* #2d88ad */
+  --color-infra-700: 35 106 135; /* #236a87 */
+  --color-infra-800: 26 77 98; /* #1a4d62 */
+  --color-infra-900: 17 49 62; /* #11313e */
+
+  /* saas — LepOps accent (magenta). Not used app-wide; kept for DS completeness. */
+  --color-saas-50: 254 241 246; /* #fef1f6 */
+  --color-saas-100: 253 213 230; /* #fdd5e6 */
+  --color-saas-200: 250 170 203; /* #faaacb */
+  --color-saas-300: 245 124 174; /* #f57cae */
+  --color-saas-400: 232 77 138; /* #e84d8a */
+  --color-saas-500: 201 53 112; /* #c93570 */
+  --color-saas-600: 166 42 91; /* #a62a5b */
+  --color-saas-700: 129 33 71; /* #812147 */
+  --color-saas-800: 93 24 51; /* #5d1833 */
+  --color-saas-900: 59 15 32; /* #3b0f20 */
+
+  /* science — Bioinformatics accent (amber; shared with AI). */
+  --color-science-50: 255 251 235; /* #fffbeb */
+  --color-science-100: 254 243 199; /* #fef3c7 */
+  --color-science-200: 253 230 138; /* #fde68a */
+  --color-science-300: 252 211 77; /* #fcd34d */
+  --color-science-400: 254 179 38; /* #feb326 */
+  --color-science-500: 217 155 30; /* #d99b1e */
+  --color-science-600: 179 127 23; /* #b37f17 */
+  --color-science-700: 140 99 17; /* #8c6311 */
+  --color-science-800: 102 71 12; /* #66470c */
+  --color-science-900: 64 45 7; /* #402d07 */
+
+  /* status — Functional maturity-badge colors — never confused with group accents. */
+  --color-status-production: 34 197 94; /* #22c55e */
+  --color-status-stable: 59 130 246; /* #3b82f6 */
+  --color-status-research: 245 158 11; /* #f59e0b */
+  --color-status-contributions: 139 92 246; /* #8b5cf6 */
+
+  /* Named aliases used by plain CSS below. */
+  --color-brand-primary: rgb(var(--color-brand-400));
+  --color-brand-primary-active: rgb(var(--color-brand-700));
+  --color-brand-accent: rgb(var(--color-infra-200));
+  --color-brand-growth: rgb(var(--color-status-production));
 
   /* Lepista DS — type roles. */
   --font-display: 'Bricolage Grotesque', sans-serif;

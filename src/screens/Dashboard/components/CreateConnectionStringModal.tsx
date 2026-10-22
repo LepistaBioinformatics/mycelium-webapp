@@ -75,7 +75,7 @@ type Inputs = {
 };
 
 const INPUT_COLORS =
-  "border-brand-600 bg-brand-violet-50 text-zinc-900 focus:border-infra-400 focus:ring-zinc-500 dark:bg-brand-950 dark:text-white placeholder-zinc-500 dark:placeholder-zinc-400 dark:focus:border-brand-violet-500 dark:focus:ring-brand-violet-500";
+  "border-brand-600 bg-brand-violet-50 text-zinc-900 focus:border-infra-400 focus:ring-zinc-500 dark:bg-surface-950 dark:text-white placeholder-zinc-500 dark:placeholder-zinc-400 dark:focus:border-brand-violet-500 dark:focus:ring-brand-violet-500";
 
 const INPUT_THEME = {
   field: { input: { colors: { custom: INPUT_COLORS } } },
@@ -516,7 +516,7 @@ function DecodedConnectionString({ value }: { value: string }) {
             {parts.map(({ key, label, value }) => (
               <li
                 key={key}
-                className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-3 px-3 py-2 bg-zinc-50 dark:bg-brand-900/40"
+                className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-3 px-3 py-2 bg-zinc-50 dark:bg-surface-900/40"
               >
                 <span className="font-mono text-[10px] uppercase tracking-wider text-zinc-500 dark:text-zinc-400 sm:w-40 sm:shrink-0">
                   {t(
