@@ -15,6 +15,7 @@ import { requestMagicLink, verifyMagicLink } from "@/services/auth/magic-link";
 import { setNotification } from "@/states/notification.state";
 import { useNativeAuthContext } from "@/contexts/NativeAuthContext";
 import { InvalidCodeError } from "@/types/NativeAuth";
+import useHostedLogin from "@/hooks/use-hosted-login";
 
 type EmailForm = { email: string };
 type CodeForm = { code: string };
@@ -31,6 +32,7 @@ export default function LoginPage() {
 
   const emailForm = useForm<EmailForm>();
   const codeForm = useForm<CodeForm>();
+  const { isHostedLogin, isRedirecting, signIn } = useHostedLogin();
 
   const onSubmitEmail = async (data: EmailForm) => {
     try {
@@ -89,7 +91,27 @@ export default function LoginPage() {
       <PageBody.Content gap={3} padding="none">
         <div className="flex flex-col items-center justify-center w-full h-full">
           <div className="flex flex-col gap-6 w-full max-w-sm mx-auto">
-            {step === "email" && (
+            {isHostedLogin && (
+              <>
+                <Typography as="h2" center>
+                  {t("screens.LoginPage.emailStep.title")}
+                </Typography>
+
+                <Button
+                  type="button"
+                  fullWidth
+                  center
+                  onClick={signIn}
+                  disabled={isRedirecting}
+                >
+                  {isRedirecting
+                    ? t("screens.HostedLogin.redirecting")
+                    : t("screens.HostedLogin.signIn")}
+                </Button>
+              </>
+            )}
+
+            {!isHostedLogin && step === "email" && (
               <>
                 <Typography as="h2" center>
                   {t("screens.LoginPage.emailStep.title")}
@@ -124,7 +146,7 @@ export default function LoginPage() {
               </>
             )}
 
-            {step === "code" && (
+            {!isHostedLogin && step === "code" && (
               <>
                 <Typography as="h2" center>
                   {t("screens.LoginPage.codeStep.title")}
