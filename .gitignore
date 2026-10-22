@@ -26,3 +26,8 @@ dist-ssr
 # Environment variables
 .env*
 tsconfig.app.tsbuildinfo
+
+# Cypress run artifacts
+cypress/screenshots
+cypress/videos
+cypress/downloads

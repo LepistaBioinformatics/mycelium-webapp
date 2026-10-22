@@ -19,8 +19,9 @@ yarn build
 # Lint
 yarn lint
 
-# E2E (Cypress installed; cypress/e2e/ is currently empty — no specs exist yet)
-yarn cy:open
+# E2E (Cypress; the gateway is fully stubbed with cy.intercept)
+yarn e2e:serve   # dev server on :4173 pointed at the fake host http://gateway.test
+yarn e2e         # headless run of cypress/e2e/**/*.cy.ts (or `yarn cy:open`)
 ```
 
 ## Architecture
