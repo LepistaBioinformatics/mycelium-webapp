@@ -172,7 +172,7 @@ function Container({
                         base: "block w-full border disabled:cursor-not-allowed disabled:opacity-50 text-start",
                         colors: {
                           custom:
-                            "border-brand-600 bg-brand-violet-50 text-zinc-900 focus:border-infra-400 focus:ring-zinc-500 dark:bg-brand-950 dark:text-white placeholder-zinc-500 dark:placeholder-zinc-400 dark:focus:border-brand-violet-500 dark:focus:ring-brand-violet-500",
+                            "border-brand-600 bg-brand-violet-50 text-zinc-900 focus:border-infra-400 focus:ring-zinc-500 dark:bg-surface-950 dark:text-white placeholder-zinc-500 dark:placeholder-zinc-400 dark:focus:border-brand-violet-500 dark:focus:ring-brand-violet-500",
                         },
                         withAddon: {
                           off: "rounded-lg",
@@ -202,7 +202,7 @@ function Container({
             className={[
               "flex items-center gap-2 self-start px-3 py-1.5 rounded-lg border transition-colors",
               "font-mono text-xs uppercase tracking-wide",
-              "text-zinc-600 dark:text-zinc-300 bg-white dark:bg-brand-950",
+              "text-zinc-600 dark:text-zinc-300 bg-white dark:bg-surface-950",
               isPaletteOpen
                 ? "border-infra-400"
                 : "border-brand-600 hover:border-infra-400",
@@ -238,7 +238,7 @@ function Container({
 }
 
 const commandPaletteContentStyles = cva(
-  "flex flex-col gap-6 max-h-[300px] overflow-y-auto bg-white dark:bg-brand-950 p-3 rounded-lg border border-brand-600 scrollbar w-full sm:w-96 shadow-sm dark:shadow-none",
+  "flex flex-col gap-6 max-h-[300px] overflow-y-auto bg-white dark:bg-surface-950 p-3 rounded-lg border border-brand-600 scrollbar w-full sm:w-96 shadow-sm dark:shadow-none",
   {
     variants: {},
     defaultVariants: {},
@@ -261,7 +261,7 @@ const commandPaletteItemStyles = cva(
       disabled: {
         true: "opacity-50 cursor-not-allowed",
         false:
-          "cursor-pointer hover:bg-brand-violet-100 dark:hover:bg-brand-900",
+          "cursor-pointer hover:bg-brand-violet-100 dark:hover:bg-surface-900",
       },
     },
     defaultVariants: {

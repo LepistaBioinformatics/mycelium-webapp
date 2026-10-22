@@ -20,10 +20,10 @@ const dropdownTheme = {
   floating: {
     base: "z-10 w-fit rounded-lg border border-brand-600 shadow-sm dark:shadow-none focus:outline-none",
     style: {
-      auto: "bg-white text-zinc-800 dark:bg-brand-950 dark:text-zinc-100",
+      auto: "bg-white text-zinc-800 dark:bg-surface-950 dark:text-zinc-100",
     },
     header: "block px-4 py-3 text-sm",
-    divider: "my-1 h-px bg-zinc-200 dark:bg-brand-800",
+    divider: "my-1 h-px bg-zinc-200 dark:bg-surface-800",
     item: {
       base: "flex w-full cursor-pointer items-center justify-start px-4 py-2 text-sm hover:bg-zinc-100 dark:hover:bg-zinc-800 focus:bg-zinc-100 dark:focus:bg-zinc-800 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50",
     },

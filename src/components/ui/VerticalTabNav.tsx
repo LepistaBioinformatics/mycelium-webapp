@@ -82,10 +82,10 @@ export default function VerticalTabNav({
           reveals its thumb on hover, which touch devices never trigger, so
           without this there's no cue that more tabs sit off-screen. */}
       {scrollHint.left && (
-        <div className="sm:hidden pointer-events-none absolute left-0 top-0 bottom-0 w-6 bg-gradient-to-r from-white dark:from-brand-950 to-transparent" />
+        <div className="sm:hidden pointer-events-none absolute left-0 top-0 bottom-0 w-6 bg-gradient-to-r from-white dark:from-surface-950 to-transparent" />
       )}
       {scrollHint.right && (
-        <div className="sm:hidden pointer-events-none absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-white dark:from-brand-950 to-transparent" />
+        <div className="sm:hidden pointer-events-none absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-white dark:from-surface-950 to-transparent" />
       )}
     </div>
   );

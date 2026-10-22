@@ -9,7 +9,7 @@ import { IoClose } from "react-icons/io5";
 const { width } = projectVariants;
 
 const styles = cva(
-  "px-2 py-1 text-left text-sm rounded-lg border dark:text-zinc-100 text-zinc-800 bg-white dark:bg-brand-950 w-full",
+  "px-2 py-1 text-left text-sm rounded-lg border dark:text-zinc-100 text-zinc-800 bg-white dark:bg-surface-950 w-full",
   {
     variants: {
       width,
@@ -22,7 +22,7 @@ const styles = cva(
       intent: {
         error:
           "border-red-500 dark:border-red-500 bg-red-50 dark:bg-red-900",
-        info: "border-brand-600 dark:border-brand-400 bg-brand-50 dark:bg-brand-900",
+        info: "border-brand-600 dark:border-brand-400 bg-brand-50 dark:bg-surface-900",
         success:
           "border-green-500 dark:border-green-500 bg-green-50 dark:bg-green-900",
         warning:

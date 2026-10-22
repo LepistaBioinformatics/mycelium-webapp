@@ -109,7 +109,7 @@ function ConnectionStringRow({ token, onAction }: RowProps) {
   const expired = isExpired(token.expiration);
 
   return (
-    <TableRow className="bg-white dark:bg-brand-950">
+    <TableRow className="bg-white dark:bg-surface-950">
       <TableCell className="font-medium text-zinc-900 dark:text-white whitespace-nowrap">
         <div className="flex items-center gap-2">
           {token.name}
@@ -267,7 +267,7 @@ export default function ListConnectionStringsSection() {
                 theme={{
                   head: {
                     cell: {
-                      base: "bg-zinc-50 px-6 py-3 group-first/head:first:rounded-tl-lg group-first/head:last:rounded-tr-lg dark:bg-brand-900",
+                      base: "bg-zinc-50 px-6 py-3 group-first/head:first:rounded-tl-lg group-first/head:last:rounded-tr-lg dark:bg-surface-900",
                     },
                   },
                 }}

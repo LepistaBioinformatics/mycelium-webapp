@@ -157,16 +157,16 @@ export default function NotificationsCard({
               </Typography>
               <select
                 {...register("locale")}
-                className={`${INPUT} cursor-pointer bg-white dark:bg-brand-950`}
+                className={`${INPUT} cursor-pointer bg-white dark:bg-surface-950`}
               >
-                <option value="" className="bg-white dark:bg-brand-950">
+                <option value="" className="bg-white dark:bg-surface-950">
                   {t(`${BASE}.locale.placeholder`)}
                 </option>
                 {NOTIFICATION_LOCALE_OPTIONS.map(({ value, label }) => (
                   <option
                     key={value}
                     value={value}
-                    className="bg-white dark:bg-brand-950"
+                    className="bg-white dark:bg-surface-950"
                   >
                     {label}
                   </option>

@@ -22,7 +22,7 @@ export default function App() {
   }, [profile, t]);
 
   return (
-    <div id="App" className="bg-white dark:bg-brand-950">
+    <div id="App" className="bg-white dark:bg-surface-950">
       <Routes>
           <Route path="*" element={<NotFound />} />
           <Route path="/login" element={<LoginPage />} />
