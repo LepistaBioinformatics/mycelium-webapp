@@ -1136,6 +1136,9 @@
         "title": "Actualizado por",
         "prefix": "Actualizado por"
       }
+    },
+    "Skeleton": {
+      "loading": "Cargando…"
     }
   },
   "Menu": {

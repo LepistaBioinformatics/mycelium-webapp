@@ -1,4 +1,5 @@
 import Button from "@/components/ui/Button";
+import Skeleton from "@/components/ui/Skeleton";
 import Card from "@/components/ui/Card";
 import Typography from "@/components/ui/Typography";
 import useProfile from "@/hooks/use-profile";
@@ -142,7 +143,15 @@ export default function ContactInfoSection() {
         </Card.Header>
 
         <Card.Body>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-5">
+          {/* Inputs stay mounted (react-hook-form) but hidden until the
+              account arrives, so nothing typed is overwritten by reset() */}
+          {account === undefined && <Skeleton.Fields count={5} columns={2} />}
+
+          <div
+            className={`grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-5 ${
+              account === undefined ? "hidden" : ""
+            }`}
+          >
             <div className="flex flex-col gap-1 sm:col-span-2">
               <label className={LABEL}>{t(`${BASE}.fullName.title`)}</label>
               <input

@@ -1,6 +1,7 @@
 "use client";
 
 import AuthorizedOr from "@/components/ui/AuthorizedOr";
+import Skeleton from "@/components/ui/Skeleton";
 import PageBody from "@/components/ui/PageBody";
 import useProfile from "@/hooks/use-profile";
 import { MycPermission } from "@/types/MyceliumPermission";
@@ -277,7 +278,12 @@ export default function AdvancedManagement() {
   );
 
   if (isLoadingTenantStatus) {
-    return <BasePage>Loading...</BasePage>;
+    return (
+      <BasePage>
+        <Skeleton.Header lines={3} />
+        <Skeleton.Fields count={4} columns={2} />
+      </BasePage>
+    );
   }
 
   if (tenantStatusError) {

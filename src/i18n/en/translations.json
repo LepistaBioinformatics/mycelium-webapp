@@ -1215,6 +1215,9 @@
         "title": "Updated by",
         "prefix": "Updated by"
       }
+    },
+    "Skeleton": {
+      "loading": "Loading…"
     }
   },
   "Menu": {

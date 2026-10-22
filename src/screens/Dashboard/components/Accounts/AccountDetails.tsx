@@ -1,4 +1,5 @@
 import SideCurtain from "@/components/ui/SideCurtain";
+import Skeleton from "@/components/ui/Skeleton";
 import Typography from "@/components/ui/Typography";
 import { formatDDMMYY } from "@/functions/format-dd-mm-yy";
 import useProfile from "@/hooks/use-profile";
@@ -313,6 +314,17 @@ export default function AccountDetails({ onClose }: Props) {
               onClick={handleClose}
             />
           </div>
+        </div>
+      </Container>
+    );
+  }
+
+  if (!account) {
+    return (
+      <Container>
+        <div className="flex flex-col gap-8 p-4">
+          <Skeleton.Header lines={2} />
+          <Skeleton.Fields count={5} />
         </div>
       </Container>
     );

@@ -1,4 +1,5 @@
 import { GoUnverified } from "react-icons/go";
+import Skeleton from "@/components/ui/Skeleton";
 import { MdDeleteOutline } from "react-icons/md";
 import Typography from "@/components/ui/Typography";
 import { formatDDMMYY } from "@/functions/format-dd-mm-yy";
@@ -153,7 +154,7 @@ export default function AccountInvitations({
     return { ...invitations, records, count: records.length };
   }, [invitations, isSearching, searchTerm]);
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <Skeleton.Table rows={3} cols={5} />;
 
   if (!invitations || (invitations.count === 0 && !isSearching)) {
     return (
@@ -338,10 +339,15 @@ function InvitationRoleCells({
   }, [localInvitationRecord, remoteInvitationRecord]);
 
   if (!invitationRecord) {
+    // Role still loading: keep the row's layout with placeholder cells
     return (
       <>
-        <TableCell />
-        <TableCell />
+        <TableCell>
+          <Skeleton className="w-24" />
+        </TableCell>
+        <TableCell>
+          <Skeleton className="w-16" />
+        </TableCell>
       </>
     );
   }

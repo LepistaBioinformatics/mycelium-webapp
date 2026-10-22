@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import Skeleton from "@/components/ui/Skeleton";
 import { useTranslation } from "react-i18next";
 import Typography from "@/components/ui/Typography";
 import { components } from "@/services/openapi/mycelium-schema";
@@ -20,7 +21,8 @@ const CONTACT_INFO_FIELD_KEYS = [
 
 interface Props {
   profile: Profile | null;
-  contactInfo: Record<string, string>;
+  /** `undefined` while the account (which holds the contact info) loads. */
+  contactInfo: Record<string, string> | undefined;
   licensedResourcesCount: number;
   tenantsOwnershipCount: number;
   onNavigate: (tab: ActiveTab) => void;
@@ -30,7 +32,7 @@ interface Tile {
   tab: ActiveTab;
   icon: ReactNode;
   labelKey: string;
-  status: string;
+  status: ReactNode;
 }
 
 export default function Overview({
@@ -45,7 +47,7 @@ export default function Overview({
   const telegramLinked = !!profile?.meta?.["telegram_user"];
 
   const contactInfoCount = CONTACT_INFO_FIELD_KEYS.filter(
-    (key) => contactInfo[key]
+    (key) => contactInfo?.[key]
   ).length;
 
   const tiles: Tile[] = [
@@ -91,10 +93,14 @@ export default function Overview({
       tab: ActiveTab.ContactInfo,
       icon: <MdContactPhone size={20} />,
       labelKey: "screens.Dashboard.Profile.ContactInfoSection.tabName",
-      status: t(`${BASE}.contactInfoFieldsFilled`, {
-        count: contactInfoCount,
-        total: CONTACT_INFO_FIELD_KEYS.length,
-      }),
+      status: contactInfo ? (
+        t(`${BASE}.contactInfoFieldsFilled`, {
+          count: contactInfoCount,
+          total: CONTACT_INFO_FIELD_KEYS.length,
+        })
+      ) : (
+        <Skeleton className="w-28 mt-1" />
+      ),
     },
   ];
 
