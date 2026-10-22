@@ -1043,6 +1043,40 @@
           "description": "Tem certeza que deseja deletar o webhook?",
           "button": "Deletar",
           "loading": "Deletando..."
+        },
+        "ExecutionEvents": {
+          "title": "Eventos de execução",
+          "summaryTitle": "Totais por gatilho e status",
+          "eventsTitle": "Eventos",
+          "empty": "Nenhum evento de execução ainda.",
+          "loadError": "Não foi possível carregar os eventos de execução.",
+          "deliveries": "{{failed}} com falha de {{total}}",
+          "filters": {
+            "trigger": "Filtrar por gatilho",
+            "status": "Filtrar por status",
+            "allTriggers": "Todos os gatilhos",
+            "allStatuses": "Todos os status"
+          },
+          "columns": {
+            "trigger": "Gatilho",
+            "status": "Status",
+            "count": "Eventos",
+            "latest": "Mais recente",
+            "created": "Criado em",
+            "attempts": "Tentativas",
+            "deliveries": "Entregas",
+            "lastResponse": "Última resposta",
+            "attempted": "Última tentativa"
+          },
+          "statuses": {
+            "pending": "Pendente",
+            "processing": "Processando",
+            "success": "Sucesso",
+            "failed": "Falhou",
+            "exhausted": "Esgotado",
+            "skipped": "Ignorado",
+            "unknown": "Desconhecido"
+          }
         }
       },
       "Onboarding": {

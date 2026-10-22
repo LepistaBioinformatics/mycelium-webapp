@@ -1043,6 +1043,40 @@
           "description": "¿Estás seguro de que quieres eliminar el webhook?",
           "button": "Borrar",
           "loading": "Eliminar ..."
+        },
+        "ExecutionEvents": {
+          "title": "Eventos de ejecución",
+          "summaryTitle": "Totales por disparador y estado",
+          "eventsTitle": "Eventos",
+          "empty": "Aún no hay eventos de ejecución.",
+          "loadError": "No se pudieron cargar los eventos de ejecución.",
+          "deliveries": "{{failed}} fallidas de {{total}}",
+          "filters": {
+            "trigger": "Filtrar por disparador",
+            "status": "Filtrar por estado",
+            "allTriggers": "Todos los disparadores",
+            "allStatuses": "Todos los estados"
+          },
+          "columns": {
+            "trigger": "Disparador",
+            "status": "Estado",
+            "count": "Eventos",
+            "latest": "Más reciente",
+            "created": "Creado",
+            "attempts": "Intentos",
+            "deliveries": "Entregas",
+            "lastResponse": "Última respuesta",
+            "attempted": "Último intento"
+          },
+          "statuses": {
+            "pending": "Pendiente",
+            "processing": "Procesando",
+            "success": "Éxito",
+            "failed": "Fallido",
+            "exhausted": "Agotado",
+            "skipped": "Omitido",
+            "unknown": "Desconocido"
+          }
         }
       },
       "Onboarding": {

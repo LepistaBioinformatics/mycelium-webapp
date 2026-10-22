@@ -14,6 +14,8 @@ import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { readSecretToken } from "@/functions/read-secret-token";
+import { WEBHOOK_TRIGGERS } from "@/constants/webhook-triggers";
 
 type WebHook = components["schemas"]["WebHook"];
 type WebHookTrigger = components["schemas"]["WebHookTrigger"];
@@ -24,14 +26,7 @@ enum Secret {
   QueryParam = "queryParam",
 }
 
-const triggers: WebHookTrigger[] = [
-  "subscriptionAccount.created",
-  "subscriptionAccount.updated",
-  "subscriptionAccount.deleted",
-  "userAccount.created",
-  "userAccount.updated",
-  "userAccount.deleted",
-];
+const triggers = WEBHOOK_TRIGGERS;
 
 type Inputs = {
   name: string;
@@ -157,8 +152,10 @@ export default function WebhookModal({
         initialAuthorizationHeader.prefix = prefix;
       }
 
-      if (token && token !== "" && token !== "REDACTED") {
-        initialAuthorizationHeader.token = token;
+      const tokenValue = readSecretToken(token);
+
+      if (tokenValue && tokenValue !== "REDACTED") {
+        initialAuthorizationHeader.token = tokenValue;
       }
 
       return {
@@ -184,8 +181,10 @@ export default function WebhookModal({
         initialQueryParameter.name = name;
       }
 
-      if (token && token !== "" && token !== "REDACTED") {
-        initialQueryParameter.token = token;
+      const tokenValue = readSecretToken(token);
+
+      if (tokenValue && tokenValue !== "REDACTED") {
+        initialQueryParameter.token = tokenValue;
       }
 
       return {
