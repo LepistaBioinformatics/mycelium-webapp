@@ -15,7 +15,12 @@ const Onboarding = lazy(() => import("@/screens/Dashboard/components/Onboarding"
 export default function App() {
   const { t } = useTranslation();
 
-  const { profile } = useProfile();
+  const { profile, isLoadingUser, isLoadingProfile } = useProfile();
+
+  // The dashboard routes only exist once the profile is loaded. Right after a
+  // refresh the URL is still unmatched while the session and profile load, so
+  // show the loading bar instead of the not-found page.
+  const isResolvingRoutes = isLoadingUser || (!profile && isLoadingProfile);
 
   const ROUTES = useMemo(() => {
     if (!profile) return [];
@@ -26,7 +31,16 @@ export default function App() {
   return (
     <div id="App" className="bg-white dark:bg-surface-950">
       <Routes>
-          <Route path="*" element={<NotFound />} />
+          <Route
+            path="*"
+            element={
+              isResolvingRoutes ? (
+                <HorizontalLoadingBar isLoading />
+              ) : (
+                <NotFound />
+              )
+            }
+          />
           <Route path="/login" element={<LoginPage />} />
           <Route
             path={HOSTED_LOGIN_CALLBACK_PATH}

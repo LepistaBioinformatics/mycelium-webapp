@@ -14,7 +14,7 @@ import Typography from "@/components/ui/Typography";
 import FormField from "@/components/ui/FomField";
 import { useDispatch } from "react-redux";
 import { setNotification } from "@/states/notification.state";
-import useProfile from "@/hooks/use-profile";
+import useProfile, { invalidateProfile } from "@/hooks/use-profile";
 import PageBody from "@/components/ui/PageBody";
 import ControlPanelBreadcrumbItem from "../ControlPanelBreadcrumbItem";
 import { MdChecklist } from "react-icons/md";
@@ -127,6 +127,10 @@ export default function Onboarding() {
     setIsCreatingAccount(true);
     try {
       await accountsCreate({ name: emailStr }, getAccessTokenSilently);
+
+      // The app loaded the profile at sign-in, when there was no account yet;
+      // refresh it so the dashboard routes get registered.
+      await invalidateProfile();
 
       const [acc] = await Promise.all([
         accountsGet(getAccessTokenSilently),
