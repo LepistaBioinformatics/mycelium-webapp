@@ -1218,6 +1218,12 @@
     },
     "Skeleton": {
       "loading": "Loading…"
+    },
+    "GatewayUnavailableOverlay": {
+      "title": "Service unavailable",
+      "description": "We can't reach the Mycelium API right now. The portal is paused to avoid showing wrong information and will resume as soon as the connection is back.",
+      "retry": "Try again now",
+      "retrying": "Checking…"
     }
   },
   "Menu": {
