@@ -1,4 +1,5 @@
 import CopyToClipboard from "@/components/ui/CopyToClipboard";
+import Skeleton from "@/components/ui/Skeleton";
 import IntroSection from "@/components/ui/IntroSection";
 import ListItem from "@/components/ui/ListItem";
 import formatEmail from "@/functions/format-email";
@@ -34,7 +35,7 @@ export default function GuestsByEmail({ email }: Props) {
     return `rpc:subscriptionsManager.guests.listLicensedAccountsOfEmail:${formattedEmail}:${tenantInfo.id}`;
   }, [formattedEmail, tenantInfo?.id]);
 
-  const { data } = useSWR<LicensedResource[]>(
+  const { data, isLoading } = useSWR<LicensedResource[]>(
     swrKey,
     async () =>
       guestsListLicensedAccountsOfEmail(
@@ -42,6 +43,8 @@ export default function GuestsByEmail({ email }: Props) {
         getAccessTokenSilently
       )
   );
+
+  if (isLoading) return <Skeleton.ListRows count={2} lines={3} />;
 
   return (
     <div className="flex flex-col gap-3">

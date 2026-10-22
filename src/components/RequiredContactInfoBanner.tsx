@@ -40,6 +40,8 @@ export default function RequiredContactInfoBanner() {
   );
 
   if (!shouldFetch) return null;
+  // `undefined` = still loading: say nothing until the account is known
+  if (account === undefined) return null;
   if (isContactInfoComplete(account)) return null;
 
   const BASE = "components.RequiredContactInfoBanner";

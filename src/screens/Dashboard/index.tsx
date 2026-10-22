@@ -1,9 +1,11 @@
 import Sidebar from "@/components/ui/Sidebar";
+import Skeleton from "@/components/ui/Skeleton";
 import useToggleSidebar from "@/hooks/use-toggle-sidebar";
 import { Outlet } from "react-router";
 import Typography from "@/components/ui/Typography";
 import Button from "@/components/ui/Button";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
+import useSWR from "swr";
 import Modal from "@/components/ui/Modal";
 import buildRoutes from "@/constants/routes";
 import useProfile from "@/hooks/use-profile";
@@ -124,14 +126,16 @@ function onboardingSteps(acc: Account | null): number {
 
 function MainHeader({ isOpen }: { isOpen: boolean }) {
   const { user, getAccessTokenSilently } = useProfile();
-  const [completedSteps, setCompletedSteps] = useState(0);
 
-  useEffect(() => {
-    if (!user?.email) return;
-    accountsGet(getAccessTokenSilently)
-      .then((acc) => setCompletedSteps(onboardingSteps(acc)))
-      .catch(() => {});
-  }, [user?.email, getAccessTokenSilently]);
+  // Same SWR key as the Profile screen, so both share one request
+  const { data: account } = useSWR<Account | null>(
+    user?.email ? "rpc:beginners.accounts.get" : null,
+    () => accountsGet(getAccessTokenSilently),
+    { revalidateOnFocus: false, revalidateOnReconnect: false }
+  );
+
+  const isLoadingSteps = account === undefined;
+  const completedSteps = isLoadingSteps ? 0 : onboardingSteps(account);
 
   const initials = user?.email
     ? (user.email.username[0] ?? "?").toUpperCase()
@@ -180,9 +184,13 @@ function MainHeader({ isOpen }: { isOpen: boolean }) {
         <span className="text-sm font-medium text-zinc-800 dark:text-zinc-200 truncate">
           {user?.email?.username ?? "…"}
         </span>
-        <span className="text-xs text-zinc-500 dark:text-zinc-400">
-          {pct}%
-        </span>
+        {isLoadingSteps ? (
+          <Skeleton className="w-8 mt-1" />
+        ) : (
+          <span className="text-xs text-zinc-500 dark:text-zinc-400">
+            {pct}%
+          </span>
+        )}
       </div>
     </div>
   );

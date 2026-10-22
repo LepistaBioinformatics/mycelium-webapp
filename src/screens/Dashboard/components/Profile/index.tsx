@@ -1,6 +1,7 @@
 "use client";
 
 import PageBody from "@/components/ui/PageBody";
+import Skeleton from "@/components/ui/Skeleton";
 import Typography from "@/components/ui/Typography";
 import useProfile from "@/hooks/use-profile";
 import { components } from "@/services/openapi/mycelium-schema";
@@ -96,7 +97,9 @@ export default function Profile() {
   const { user, profile, isLoadingUser, getAccessTokenSilently } =
     useProfile();
 
-  const { data: account } = useSWR<Account | null>(
+  const { data: account, isLoading: isLoadingAccount } = useSWR<
+    Account | null
+  >(
     "rpc:beginners.accounts.get",
     () => accountsGet(getAccessTokenSilently),
     { revalidateOnFocus: false, revalidateOnReconnect: false }
@@ -178,10 +181,8 @@ export default function Profile() {
         <PageBody.Content padding="md" container flex="col" gap={12}>
           <Section>
             <Section.Header>
-              {isLoadingUser ? (
-                <Typography>
-                  {t("screens.Dashboard.Profile.loading")}
-                </Typography>
+              {isLoadingUser || isLoadingAccount ? (
+                <Skeleton.Header lines={2} />
               ) : (
                 <IntroSection
                   prefix={t("screens.Dashboard.Profile.loggedInAs.prefix")}
@@ -286,7 +287,7 @@ export default function Profile() {
               {activeTab === ActiveTab.Overview && (
                 <Overview
                   profile={profile}
-                  contactInfo={contactInfo}
+                  contactInfo={account === undefined ? undefined : contactInfo}
                   licensedResourcesCount={licensedResources?.length ?? 0}
                   tenantsOwnershipCount={tenantsOwnership?.length ?? 0}
                   onNavigate={(tab) => setSearchParams({ tab })}

@@ -1,4 +1,5 @@
 import useSWR from "swr";
+import Skeleton from "@/components/ui/Skeleton";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import {
@@ -240,13 +241,7 @@ export default function ListConnectionStringsSection() {
         </Card.Header>
 
         <Card.Body width="full">
-          {isLoading && (
-            <div className="py-8 flex justify-center">
-              <Typography decoration="smooth">
-                {t("screens.Dashboard.Profile.loading")}
-              </Typography>
-            </div>
-          )}
+          {isLoading && <Skeleton.Table rows={3} cols={5} />}
 
           {isEmpty && (
             <div className="py-8 flex flex-col items-center gap-2 text-center">

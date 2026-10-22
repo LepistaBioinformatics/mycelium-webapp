@@ -1,4 +1,5 @@
 import { cva, VariantProps } from "class-variance-authority";
+import Skeleton from "@/components/ui/Skeleton";
 import FormField from "@/components/ui/FomField";
 import PermissionIcon from "@/components/ui/PermissionIcon";
 import Typography from "@/components/ui/Typography";
@@ -213,6 +214,12 @@ export default function GuestRoleSelector({
             )}
 
             <div className="flex flex-col mt-2 rounded-lg border border-brand-600 shadow-sm dark:shadow-none bg-white dark:bg-surface-950 relative">
+              {isLoading && !guestRolesData && (
+                <div className="p-3">
+                  <Skeleton.ListRows count={3} lines={1} />
+                </div>
+              )}
+
               {guestRolesData
                 ?.sort(
                   (a, b) =>

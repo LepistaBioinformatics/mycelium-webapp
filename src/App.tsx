@@ -3,14 +3,19 @@ import { Routes, Route } from "react-router";
 import NotFound from "./components/NotFound";
 import useProfile from "./hooks/use-profile";
 import buildRoutes, { HOME_ROUTE, DASHBOARD_ROUTE } from "./constants/routes";
-import { Fragment, lazy, Suspense, useMemo } from "react";
+import { Fragment, lazy, Suspense, useMemo, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import LoginPage from "@/screens/LoginPage";
 import HostedLoginCallback from "@/screens/HostedLoginCallback";
 import { HOSTED_LOGIN_CALLBACK_PATH } from "@/services/auth/hosted-login";
-import { HorizontalLoadingBar } from "@/components/ui/HorizontalLoadingBar";
+import Skeleton from "@/components/ui/Skeleton";
 
 const Onboarding = lazy(() => import("@/screens/Dashboard/components/Onboarding"));
+
+/** Dashboard screens are lazy chunks: show a page skeleton while one loads. */
+function withPageSkeleton(element: ReactNode) {
+  return <Suspense fallback={<Skeleton.Page />}>{element}</Suspense>;
+}
 
 export default function App() {
   const { t } = useTranslation();
@@ -19,7 +24,7 @@ export default function App() {
 
   // The dashboard routes only exist once the profile is loaded. Right after a
   // refresh the URL is still unmatched while the session and profile load, so
-  // show the loading bar instead of the not-found page.
+  // show a page skeleton instead of the not-found page.
   const isResolvingRoutes = isLoadingUser || (!profile && isLoadingProfile);
 
   const ROUTES = useMemo(() => {
@@ -35,7 +40,7 @@ export default function App() {
             path="*"
             element={
               isResolvingRoutes ? (
-                <HorizontalLoadingBar isLoading />
+                <Skeleton.Page />
               ) : (
                 <NotFound />
               )
@@ -47,26 +52,25 @@ export default function App() {
             element={<HostedLoginCallback />}
           />
           <Route path={HOME_ROUTE.path} element={HOME_ROUTE.element} />
-          <Route path={DASHBOARD_ROUTE.path} element={DASHBOARD_ROUTE.element}>
-            <Route
-              index
-              element={
-                <Suspense fallback={<HorizontalLoadingBar isLoading />}>
-                  <Onboarding />
-                </Suspense>
-              }
-            />
+          <Route
+            path={DASHBOARD_ROUTE.path}
+            element={withPageSkeleton(DASHBOARD_ROUTE.element)}
+          >
+            <Route index element={withPageSkeleton(<Onboarding />)} />
 
             {ROUTES.sort((a, b) => a.position - b.position).map((route) => (
               <Fragment key={route.path}>
-                <Route path={route.path} element={route.element} />
+                <Route
+                  path={route.path}
+                  element={withPageSkeleton(route.element)}
+                />
 
                 {route?.children?.map((child) => (
                   <Fragment key={child.path}>
                     <Route
                       key={child.path}
                       path={child.path}
-                      element={child.element}
+                      element={withPageSkeleton(child.element)}
                     />
 
                     {child?.children?.map((child) => (
@@ -74,7 +78,7 @@ export default function App() {
                         <Route
                           key={child.path}
                           path={child.path}
-                          element={child.element}
+                          element={withPageSkeleton(child.element)}
                         />
                       </Fragment>
                     ))}

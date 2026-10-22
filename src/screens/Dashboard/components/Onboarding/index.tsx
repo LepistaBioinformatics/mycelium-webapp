@@ -1,4 +1,6 @@
 import { useTranslation } from "react-i18next";
+import Skeleton from "@/components/ui/Skeleton";
+import { mutate as mutateSWR } from "swr";
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { components } from "@/services/openapi/mycelium-schema";
@@ -131,6 +133,8 @@ export default function Onboarding() {
       // The app loaded the profile at sign-in, when there was no account yet;
       // refresh it so the dashboard routes get registered.
       await invalidateProfile();
+      // The sidebar's onboarding ring reads the account from this SWR key
+      void mutateSWR("rpc:beginners.accounts.get");
 
       const [acc] = await Promise.all([
         accountsGet(getAccessTokenSilently),
@@ -180,6 +184,7 @@ export default function Onboarding() {
         }
 
         setMetaSaved((prev) => ({ ...prev, [key]: true }));
+        void mutateSWR("rpc:beginners.accounts.get");
         setTimeout(
           () => setMetaSaved((prev) => ({ ...prev, [key]: false })),
           2000
@@ -222,7 +227,11 @@ export default function Onboarding() {
         <WelcomeHeader emailStr={emailStr} tKey={tKey} />
 
         {/* A — Progress bar */}
-        <ProgressBar completed={completedSteps} total={TOTAL_STEPS} tKey={tKey} />
+        {accountStatus === "loading" ? (
+          <Skeleton shape="block" className="h-10 w-full" />
+        ) : (
+          <ProgressBar completed={completedSteps} total={TOTAL_STEPS} tKey={tKey} />
+        )}
 
         {/* D — All done: completion card */}
         {allDone && !isEditing ? (

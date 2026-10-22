@@ -1,5 +1,5 @@
 import Pager, { PagerProps } from "@/components/ui/Pager";
-import Typography from "@/components/ui/Typography";
+import Skeleton from "@/components/ui/Skeleton";
 
 interface Props extends BaseProps, PagerProps {
   isLoading: boolean;
@@ -16,9 +16,7 @@ export default function PaginatedContent({
   return (
     <div id="PaginatedContent">
       {isLoading ? (
-        <div className="flex gap-4 justify-center mx-auto w-full xl:max-w-4xl items-start">
-          <Typography>Loading...</Typography>
-        </div>
+        <Skeleton.ListRows />
       ) : (
         <div className="flex flex-col gap-4 w-full mb-24">
           <Pager {...props} records={records} />

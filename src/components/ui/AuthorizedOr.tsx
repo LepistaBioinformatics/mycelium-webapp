@@ -1,5 +1,6 @@
 import { cva, VariantProps } from "class-variance-authority";
 import Typography from "./Typography";
+import Skeleton from "./Skeleton";
 
 const styles = cva(
   "flex flex-col gap-4 w-full sm:max-w-4xl mx-auto rounded-lg border px-4 py-2",
@@ -31,11 +32,7 @@ export default function AuthorizedOr({
   }
 
   if (isLoading) {
-    return (
-      <div className={styles()} {...props}>
-        <Typography>Loading...</Typography>
-      </div>
-    );
+    return <Skeleton.ListRows count={3} />;
   }
 
   return (
