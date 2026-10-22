@@ -5,6 +5,11 @@ import { rpcCall } from "./client";
 type WebHook = components["schemas"]["WebHook"];
 type ErrorCode = components["schemas"]["ErrorCode"];
 type HttpSecret = components["schemas"]["HttpSecret"];
+type WebHookTrigger = components["schemas"]["WebHookTrigger"];
+type WebHookExecutionStatus = components["schemas"]["WebHookExecutionStatus"];
+type WebHookExecutionEvent = components["schemas"]["WebHookExecutionEvent"];
+type WebHookExecutionSummary =
+  components["schemas"]["WebHookExecutionSummary"];
 
 // ---------------------------------------------------------------------------
 // Webhooks
@@ -79,6 +84,40 @@ export function webhooksDelete(
     params,
     getToken
   );
+}
+
+export interface WebhooksListExecutionsParams {
+  trigger?: WebHookTrigger;
+  status?: WebHookExecutionStatus;
+  skip?: number;
+  pageSize?: number;
+}
+
+/** Resolves to `null` when no execution event matches the filters. */
+export function webhooksListExecutions(
+  params: WebhooksListExecutionsParams,
+  getToken: () => Promise<string>
+): Promise<PaginatedRecords<WebHookExecutionEvent> | null> {
+  return rpcCall<
+    WebhooksListExecutionsParams,
+    PaginatedRecords<WebHookExecutionEvent> | null
+  >("systemManager.webhooks.listExecutions", params, getToken);
+}
+
+export interface WebhooksSummarizeExecutionsParams {
+  /** RFC 3339 timestamp; only events created at or after it are counted. */
+  since?: string;
+}
+
+/** Resolves to `null` when there are no execution events. */
+export function webhooksSummarizeExecutions(
+  params: WebhooksSummarizeExecutionsParams,
+  getToken: () => Promise<string>
+): Promise<WebHookExecutionSummary[] | null> {
+  return rpcCall<
+    WebhooksSummarizeExecutionsParams,
+    WebHookExecutionSummary[] | null
+  >("systemManager.webhooks.summarizeExecutions", params, getToken);
 }
 
 // ---------------------------------------------------------------------------

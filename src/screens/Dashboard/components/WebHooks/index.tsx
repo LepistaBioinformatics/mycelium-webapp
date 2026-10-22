@@ -24,6 +24,8 @@ import IntroSection from "@/components/ui/IntroSection";
 import WebhookModal from "./WebhookModal";
 import EditWebhookModal from "./EditWebhookModal";
 import DeleteWebHook from "./DeleteWebHook";
+import ExecutionEvents from "./ExecutionEvents";
+import { describeSecretToken } from "@/functions/read-secret-token";
 
 type WebHook = components["schemas"]["WebHook"];
 
@@ -233,6 +235,10 @@ export default function Webhooks() {
             </ListItem>
           ))}
         </PaginatedContent>
+
+        <div className="mx-auto w-full sm:max-w-4xl mb-24">
+          <ExecutionEvents />
+        </div>
       </div>
 
       <WebhookModal
@@ -289,7 +295,7 @@ const Secret = ({
         </Typography>
         <Typography as="small">
           {t("screens.Dashboard.Webhooks.tokenValue")}:{" "}
-          <span className="font-bold">{token}</span>
+          <span className="font-bold">{describeSecretToken(token)}</span>
         </Typography>
       </div>
     );
@@ -311,7 +317,7 @@ const Secret = ({
         </Typography>
         <Typography as="small">
           {t("screens.Dashboard.Webhooks.queryParameterValue")}:{" "}
-          <span className="font-bold">{token}</span>
+          <span className="font-bold">{describeSecretToken(token)}</span>
         </Typography>
       </div>
     );

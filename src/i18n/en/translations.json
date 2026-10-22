@@ -1158,6 +1158,40 @@
           "description": "Are you sure you want to delete webhook?",
           "button": "Delete",
           "loading": "Deleting ..."
+        },
+        "ExecutionEvents": {
+          "title": "Execution events",
+          "summaryTitle": "Totals by trigger and status",
+          "eventsTitle": "Events",
+          "empty": "No execution events yet.",
+          "loadError": "Could not load execution events.",
+          "deliveries": "{{failed}} failed of {{total}}",
+          "filters": {
+            "trigger": "Filter by trigger",
+            "status": "Filter by status",
+            "allTriggers": "All triggers",
+            "allStatuses": "All statuses"
+          },
+          "columns": {
+            "trigger": "Trigger",
+            "status": "Status",
+            "count": "Events",
+            "latest": "Latest",
+            "created": "Created",
+            "attempts": "Attempts",
+            "deliveries": "Deliveries",
+            "lastResponse": "Last response",
+            "attempted": "Last attempt"
+          },
+          "statuses": {
+            "pending": "Pending",
+            "processing": "Processing",
+            "success": "Success",
+            "failed": "Failed",
+            "exhausted": "Exhausted",
+            "skipped": "Skipped",
+            "unknown": "Unknown"
+          }
         }
       }
     },
