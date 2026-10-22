@@ -1,0 +1,14 @@
+{
+  "id": "0b3d1c8e-7a44-4a5f-8f62-9e1d2c3b4a55",
+  "name": "Ana Silva",
+  "slug": "ana-silva",
+  "isActive": true,
+  "isChecked": true,
+  "isArchived": false,
+  "isDeleted": false,
+  "isSystemAccount": false,
+  "owners": [],
+  "accountType": "user",
+  "createdAt": "2026-10-22T12:00:00Z",
+  "meta": { "locale": "en" }
+}

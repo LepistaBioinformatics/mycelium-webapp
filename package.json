@@ -9,6 +9,8 @@
     "preview": "vite preview",
     "test": "vitest run",
     "cy:open": "cypress open",
+    "e2e:serve": "VITE_MYCELIUM_API_URL=http://gateway.test vite --port 4173 --strictPort",
+    "e2e": "cypress run",
     "generate-pwa-assets": "pwa-assets-generator --preset minimal public/logo-small.svg"
   },
   "dependencies": {
