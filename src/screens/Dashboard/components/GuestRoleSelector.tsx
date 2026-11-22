@@ -37,6 +37,11 @@ export interface GuestRoleSelectorProps {
   setSelectedRole: (role: GuestRole) => void;
   shouldBeSystemRole: boolean;
   restrictRoleToSlug?: SystemActor;
+  /**
+   * The tenant to list roles of. Left undefined, the tenant in the Redux store
+   * is used; null lists roles without a tenant filter.
+   */
+  tenantId?: string | null;
 }
 
 /**
@@ -54,6 +59,7 @@ export default function GuestRoleSelector({
   ignoreList,
   shouldBeSystemRole,
   restrictRoleToSlug,
+  tenantId: tenantIdOverride,
 }: GuestRoleSelectorProps) {
   const { t } = useTranslation();
 
@@ -61,10 +67,12 @@ export default function GuestRoleSelector({
   const [isEditing, setIsEditing] = useState(selectedRole ? false : true);
 
   const { tenantInfo } = useSelector((state: RootState) => state.tenant);
+  const tenantId =
+    tenantIdOverride === undefined ? tenantInfo?.id : tenantIdOverride;
 
   const { isAuthenticated, hasEnoughPermissions, getAccessTokenSilently } =
     useProfile({
-      tenantOwnerNeeded: [tenantInfo?.id || ""],
+      tenantOwnerNeeded: [tenantId || ""],
       roles: [MycRole.SubscriptionsManager],
       permissions: [MycPermission.Read],
     });
@@ -90,7 +98,7 @@ export default function GuestRoleSelector({
     const params: GuestRolesListParams = {
       pageSize,
       system: shouldBeSystemRole,
-      tenantId: tenantInfo?.id ?? undefined,
+      tenantId: tenantId ?? undefined,
     };
 
     if (searchTerm && searchTerm !== "") {
@@ -109,7 +117,7 @@ export default function GuestRoleSelector({
     searchTerm,
     restrictRoleToSlug,
     shouldBeSystemRole,
-    tenantInfo?.id,
+    tenantId,
   ]);
 
   const swrKey = swrParams
