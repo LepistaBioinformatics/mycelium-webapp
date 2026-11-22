@@ -18,7 +18,6 @@ import GuestRoleSelector from "../GuestRoleSelector";
 import {
   errorMessage,
   PREFIX,
-  swrOptions,
   useFederationOperator,
   usePeers,
 } from "./shared";
@@ -88,7 +87,14 @@ export default function CreateTranslationRuleModal({
       ? ["rpc", "federation.peers.roles", peerInstanceId]
       : null,
     () => peersRoles({ instanceId: peerInstanceId }, getToken),
-    swrOptions
+    // Each read is a signed request to the remote peer: fetch once per peer
+    // pick, never poll (a refresh could also swap the input mid-typing).
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      revalidateIfStale: false,
+      shouldRetryOnError: false,
+    }
   );
 
   const verifiedRoles =
