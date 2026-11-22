@@ -1114,6 +1114,139 @@
         "saved": "Guardado",
         "edit": "Editar información",
         "error": "Error inesperado"
+      },
+      "Federation": {
+        "title": "Federación",
+        "tabs": {
+          "peers": "Pares",
+          "links": "Vínculos de identidad",
+          "assertions": "Aserciones almacenadas",
+          "translations": "Reglas de traducción"
+        },
+        "peer": "Par",
+        "actions": "Acciones",
+        "cancel": "Cancelar",
+        "working": "Procesando ...",
+        "done": "Hecho",
+        "loadError": "No se pudieron cargar los datos. Inténtelo más tarde.",
+        "empty": "Todavía no hay nada aquí.",
+        "permissions": {
+          "read": "Lectura",
+          "write": "Escritura"
+        },
+        "statuses": {
+          "declared": "Declarado",
+          "handshaking": "En handshake",
+          "active": "Activo",
+          "degraded": "Degradado",
+          "unreachable": "Inalcanzable",
+          "quarantined": "En cuarentena",
+          "untrusted": "No confiable",
+          "pending": "Pendiente",
+          "revoked": "Revocado",
+          "enabled": "Activada",
+          "disabled": "Desactivada"
+        },
+        "Peers": {
+          "title": "Pares de la federación",
+          "columns": {
+            "name": "Nombre",
+            "baseUrl": "URL base",
+            "instanceId": "ID de instancia",
+            "status": "Estado",
+            "kinds": "Tipos negociados",
+            "lastContact": "Último contacto",
+            "failures": "Fallos"
+          },
+          "quarantine": "Cuarentena",
+          "release": "Liberar",
+          "quarantineTitle": "Poner par en cuarentena",
+          "quarantineDescription": "¿Poner {{name}} en cuarentena? Sus solicitudes se rechazan y las aserciones almacenadas de él se descartan hasta que se libere.",
+          "releaseTitle": "Liberar par",
+          "releaseDescription": "¿Liberar {{name}} de la cuarentena? Pasa por un nuevo handshake antes de ser confiable.",
+          "switch": {
+            "title": "Interruptor de federación",
+            "description": "Activa o desactiva la federación en esta instancia. Desactivar es el kill-switch: la instancia deja de responder a los pares y rechaza toda solicitud de par. El gateway no informa el estado actual, así que solo se muestra el resultado de un cambio hecho aquí.",
+            "turnOn": "Activar",
+            "turnOff": "Desactivar",
+            "turnOnTitle": "Activar la federación",
+            "turnOnDescription": "¿Activar la federación? El gateway lo rechaza mientras la federación no esté configurada.",
+            "turnOffTitle": "Desactivar la federación",
+            "turnOffDescription": "¿Desactivar la federación? Toda solicitud de par se rechaza hasta que se vuelva a activar.",
+            "nowOn": "La federación fue activada ({{date}}).",
+            "nowOff": "La federación fue desactivada ({{date}})."
+          }
+        },
+        "Links": {
+          "title": "Vínculos de identidad",
+          "columns": {
+            "email": "Correo local",
+            "status": "Estado",
+            "established": "Establecido",
+            "revoked": "Revocado"
+          },
+          "revoke": "Revocar",
+          "revokeTitle": "Revocar vínculo de identidad",
+          "revokeDescription": "¿Revocar el vínculo de identidad de {{email}}? Las concesiones afirmadas a través de él dejan de aplicarse."
+        },
+        "Assertions": {
+          "title": "Aserciones almacenadas",
+          "columns": {
+            "link": "Vínculo",
+            "kind": "Tipo",
+            "issued": "Emitida",
+            "expires": "Expira",
+            "grants": "Concesiones"
+          }
+        },
+        "Translations": {
+          "title": "Reglas de traducción",
+          "description": "Una regla convierte una concesión del par (tenant, rol y permiso mínimo del emisor) en una concesión de invitado local sobre una cuenta local.",
+          "columns": {
+            "issuerTenant": "Tenant del emisor",
+            "issuerRole": "Rol del emisor",
+            "issuerMinPerm": "Permiso mín. del emisor",
+            "localAccount": "Cuenta local",
+            "localRole": "Rol de invitado local",
+            "localPerm": "Permiso local",
+            "enabled": "Activada"
+          },
+          "create": "Crear regla",
+          "enable": "Activar",
+          "disable": "Desactivar",
+          "delete": "Eliminar",
+          "enableTitle": "Activar regla",
+          "enableDescription": "¿Activar la regla del rol {{role}}? Se aplica desde la próxima solicitud.",
+          "disableTitle": "Desactivar regla",
+          "disableDescription": "¿Desactivar la regla del rol {{role}}? Deja de aplicarse en la próxima solicitud.",
+          "deleteTitle": "Eliminar regla",
+          "deleteDescription": "¿Eliminar la regla del rol {{role}}? Esto no se puede deshacer.",
+          "CreateRule": {
+            "title": "Crear regla de traducción",
+            "description": "Elija un par, luego la concesión del emisor a coincidir y la concesión local en que se convierte.",
+            "peer": "Par",
+            "choosePeer": "Elija un par",
+            "issuerRole": "Rol del emisor",
+            "issuerRoleHint": "El slug del rol en el par",
+            "chooseRole": "Elija un rol",
+            "issuerRolePlaceholder": "Slug del rol, p. ej. editor",
+            "loadingRoles": "Cargando los roles del par ...",
+            "rolesUnknown": "El par no comparte su vocabulario de roles ahora. Escriba el slug del rol.",
+            "rolesRejected": "El vocabulario de roles del par falló la verificación ({{reason}}). Escriba el slug del rol.",
+            "rolesError": "No se pudieron leer los roles del par ({{reason}}). Escriba el slug del rol.",
+            "issuerTenant": "ID del tenant del emisor",
+            "issuerMinPerm": "Permiso mínimo del emisor",
+            "localAccount": "ID de la cuenta local",
+            "localAccountHint": "Una cuenta de tenant local; las cuentas de sistema se rechazan",
+            "localRole": "Rol de invitado local",
+            "localRoleRequired": "Elija un rol de invitado local.",
+            "localPerm": "Permiso local",
+            "required": "Obligatorio",
+            "invalidUuid": "Debe ser un UUID",
+            "submit": "Crear",
+            "created": "Regla de traducción creada"
+          }
+        }
       }
     },
     "LoginPage": {
@@ -1194,6 +1327,7 @@
     "webhooks": "Webhooks",
     "errorCodes": "Códigos de error",
     "operations": "Operaciones",
-    "dashboard": "Panel"
+    "dashboard": "Panel",
+    "federation": "Federación"
   }
 }

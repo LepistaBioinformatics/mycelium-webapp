@@ -1193,6 +1193,139 @@
             "unknown": "Unknown"
           }
         }
+      },
+      "Federation": {
+        "title": "Federation",
+        "tabs": {
+          "peers": "Peers",
+          "links": "Identity links",
+          "assertions": "Stored assertions",
+          "translations": "Translation rules"
+        },
+        "peer": "Peer",
+        "actions": "Actions",
+        "cancel": "Cancel",
+        "working": "Working ...",
+        "done": "Done",
+        "loadError": "Could not load the data. Try again later.",
+        "empty": "Nothing here yet.",
+        "permissions": {
+          "read": "Read",
+          "write": "Write"
+        },
+        "statuses": {
+          "declared": "Declared",
+          "handshaking": "Handshaking",
+          "active": "Active",
+          "degraded": "Degraded",
+          "unreachable": "Unreachable",
+          "quarantined": "Quarantined",
+          "untrusted": "Untrusted",
+          "pending": "Pending",
+          "revoked": "Revoked",
+          "enabled": "Enabled",
+          "disabled": "Disabled"
+        },
+        "Peers": {
+          "title": "Federation peers",
+          "columns": {
+            "name": "Display name",
+            "baseUrl": "Base URL",
+            "instanceId": "Instance ID",
+            "status": "Status",
+            "kinds": "Negotiated kinds",
+            "lastContact": "Last contact",
+            "failures": "Failures"
+          },
+          "quarantine": "Quarantine",
+          "release": "Release",
+          "quarantineTitle": "Quarantine peer",
+          "quarantineDescription": "Quarantine {{name}}? Its requests are refused and the assertions stored from it are dropped until it is released.",
+          "releaseTitle": "Release peer",
+          "releaseDescription": "Release {{name}} from quarantine? It is handshaken again before it is trusted.",
+          "switch": {
+            "title": "Federation switch",
+            "description": "Turns federation on or off for this instance. Off is the kill-switch: the instance stops answering peers and refuses every peer request. The gateway does not report the current state, so only the result of a switch made here is shown.",
+            "turnOn": "Turn on",
+            "turnOff": "Turn off",
+            "turnOnTitle": "Turn federation on",
+            "turnOnDescription": "Turn federation on? The gateway refuses this while federation is not configured.",
+            "turnOffTitle": "Turn federation off",
+            "turnOffDescription": "Turn federation off? Every peer request is refused until it is turned on again.",
+            "nowOn": "Federation was turned on ({{date}}).",
+            "nowOff": "Federation was turned off ({{date}})."
+          }
+        },
+        "Links": {
+          "title": "Identity links",
+          "columns": {
+            "email": "Local email",
+            "status": "Status",
+            "established": "Established",
+            "revoked": "Revoked"
+          },
+          "revoke": "Revoke",
+          "revokeTitle": "Revoke identity link",
+          "revokeDescription": "Revoke the identity link of {{email}}? Grants asserted through it stop applying."
+        },
+        "Assertions": {
+          "title": "Stored assertions",
+          "columns": {
+            "link": "Link",
+            "kind": "Kind",
+            "issued": "Issued",
+            "expires": "Expires",
+            "grants": "Grants"
+          }
+        },
+        "Translations": {
+          "title": "Translation rules",
+          "description": "A rule turns a peer grant (issuer tenant, role and minimum permission) into a local guest grant on a local account.",
+          "columns": {
+            "issuerTenant": "Issuer tenant",
+            "issuerRole": "Issuer role",
+            "issuerMinPerm": "Issuer min. permission",
+            "localAccount": "Local account",
+            "localRole": "Local guest role",
+            "localPerm": "Local permission",
+            "enabled": "Enabled"
+          },
+          "create": "Create rule",
+          "enable": "Enable",
+          "disable": "Disable",
+          "delete": "Delete",
+          "enableTitle": "Enable rule",
+          "enableDescription": "Enable the rule for issuer role {{role}}? It applies on the next request.",
+          "disableTitle": "Disable rule",
+          "disableDescription": "Disable the rule for issuer role {{role}}? It stops applying on the next request.",
+          "deleteTitle": "Delete rule",
+          "deleteDescription": "Delete the rule for issuer role {{role}}? This cannot be undone.",
+          "CreateRule": {
+            "title": "Create translation rule",
+            "description": "Pick a peer, then the issuer grant to match and the local grant it becomes.",
+            "peer": "Peer",
+            "choosePeer": "Choose a peer",
+            "issuerRole": "Issuer role",
+            "issuerRoleHint": "The slug of the role on the peer",
+            "chooseRole": "Choose a role",
+            "issuerRolePlaceholder": "Role slug, e.g. editor",
+            "loadingRoles": "Loading the peer's roles ...",
+            "rolesUnknown": "The peer does not share its role vocabulary now. Type the role slug.",
+            "rolesRejected": "The peer's role vocabulary failed verification ({{reason}}). Type the role slug.",
+            "rolesError": "Could not read the peer's roles ({{reason}}). Type the role slug.",
+            "issuerTenant": "Issuer tenant ID",
+            "issuerMinPerm": "Issuer minimum permission",
+            "localAccount": "Local account ID",
+            "localAccountHint": "A local tenant account; system accounts are refused",
+            "localRole": "Local guest role",
+            "localRoleRequired": "Choose a local guest role.",
+            "localPerm": "Local permission",
+            "required": "Required",
+            "invalidUuid": "Must be a UUID",
+            "submit": "Create",
+            "created": "Translation rule created"
+          }
+        }
       }
     },
     "LoginPage": {
@@ -1273,6 +1406,7 @@
     "webhooks": "Webhooks",
     "errorCodes": "Error codes",
     "operations": "Operations",
-    "dashboard": "Dashboard"
+    "dashboard": "Dashboard",
+    "federation": "Federation"
   }
 }
