@@ -1114,6 +1114,139 @@
         "saved": "Salvo",
         "edit": "Editar informações",
         "error": "Erro inesperado"
+      },
+      "Federation": {
+        "title": "Federação",
+        "tabs": {
+          "peers": "Pares",
+          "links": "Vínculos de identidade",
+          "assertions": "Asserções armazenadas",
+          "translations": "Regras de tradução"
+        },
+        "peer": "Par",
+        "actions": "Ações",
+        "cancel": "Cancelar",
+        "working": "Processando ...",
+        "done": "Concluído",
+        "loadError": "Não foi possível carregar os dados. Tente novamente mais tarde.",
+        "empty": "Nada por aqui ainda.",
+        "permissions": {
+          "read": "Leitura",
+          "write": "Escrita"
+        },
+        "statuses": {
+          "declared": "Declarado",
+          "handshaking": "Em handshake",
+          "active": "Ativo",
+          "degraded": "Degradado",
+          "unreachable": "Inacessível",
+          "quarantined": "Em quarentena",
+          "untrusted": "Não confiável",
+          "pending": "Pendente",
+          "revoked": "Revogado",
+          "enabled": "Ativada",
+          "disabled": "Desativada"
+        },
+        "Peers": {
+          "title": "Pares da federação",
+          "columns": {
+            "name": "Nome",
+            "baseUrl": "URL base",
+            "instanceId": "ID da instância",
+            "status": "Status",
+            "kinds": "Tipos negociados",
+            "lastContact": "Último contato",
+            "failures": "Falhas"
+          },
+          "quarantine": "Quarentena",
+          "release": "Liberar",
+          "quarantineTitle": "Colocar par em quarentena",
+          "quarantineDescription": "Colocar {{name}} em quarentena? Suas requisições são recusadas e as asserções armazenadas dele são descartadas até a liberação.",
+          "releaseTitle": "Liberar par",
+          "releaseDescription": "Liberar {{name}} da quarentena? Ele passa por um novo handshake antes de ser confiável.",
+          "switch": {
+            "title": "Chave da federação",
+            "description": "Liga ou desliga a federação nesta instância. Desligar é o kill-switch: a instância deixa de responder aos pares e recusa toda requisição de par. O gateway não informa o estado atual, então só o resultado de uma mudança feita aqui é exibido.",
+            "turnOn": "Ligar",
+            "turnOff": "Desligar",
+            "turnOnTitle": "Ligar a federação",
+            "turnOnDescription": "Ligar a federação? O gateway recusa enquanto a federação não estiver configurada.",
+            "turnOffTitle": "Desligar a federação",
+            "turnOffDescription": "Desligar a federação? Toda requisição de par é recusada até que ela seja ligada de novo.",
+            "nowOn": "A federação foi ligada ({{date}}).",
+            "nowOff": "A federação foi desligada ({{date}})."
+          }
+        },
+        "Links": {
+          "title": "Vínculos de identidade",
+          "columns": {
+            "email": "E-mail local",
+            "status": "Status",
+            "established": "Estabelecido",
+            "revoked": "Revogado"
+          },
+          "revoke": "Revogar",
+          "revokeTitle": "Revogar vínculo de identidade",
+          "revokeDescription": "Revogar o vínculo de identidade de {{email}}? As concessões declaradas por ele deixam de valer."
+        },
+        "Assertions": {
+          "title": "Asserções armazenadas",
+          "columns": {
+            "link": "Vínculo",
+            "kind": "Tipo",
+            "issued": "Emitida",
+            "expires": "Expira",
+            "grants": "Concessões"
+          }
+        },
+        "Translations": {
+          "title": "Regras de tradução",
+          "description": "Uma regra transforma uma concessão do par (tenant, papel e permissão mínima do emissor) em uma concessão de convidado local em uma conta local.",
+          "columns": {
+            "issuerTenant": "Tenant do emissor",
+            "issuerRole": "Papel do emissor",
+            "issuerMinPerm": "Permissão mín. do emissor",
+            "localAccount": "Conta local",
+            "localRole": "Papel de convidado local",
+            "localPerm": "Permissão local",
+            "enabled": "Ativada"
+          },
+          "create": "Criar regra",
+          "enable": "Ativar",
+          "disable": "Desativar",
+          "delete": "Excluir",
+          "enableTitle": "Ativar regra",
+          "enableDescription": "Ativar a regra do papel {{role}}? Ela vale a partir da próxima requisição.",
+          "disableTitle": "Desativar regra",
+          "disableDescription": "Desativar a regra do papel {{role}}? Ela deixa de valer na próxima requisição.",
+          "deleteTitle": "Excluir regra",
+          "deleteDescription": "Excluir a regra do papel {{role}}? Isso não pode ser desfeito.",
+          "CreateRule": {
+            "title": "Criar regra de tradução",
+            "description": "Escolha um par, depois a concessão do emissor a casar e a concessão local que ela vira.",
+            "peer": "Par",
+            "choosePeer": "Escolha um par",
+            "issuerRole": "Papel do emissor",
+            "issuerRoleHint": "O slug do papel no par",
+            "chooseRole": "Escolha um papel",
+            "issuerRolePlaceholder": "Slug do papel, ex.: editor",
+            "loadingRoles": "Carregando os papéis do par ...",
+            "rolesUnknown": "O par não compartilha seu vocabulário de papéis agora. Digite o slug do papel.",
+            "rolesRejected": "O vocabulário de papéis do par falhou na verificação ({{reason}}). Digite o slug do papel.",
+            "rolesError": "Não foi possível ler os papéis do par ({{reason}}). Digite o slug do papel.",
+            "issuerTenant": "ID do tenant do emissor",
+            "issuerMinPerm": "Permissão mínima do emissor",
+            "localAccount": "ID da conta local",
+            "localAccountHint": "Uma conta de tenant local; contas de sistema são recusadas",
+            "localRole": "Papel de convidado local",
+            "localRoleRequired": "Escolha um papel de convidado local.",
+            "localPerm": "Permissão local",
+            "required": "Obrigatório",
+            "invalidUuid": "Deve ser um UUID",
+            "submit": "Criar",
+            "created": "Regra de tradução criada"
+          }
+        }
       }
     },
     "LoginPage": {
@@ -1194,6 +1327,7 @@
     "webhooks": "Webhooks",
     "errorCodes": "Códigos de erro",
     "operations": "Operações",
-    "dashboard": "Dashboard"
+    "dashboard": "Dashboard",
+    "federation": "Federação"
   }
 }
