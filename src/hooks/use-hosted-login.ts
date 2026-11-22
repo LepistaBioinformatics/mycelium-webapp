@@ -3,8 +3,9 @@ import { useDispatch } from "react-redux";
 import { useTranslation } from "react-i18next";
 
 import { setNotification } from "@/states/notification.state";
+import { useAppConfig } from "@/hooks/use-app-config";
 import {
-  HOSTED_LOGIN_CLIENT_ID,
+  BUILD_HOSTED_LOGIN_CLIENT_ID,
   startHostedLogin,
 } from "@/services/auth/hosted-login";
 
@@ -13,6 +14,14 @@ export default function useHostedLogin() {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const [isRedirecting, setIsRedirecting] = useState(false);
+  const { appConfig, appConfigError } = useAppConfig();
+
+  const isHostedLogin = Boolean(
+    BUILD_HOSTED_LOGIN_CLIENT_ID || appConfig?.hostedLoginClientId
+  );
+  const isResolved = Boolean(
+    BUILD_HOSTED_LOGIN_CLIENT_ID || appConfig || appConfigError
+  );
 
   const signIn = useCallback(async () => {
     setIsRedirecting(true);
@@ -30,7 +39,9 @@ export default function useHostedLogin() {
   }, [dispatch, t]);
 
   return {
-    isHostedLogin: Boolean(HOSTED_LOGIN_CLIENT_ID),
+    isHostedLogin,
+    /** The built-in magic-link form; false until the client id is resolved. */
+    isMagicLink: isResolved && !isHostedLogin,
     isRedirecting,
     signIn,
   };

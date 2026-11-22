@@ -289,7 +289,10 @@ const FormattedPath = ({
   path: string;
   parameters?: Parameter[] | null;
 }) => {
-  const url = useMemo(() => `${MYCELIUM_API_URL}${path}`, [path]);
+  const url = useMemo(
+    () => `${MYCELIUM_API_URL || window.location.origin}${path}`,
+    [path]
+  );
 
   const formattedPath = useMemo(() => {
     const composedPathParts: {

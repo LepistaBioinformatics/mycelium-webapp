@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 
-// The client id is read at import time, so each test loads a fresh module.
+// The build-time client id and the /app-config lookup are cached per module,
+// so each test loads a fresh one.
 async function loadModule(clientId = "webapp") {
   vi.resetModules();
   vi.stubEnv("VITE_MYCELIUM_HOSTED_LOGIN_CLIENT_ID", clientId);
@@ -37,6 +38,15 @@ function redirectParams(): URLSearchParams {
   return new URL(target).searchParams;
 }
 
+function mockAppConfig(extra: Record<string, unknown>) {
+  vi.mocked(fetch).mockResolvedValueOnce(
+    new Response(
+      JSON.stringify({ domainName: "myc-01", domainUrl: null, locale: null, ...extra }),
+      { status: 200 }
+    )
+  );
+}
+
 function pending(): { state: string; codeVerifier: string } {
   return JSON.parse(sessionStorage.getItem("myc-hosted-login-pending") ?? "{}");
 }
@@ -60,12 +70,55 @@ describe("startHostedLogin", () => {
     );
   });
 
-  it("does nothing when hosted login is not configured", async () => {
+  it("uses the build-time client id without fetching /app-config", async () => {
+    const { startHostedLogin } = await loadModule("webapp");
+
+    await startHostedLogin();
+
+    expect(redirectParams().get("client_id")).toBe("webapp");
+    expect(fetch).not.toHaveBeenCalled();
+  });
+
+  it("reads the client id from /app-config when not set at build time", async () => {
+    mockAppConfig({ hostedLoginClientId: "service-01" });
     const { startHostedLogin } = await loadModule("");
 
     await startHostedLogin();
 
+    expect(String(vi.mocked(fetch).mock.calls[0]?.[0])).toMatch(/\/app-config$/);
+    expect(redirectParams().get("client_id")).toBe("service-01");
+  });
+
+  it("fails without redirecting when /app-config has no client id", async () => {
+    mockAppConfig({});
+    const { startHostedLogin } = await loadModule("");
+
+    await expect(startHostedLogin()).rejects.toThrow();
+
     expect(assign).not.toHaveBeenCalled();
+  });
+
+  it("fails without redirecting when /app-config fails, and retries next time", async () => {
+    vi.mocked(fetch).mockResolvedValueOnce(new Response("{}", { status: 503 }));
+    const { startHostedLogin } = await loadModule("");
+
+    await expect(startHostedLogin()).rejects.toThrow();
+    expect(assign).not.toHaveBeenCalled();
+
+    mockAppConfig({ hostedLoginClientId: "service-01" });
+    await startHostedLogin();
+    expect(redirectParams().get("client_id")).toBe("service-01");
+  });
+
+  it("includes the base path in the redirect URI", async () => {
+    vi.stubEnv("BASE_URL", "/_app/");
+    const { startHostedLogin } = await loadModule();
+
+    await startHostedLogin();
+
+    expect(redirectParams().get("redirect_uri")).toBe(
+      "http://localhost:5173/_app/callback"
+    );
   });
 });
 
@@ -101,6 +154,23 @@ describe("completeHostedLogin", () => {
 
     await expect(completeHostedLogin("auth-code", "forged")).rejects.toThrow();
     expect(fetch).not.toHaveBeenCalled();
+  });
+
+  it("exchanges the code with the client id from /app-config", async () => {
+    mockAppConfig({ hostedLoginClientId: "service-01" });
+    const { startHostedLogin, completeHostedLogin } = await loadModule("");
+    await startHostedLogin();
+    vi.mocked(fetch).mockResolvedValue(
+      new Response(JSON.stringify({ access_token: "jwt" }), { status: 200 })
+    );
+
+    await completeHostedLogin("auth-code", pending().state);
+
+    const [url, init] = vi.mocked(fetch).mock.calls[1] ?? [];
+    expect(String(url)).toMatch(/\/_adm\/hosted-login\/token$/);
+    expect(new URLSearchParams(String(init?.body)).get("client_id")).toBe(
+      "service-01"
+    );
   });
 
   it("rejects when no login was started", async () => {

@@ -4,6 +4,7 @@ export interface AppPublicConfig {
   domainName: string;
   domainUrl: string | null;
   locale: string | null;
+  hostedLoginClientId?: string;
 }
 
 export async function fetchAppPublicConfig(): Promise<AppPublicConfig> {

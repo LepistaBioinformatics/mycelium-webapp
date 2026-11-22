@@ -1,11 +1,18 @@
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
 import path from 'path';
 import tailwindcss from 'tailwindcss'
 import { VitePWA } from 'vite-plugin-pwa';
 
+// `/_app`, `_app/` and `/_app/` all become `/_app/`; unset stays `/`.
+function normalizeBasePath(value: string | undefined): string {
+  const trimmed = (value ?? '').trim().replace(/^\/+|\/+$/g, '');
+  return trimmed ? `/${trimmed}/` : '/';
+}
+
 // https://vite.dev/config/
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
+  base: normalizeBasePath(loadEnv(mode, process.cwd(), '').VITE_BASE_PATH),
   plugins: [
     react(),
     VitePWA({
@@ -102,4 +109,4 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src')
     }
   }
-})
+}))

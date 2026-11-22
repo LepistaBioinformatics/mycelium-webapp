@@ -32,7 +32,8 @@ export default function LoginPage() {
 
   const emailForm = useForm<EmailForm>();
   const codeForm = useForm<CodeForm>();
-  const { isHostedLogin, isRedirecting, signIn } = useHostedLogin();
+  const { isHostedLogin, isMagicLink, isRedirecting, signIn } =
+    useHostedLogin();
 
   const onSubmitEmail = async (data: EmailForm) => {
     try {
@@ -111,7 +112,7 @@ export default function LoginPage() {
               </>
             )}
 
-            {!isHostedLogin && step === "email" && (
+            {isMagicLink && step === "email" && (
               <>
                 <Typography as="h2" center>
                   {t("screens.LoginPage.emailStep.title")}
@@ -146,7 +147,7 @@ export default function LoginPage() {
               </>
             )}
 
-            {!isHostedLogin && step === "code" && (
+            {isMagicLink && step === "code" && (
               <>
                 <Typography as="h2" center>
                   {t("screens.LoginPage.codeStep.title")}

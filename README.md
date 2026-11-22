@@ -22,6 +22,25 @@ yarn preview                      # serves dist/ locally
 For local development instead of a static build, copy `.env.example` to
 `.env.local` and run `yarn dev`.
 
+### Served by the gateway
+
+The gateway can serve the build itself under `/_app/` on its own origin. Build
+once with the base path and no API URL; the app then calls the API on the
+origin it was loaded from and reads the hosted login client id from the
+gateway's `/app-config`, so the same `dist/` works on any gateway:
+
+```bash
+VITE_MYCELIUM_API_URL= VITE_BASE_PATH=/_app/ yarn build
+```
+
+`VITE_MYCELIUM_API_URL=` is set empty on purpose: it overrides any value in
+`.env.production` / `.env.local`.
+
+Then point the gateway's `[api.webapp] distDir` at `dist/` (the gateway must
+be built with the `webapp` feature). See
+[Serving the Webapp](https://lepistabioinformatics.github.io/mycelium/30-serving-the-webapp.html)
+in the gateway book.
+
 ## Features
 
 [MAG (Mycelium API Gateway)](https://github.com/LepistaBioinformatics/mycelium) is a

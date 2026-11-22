@@ -47,6 +47,7 @@ import VerticalTabNav from "@/components/ui/VerticalTabNav";
 import Overview from "./Overview";
 import { ActiveTab } from "./active-tab";
 import { useEffect } from "react";
+import { withBasePath } from "@/functions/with-base-path";
 
 interface NavItem {
   tab: ActiveTab;
@@ -299,7 +300,7 @@ export default function AdvancedManagement() {
           </Typography>
 
           <img
-            src="/undraw.co/undraw_towing_e407.svg"
+            src={withBasePath("undraw.co/undraw_towing_e407.svg")}
             alt="403"
             className="mx-auto"
             width={300}
@@ -319,7 +320,7 @@ export default function AdvancedManagement() {
           </Typography>
 
           <img
-            src="/undraw.co/undraw_secure-login_m11a.svg"
+            src={withBasePath("undraw.co/undraw_secure-login_m11a.svg")}
             alt="403"
             className="mx-auto"
             width={300}

@@ -8,13 +8,14 @@ import { ThemeProvider } from "./components/ThemeProvider";
 import { NativeAuthProvider } from "@/contexts/NativeAuthContext";
 import { BrowserRouter } from "react-router";
 import App from "./App";
+import { routerBasename } from "@/functions/with-base-path";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <ReduxProvider store={state.store}>
       <PersistGate loading={null} persistor={state.persistor}>
         <ThemeProvider>
-          <BrowserRouter>
+          <BrowserRouter basename={routerBasename()}>
             <NativeAuthProvider>
               <App />
             </NativeAuthProvider>
