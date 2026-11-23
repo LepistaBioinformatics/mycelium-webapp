@@ -1,14 +1,13 @@
 import PageBody from "@/components/ui/PageBody";
 import useProfile from "@/hooks/use-profile";
 import useSearchBarParams from "@/hooks/use-search-bar-params";
-import PaginatedRecords from "@/types/PaginatedRecords";
 import DashBoardBody from "../DashBoardBody";
 import PaginatedContent from "../PaginatedContent";
 import { MycRole } from "@/types/MyceliumRole";
 import { MycPermission } from "@/types/MyceliumPermission";
 import { MdInput, MdOutlineOutput, MdWebhook } from "react-icons/md";
 import { components } from "@/services/openapi/mycelium-schema";
-import useSWR from "swr";
+import useLoadMore from "@/hooks/use-load-more";
 import { MYCELIUM_API_URL } from "@/services/openapi/mycelium-api";
 import useSuspenseError from "@/hooks/use-suspense-error";
 import { toolsList } from "@/services/rpc/gatewayManager";
@@ -17,6 +16,12 @@ import Typography from "@/components/ui/Typography";
 import CopyToClipboard from "@/components/ui/CopyToClipboard";
 import DetailsBox from "@/components/ui/DetailsBox";
 import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
+import SearchBar from "@/components/ui/SearchBar";
+import {
+  parseSearchTerm,
+  replaceSearchFilter,
+} from "@/functions/search-term-filters";
 import JSONPretty from "react-json-pretty";
 import JSONPrettyMon from "react-json-pretty/dist/monikai";
 import MarkdownViewer from "@/components/ui/MarkdownViewer";
@@ -24,7 +29,29 @@ import MarkdownViewer from "@/components/ui/MarkdownViewer";
 type ToolOperation = components["schemas"]["ToolOperation"] & { score: number };
 type Parameter = components["schemas"]["Parameter"];
 
+const PREFIX = "screens.Dashboard.Discovery";
+const PAGE_SIZE = 20;
+const HIDE_GATEWAY = "/hideGateway";
+const HTTP_METHODS = ["get", "post", "put", "patch", "delete"];
+const METHOD_FILTERS = HTTP_METHODS.map((method) => `method:${method}`);
+
+/** Turn the search term into `gatewayManager.tools.list` filters */
+function toOperationFilters(term: string | null) {
+  const { filters, text } = parseSearchTerm(term);
+  const method = filters
+    .find((filter) => METHOD_FILTERS.includes(filter.toLowerCase()))
+    ?.slice("method:".length);
+
+  return {
+    query: text || undefined,
+    method,
+    excludeGateway: filters.includes(HIDE_GATEWAY) || undefined,
+  };
+}
+
 export default function Discovery() {
+  const { t } = useTranslation();
+
   const {
     isLoadingUser,
     isAuthenticated,
@@ -38,62 +65,84 @@ export default function Discovery() {
 
   const { parseHttpError } = useSuspenseError();
 
-  const { skip, pageSize, searchTerm, setSkip, setPageSize, setSearchTerm } =
-    useSearchBarParams({
-      initialSkip: 0,
-      initialPageSize: 20,
-    });
+  const { searchTerm, setSearchTerm } = useSearchBarParams({
+    initialSkip: 0,
+    initialPageSize: PAGE_SIZE,
+  });
 
-  const rpcKey = useMemo(() => {
-    if (!isAuthenticated) return null;
-    if (!hasEnoughPermissions) return null;
+  const filters = useMemo(() => toOperationFilters(searchTerm), [searchTerm]);
 
-    return ["rpc", "gatewayManager.tools.list", skip, pageSize, searchTerm] as const;
-  }, [searchTerm, skip, pageSize, isAuthenticated, hasEnoughPermissions]);
-
-  const {
-    data: operations,
-    isLoading: isLoadingOperations,
-    mutate: mutateOperations,
-  } = useSWR<PaginatedRecords<ToolOperation>>(
-    rpcKey,
-    async () =>
+  const operations = useLoadMore<ToolOperation>({
+    baseKey:
+      isAuthenticated && hasEnoughPermissions
+        ? [
+            "rpc",
+            "gatewayManager.tools.list",
+            filters.query,
+            filters.method,
+            filters.excludeGateway,
+          ]
+        : null,
+    pageSize: PAGE_SIZE,
+    fetchPage: (skip, pageSize) =>
       toolsList(
-        {
-          skip: skip ?? 0,
-          pageSize: pageSize ?? 20,
-          query: searchTerm && searchTerm !== "" ? searchTerm : undefined,
-        },
+        { skip, pageSize, ...filters },
         getAccessTokenSilently
       ).catch(parseHttpError),
-    {
-      revalidateIfStale: true,
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false,
-      revalidateOnMount: true,
-      //refreshInterval: 1000 * 60,
-    }
-  );
+    // The list had no background refresh before the migration
+    refreshInterval: 0,
+  });
 
   const onSubmit = (term?: string) => {
-    console.log(term);
-    setSkip(0);
-
     if (term !== undefined) setSearchTerm(term);
 
-    mutateOperations(operations, { rollbackOnError: true });
+    operations.mutate();
   };
 
   return (
     <DashBoardBody
       breadcrumb={
         <PageBody.Breadcrumb.Item icon={MdWebhook}>
-          Operations
+          {t("Menu.operations")}
         </PageBody.Breadcrumb.Item>
       }
+      term={searchTerm ?? undefined}
       onSubmit={onSubmit}
-      setSkip={setSkip}
-      setPageSize={setPageSize}
+      commandPalette={
+        <SearchBar.Content>
+          <div className="flex flex-col gap-1">
+            <Typography as="h4" decoration="smooth">
+              {t(`${PREFIX}.filters.origin`)}
+            </Typography>
+            <SearchBar.Item
+              brief={t(`${PREFIX}.filters.hideGateway`)}
+              description={t(`${PREFIX}.filters.hideGatewayDescription`)}
+              command={HIDE_GATEWAY}
+              onClick={() =>
+                onSubmit(
+                  replaceSearchFilter(searchTerm, HIDE_GATEWAY, [HIDE_GATEWAY])
+                )
+              }
+            />
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <Typography as="h4" decoration="smooth">
+              {t(`${PREFIX}.filters.method`)}
+            </Typography>
+            {METHOD_FILTERS.map((filter) => (
+              <SearchBar.Item
+                key={filter}
+                brief={filter.slice("method:".length).toUpperCase()}
+                command={filter}
+                onClick={() =>
+                  onSubmit(replaceSearchFilter(searchTerm, filter, METHOD_FILTERS))
+                }
+              />
+            ))}
+          </div>
+        </SearchBar.Content>
+      }
       isLoading={isLoadingUser}
       authorized={hasEnoughPermissions}
     >
@@ -102,15 +151,15 @@ export default function Discovery() {
         className="flex flex-col justify-center gap-4 w-full mx-auto"
       >
         <PaginatedContent
-          isLoading={isLoadingOperations}
-          records={operations}
-          mutation={mutateOperations}
-          skip={skip}
-          setSkip={setSkip}
-          pageSize={pageSize}
+          isLoading={operations.isLoading}
+          loaded={operations.records.length}
+          total={operations.count}
+          hasMore={operations.hasMore}
+          isLoadingMore={operations.isLoadingMore}
+          onLoadMore={operations.loadMore}
         >
-          {operations?.records
-            ?.sort((a, b) => (b.score || 0) - (a.score || 0))
+          {operations.records
+            .sort((a, b) => (b.score || 0) - (a.score || 0))
             ?.map((record) => (
               <ListItem key={record.operationId}>
                 <div className="flex justify-between gap-0">
@@ -239,38 +288,38 @@ export default function Discovery() {
  */
 const OperationMethod = ({ method }: { method: string }) => {
   const style = (className: string) =>
-    `${className} text-sm text-center font-bold-md px-2 mt-2 sm:mt-0 text-white border rounded-lg bg-opacity-50 h-fit min-w-[5rem]`;
+    `${className} text-sm text-center font-bold-md px-2 mt-2 sm:mt-0 text-white border rounded-lg h-fit min-w-[5rem]`;
 
   switch (method) {
     case "GET":
       return (
-        <span className={style("bg-brand-violet-500 border-brand-violet-500")}>
+        <span className={style("bg-brand-violet-500/50 border-brand-violet-500")}>
           {method}
         </span>
       );
     case "POST":
       return (
-        <span className={style("bg-green-500 border-green-500")}>{method}</span>
+        <span className={style("bg-green-500/50 border-green-500")}>{method}</span>
       );
     case "PUT":
       return (
-        <span className={style("bg-yellow-500 border-yellow-500")}>
+        <span className={style("bg-yellow-500/50 border-yellow-500")}>
           {method}
         </span>
       );
     case "PATCH":
       return (
-        <span className={style("bg-purple-500 border-purple-500")}>
+        <span className={style("bg-purple-500/50 border-purple-500")}>
           {method}
         </span>
       );
     case "DELETE":
       return (
-        <span className={style("bg-red-500 border-red-500")}>{method}</span>
+        <span className={style("bg-red-500/50 border-red-500")}>{method}</span>
       );
     default:
       return (
-        <span className={style("bg-zinc-500 border-zinc-500")}>{method}</span>
+        <span className={style("bg-zinc-500/50 border-zinc-500")}>{method}</span>
       );
   }
 };

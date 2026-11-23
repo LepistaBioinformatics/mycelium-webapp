@@ -372,7 +372,7 @@ export default function BrandCard({ tenant, mutateTenantStatus }: Props) {
                 onDrop={handleDrop}
                 onClick={() => inputRef.current?.click()}
                 className={[
-                  "flex flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-brand-600 px-6 py-10 cursor-pointer transition-colors",
+                  "flex flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-brand-600/40 px-6 py-10 cursor-pointer transition-colors",
                   dragOver
                     ? "bg-brand-violet-50 dark:bg-brand-violet-950"
                     : "hover:border-brand-violet-400 dark:hover:border-brand-violet-600 hover:bg-zinc-50 dark:hover:bg-zinc-800/50",
@@ -509,7 +509,7 @@ export default function BrandCard({ tenant, mutateTenantStatus }: Props) {
                       />
                       <input
                         id={field}
-                        className="rounded-lg border border-brand-600 bg-brand-violet-50 px-2 py-1.5 text-sm text-zinc-900 focus:border-brand-violet-500 focus:ring-1 focus:ring-brand-violet-500 focus:outline-none dark:bg-surface-950 dark:text-white dark:focus:border-brand-violet-400 dark:focus:ring-brand-violet-400 w-full"
+                        className="rounded-md border border-input bg-field text-foreground shadow-xs outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/40 disabled:opacity-50 disabled:cursor-not-allowed px-2 py-1.5 text-sm w-full"
                         placeholder="#9260C4"
                         {...registerIdentity(field, {
                           pattern: {
@@ -541,7 +541,7 @@ export default function BrandCard({ tenant, mutateTenantStatus }: Props) {
                 <input
                   id="headingFontFamily"
                   list="brand-font-suggestions"
-                  className="rounded-lg border border-brand-600 bg-brand-violet-50 px-2 py-1.5 text-sm text-zinc-900 focus:border-brand-violet-500 focus:ring-1 focus:ring-brand-violet-500 focus:outline-none dark:bg-surface-950 dark:text-white dark:focus:border-brand-violet-400 dark:focus:ring-brand-violet-400 w-full"
+                  className="rounded-md border border-input bg-field text-foreground shadow-xs outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/40 disabled:opacity-50 disabled:cursor-not-allowed px-2 py-1.5 text-sm w-full"
                   placeholder="Bricolage Grotesque"
                   {...registerIdentity("headingFontFamily")}
                 />
@@ -556,7 +556,7 @@ export default function BrandCard({ tenant, mutateTenantStatus }: Props) {
                 <input
                   id="bodyFontFamily"
                   list="brand-font-suggestions"
-                  className="rounded-lg border border-brand-600 bg-brand-violet-50 px-2 py-1.5 text-sm text-zinc-900 focus:border-brand-violet-500 focus:ring-1 focus:ring-brand-violet-500 focus:outline-none dark:bg-surface-950 dark:text-white dark:focus:border-brand-violet-400 dark:focus:ring-brand-violet-400 w-full"
+                  className="rounded-md border border-input bg-field text-foreground shadow-xs outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/40 disabled:opacity-50 disabled:cursor-not-allowed px-2 py-1.5 text-sm w-full"
                   placeholder="Hanken Grotesk"
                   {...registerIdentity("bodyFontFamily")}
                 />

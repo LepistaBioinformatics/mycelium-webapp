@@ -1,7 +1,10 @@
 import { cva } from "class-variance-authority";
 
+// Lepista DS on the shadcn token layer: mono uppercase labels, violet primary
+// (`--primary`), cyan focus ring (`--ring`). Cyan is too light for a solid fill
+// under white text, so the `info` intent uses infra-600.
 export const buttonStyles = cva(
-  "rounded-lg border font-mono tracking-wide transition-all",
+  "inline-flex items-center justify-center gap-2 rounded-md border font-mono text-[0.85em] tracking-wide whitespace-nowrap transition-colors outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 [&_svg]:shrink-0",
   {
     variants: {
       fullWidth: {
@@ -11,24 +14,18 @@ export const buttonStyles = cva(
         true: "text-center justify-center items-center",
       },
       intent: {
-        // Violet surface + violet border. Cyan #64C5EB is too light for a
-        // solid fill under white text (WCAG), so the accent lives in the border.
-        // brand-800 reads near-black against the light-mode page background, so
-        // light mode uses brand-600 and dark mode goes one step darker (brand-700)
-        // to stay legible against the dark brand-950 shell.
-        // Subtle shadow only — the hard-offset `shadow-neo` treatment is reserved
-        // for marketing surfaces (HomePage), it reads as too heavy repeated across
-        // a dense admin UI.
+        // Tonal fills: a tinted surface with dark text reads as the call to
+        // action without the glare of a saturated solid block.
         primary:
-          "uppercase bg-brand-600 hover:bg-brand-700 dark:bg-brand-700 dark:hover:bg-brand-800 text-white border-brand-600 shadow-sm dark:shadow-none",
+          "uppercase shadow-xs bg-brand-100 text-brand-800 border-brand-200 hover:bg-brand-200 dark:bg-brand-900/60 dark:text-brand-100 dark:border-brand-700 dark:hover:bg-brand-800",
         secondary:
-          "uppercase text-white font-semibold bg-zinc-600 hover:bg-zinc-700 border-zinc-500",
+          "uppercase shadow-xs bg-field text-zinc-700 border-input hover:bg-muted dark:text-zinc-200",
         warning:
-          "uppercase bg-yellow-500 dark:bg-yellow-600 text-white hover:bg-yellow-600 hover:dark:bg-yellow-700 border-yellow-600 font-semibold",
+          "uppercase shadow-xs bg-amber-100 text-amber-900 border-amber-200 hover:bg-amber-200 dark:bg-amber-950/60 dark:text-amber-200 dark:border-amber-800 dark:hover:bg-amber-900",
         danger:
-          "uppercase bg-red-500 dark:bg-red-600 text-white hover:bg-red-600 dark:hover:bg-red-700 border-red-600",
-        link: "!text-brand-600 dark:!text-brand-300 bg-transparent hover:bg-transparent border-transparent hover:border-brand-600 dark:hover:border-brand-300",
-        info: "uppercase bg-infra-600 hover:bg-infra-700 text-white border-infra-700",
+          "uppercase shadow-xs bg-red-50 text-red-700 border-red-200 hover:bg-red-100 dark:bg-red-950/60 dark:text-red-300 dark:border-red-900 dark:hover:bg-red-900/60",
+        link: "text-primary! dark:text-brand-300! bg-transparent border-transparent underline-offset-4 hover:underline",
+        info: "uppercase shadow-xs bg-infra-100 text-infra-800 border-infra-200 hover:bg-infra-200 dark:bg-infra-900/60 dark:text-infra-200 dark:border-infra-800 dark:hover:bg-infra-800",
       },
       size: {
         xs: "py-1 px-2 text-xs",
@@ -37,10 +34,10 @@ export const buttonStyles = cva(
         lg: "py-3 px-6 text-lg",
       },
       padding: {
-        none: "!p-0",
-        sm: "!px-1 !py-0.5",
-        md: "!px-2 !py-1",
-        lg: "!px-3 !py-2",
+        none: "p-0!",
+        sm: "px-1! py-0.5!",
+        md: "px-2.5! py-1!",
+        lg: "px-3.5! py-2!",
       },
       disabled: {
         true: "opacity-50 cursor-not-allowed",

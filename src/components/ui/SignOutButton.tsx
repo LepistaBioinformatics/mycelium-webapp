@@ -1,7 +1,8 @@
 import { PiSignOutBold } from "react-icons/pi";
 import { useTranslation } from "react-i18next";
 
-const ROW = "flex items-center px-3 w-full min-h-[2.5rem]";
+const ROW =
+  "flex items-center mx-1.5 px-2 w-[calc(100%-0.75rem)] min-h-9 rounded-md text-sm outline-none focus-visible:ring-[3px] focus-visible:ring-sidebar-ring/50";
 const ICON = "shrink-0 w-4 h-4 flex items-center justify-center";
 
 interface Props {
@@ -16,7 +17,7 @@ export default function SignOutButton({ logout, isOpen = false }: Props) {
     <button
       onClick={logout}
       title={t("Menu.logout")}
-      className={`${ROW} border-l-2 border-transparent text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-red-500 dark:hover:text-red-400 transition-colors`}
+      className={`${ROW} text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors`}
     >
       <span className={ICON}>
         <PiSignOutBold />

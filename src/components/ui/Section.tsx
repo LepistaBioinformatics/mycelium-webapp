@@ -1,7 +1,7 @@
 import { cva, VariantProps } from "class-variance-authority";
 
 const containerStyles = cva(
-  "flex flex-col overflow-x-auto scrollbar p-4 rounded-lg border border-brand-600 shadow-sm dark:shadow-none bg-white dark:bg-surface-950",
+  "flex flex-col overflow-x-auto scrollbar p-4 rounded-xl border border-brand-600/25 dark:border-brand-400/20 shadow-card bg-card",
   {
     variants: {
       gap: {

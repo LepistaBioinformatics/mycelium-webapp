@@ -16,14 +16,13 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import useSWR from "swr";
+import { fieldStyles } from "@/components/ui/field-styles";
 
 type Account = components["schemas"]["Account"];
 
 interface ContactInfoFormValues {
   fullName: string;
   phoneNumber: string;
-  emergencyContactName: string;
-  emergencyContactPhone: string;
   jobTitle: string;
 }
 
@@ -32,15 +31,12 @@ const META_FIELD_KEYS: Record<
   string
 > = {
   phoneNumber: "phone_number",
-  emergencyContactName: "emergency_contact_name",
-  emergencyContactPhone: "emergency_contact_phone",
   jobTitle: "job_title",
 };
 
 const BASE = "screens.Dashboard.Profile.ContactInfoSection";
 
-const INPUT =
-  "w-full bg-transparent border-b border-zinc-300 dark:border-zinc-700 px-0 py-1.5 text-sm text-zinc-800 dark:text-zinc-200 focus:outline-none focus:border-brand-violet-500 dark:focus:border-brand-violet-400 placeholder-zinc-400 dark:placeholder-zinc-600";
+const INPUT = fieldStyles();
 const LABEL =
   "text-xs font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wide";
 
@@ -62,8 +58,6 @@ export default function ContactInfoSection() {
     defaultValues: {
       fullName: "",
       phoneNumber: "",
-      emergencyContactName: "",
-      emergencyContactPhone: "",
       jobTitle: "",
     },
   });
@@ -75,8 +69,6 @@ export default function ContactInfoSection() {
     reset({
       fullName: account.name ?? "",
       phoneNumber: meta[META_FIELD_KEYS.phoneNumber] ?? "",
-      emergencyContactName: meta[META_FIELD_KEYS.emergencyContactName] ?? "",
-      emergencyContactPhone: meta[META_FIELD_KEYS.emergencyContactPhone] ?? "",
       jobTitle: meta[META_FIELD_KEYS.jobTitle] ?? "",
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -182,32 +174,6 @@ export default function ContactInfoSection() {
               />
             </div>
 
-            <div className="flex flex-col gap-1">
-              <label className={LABEL}>
-                {t(`${BASE}.emergencyContactName.title`)}
-              </label>
-              <Typography as="small" decoration="smooth">
-                {t(`${BASE}.emergencyContactName.description`)}
-              </Typography>
-              <input
-                {...register("emergencyContactName")}
-                className={INPUT}
-                placeholder={t(`${BASE}.emergencyContactName.placeholder`)}
-                type="text"
-              />
-            </div>
-
-            <div className="flex flex-col gap-1">
-              <label className={LABEL}>
-                {t(`${BASE}.emergencyContactPhone.title`)}
-              </label>
-              <input
-                {...register("emergencyContactPhone")}
-                className={INPUT}
-                placeholder="+1 555 000 0000"
-                type="tel"
-              />
-            </div>
           </div>
         </Card.Body>
       </Card>

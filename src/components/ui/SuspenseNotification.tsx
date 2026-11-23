@@ -11,7 +11,7 @@ import Countdown from "react-countdown";
 import { useMemo } from "react";
 
 const styles = cva(
-  "fixed top-1 left-1 sm:right-5 sm:left-auto w-[calc(100%-1rem)] md:w-[50%] xl:max-w-[500px] flex flex-col gap-1 z-[1000] transition-all duration-300",
+  "fixed top-1 left-1 sm:right-5 sm:left-auto w-[calc(100%-1rem)] md:w-[50%] xl:max-w-[500px] flex flex-col gap-1 z-1000 pointer-events-auto transition-all duration-300",
   {
     variants: {
       show: {
@@ -114,7 +114,7 @@ export default function SuspenseNotification({
       <Countdown
         date={deadline}
         renderer={({ seconds }) => (
-          <div className={styles({ intent, show })}>
+          <div data-app-notification className={styles({ intent, show })}>
             <ProgressBar
               percent={((seconds * 100) / timeout) * 1000}
               intent={intent}
@@ -141,7 +141,7 @@ export default function SuspenseNotification({
 }
 
 const progressBarStyles = cva(
-  "h-full flex justify-center items-center transition-all duration-[2000ms]",
+  "h-full flex justify-center items-center transition-all duration-2000",
   {
     variants: {
       intent: {

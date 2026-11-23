@@ -8,15 +8,14 @@ import {
   TableCell,
   TableHead,
   TableHeadCell,
-  TableRow,
-} from "flowbite-react";
+  TableRow
+} from "@/components/ui/DataTable";
 import { useTranslation } from "react-i18next";
 import useSWR from "swr";
 import {
   cellClassName,
   rowClassName,
-  tableTheme,
-} from "../WebHooks/ExecutionEvents/table-theme";
+  } from "../WebhookExecutions/ExecutionEvents/table-theme";
 import {
   formatDate,
   peerName,
@@ -63,7 +62,7 @@ export default function AssertionsTab() {
             !assertions.data?.length && <Empty />}
           {!!assertions.data?.length && (
             <div className="overflow-x-auto scrollbar w-full">
-              <Table theme={tableTheme} data-testid="federation-assertions">
+              <Table data-testid="federation-assertions">
                 <TableHead>
                   <TableHeadCell>{t(`${TAB}.columns.link`)}</TableHeadCell>
                   <TableHeadCell>{t(`${PREFIX}.peer`)}</TableHeadCell>

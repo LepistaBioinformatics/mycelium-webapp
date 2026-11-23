@@ -7,11 +7,11 @@ import { useTranslation } from "react-i18next";
 // ? empty states. Compose the shape of the content that is about to appear.
 // ? ---------------------------------------------------------------------------
 
-const blockStyles = cva("animate-pulse bg-zinc-200 dark:bg-surface-800", {
+const blockStyles = cva("animate-pulse bg-muted dark:bg-surface-800", {
   variants: {
     shape: {
-      line: "h-3 rounded",
-      title: "h-6 rounded",
+      line: "h-3 rounded-sm",
+      title: "h-6 rounded-sm",
       block: "rounded-lg",
       circle: "rounded-full",
     },
@@ -55,11 +55,7 @@ function ListRows({ count = 5, lines = 2 }: { count?: number; lines?: number }) 
       {Array.from({ length: count }, (_, row) => (
         <div
           key={row}
-          className={`flex flex-col gap-2 border border-l-4 border-zinc-200 dark:border-surface-800 px-4 py-3 mx-auto w-full xl:max-w-4xl ${
-            row % 2 === 0
-              ? "bg-white dark:bg-surface-950"
-              : "bg-zinc-50 dark:bg-surface-900"
-          }`}
+          className={"flex flex-col gap-2 rounded-lg border border-border bg-card px-4 py-3 mx-auto w-full xl:max-w-4xl"}
         >
           <Skeleton shape="title" className="w-1/3" />
           {Array.from({ length: lines }, (_, line) => (

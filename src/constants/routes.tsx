@@ -5,7 +5,7 @@ import { SlOrganization } from "react-icons/sl";
 import { MdManageAccounts } from "react-icons/md";
 import { FaUserCheck } from "react-icons/fa";
 import { MdNearbyError } from "react-icons/md";
-import { MdWebhook } from "react-icons/md";
+import { MdHistory, MdWebhook } from "react-icons/md";
 import { MdHub } from "react-icons/md";
 import { components } from "@/services/openapi/mycelium-schema";
 import AdvancedManagement from "@/screens/Dashboard/components/Tenants/Details";
@@ -26,6 +26,9 @@ const ErrorCodes = lazy(
   () => import("@/screens/Dashboard/components/ErrorCodes")
 );
 const Webhooks = lazy(() => import("@/screens/Dashboard/components/WebHooks"));
+const WebhookExecutions = lazy(
+  () => import("@/screens/Dashboard/components/WebhookExecutions")
+);
 const Federation = lazy(
   () => import("@/screens/Dashboard/components/Federation")
 );
@@ -160,6 +163,15 @@ const ROUTES = {
     icon: <MdWebhook />,
     position: 8,
   } as AppRoute,
+  WEBHOOK_EXECUTIONS: {
+    name: "Webhook executions",
+    path: "/dashboard/webhook-executions",
+    translationKey: "webhookExecutions",
+    element: <WebhookExecutions />,
+    errorElement: <ErrorBoundary />,
+    icon: <MdHistory />,
+    position: 9,
+  } as AppRoute,
   FEDERATION: {
     name: "Federation",
     path: "/dashboard/federation",
@@ -168,7 +180,7 @@ const ROUTES = {
     errorElement: <ErrorBoundary />,
     icon: <MdHub />,
     shouldBeStaff: true,
-    position: 9,
+    position: 10,
   } as AppRoute,
   DISCOVERY: {
     name: "Discovery",
@@ -177,7 +189,7 @@ const ROUTES = {
     element: <Discovery />,
     errorElement: <ErrorBoundary />,
     icon: <RiRouteFill />,
-    position: 10,
+    position: 11,
   } as AppRoute,
 } as const;
 

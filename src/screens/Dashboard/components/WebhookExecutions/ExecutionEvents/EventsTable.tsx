@@ -6,11 +6,11 @@ import {
   TableCell,
   TableHead,
   TableHeadCell,
-  TableRow,
-} from "flowbite-react";
+  TableRow
+} from "@/components/ui/DataTable";
 import { useTranslation } from "react-i18next";
 import StatusBadge from "./StatusBadge";
-import { cellClassName, rowClassName, tableTheme } from "./table-theme";
+import { cellClassName, rowClassName } from "./table-theme";
 
 type WebHookExecutionEvent = components["schemas"]["WebHookExecutionEvent"];
 
@@ -25,7 +25,7 @@ export default function EventsTable({
 
   return (
     <div className="overflow-x-auto scrollbar w-full">
-      <Table theme={tableTheme} data-testid="webhook-execution-events">
+      <Table data-testid="webhook-execution-events">
         <TableHead>
           <TableHeadCell>{t(`${PREFIX}.columns.created`)}</TableHeadCell>
           <TableHeadCell>{t(`${PREFIX}.columns.trigger`)}</TableHeadCell>

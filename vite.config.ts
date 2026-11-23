@@ -1,7 +1,7 @@
 import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
 import path from 'path';
-import tailwindcss from 'tailwindcss'
+import tailwindcss from '@tailwindcss/vite'
 import { VitePWA } from 'vite-plugin-pwa';
 
 // `/_app`, `_app/` and `/_app/` all become `/_app/`; unset stays `/`.
@@ -15,6 +15,7 @@ export default defineConfig(({ mode }) => ({
   base: normalizeBasePath(loadEnv(mode, process.cwd(), '').VITE_BASE_PATH),
   plugins: [
     react(),
+    tailwindcss(),
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: [
@@ -99,11 +100,6 @@ export default defineConfig(({ mode }) => ({
       }
     })
   ],
-  css: {
-    postcss: {
-      plugins: [tailwindcss()],
-    },
-  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src')

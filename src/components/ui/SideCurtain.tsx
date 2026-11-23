@@ -1,11 +1,11 @@
 import { cva, VariantProps } from "class-variance-authority";
 import Typography from "./Typography";
-import { IoCloseSharp } from "react-icons/io5";
+import { X } from "lucide-react";
 import { useNavigate } from "react-router";
 import { createPortal } from "react-dom";
 
 const containerStyles = cva(
-  "fixed z-[997] right-0 top-0 bottom-0 w-full bg-zinc-600 bg-opacity-20 dark:bg-zinc-900 dark:bg-opacity-40 flex justify-end",
+  "fixed z-997 right-0 top-0 bottom-0 w-full bg-black/40 flex justify-end animate-in fade-in-0",
   {
     variants: {
       open: {
@@ -51,15 +51,13 @@ function Container({
       {...props}
       onClick={(e: any) => {
         // Dispatch handleClick if the click is outside the div with id
-        // side-curtain-content. Also treat #modal-container as "inside":
-        // Modal is portaled to document.body, so a click there wouldn't
-        // match closest() above even when the modal is logically nested
-        // inside this SideCurtain. Modal.tsx already stops propagation on
-        // its own clicks, so this is defense-in-depth for any future
-        // overlay that forgets to.
+        // side-curtain-content. Also treat a dialog (Modal) as "inside":
+        // it is portaled to document.body, so a click on it (or on its
+        // overlay) wouldn't match closest() above even when the modal is
+        // logically nested inside this SideCurtain.
         if (
           !e.target.closest("#side-curtain-content") &&
-          !e.target.closest("#modal-container")
+          !e.target.closest('[data-slot^="dialog"]')
         ) {
           handleClose?.();
         }
@@ -67,14 +65,19 @@ function Container({
     >
       <div
         id="side-curtain-content"
-        className="flex flex-col w-full sm:w-[70%] xl:w-1/2 sm:mb-16 h-[92vh] sm:h-screen overflow-y-auto bg-white dark:bg-surface-950 px-2 border border-brand-600 shadow-sm dark:shadow-none sm:rounded-l-lg scrollbar"
+        className="flex flex-col w-full sm:w-[70%] xl:w-1/2 sm:mb-16 h-[92vh] sm:h-screen overflow-y-auto bg-card px-2 sm:px-4 border-l border-border shadow-raised sm:rounded-l-xl scrollbar animate-in slide-in-from-right duration-300"
       >
-        <div className="flex justify-between items-center gap-2 w-full py-3 sticky top-0 bg-white dark:bg-surface-950">
+        <div className="flex justify-between items-center gap-2 w-full py-3 sticky top-0 z-10 bg-card border-b border-border">
           <Typography as="h4" decoration="smooth">
             {title}
           </Typography>
-          <button onClick={handleClose || defaultHandleClose}>
-            <IoCloseSharp className="text-3xl text-brand-violet-500 dark:text-brand-violet-500" />
+          <button
+            type="button"
+            onClick={handleClose || defaultHandleClose}
+            className="rounded-md p-1 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
+          >
+            <X className="size-6" />
+            <span className="sr-only">Close</span>
           </button>
         </div>
 

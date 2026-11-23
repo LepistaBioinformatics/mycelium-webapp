@@ -4,9 +4,8 @@ import Typography from "@/components/ui/Typography";
 import useProfile from "@/hooks/use-profile";
 import { components } from "@/services/openapi/mycelium-schema";
 import { guestRolesList } from "@/services/rpc/guestManager";
-import PaginatedRecords from "@/types/PaginatedRecords";
 import { useState } from "react";
-import useSWR from "swr";
+import useLoadMore from "@/hooks/use-load-more";
 import GuestRolesInitializer from "./GuestRolesInitializer";
 import Button from "@/components/ui/Button";
 import CopyToClipboard from "@/components/ui/CopyToClipboard";
@@ -25,6 +24,8 @@ import { FaPlus } from "react-icons/fa";
 import IntroSection from "@/components/ui/IntroSection";
 
 type GuestRole = components["schemas"]["GuestRole"];
+
+const PAGE_SIZE = 20;
 
 export default function GuestRoles() {
   const { t } = useTranslation();
@@ -46,50 +47,37 @@ export default function GuestRoles() {
     restrictSystemAccount: true,
   });
 
-  const { skip, pageSize, setSkip, setPageSize, searchTerm, setSearchTerm } =
-    useSearchBarParams({
-      initialSkip: 0,
-      initialPageSize: 10,
-    });
+  const { searchTerm, setSearchTerm } = useSearchBarParams({
+    initialSkip: 0,
+    initialPageSize: PAGE_SIZE,
+  });
 
-  const swrKey =
-    isAuthenticated && hasEnoughPermissions
-      ? (["rpc", "guestManager.guestRoles.list", skip, pageSize, searchTerm] as const)
-      : null;
-
-  const {
-    data: guestRoles,
-    isLoading: isLoadingGuestRoles,
-    mutate: mutateGuestRoles,
-  } = useSWR<PaginatedRecords<GuestRole>>(
-    swrKey,
-    () =>
+  const guestRoles = useLoadMore<GuestRole>({
+    baseKey:
+      isAuthenticated && hasEnoughPermissions
+        ? ["rpc", "guestManager.guestRoles.list", searchTerm ?? ""]
+        : null,
+    pageSize: PAGE_SIZE,
+    fetchPage: (skip, pageSize) =>
       guestRolesList(
         {
-          skip: skip ?? undefined,
-          pageSize: pageSize ?? undefined,
-          name: searchTerm && searchTerm !== "" ? searchTerm : undefined,
+          skip: skip || undefined,
+          pageSize,
+          name: searchTerm || undefined,
         },
         getAccessTokenSilently
       ),
-    {
-      revalidateIfStale: true,
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false,
-      revalidateOnMount: true,
-      refreshInterval: 1000 * 60,
-    }
-  );
+  });
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setCurrentGuestRole(null);
-    mutateGuestRoles(guestRoles, { rollbackOnError: true });
+    guestRoles.mutate();
   };
 
   const handleSuccess = () => {
     handleCloseModal();
-    mutateGuestRoles(guestRoles, { rollbackOnError: true });
+    guestRoles.mutate();
   };
 
   const handleViewGuestRoleClick = (guestRole: GuestRole) => {
@@ -99,11 +87,9 @@ export default function GuestRoles() {
   };
 
   const onSubmit = (term?: string) => {
-    setSkip(0);
-
     if (term !== undefined) setSearchTerm(term);
 
-    mutateGuestRoles(guestRoles, { rollbackOnError: true });
+    guestRoles.mutate();
   };
 
   return (
@@ -114,8 +100,6 @@ export default function GuestRoles() {
         </PageBody.Breadcrumb.Item>
       }
       onSubmit={onSubmit}
-      setSkip={setSkip}
-      setPageSize={setPageSize}
       isLoading={isLoadingUser}
       authorized={hasEnoughPermissions}
     >
@@ -123,7 +107,8 @@ export default function GuestRoles() {
         id="GuestRolesContent"
         className="flex flex-col justify-center gap-4 w-full mx-auto"
       >
-        <div className="flex justify-end mx-auto w-full sm:max-w-4xl">
+        <div className="flex items-center justify-end gap-3 mx-auto w-full sm:max-w-4xl">
+          <GuestRolesInitializer onSuccess={guestRoles.mutate} />
           <Button
             onClick={() => setIsModalOpen(true)}
             size="sm"
@@ -138,14 +123,14 @@ export default function GuestRoles() {
         </div>
 
         <PaginatedContent
-          isLoading={isLoadingGuestRoles}
-          records={guestRoles}
-          mutation={mutateGuestRoles}
-          skip={skip}
-          setSkip={setSkip}
-          pageSize={pageSize}
+          isLoading={guestRoles.isLoading}
+          loaded={guestRoles.records.length}
+          total={guestRoles.count}
+          hasMore={guestRoles.hasMore}
+          isLoadingMore={guestRoles.isLoadingMore}
+          onLoadMore={guestRoles.loadMore}
         >
-          {guestRoles?.records?.map((guestRole) => (
+          {guestRoles.records.map((guestRole) => (
             <ListItem key={guestRole?.id}>
               <div className="flex justify-between gap-3">
                 <Typography as="h3" title={guestRole?.name}>
@@ -199,10 +184,6 @@ export default function GuestRoles() {
             </ListItem>
           ))}
         </PaginatedContent>
-
-        <div className="flex flex-col gap-8 mb-24">
-          <GuestRolesInitializer onSuccess={mutateGuestRoles} />
-        </div>
       </div>
 
       <GuestRolesModal
@@ -217,7 +198,7 @@ export default function GuestRoles() {
           isOpen={isViewModalOpen}
           onClose={handleCloseModal}
           guestRole={currentGuestRole}
-          mutateGuestRoles={mutateGuestRoles}
+          mutateGuestRoles={guestRoles.mutate}
         />
       )}
     </DashBoardBody>

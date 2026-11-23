@@ -11,7 +11,9 @@ import ControlPanelBreadcrumbItem from "../ControlPanelBreadcrumbItem";
 import AssertionsTab from "./AssertionsTab";
 import LinksTab from "./LinksTab";
 import PeersTab from "./PeersTab";
-import { PREFIX } from "./shared";
+import { isFederationUnavailable, PREFIX, usePeers } from "./shared";
+import Banner from "@/components/ui/Banner";
+import Typography from "@/components/ui/Typography";
 import TranslationsTab from "./TranslationsTab";
 
 const TABS = ["peers", "links", "assertions", "translations"] as const;
@@ -37,6 +39,8 @@ export default function Federation() {
   const { t } = useTranslation();
   const { profile, isLoadingUser, isLoadingProfile } = useProfile();
   const [searchParams, setSearchParams] = useSearchParams();
+  const peers = usePeers();
+  const unavailable = !!peers.error && isFederationUnavailable(peers.error);
 
   const requested = searchParams.get("tab");
   const activeTab: Tab = TABS.includes(requested as Tab)
@@ -57,6 +61,15 @@ export default function Federation() {
           authorized={profile?.isStaff}
           isLoading={isLoadingUser || isLoadingProfile}
         >
+          {unavailable && (
+            <Banner intent="info" title={t(`${PREFIX}.unavailable.title`)}>
+              <Typography as="small" decoration="smooth">
+                {t(`${PREFIX}.unavailable.description`)}
+              </Typography>
+            </Banner>
+          )}
+
+          {!unavailable && (
           <div className="flex flex-col sm:flex-row gap-0 w-full h-full">
             <VerticalTabNav
               items={NAV_ITEMS}
@@ -72,6 +85,7 @@ export default function Federation() {
               {activeTab === "translations" && <TranslationsTab />}
             </div>
           </div>
+          )}
         </AuthorizedOr>
       </PageBody.Content>
     </PageBody>

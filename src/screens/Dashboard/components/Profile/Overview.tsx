@@ -14,8 +14,6 @@ const BASE = "screens.Dashboard.Profile.Overview";
 
 const CONTACT_INFO_FIELD_KEYS = [
   "phone_number",
-  "emergency_contact_name",
-  "emergency_contact_phone",
   "job_title",
 ];
 
@@ -111,7 +109,7 @@ export default function Overview({
           key={tile.tab}
           type="button"
           onClick={() => onNavigate(tile.tab)}
-          className="flex flex-col gap-1 text-left p-3 rounded-lg border border-brand-600 shadow-sm dark:shadow-none bg-white dark:bg-surface-950 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors"
+          className="flex flex-col gap-1 text-left p-3 rounded-lg border border-border bg-card shadow-xs hover:shadow-card hover:border-brand-600/30 dark:hover:border-brand-400/30 transition-[box-shadow,border-color]"
         >
           <div className="flex items-center gap-2">
             {tile.icon}

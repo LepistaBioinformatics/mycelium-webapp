@@ -14,8 +14,8 @@ import {
   TableCell,
   TableHead,
   TableHeadCell,
-  TableRow,
-} from "flowbite-react";
+  TableRow
+} from "@/components/ui/DataTable";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaPlus } from "react-icons/fa";
@@ -23,8 +23,7 @@ import useSWR from "swr";
 import {
   cellClassName,
   rowClassName,
-  tableTheme,
-} from "../WebHooks/ExecutionEvents/table-theme";
+  } from "../WebhookExecutions/ExecutionEvents/table-theme";
 import ConfirmModal from "./ConfirmModal";
 import CreateTranslationRuleModal from "./CreateTranslationRuleModal";
 import {
@@ -100,7 +99,7 @@ export default function TranslationsTab() {
           )}
           {!!rules.data?.length && (
             <div className="overflow-x-auto scrollbar w-full">
-              <Table theme={tableTheme} data-testid="federation-translations">
+              <Table data-testid="federation-translations">
                 <TableHead>
                   <TableHeadCell>{t(`${PREFIX}.peer`)}</TableHeadCell>
                   <TableHeadCell>

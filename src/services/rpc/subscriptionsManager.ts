@@ -42,10 +42,9 @@ export function accountsList(
 // The gateway's `subscriptionsManager.accounts.list` accepts a single
 // `accountType` per call (no "all types" option) — see
 // core/use_cases/.../list_accounts_by_type.rs. To show every allowed type in
-// one list, fire one batched request per type and merge client-side. Since
-// each type is paginated independently server-side, the merged `count`/page
-// are best-effort (sorted by createdAt, sliced to pageSize) rather than a
-// true global pagination.
+// one list, fire one batched request per type and merge client-side. Each
+// type is paginated independently server-side: a merged page holds up to one
+// page per type (sorted by createdAt), and `count` is the sum of the types.
 export async function accountsListMerged(
   accountTypes: string[],
   params: AccountsListParams,
@@ -64,7 +63,9 @@ export async function accountsListMerged(
 
   for (const result of results) {
     if ("error" in result) continue;
-    const page = result.result as PaginatedRecords<Account>;
+    // A type with no accounts answers `null` (FetchManyResponseKind::NotFound).
+    const page = result.result as PaginatedRecords<Account> | null;
+    if (!page) continue;
     records.push(...(page.records ?? []));
     count += page.count ?? 0;
   }
@@ -74,12 +75,13 @@ export async function accountsListMerged(
       new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
   );
 
-  const pageSize = params.pageSize ?? records.length;
-
+  // Keep every record of this batch: each type was asked for one page, and
+  // "load more" asks every type for its next page, so slicing here would drop
+  // records for good.
   return {
-    records: records.slice(0, pageSize),
+    records,
     count,
-    size: pageSize,
+    size: params.pageSize ?? records.length,
     skip: params.skip ?? 0,
   };
 }

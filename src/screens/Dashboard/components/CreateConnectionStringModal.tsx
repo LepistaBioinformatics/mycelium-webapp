@@ -1,21 +1,23 @@
 import Button from "@/components/ui/Button";
-import CopyToClipboard from "@/components/ui/CopyToClipboard";
 import DetailsBox from "@/components/ui/DetailsBox";
 import Divider from "@/components/ui/Divider";
 import FormField from "@/components/ui/FomField";
 import Modal from "@/components/ui/Modal";
-import PermissionIcon from "@/components/ui/PermissionIcon";
 import Typography from "@/components/ui/Typography";
 import useProfile from "@/hooks/use-profile";
 import useSuspenseError from "@/hooks/use-suspense-error";
-import { tokensCreate } from "@/services/rpc/beginners";
+import { tenantsGetPublicInfo, tokensCreate } from "@/services/rpc/beginners";
 import { MycPermission } from "@/types/MyceliumPermission";
-import { Select, Spinner, TextInput } from "flowbite-react";
-import { ComponentProps, useMemo, useState } from "react";
+import { Select, TextInput } from "@/components/ui/Input";
+import Spinner from "@/components/ui/Spinner";
+import { ReactNode, useMemo, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { FaCheck, FaCopy, FaTimes } from "react-icons/fa";
-import { RiCheckboxBlankLine, RiCheckboxLine } from "react-icons/ri";
+import useSWR from "swr";
+import ConnectionStringScope, {
+  PermissionedRole,
+} from "./ConnectionStringScope";
 
 // Mirrors the gateway's `ConnectionStringBean::to_string()` format
 // (core/src/domain/dtos/token/connection_string/connection_string_beans.rs):
@@ -55,17 +57,14 @@ function decodeConnectionString(
   }
 }
 
-type PermissionedRole = {
-  role: string;
-  permission: MycPermission;
-};
-
 interface Props {
   isOpen: boolean;
   onClose: () => void;
   onSuccess: () => void;
   tenantId?: string | null;
   accountId?: string | null;
+  /** How to show the account (e.g. `<AccountName />`); its id is shown too */
+  accountName?: ReactNode;
   roles?: PermissionedRole[] | null;
 }
 
@@ -74,16 +73,8 @@ type Inputs = {
   expiration: number;
 };
 
-const INPUT_COLORS =
-  "border-brand-600 bg-brand-violet-50 text-zinc-900 focus:border-infra-400 focus:ring-zinc-500 dark:bg-surface-950 dark:text-white placeholder-zinc-500 dark:placeholder-zinc-400 dark:focus:border-brand-violet-500 dark:focus:ring-brand-violet-500";
 
-const INPUT_THEME = {
-  field: { input: { colors: { custom: INPUT_COLORS } } },
-};
 
-const SELECT_THEME = {
-  field: { select: { colors: { custom: INPUT_COLORS } } },
-};
 
 enum Expiration {
   oneHour = 60 * 60,
@@ -99,9 +90,12 @@ export default function CreateConnectionStringModal({
   onClose,
   tenantId,
   accountId,
+  accountName,
   roles,
 }: Props) {
   const { t } = useTranslation();
+
+  const tenantName = useTenantName(tenantId);
 
   const [copied, setCopied] = useState(false);
 
@@ -218,22 +212,13 @@ export default function CreateConnectionStringModal({
     setRemovedRoles((prev) => [...prev, permissionedRole]);
   };
 
-  const CheckIcon = ({
-    role,
-    permission,
-    ...props
-  }: {
-    role: string;
-    permission: MycPermission;
-  } & ComponentProps<typeof RiCheckboxLine>) => {
-    const Icon = removedRoles.some(
-      (r) => r.role === role && r.permission === permission
-    )
-      ? RiCheckboxBlankLine
-      : RiCheckboxLine;
+  const isRoleIncluded = (role: PermissionedRole) =>
+    !removedRoles.some(
+      (r) => r.role === role.role && r.permission === role.permission
+    );
 
-    return <Icon {...props} />;
-  };
+  const hasNoRoleLeft =
+    !!roles && roles.length > 0 && !roles.some(isRoleIncluded);
 
   const ExpirationOptions: (keyof typeof Expiration)[] = [
     "oneHour",
@@ -277,8 +262,7 @@ export default function CreateConnectionStringModal({
                   autoFocus
                   type="text"
                   required
-                  color="custom"
-                  theme={INPUT_THEME}
+                 
                   disabled={isSubmitting || connectionString !== null || copied}
                   placeholder={t(
                     "screens.Dashboard.AdvancedOptionsModal.form.name.placeholder"
@@ -302,8 +286,7 @@ export default function CreateConnectionStringModal({
               >
                 <Select
                   id="expiration"
-                  color="custom"
-                  theme={SELECT_THEME}
+                 
                   disabled={isSubmitting || connectionString !== null || copied}
                   {...register("expiration")}
                 >
@@ -322,6 +305,17 @@ export default function CreateConnectionStringModal({
               </FormField>
             </div>
 
+            <ConnectionStringScope
+              tenantId={tenantId}
+              tenantName={tenantName}
+              accountId={accountId}
+              accountName={accountName}
+              roles={roles}
+              isRoleIncluded={isRoleIncluded}
+              onToggleRole={handleRemoveRole}
+              locked={isSubmitting || connectionString !== null}
+            />
+
             <Button
               type="submit"
              
@@ -333,7 +327,8 @@ export default function CreateConnectionStringModal({
                 expirationWatcher === null ||
                 errors.expiration !== undefined ||
                 errors.name !== undefined ||
-                copied
+                copied ||
+                hasNoRoleLeft
               }
             >
               {isSubmitting ? (
@@ -352,12 +347,17 @@ export default function CreateConnectionStringModal({
 
               <TextInput
                 value={connectionString}
-                color="custom"
-                theme={INPUT_THEME}
+               
                 disabled
               />
 
-              <DecodedConnectionString value={connectionString} />
+              <DecodedConnectionString
+                value={connectionString}
+                names={{
+                  ...(tenantId ? { [tenantId]: tenantName } : {}),
+                  ...(accountId ? { [accountId]: accountName } : {}),
+                }}
+              />
 
               <div className="flex flex-col-reverse sm:flex-row gap-5 justify-rev sm:justify-between">
                 <Button
@@ -402,96 +402,38 @@ export default function CreateConnectionStringModal({
             </div>
           )}
 
-          {roles && roles.length > 0 && (
-            <div className="rounded-lg border border-brand-600 px-2 flex flex-col gap-5 justify-between group/clip py-2">
-              <div className="flex sm:flex-col gap-3">
-                <Typography as="h5">
-                  {t(
-                    "screens.Dashboard.AdvancedOptionsModal.permissionedRoles"
-                  )}
-                </Typography>
-                <Typography as="p" decoration="smooth">
-                  {t(
-                    "screens.Dashboard.AdvancedOptionsModal.permissionedRolesDescription"
-                  )}
-                </Typography>
-              </div>
-
-              <div className="flex flex-col gap-3 py-2">
-                {roles.map(({ role, permission }, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center justify-between gap-8 border-t border-brand-violet-300 dark:border-brand-violet-700 px-3 py-2"
-                  >
-                    <div className="flex items-center gap-2">
-                      <span>{role}</span>
-                      <span className="sm:block sm:group-hover:hidden transition-all duration-500">
-                        <PermissionIcon permission={permission} inline />
-                      </span>
-                    </div>
-                    <CheckIcon
-                      role={role}
-                      permission={permission}
-                      title={t(
-                        "screens.Dashboard.AdvancedOptionsModal.removeRole"
-                      )}
-                      className="text-lg text-orange-300 dark:text-orange-300 cursor-pointer"
-                      onClick={() => handleRemoveRole({ role, permission })}
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {accountId && (
-            <div className="rounded-lg border border-brand-600 px-2 flex flex-col justify-between group/clip">
-              <div className="flex sm:flex-col gap-1">
-                <Typography as="h5">
-                  {t("screens.Dashboard.AdvancedOptionsModal.accountId")}
-                  <CopyToClipboard text={accountId} inline groupHidden />
-                </Typography>
-                <Typography as="p" decoration="smooth">
-                  {t(
-                    "screens.Dashboard.AdvancedOptionsModal.accountIdDescription"
-                  )}
-                </Typography>
-              </div>
-              <div className="mt-1">
-                <Typography as="span" decoration="faded">
-                  {accountId}
-                </Typography>
-              </div>
-            </div>
-          )}
-
-          {tenantId && (
-            <div className="rounded-lg border border-brand-600 px-2 flex flex-col justify-between group/clip">
-              <div className="flex sm:flex-col gap-3">
-                <Typography as="h5">
-                  {t("screens.Dashboard.AdvancedOptionsModal.tenantId")}
-                  <CopyToClipboard text={tenantId} inline groupHidden />
-                </Typography>
-                <Typography as="p" decoration="smooth">
-                  {t(
-                    "screens.Dashboard.AdvancedOptionsModal.tenantIdDescription"
-                  )}
-                </Typography>
-              </div>
-              <div className="mt-1">
-                <Typography as="span" decoration="faded">
-                  {tenantId}
-                </Typography>
-              </div>
-            </div>
-          )}
         </div>
       </Modal.Body>
     </Modal>
   );
 }
 
-function DecodedConnectionString({ value }: { value: string }) {
+/**
+ * The namespace name, when the connection string is restricted to one.
+ * Shares the cache key of `useTenantDetails`.
+ */
+function useTenantName(tenantId?: string | null): string | undefined {
+  const { getAccessTokenSilently } = useProfile();
+
+  const { data } = useSWR(
+    tenantId ? ["rpc", "beginners.tenants.getPublicInfo", tenantId] : null,
+    ([, , id]: [string, string, string]) =>
+      tenantsGetPublicInfo({ tenantId: id }, getAccessTokenSilently).then(
+        (tenant) => ({ active: tenant })
+      ),
+    { revalidateOnFocus: false, revalidateIfStale: false }
+  );
+
+  return data?.active?.name;
+}
+
+function DecodedConnectionString({
+  value,
+  names,
+}: {
+  value: string;
+  names: Record<string, ReactNode>;
+}) {
   const { t } = useTranslation();
 
   const parts = useMemo(() => decodeConnectionString(value), [value]);
@@ -512,7 +454,7 @@ function DecodedConnectionString({ value }: { value: string }) {
         )}
 
         {parts && parts.length > 0 && (
-          <ul className="flex flex-col divide-y divide-zinc-200 dark:divide-brand-900 rounded-lg border border-brand-600 overflow-hidden">
+          <ul className="flex flex-col divide-y divide-border rounded-lg border border-border bg-card shadow-xs overflow-hidden">
             {parts.map(({ key, label, value }) => (
               <li
                 key={key}
@@ -523,8 +465,15 @@ function DecodedConnectionString({ value }: { value: string }) {
                     `screens.Dashboard.AdvancedOptionsModal.decoded.fields.${label}`
                   )}
                 </span>
-                <span className="font-mono text-xs text-zinc-700 dark:text-zinc-200 break-all flex-1">
-                  {value}
+                <span className="flex flex-1 flex-col gap-0.5">
+                  {names[value] && (
+                    <span className="text-sm text-foreground">
+                      {names[value]}
+                    </span>
+                  )}
+                  <span className="font-mono text-xs text-zinc-700 dark:text-zinc-200 break-all">
+                    {value}
+                  </span>
                 </span>
               </li>
             ))}

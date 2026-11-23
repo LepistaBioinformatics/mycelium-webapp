@@ -5,7 +5,7 @@ import { useCallback, useMemo, useState } from "react";
 import useProfile from "@/hooks/use-profile";
 import Button from "@/components/ui/Button";
 import useSuspenseError from "@/hooks/use-suspense-error";
-import { Spinner } from "flowbite-react";
+import Spinner from "@/components/ui/Spinner";
 import Countdown from "react-countdown";
 import { useTranslation } from "react-i18next";
 import {

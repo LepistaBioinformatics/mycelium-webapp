@@ -337,6 +337,19 @@
     (`w-4 h-4` with `rounded-lg` added — at that exact size, an 8px radius on a 16px box *is*
     a circle, so no visual change, now consistent with the token instead of being unrounded).
     Table corner classes (`rounded-tl-lg` etc.) were already all `-lg` — no fix needed there.
+- **D34** — (2026-11-22) UI modernization on **Tailwind CSS v4 + shadcn/ui** (spec
+  `features/ui-shadcn/`). `tailwind.config.js`/PostCSS replaced by `@theme` in `src/index.css`;
+  shadcn source lives in `src/components/shadcn/` and the `src/components/ui/` wrappers keep
+  their API. **Flowbite-React removed** (inputs → `ui/Input`, tables → `ui/DataTable`,
+  dropdown → Radix DropdownMenu, modal → Radix Dialog).
+- **D35** — (2026-11-22, user feedback) Light mode uses a **soft grey page** (`#f6f6f8`) with
+  white surfaces lifted by an **elevation scale** (`shadow-xs`/`shadow-card`/`shadow-raised`)
+  instead of heavy borders; borders are soft (neutral or `brand-600/25`). **Buttons are
+  tonal** (tinted fill, dark text). Selected tabs/sidebar items are raised white pills.
+  Supersedes the D11 "1px solid violet border" rule; `.claude/rules/design-system.md` updated.
+- **D36** — (2026-11-22, user) **Emergency contact removed** from the webapp (form, overview
+  count, required-contact banner, profile header). The gateway never required it (only the
+  `AccountMetaKey` exists); the banner now requires phone + job title. Stored values are kept.
 
 ## Blockers
 

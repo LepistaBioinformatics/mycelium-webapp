@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { Flowbite, type ThemeMode } from "flowbite-react";
+
+type ThemeMode = "light" | "dark";
 
 const ThemeContext = createContext<{ mode: ThemeMode }>({ mode: "light" });
 
@@ -27,7 +28,7 @@ export function ThemeProvider({ children }: BaseProps) {
 
   return (
     <ThemeContext.Provider value={{ mode }}>
-      <Flowbite theme={{ mode }}>{children}</Flowbite>
+      {children}
     </ThemeContext.Provider>
   );
 }

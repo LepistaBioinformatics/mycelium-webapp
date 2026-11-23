@@ -10,6 +10,7 @@ import HostedLoginCallback from "@/screens/HostedLoginCallback";
 import { HOSTED_LOGIN_CALLBACK_PATH } from "@/services/auth/hosted-login";
 import Skeleton from "@/components/ui/Skeleton";
 import GatewayUnavailableOverlay from "@/components/GatewayUnavailableOverlay";
+import PublicErrorCodes from "@/screens/PublicErrorCodes";
 
 const Onboarding = lazy(() => import("@/screens/Dashboard/components/Onboarding"));
 
@@ -35,7 +36,7 @@ export default function App() {
   }, [profile, t]);
 
   return (
-    <div id="App" className="bg-white dark:bg-surface-950">
+    <div id="App" className="bg-background">
       <GatewayUnavailableOverlay />
       <Routes>
           <Route
@@ -49,6 +50,7 @@ export default function App() {
             }
           />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/error-codes" element={<PublicErrorCodes />} />
           <Route
             path={HOSTED_LOGIN_CALLBACK_PATH}
             element={<HostedLoginCallback />}

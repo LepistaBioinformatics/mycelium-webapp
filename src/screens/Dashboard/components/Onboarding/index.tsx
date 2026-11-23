@@ -7,6 +7,7 @@ import { components } from "@/services/openapi/mycelium-schema";
 import {
   accountsCreate,
   accountsGet,
+  accountsUpdateName,
   metaCreate,
   metaUpdate,
   profileGet,
@@ -21,8 +22,9 @@ import useGatewayHealth from "@/hooks/use-gateway-health";
 import PageBody from "@/components/ui/PageBody";
 import ControlPanelBreadcrumbItem from "../ControlPanelBreadcrumbItem";
 import { MdChecklist } from "react-icons/md";
-import { FaTelegramPlane } from "react-icons/fa";
-import { ActiveTab } from "../Profile/active-tab";
+import { onboardingProgress } from "@/functions/onboarding-progress";
+import isPrivilegedAccount from "@/functions/is-privileged-account";
+import { TextInput } from "@/components/ui/Input";
 
 type Account = components["schemas"]["Account"];
 type AccountStatus = "loading" | "exists" | "missing";
@@ -31,15 +33,13 @@ type AccountStatus = "loading" | "exists" | "missing";
 // Meta
 // ---------------------------------------------------------------------------
 //
-// Only `locale` is collected here. `phone_number` and `whatsapp_user` were
-// removed (2026-07-11): they're stored by the gateway (`AccountMetaKey`) but
-// never read by anything — no SMS, no WhatsApp notification, nothing consumes
-// them. `telegram_user` DOES have a real integration (alternate login via the
-// Telegram bot — core/src/use_cases/gateway/telegram/*), so it stays
-// reachable from here, but as an optional, non-blocking link out to the
-// existing "Identity" tab rather than a step collected inline.
+// The onboarding collects what identifies the person behind the account:
+// their name (the account is created with the email as its name), the
+// language, and — for privileged roles, the ones the required-contact banner
+// asks for — a phone number and job title (`phone_number`, `job_title`,
+// standard `AccountMetaKey`s). Telegram stays on the Profile's Identity tab.
 
-type MetaKey = "locale";
+type MetaKey = "locale" | "phone_number" | "job_title";
 type MetaRecord = Record<MetaKey, string>;
 type MetaBoolRecord = Record<MetaKey, boolean>;
 
@@ -50,36 +50,18 @@ const LOCALE_OPTIONS = [
 ];
 
 function makeMetaRecord(value: string): MetaRecord {
-  return { locale: value };
+  return { locale: value, phone_number: value, job_title: value };
 }
 
 function makeMetaBoolRecord(value: boolean): MetaBoolRecord {
-  return { locale: value };
-}
-
-// Steps: account + locale = 2. Telegram is an optional, uncounted extra.
-const TOTAL_STEPS = 2;
-
-function isTelegramLinked(meta: Record<string, string> | undefined): boolean {
-  try {
-    const raw = meta?.telegram_user;
-    if (!raw) return false;
-    const parsed = JSON.parse(raw) as unknown;
-    return (
-      typeof parsed === "object" &&
-      parsed !== null &&
-      typeof (parsed as Record<string, unknown>).id === "number"
-    );
-  } catch {
-    return false;
-  }
+  return { locale: value, phone_number: value, job_title: value };
 }
 
 export default function Onboarding() {
   const { t, i18n } = useTranslation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { user, getAccessTokenSilently } = useProfile();
+  const { user, profile, getAccessTokenSilently } = useProfile();
   const { isGatewayDown } = useGatewayHealth();
 
   const [accountStatus, setAccountStatus] = useState<AccountStatus>("loading");
@@ -89,6 +71,8 @@ export default function Onboarding() {
   const [metaSaving, setMetaSaving] = useState<MetaBoolRecord>(makeMetaBoolRecord(false));
   const [metaSaved, setMetaSaved] = useState<MetaBoolRecord>(makeMetaBoolRecord(false));
   const [isEditing, setIsEditing] = useState(false);
+  const [nameValue, setNameValue] = useState("");
+  const [isSavingName, setIsSavingName] = useState(false);
 
   const tKey = "screens.Dashboard.Onboarding";
 
@@ -123,6 +107,8 @@ export default function Onboarding() {
     if (!account?.meta) return;
     setMetaValues((prev) => ({
       locale: account.meta?.locale ?? prev.locale,
+      phone_number: account.meta?.phone_number ?? prev.phone_number,
+      job_title: account.meta?.job_title ?? prev.job_title,
     }));
     if (account.meta?.locale) {
       const i18nKey = account.meta.locale === "pt-BR" ? "ptBr" : account.meta.locale;
@@ -139,7 +125,7 @@ export default function Onboarding() {
       // The app loaded the profile at sign-in, when there was no account yet;
       // refresh it so the dashboard routes get registered.
       await invalidateProfile();
-      // The sidebar's onboarding ring reads the account from this SWR key
+      // The sidebar's onboarding ring-3 reads the account from this SWR key
       void mutateSWR("rpc:beginners.accounts.get");
 
       const [acc] = await Promise.all([
@@ -165,6 +151,29 @@ export default function Onboarding() {
       setIsCreatingAccount(false);
     }
   }, [emailStr, getAccessTokenSilently, dispatch, t, tKey]);
+
+  const handleSaveName = useCallback(async () => {
+    if (!account?.id || nameValue.trim() === "") return;
+    setIsSavingName(true);
+    try {
+      const updated = await accountsUpdateName(
+        { accountId: account.id, name: nameValue.trim() },
+        getAccessTokenSilently
+      );
+      setAccount((prev) => (prev ? { ...prev, name: updated?.name ?? nameValue.trim() } : prev));
+      void mutateSWR("rpc:beginners.accounts.get");
+    } catch (error) {
+      dispatch(
+        setNotification({
+          notification:
+            error instanceof Error ? error.message : t(`${tKey}.error`),
+          type: "error",
+        })
+      );
+    } finally {
+      setIsSavingName(false);
+    }
+  }, [account?.id, nameValue, getAccessTokenSilently, dispatch, t, tKey]);
 
   const handleSaveMeta = useCallback(
     async (key: MetaKey) => {
@@ -211,13 +220,27 @@ export default function Onboarding() {
   );
 
   const meta = account?.meta as Record<string, string> | undefined;
-  const localeSet = !!(meta?.locale);
-  const telegramSet = isTelegramLinked(meta);
+  const privileged = isPrivilegedAccount(profile);
+  const progress = onboardingProgress(
+    accountStatus === "exists" ? account : null,
+    emailStr,
+    privileged
+  );
+  const localeSet = progress.steps.locale;
+  const completedSteps = progress.done;
+  const allDone = progress.isComplete;
+  const contactChanged =
+    metaValues.phone_number !== (meta?.phone_number ?? "") ||
+    metaValues.job_title !== (meta?.job_title ?? "");
 
-  const completedSteps =
-    (accountStatus === "exists" ? 1 : 0) + (localeSet ? 1 : 0);
-
-  const allDone = completedSteps === TOTAL_STEPS;
+  const handleSaveContact = async () => {
+    if (metaValues.phone_number !== (meta?.phone_number ?? "")) {
+      await handleSaveMeta("phone_number");
+    }
+    if (metaValues.job_title !== (meta?.job_title ?? "")) {
+      await handleSaveMeta("job_title");
+    }
+  };
 
   return (
     <div className="p-1 sm:p-5">
@@ -236,7 +259,7 @@ export default function Onboarding() {
         {accountStatus === "loading" ? (
           <Skeleton shape="block" className="h-10 w-full" />
         ) : (
-          <ProgressBar completed={completedSteps} total={TOTAL_STEPS} tKey={tKey} />
+          <ProgressBar completed={completedSteps} total={progress.total} tKey={tKey} />
         )}
 
         {/* D — All done: completion card */}
@@ -284,7 +307,40 @@ export default function Onboarding() {
                 )}
               </TimelineItem>
 
-              {/* Step 2 — Locale */}
+              {/* Step 2 — Name */}
+              <TimelineItem
+                done={progress.steps.name}
+                disabled={accountStatus !== "exists"}
+                label={t(`${tKey}.name.title`)}
+              >
+                <div className="flex flex-col gap-2">
+                  <Typography as="small" decoration="smooth">
+                    {t(`${tKey}.name.description`)}
+                  </Typography>
+                  <FormField label={t(`${tKey}.name.label`)} id="onboarding-name">
+                    <TextInput
+                      id="onboarding-name"
+                      value={nameValue || (progress.steps.name ? account?.name ?? "" : "")}
+                      disabled={accountStatus !== "exists"}
+                      placeholder={t(`${tKey}.name.placeholder`)}
+                      autoComplete="name"
+                      onChange={(event) => setNameValue(event.target.value)}
+                    />
+                  </FormField>
+                  {nameValue.trim() !== "" && nameValue.trim() !== account?.name && (
+                    <Button
+                      onClick={handleSaveName}
+                      disabled={isSavingName}
+                      intent="secondary"
+                      size="sm"
+                    >
+                      {isSavingName ? t(`${tKey}.saving`) : t(`${tKey}.save`)}
+                    </Button>
+                  )}
+                </div>
+              </TimelineItem>
+
+              {/* Step 3 — Locale */}
               <TimelineItem
                 done={localeSet}
                 disabled={accountStatus !== "exists"}
@@ -328,37 +384,57 @@ export default function Onboarding() {
                 </div>
               </TimelineItem>
 
-              {/* Optional — Connect Telegram (not counted in progress) */}
+              {/* Step 4 — Work contact (required for privileged roles) */}
               <TimelineItem
-                done={telegramSet}
+                done={progress.steps.contact}
                 disabled={accountStatus !== "exists"}
-                label={t(`${tKey}.meta.telegram.title`)}
-                optional
+                label={t(`${tKey}.contact.title`)}
+                optional={!privileged}
               >
-                <div className="flex flex-col gap-3">
+                <div className="flex flex-col gap-2">
                   <Typography as="small" decoration="smooth">
-                    {telegramSet
-                      ? t(`${tKey}.meta.telegram.linkedHint`)
-                      : t(`${tKey}.meta.telegram.linkHint`)}
+                    {privileged
+                      ? t(`${tKey}.contact.requiredDescription`)
+                      : t(`${tKey}.contact.optionalDescription`)}
                   </Typography>
-
-                  {!telegramSet && (
-                    <div>
-                      <Button
-                        intent="secondary"
-                        size="sm"
-                        onClick={() =>
-                          navigate(
-                            `/dashboard/profile?tab=${ActiveTab.TelegramIdentity}`
-                          )
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <FormField label={t(`${tKey}.contact.phone`)} id="onboarding-phone">
+                      <TextInput
+                        id="onboarding-phone"
+                        type="tel"
+                        autoComplete="tel"
+                        placeholder="+1 555 000 0000"
+                        value={metaValues.phone_number}
+                        disabled={accountStatus !== "exists"}
+                        onChange={(event) =>
+                          setMetaValues((prev) => ({ ...prev, phone_number: event.target.value }))
                         }
-                      >
-                        <span className="inline-flex items-center gap-2">
-                          <FaTelegramPlane />
-                          {t(`${tKey}.meta.telegram.button`)}
-                        </span>
-                      </Button>
-                    </div>
+                      />
+                    </FormField>
+                    <FormField label={t(`${tKey}.contact.jobTitle`)} id="onboarding-job">
+                      <TextInput
+                        id="onboarding-job"
+                        autoComplete="organization-title"
+                        placeholder={t(`${tKey}.contact.jobTitlePlaceholder`)}
+                        value={metaValues.job_title}
+                        disabled={accountStatus !== "exists"}
+                        onChange={(event) =>
+                          setMetaValues((prev) => ({ ...prev, job_title: event.target.value }))
+                        }
+                      />
+                    </FormField>
+                  </div>
+                  {contactChanged && (
+                    <Button
+                      onClick={handleSaveContact}
+                      disabled={metaSaving.phone_number || metaSaving.job_title}
+                      intent="secondary"
+                      size="sm"
+                    >
+                      {metaSaving.phone_number || metaSaving.job_title
+                        ? t(`${tKey}.saving`)
+                        : t(`${tKey}.save`)}
+                    </Button>
                   )}
                 </div>
               </TimelineItem>
@@ -389,7 +465,7 @@ function WelcomeHeader({ emailStr, tKey }: { emailStr: string; tKey: string }) {
 
   return (
     <div className="flex items-center gap-4">
-      <div className="w-12 h-12 rounded-full bg-brand-violet-500 dark:bg-brand-violet-400 flex items-center justify-center text-white font-bold text-xl flex-shrink-0">
+      <div className="w-12 h-12 rounded-full bg-brand-100 text-brand-700 dark:bg-brand-900/60 dark:text-brand-200 ring-1 ring-brand-200 dark:ring-brand-700 flex items-center justify-center font-bold text-xl shrink-0">
         {initials}
       </div>
       <div className="flex flex-col gap-0.5">
@@ -513,7 +589,7 @@ function LocaleSelect({
       value={value}
       disabled={disabled}
       onChange={(e) => onChange(e.target.value)}
-      className="block w-full rounded-lg border border-brand-600 bg-brand-violet-50 px-3 py-2 text-zinc-900 focus:border-brand-violet-500 focus:ring-1 focus:ring-brand-violet-500 focus:outline-none dark:bg-surface-950 dark:text-white dark:focus:border-brand-violet-400 dark:focus:ring-brand-violet-400 disabled:opacity-50 disabled:cursor-not-allowed"
+      className="block w-full rounded-md border border-input bg-field text-foreground shadow-xs outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/40 disabled:opacity-50 disabled:cursor-not-allowed px-3 py-2"
     >
       <option value="">{t(`${tKey}.meta.locale.placeholder`)}</option>
       {LOCALE_OPTIONS.map((opt) => (
@@ -558,7 +634,7 @@ function TimelineItem({
     <div className="relative pl-8 pb-8">
       {/* Dot */}
       <div
-        className={`absolute -left-[9px] top-1 w-4 h-4 rounded-lg border-2 ${dotColor} flex items-center justify-center`}
+        className={`absolute left-[-9px] top-1 w-4 h-4 rounded-lg border-2 ${dotColor} flex items-center justify-center`}
       >
         {done && (
           <svg

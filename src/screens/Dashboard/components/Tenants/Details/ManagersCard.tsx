@@ -30,6 +30,9 @@ export default function ManagersCard({ tenant, mutateTenantStatus }: Props) {
   const [isGuestToAccountModalOpen, setIsGuestToAccountModalOpen] =
     useState(false);
   const [isUnInviteModalOpen, setIsUnInviteModalOpen] = useState(false);
+  // Bumped after an invite or un-invite: part of the invitations list key,
+  // so the list reloads from its first page.
+  const [invitationsVersion, setInvitationsVersion] = useState(0);
   const [currentGuestUser, setCurrentGuestUser] = useState<GuestUser | null>(
     null
   );
@@ -61,6 +64,7 @@ export default function ManagersCard({ tenant, mutateTenantStatus }: Props) {
     mutateTenantStatus();
     setIsUnInviteModalOpen(false);
     setCurrentGuestUser(null);
+    setInvitationsVersion((version) => version + 1);
   };
 
   const handleCreateManagementAccountModalClose = () => {
@@ -140,6 +144,7 @@ export default function ManagersCard({ tenant, mutateTenantStatus }: Props) {
                 account={manager}
                 tenantId={tenant?.id}
                 setCurrentGuestUser={handleOpenUnInviteModal}
+                refreshKey={invitationsVersion}
               />
             </div>
           ) : (
@@ -181,6 +186,7 @@ export default function ManagersCard({ tenant, mutateTenantStatus }: Props) {
           account={manager}
           isOpen={isGuestToAccountModalOpen}
           onClose={handleCloseGuestToAccountModal}
+          onInvited={() => setInvitationsVersion((version) => version + 1)}
           restrictRoleToSlug={"tenantManager"}
           tenantId={tenant?.id}
         />

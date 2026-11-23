@@ -1,6 +1,6 @@
-import { Config } from "tailwindcss";
+// Spread into the `variants` / `defaultVariants` of CVA primitives.
 
-const sharedComponentStylesVariants: Config["variants"] = {
+const sharedComponentStylesVariants = {
     width: {
         full: "w-full",
         min: "w-min",
@@ -64,7 +64,8 @@ const sharedComponentStylesVariants: Config["variants"] = {
     }
 };
 
-const sharedComponentStylesDefaultVariants: Config["defaultVariants"] = {
+// Typed as `object`: each primitive only declares some of these variants.
+const sharedComponentStylesDefaultVariants: object = {
     width: "none",
     height: "none",
     padding: "md",

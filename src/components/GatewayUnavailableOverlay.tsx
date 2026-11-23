@@ -33,9 +33,9 @@ export default function GatewayUnavailableOverlay() {
       aria-modal="true"
       aria-labelledby="gateway-unavailable-title"
       aria-describedby="gateway-unavailable-description"
-      className="fixed inset-0 z-[1000] flex items-center justify-center bg-black bg-opacity-50 sm:bg-opacity-60 px-4"
+      className="fixed inset-0 z-1000 flex items-center justify-center bg-black/50 sm:bg-black/60 px-4"
     >
-      <div className="flex flex-col items-center gap-4 max-w-md w-full p-6 rounded-lg border border-brand-600 shadow-sm dark:shadow-none bg-white dark:bg-surface-950 text-center">
+      <div className="flex flex-col items-center gap-4 max-w-md w-full p-6 rounded-xl border border-brand-600/25 dark:border-brand-400/20 shadow-lg bg-card text-center">
         <MdCloudOff className="text-4xl text-infra-500" aria-hidden="true" />
 
         <div id="gateway-unavailable-title">

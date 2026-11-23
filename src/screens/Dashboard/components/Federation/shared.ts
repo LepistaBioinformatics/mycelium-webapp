@@ -55,6 +55,13 @@ export function peerName(peer: PeerOverview | undefined, fallback: string) {
   return peer.displayName || peer.baseUrl;
 }
 
+/** The gateway answers JSON-RPC "method not found" (-32601) for every
+ * `federation.*` method when it was built without federation (e.g. the
+ * standalone mode, which does not support it). */
+export function isFederationUnavailable(err: unknown) {
+  return errorMessage(err).includes("(-32601)");
+}
+
 export function errorMessage(err: unknown) {
   return err instanceof Error ? err.message : String(err);
 }

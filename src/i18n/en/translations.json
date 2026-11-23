@@ -64,9 +64,7 @@
           "title": "Your email"
         },
         "personalInfo": {
-          "phoneNumber": "Phone",
-          "emergencyContactName": "Emergency contact",
-          "emergencyContactPhone": "Emergency phone"
+          "phoneNumber": "Phone"
         },
         "ContactInfoSection": {
           "tabName": "Contact Info",
@@ -83,14 +81,6 @@
             "title": "Job title",
             "placeholder": "e.g. Infrastructure Lead"
           },
-          "emergencyContactName": {
-            "title": "Emergency contact name",
-            "description": "Someone we can reach on your behalf if needed.",
-            "placeholder": "Full name"
-          },
-          "emergencyContactPhone": {
-            "title": "Emergency contact phone"
-          },
           "save": "Save",
           "saving": "Saving...",
           "error": "Some fields failed to save"
@@ -99,14 +89,7 @@
       "AdvancedOptionsModal": {
         "title": "Create Connection String",
         "tabName": "Advanced Options",
-        "accountId": "Restricted to account",
-        "accountIdDescription": "The connection string will be restricted to the account with the ID.",
-        "tenantId": "Restricted to tenant",
-        "tenantIdDescription": "The connection string will be restricted to the tenant with the ID.",
-        "permissionedRoles": "Roles and permissions",
-        "permissionedRolesDescription": "The connection string will be restricted to the roles and permissions selected.",
-        "removeRole": "Do not include this role in the filter",
-        "explain": "The connection string will be restricted to account, tenant, roles and permissions selected in this step. To verify if the generated token has the appropriate scope, use tools like base64decode.org",
+        "explain": "A connection string lets a script or another service call the gateway on your behalf. It only carries the scope listed below, until it expires.",
         "form": {
           "expiration": {
             "label": "Select expiration",
@@ -147,6 +130,27 @@
             "serviceAccount": "Service account",
             "roles": "Roles",
             "expiresAt": "Expires at"
+          }
+        },
+        "scope": {
+          "title": "What this connection string can access",
+          "description": "Requests made with it are limited to:",
+          "unrestricted": "No restriction applies: this connection string carries all of your current permissions. Create it from a namespace or an account to narrow it down.",
+          "tenant": {
+            "label": "Namespace",
+            "hint": "Only requests to this namespace are accepted."
+          },
+          "account": {
+            "label": "Account",
+            "hint": "It acts only on this account."
+          },
+          "roles": {
+            "label": "Roles",
+            "count": "{{included}} of {{total}} included",
+            "hint": "Only the selected roles go into the connection string. Click a role to leave it out.",
+            "noneSelected": "Select at least one role.",
+            "remove": "Leave out {{role}}",
+            "include": "Include {{role}}"
           }
         }
       },
@@ -693,6 +697,10 @@
               "desctiption": "Removing the invitation will remove the accesses from the invited user.",
               "confirm": "Proceed"
             }
+          },
+          "unverified": {
+            "label": "Not verified",
+            "title": "The guest has not confirmed this invitation yet"
           }
         },
         "AccountDetails": {
@@ -788,6 +796,11 @@
           "withPermission": {
             "title": "Permission",
             "prefix": "With permission"
+          },
+          "myGuestsEmpty": "{{email}} has no invitations in {{tenant}}",
+          "myGuestsNoTenant": {
+            "title": "Select a namespace to see the invitations",
+            "description": "Invitations are listed per namespace. Mark a namespace with the star on the Namespaces screen to see this user's invitations in it."
           }
         },
         "PermissionsOnAccount": {
@@ -845,19 +858,33 @@
           "title": "Invite a user",
           "form": {
             "email": {
-              "label": "1. With this email",
+              "label": "E-mail",
               "placeholder": "example@email.com",
-              "title": "The invited user's email address. "
+              "title": "The invited user's email address. ",
+              "invalid": "Type a valid e-mail address"
             },
             "account": {
-              "label": "2. For this account",
+              "label": "Invite to",
               "title": "The account to invite the user"
             },
             "role": {
-              "label": "3. With this function",
+              "label": "Role",
               "title": "The function of the invited user"
             },
-            "invite": "To invite"
+            "invite": "Send invite"
+          },
+          "steps": {
+            "label": "Invitation steps",
+            "email": "E-mail",
+            "role": "Role"
+          },
+          "continue": "Continue",
+          "back": "Back",
+          "changeEmail": "Change",
+          "sending": "Sending…",
+          "errors": {
+            "missingTenant": "Select a namespace before inviting to this account",
+            "generic": "The invitation could not be sent"
           }
         },
         "DeleteAccount": {
@@ -996,9 +1023,27 @@
         "GuestRoleSelector": {
           "label": "Child role",
           "title": "Select a child role",
-          "placeholder": "Select a child role",
-          "loading": "Loading...",
-          "button": "Click to Select"
+          "placeholder": "Search roles by name…",
+          "change": "Change",
+          "empty": "No roles match this search",
+          "permissions": {
+            "read": "Read",
+            "write": "Write"
+          },
+          "unavailable": {
+            "ignored": "Already assigned",
+            "sameAsParent": "Same as the parent role",
+            "notBelowParent": "Must have a lower permission than the parent role"
+          }
+        },
+        "initializer": {
+          "button": "System roles",
+          "title": "Initialize system roles",
+          "description": "Creates the gateway's built-in guest roles, one with read and one with write permission for each actor below. Managers use them to delegate gateway administration.",
+          "idempotent": "Roles that already exist are kept as they are, so running this again is safe.",
+          "confirm": "Initialize",
+          "cancel": "Cancel",
+          "success": "System roles are ready"
         }
       },
       "ErrorCodes": {
@@ -1029,12 +1074,6 @@
           "complete": "Account created"
         },
         "meta": {
-          "telegram": {
-            "title": "Telegram",
-            "linkHint": "Optional — connect Telegram to sign in and receive notifications through the bot.",
-            "linkedHint": "Telegram is connected.",
-            "button": "Connect Telegram"
-          },
           "locale": {
             "title": "Preferred language",
             "description": "Sets the language for the dashboard and system emails.",
@@ -1045,7 +1084,33 @@
         "saving": "Saving...",
         "saved": "Saved",
         "edit": "Edit information",
-        "error": "Unexpected error"
+        "error": "Unexpected error",
+        "name": {
+          "title": "Your name",
+          "description": "How people will see you across the portal and in invitations.",
+          "label": "Full name",
+          "placeholder": "e.g. Ana Silva"
+        },
+        "contact": {
+          "title": "Work contact",
+          "requiredDescription": "Your role has elevated privileges, so we need a way to reach you if something needs your attention.",
+          "optionalDescription": "Optional — helps administrators reach you if something needs your attention.",
+          "phone": "Phone number",
+          "jobTitle": "Job title",
+          "jobTitlePlaceholder": "e.g. Infrastructure Lead"
+        }
+      },
+      "Discovery": {
+        "filters": {
+          "origin": "Origin",
+          "hideGateway": "Hide gateway endpoints",
+          "hideGatewayDescription": "Leave out the API gateway's own operations and list only downstream services",
+          "method": "HTTP method"
+        }
+      },
+      "WebhookExecutions": {
+        "title": "Webhook executions",
+        "searchPlaceholder": "Filter with status:failed or trigger:userAccount.created"
       },
       "Webhooks": {
         "title": "Webhooks",
@@ -1325,6 +1390,10 @@
             "submit": "Create",
             "created": "Translation rule created"
           }
+        },
+        "unavailable": {
+          "title": "Federation is not available on this gateway",
+          "description": "This instance was built without federation, so it cannot join a peer mesh. Federation is not supported in standalone mode; it needs a full or postgres-only build with the federation feature."
         }
       }
     },
@@ -1344,7 +1413,7 @@
       }
     },
     "HostedLogin": {
-      "signIn": "Sign in",
+      "signIn": "Continue to the portal",
       "redirecting": "Redirecting to sign in…",
       "startError": "Could not start the sign-in. Try again.",
       "callback": {
@@ -1353,20 +1422,28 @@
         "failedDetail": "The sign-in link is invalid, expired, or was opened in another browser.",
         "retry": "Try again"
       }
+    },
+    "PublicErrorCodes": {
+      "title": "Error codes",
+      "description": "Look up an error returned by this gateway or its services. Search by code (MYC00023), prefix (MYC) or number (23).",
+      "searchPlaceholder": "Search by code, e.g. MYC00023",
+      "back": "Home",
+      "empty": "No error code matches this search",
+      "unavailable": "Error codes could not be loaded right now",
+      "footerLink": "Error codes",
+      "loginLink": "Got an error code? Look it up"
     }
   },
   "components": {
     "SearchBar": {
       "placeholder": "Search results ...",
+      "removeFilter": "Remove filter {{filter}}",
+      "clearFilters": "Clear filters",
+      "refinePlaceholder": "Refine with a search term…",
       "clear": "Clear search",
       "commandPalette": {
         "title": "Filters"
       }
-    },
-    "Pager": {
-      "records": "{{number}} results",
-      "prev": "Previous",
-      "next": "Next"
     },
     "RequiredContactInfoBanner": {
       "title": "Complete your contact information",
@@ -1391,6 +1468,17 @@
       "description": "We can't reach the Mycelium API right now. The portal is paused to avoid showing wrong information and will resume as soon as the connection is back.",
       "retry": "Try again now",
       "retrying": "Checking…"
+    },
+    "AccountName": {
+      "serviceAccount": "Service account",
+      "tenantManager": "Namespace management",
+      "role": "{{role}} role",
+      "actor": "{{actor}}"
+    },
+    "LoadMore": {
+      "showing": "Showing {{loaded}} of {{total}}",
+      "button": "Load more",
+      "loading": "Loading…"
     }
   },
   "Menu": {
@@ -1404,9 +1492,12 @@
     "accounts": "Accounts",
     "guestRoles": "Guest Roles",
     "webhooks": "Webhooks",
+    "webhookExecutions": "Webhook executions",
     "errorCodes": "Error codes",
     "operations": "Operations",
     "dashboard": "Dashboard",
-    "federation": "Federation"
+    "federation": "Federation",
+    "gettingStarted": "Getting started",
+    "onboardingProgress": "{{percent}}% set up"
   }
 }

@@ -7,11 +7,9 @@ import useProfile from "@/hooks/use-profile";
 import { components } from "@/services/openapi/mycelium-schema";
 import { tenantsGetPublicInfo } from "@/services/rpc/beginners";
 import { tenantsList } from "@/services/rpc/managers";
-import PaginatedRecords from "@/types/PaginatedRecords";
 import { useCallback, useMemo, useState } from "react";
-import useSWR from "swr";
+import useLoadMore from "@/hooks/use-load-more";
 import TenantModal from "./TenantModal";
-import TenantDetails from "./TenantDetails";
 import DashBoardBody from "../DashBoardBody";
 import useSearchBarParams from "@/hooks/use-search-bar-params";
 import PaginatedContent from "../PaginatedContent";
@@ -19,15 +17,16 @@ import ListItem from "@/components/ui/ListItem";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/states/store";
 import { FaRegStar, FaStar } from "react-icons/fa6";
-import { MdManageAccounts } from "react-icons/md";
 import { setTenantInfo, setTenantIsLoading } from "@/states/tenant.state";
 import { SlOrganization } from "react-icons/sl";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { useTranslation } from "react-i18next";
 import { MycRole } from "@/types/MyceliumRole";
 import { MycPermission } from "@/types/MyceliumPermission";
 
 type Tenant = components["schemas"]["Tenant"];
+
+const PAGE_SIZE = 20;
 
 export default function Tenants() {
   const { t } = useTranslation();
@@ -35,8 +34,6 @@ export default function Tenants() {
   const navigate = useNavigate();
 
   const [isNewModalOpen, setIsNewModalOpen] = useState(false);
-  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
-  const [currentTenant, setCurrentTenant] = useState<Tenant | null>(null);
 
   const { tenantInfo, isLoading: isLoadingTenantInfo } = useSelector(
     (state: RootState) => state.tenant
@@ -57,54 +54,23 @@ export default function Tenants() {
     shouldBeStaff: true,
   });
 
-  const { skip, pageSize, setSkip, setPageSize, searchTerm, setSearchTerm } =
-    useSearchBarParams({
-      initialSkip: 0,
-      initialPageSize: 10,
-    });
+  const { searchTerm, setSearchTerm } = useSearchBarParams({
+    initialSkip: 0,
+    initialPageSize: PAGE_SIZE,
+  });
 
-  const swrKey = useMemo(() => {
-    if (!isAuthenticated) return null;
-    if (!hasEnoughPermissions) return null;
-
-    return ["rpc", "managers.tenants.list", skip, pageSize, searchTerm] as [
-      string,
-      string,
-      number,
-      number,
-      string,
-    ];
-  }, [searchTerm, skip, pageSize, isAuthenticated, hasEnoughPermissions]);
-
-  const {
-    data: tenants,
-    isLoading: isLoadingTenants,
-    mutate: mutateTenants,
-  } = useSWR<PaginatedRecords<Tenant>>(
-    swrKey,
-    ([, , _skip, _pageSize, _searchTerm]: [
-      string,
-      string,
-      number,
-      number,
-      string,
-    ]) =>
+  const tenants = useLoadMore<Tenant>({
+    baseKey:
+      isAuthenticated && hasEnoughPermissions
+        ? ["rpc", "managers.tenants.list", searchTerm ?? ""]
+        : null,
+    pageSize: PAGE_SIZE,
+    fetchPage: (skip, pageSize) =>
       tenantsList(
-        {
-          skip: _skip || undefined,
-          pageSize: _pageSize || undefined,
-          name: _searchTerm || undefined,
-        },
+        { skip: skip || undefined, pageSize, name: searchTerm || undefined },
         getAccessTokenSilently
       ),
-    {
-      revalidateIfStale: true,
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false,
-      revalidateOnMount: true,
-      refreshInterval: 1000 * 60,
-    }
-  );
+  });
 
   const setTokenPublicInformation = useCallback(
     async (tenantId: string | null | undefined) => {
@@ -128,29 +94,19 @@ export default function Tenants() {
   );
 
   const onSubmit = (term?: string) => {
-    setSkip(0);
-
     if (term !== undefined) setSearchTerm(term);
 
-    mutateTenants(tenants, { rollbackOnError: true });
+    tenants.mutate();
   };
 
   const handleCloseModal = () => {
     setIsNewModalOpen(false);
-    setIsViewModalOpen(false);
-    setCurrentTenant(null);
-    mutateTenants(tenants, { rollbackOnError: true });
+    tenants.mutate();
   };
 
   const handleSuccess = () => {
     handleCloseModal();
-    mutateTenants(tenants, { rollbackOnError: true });
-  };
-
-  const handleViewTenantClick = (tenant: Tenant) => {
-    Promise.resolve()
-      .then(() => setCurrentTenant(tenant))
-      .then(() => setIsViewModalOpen(true));
+    tenants.mutate();
   };
 
   return (
@@ -161,8 +117,6 @@ export default function Tenants() {
         </PageBody.Breadcrumb.Item>
       }
       onSubmit={onSubmit}
-      setSkip={setSkip}
-      setPageSize={setPageSize}
       isLoading={isLoadingUser}
       authorized={hasEnoughPermissions}
     >
@@ -185,62 +139,51 @@ export default function Tenants() {
         </div>
 
         <PaginatedContent
-          isLoading={isLoadingTenants}
-          records={tenants}
-          mutation={mutateTenants}
-          skip={skip}
-          setSkip={setSkip}
-          pageSize={pageSize}
+          isLoading={tenants.isLoading}
+          loaded={tenants.records.length}
+          total={tenants.count}
+          hasMore={tenants.hasMore}
+          isLoadingMore={tenants.isLoadingMore}
+          onLoadMore={tenants.loadMore}
         >
-          {tenants?.records?.map((tenant) => (
+          {tenants.records.map((tenant) => (
             <ListItem key={tenant?.id}>
-              <div className="flex flex-col sm:flex-row justify-between gap-3 group">
-                <Typography as="h3" highlight>
-                  <div className="flex items-center justify-between sm:justify-start gap-8">
-                    <button
+              {/* The whole row opens the tenant; the name is the keyboard
+                  target, the star and copy buttons keep their own action. */}
+              <div
+                className="flex flex-col gap-1 cursor-pointer"
+                onClick={() => navigate(`/dashboard/tenants/${tenant.id}`)}
+              >
+                <div className="flex justify-between items-start gap-3 group">
+                  <Typography as="h3" highlight>
+                    <Link
+                      to={`/dashboard/tenants/${tenant.id}`}
                       title={t(
-                        "screens.Dashboard.Tenants.viewTenantBasicDetails"
+                        "screens.Dashboard.Tenants.TenantDetails.name.viewDetailsButton"
                       )}
-                      className="hover:underline text-brand-violet-500 dark:text-brand-violet-400 bg-transparent"
-                      onClick={() => handleViewTenantClick(tenant)}
+                      className="hover:underline rounded-sm outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
+                      onClick={(event) => event.stopPropagation()}
                     >
                       {tenant?.name}
-                    </button>
-
-                    <Button
-                      size="sm"
-                      onClick={() => navigate(`/dashboard/tenants/${tenant.id}`)}
-                    >
-                      <span className="flex items-center gap-1.5">
-                        <MdManageAccounts size={16} />
-                        {t(
-                          "screens.Dashboard.Tenants.TenantDetails.name.viewDetailsButton"
-                        )}
-                      </span>
-                    </Button>
+                    </Link>
+                  </Typography>
+                  <div
+                    className="flex gap-5"
+                    onClick={(event) => event.stopPropagation()}
+                  >
+                    <TenantStar
+                      tenantId={tenant.id}
+                      handleClick={() => setTokenPublicInformation(tenant.id)}
+                    />
+                    <CopyToClipboard text={tenant?.id ?? ""} />
                   </div>
-                </Typography>
-                <div className="flex gap-5">
-                  <TenantStar
-                    tenantId={tenant.id}
-                    handleClick={() => setTokenPublicInformation(tenant.id)}
-                  />
-                  <CopyToClipboard text={tenant?.id ?? ""} />
                 </div>
+                <Typography as="span">{tenant?.description}</Typography>
               </div>
-              <Typography as="span">{tenant?.description}</Typography>
             </ListItem>
           ))}
         </PaginatedContent>
       </div>
-
-      {isViewModalOpen && currentTenant && (
-        <TenantDetails
-          isOpen={isViewModalOpen}
-          onClose={handleCloseModal}
-          tenant={currentTenant}
-        />
-      )}
 
       <TenantModal
         isOpen={isNewModalOpen}

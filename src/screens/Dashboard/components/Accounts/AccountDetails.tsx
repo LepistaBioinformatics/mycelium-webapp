@@ -14,7 +14,7 @@ import { useSelector } from "react-redux";
 import Banner from "@/components/ui/Banner";
 import Button from "@/components/ui/Button";
 import GuestToAccountModal from "./GuestToAccountModal";
-import DetailsBox from "@/components/ui/DetailsBox";
+import Tabs from "@/components/ui/Tabs";
 import EditAccountModal from "./EditAccountModal";
 import CopyToClipboard from "@/components/ui/CopyToClipboard";
 import UpgradeOrDowngradeAccountModal from "./UpgradeOrDowngradeAccountModal";
@@ -22,7 +22,7 @@ import IntroSection from "@/components/ui/IntroSection";
 import AccountInvitations from "./AccountInvitations";
 import UnInviteGuestModal from "./UnInviteGuestModal";
 import { useTranslation } from "react-i18next";
-import { useNavigate, useSearchParams } from "react-router";
+import { useSearchParams } from "react-router";
 import WrittenBy from "@/components/WrittenBy";
 import { IoReturnDownBack } from "react-icons/io5";
 import PermissionsOnAccount from "./PermissionsOnAccount";
@@ -31,6 +31,7 @@ import getLicensedResourcesOrNull from "@/functions/get-licensed-resources-or-nu
 import { MycPermission } from "@/types/MyceliumPermission";
 import GuestsByEmail from "./GuestsByEmail";
 import { withBasePath } from "@/functions/with-base-path";
+import AccountName from "@/components/AccountName";
 
 type Account = components["schemas"]["Account"];
 type GuestUser = components["schemas"]["GuestUser"];
@@ -40,19 +41,16 @@ interface Props {
 }
 
 enum OpenedSection {
-  Details,
-  Invitations,
-  AdvancedActions,
-  MyGuests,
+  Details = "details",
+  Invitations = "invitations",
+  AdvancedActions = "advancedActions",
+  MyGuests = "myGuests",
 }
 
 export default function AccountDetails({ onClose }: Props) {
   const { t } = useTranslation();
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [searchParams, _] = useSearchParams();
-
-  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const accountId = useMemo(() => {
     if (!searchParams) return null;
@@ -78,6 +76,9 @@ export default function AccountDetails({ onClose }: Props) {
     null
   );
   const [isUnInviteModalOpen, setIsUnInviteModalOpen] = useState(false);
+  // Bumped after an invite or un-invite: part of the invitations list key,
+  // so the list reloads from its first page.
+  const [invitationsVersion, setInvitationsVersion] = useState(0);
   const [
     isCreateConnectionStringModalOpen,
     setIsCreateConnectionStringModalOpen,
@@ -90,6 +91,8 @@ export default function AccountDetails({ onClose }: Props) {
   );
 
   const { tenantInfo } = useSelector((state: RootState) => state.tenant);
+  // The account's namespace: given by the link, or the selected namespace.
+  const tenantId = searchParams.get("tenantId") || tenantInfo?.id || null;
 
   const filteredLicensedResources = useMemo(() => {
     const licensedResources = getLicensedResourcesOrNull(
@@ -100,7 +103,7 @@ export default function AccountDetails({ onClose }: Props) {
 
     const filtered = licensedResources.filter(
       (resource) =>
-        resource.accId === accountId && resource.tenantId === tenantInfo?.id
+        resource.accId === accountId && resource.tenantId === tenantId
     );
 
     if (filtered.length === 0) return null;
@@ -118,7 +121,7 @@ export default function AccountDetails({ onClose }: Props) {
               t.role === resource.role && t.permission === resource.permission
           )
       );
-  }, [profile?.licensedResources, accountId, tenantInfo?.id]);
+  }, [profile?.licensedResources, accountId, tenantId]);
 
   const handleClose = () => {
     if (onClose) {
@@ -126,14 +129,12 @@ export default function AccountDetails({ onClose }: Props) {
       return;
     }
 
-    navigate(-1);
-  };
-
-  const handleToggleSection = (
-    section: OpenedSection,
-    state: "open" | "closed"
-  ) => {
-    if (state === "open") setOpenedSection(section);
+    // The curtain sits on top of whatever page opened it: closing drops the
+    // params instead of navigating away.
+    const params = new URLSearchParams(searchParams);
+    params.delete("accountId");
+    params.delete("tenantId");
+    setSearchParams(params, { replace: true });
   };
 
   const handleCloseGuestToAccountModal = () => {
@@ -152,6 +153,7 @@ export default function AccountDetails({ onClose }: Props) {
   const handleCloseUnInviteModal = () => {
     onClose?.();
     setIsUnInviteModalOpen(false);
+    setInvitationsVersion((version) => version + 1);
   };
 
   const handleCloseEditModal = () => {
@@ -183,9 +185,9 @@ export default function AccountDetails({ onClose }: Props) {
       "rpc",
       "subscriptionsManager.accounts.get",
       accountId,
-      tenantInfo?.id ?? "",
+      tenantId ?? "",
     ] as const;
-  }, [accountId, tenantInfo?.id]);
+  }, [accountId, tenantId]);
 
   const {
     data: account,
@@ -195,7 +197,7 @@ export default function AccountDetails({ onClose }: Props) {
     swrKey,
     async () =>
       accountsGet(
-        { accountId: accountId!, tenantId: tenantInfo?.id ?? undefined },
+        { accountId: accountId!, tenantId: tenantId ?? undefined },
         getAccessTokenSilently
       ),
     {
@@ -340,10 +342,10 @@ export default function AccountDetails({ onClose }: Props) {
       {account && (
         <IntroSection
           prefix={t("screens.Dashboard.Accounts.AccountDetails.name.prefix")}
-          content={account?.name}
+          content={<AccountName account={account} />}
           title={t("screens.Dashboard.Accounts.AccountDetails.name.title")}
         >
-          {tenantInfo?.id && showTenantInfo && (
+          {tenantInfo?.id && tenantInfo.id === tenantId && showTenantInfo && (
             <>
               <IntroSection.Item
                 prefix={t(
@@ -370,15 +372,30 @@ export default function AccountDetails({ onClose }: Props) {
         </IntroSection>
       )}
 
-      <DetailsBox
-        open={openedSection === OpenedSection.Details}
-        onToggle={(state) => handleToggleSection(OpenedSection.Details, state)}
+      <Tabs
+        value={openedSection}
+        onValueChange={(value) => setOpenedSection(value as OpenedSection)}
       >
-        <DetailsBox.Summary>
-          {t("screens.Dashboard.Accounts.AccountDetails.details")}
-        </DetailsBox.Summary>
+        <Tabs.List>
+          <Tabs.Trigger value={OpenedSection.Details}>
+            {t("screens.Dashboard.Accounts.AccountDetails.details")}
+          </Tabs.Trigger>
+          {includeInvitationsFeature && (
+            <Tabs.Trigger value={OpenedSection.Invitations}>
+              {t("screens.Dashboard.Accounts.AccountDetails.invitations")}
+            </Tabs.Trigger>
+          )}
+          {includeMyGuestsFeature && accountEmails && (
+            <Tabs.Trigger value={OpenedSection.MyGuests}>
+              {t("screens.Dashboard.Accounts.AccountDetails.myGuests")}
+            </Tabs.Trigger>
+          )}
+          <Tabs.Trigger value={OpenedSection.AdvancedActions}>
+            {t("screens.Dashboard.Accounts.AccountDetails.advancedActions")}
+          </Tabs.Trigger>
+        </Tabs.List>
 
-        <DetailsBox.Content minHeight="30">
+      <Tabs.Content value={OpenedSection.Details}>
           <div className="flex flex-col gap-5">
             <IntroSection.Item
               prefix={t(
@@ -465,26 +482,14 @@ export default function AccountDetails({ onClose }: Props) {
             >
               <PermissionsOnAccount
                 accountId={account?.id}
-                tenantId={tenantInfo?.id}
+                tenantId={tenantId}
               />
             </IntroSection.Item>
           </div>
-        </DetailsBox.Content>
-      </DetailsBox>
+      </Tabs.Content>
 
       {includeInvitationsFeature && (
-        <DetailsBox
-          open={openedSection === OpenedSection.Invitations}
-          onToggle={(state) =>
-            handleToggleSection(OpenedSection.Invitations, state)
-          }
-        >
-          <DetailsBox.Summary>
-            {t("screens.Dashboard.Accounts.AccountDetails.invitations")}
-          </DetailsBox.Summary>
-
-          {openedSection === OpenedSection.Invitations && (
-            <DetailsBox.Content minHeight="50">
+        <Tabs.Content value={OpenedSection.Invitations}>
               {includeInvitationsFeature && (
                 <div className="flex justify-end">
                   <Button
@@ -498,52 +503,28 @@ export default function AccountDetails({ onClose }: Props) {
                 </div>
               )}
 
-              {tenantInfo?.id && account && (
+              {tenantId && account && (
                 <div className="flex flex-col gap-1">
                   <AccountInvitations
                     account={account}
-                    tenantId={tenantInfo?.id}
+                    tenantId={tenantId}
                     setCurrentGuestUser={handleOpenUnInviteModal}
+                    refreshKey={invitationsVersion}
                   />
                 </div>
               )}
-            </DetailsBox.Content>
-          )}
-        </DetailsBox>
+        </Tabs.Content>
       )}
 
       {includeMyGuestsFeature && accountEmails && (
-        <DetailsBox
-          open={openedSection === OpenedSection.MyGuests}
-          onToggle={(state) =>
-            handleToggleSection(OpenedSection.MyGuests, state)
-          }
-        >
-          <DetailsBox.Summary>
-            {t("screens.Dashboard.Accounts.AccountDetails.myGuests")}
-          </DetailsBox.Summary>
-
-          <div className="max-h-[calc(100vh-15rem)] overflow-y-auto scrollbar">
-            <DetailsBox.Content minHeight="50">
-              {accountEmails?.map((email, index) => (
-                <GuestsByEmail key={index} email={email.email} />
-              ))}
-            </DetailsBox.Content>
-          </div>
-        </DetailsBox>
+        <Tabs.Content value={OpenedSection.MyGuests}>
+          {accountEmails?.map((email, index) => (
+            <GuestsByEmail key={index} email={email.email} />
+          ))}
+        </Tabs.Content>
       )}
 
-      <DetailsBox
-        open={openedSection === OpenedSection.AdvancedActions}
-        onToggle={(state) =>
-          handleToggleSection(OpenedSection.AdvancedActions, state)
-        }
-      >
-        <DetailsBox.Summary>
-          {t("screens.Dashboard.Accounts.AccountDetails.advancedActions")}
-        </DetailsBox.Summary>
-
-        <DetailsBox.Content minHeight="50">
+      <Tabs.Content value={OpenedSection.AdvancedActions}>
           <Banner intent="info">
             <div className="flex justify-between gap-2 my-5">
               <div className="flex flex-col gap-2">
@@ -671,13 +652,13 @@ export default function AccountDetails({ onClose }: Props) {
                 </Banner>
               </>
             )}
-        </DetailsBox.Content>
-      </DetailsBox>
+      </Tabs.Content>
+      </Tabs>
 
-      {tenantInfo?.id && account && (
+      {tenantId && account && (
         <DeleteAccount
           account={account}
-          tenantId={tenantInfo?.id}
+          tenantId={tenantId}
           isOpen={isDeleteModalOpen}
           onClose={handleCloseDeleteModal}
         />
@@ -687,6 +668,7 @@ export default function AccountDetails({ onClose }: Props) {
         <GuestToAccountModal
           isOpen={isGuestToAccountModalOpen}
           onClose={handleCloseGuestToAccountModal}
+          onInvited={() => setInvitationsVersion((version) => version + 1)}
           account={account}
           restrictRoleToSlug={restrictRoleToSlug?.roleName ?? undefined}
         />
@@ -727,7 +709,8 @@ export default function AccountDetails({ onClose }: Props) {
           onClose={handleCloseCreateConnectionStringModal}
           onSuccess={handleSuccessCreateConnectionString}
           accountId={account.id}
-          tenantId={tenantInfo?.id}
+          accountName={<AccountName account={account} />}
+          tenantId={tenantId}
           roles={filteredLicensedResources}
         />
       )}

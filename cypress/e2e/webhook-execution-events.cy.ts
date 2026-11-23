@@ -58,7 +58,7 @@ describe("Webhook execution events", () => {
   });
 
   it("shows the totals and the events without payloads", () => {
-    cy.visitSignedIn("/dashboard/webhooks");
+    cy.visitSignedIn("/dashboard/webhook-executions");
 
     cy.get("[data-testid=webhook-execution-summary]")
       .should("contain", "12")
@@ -71,11 +71,12 @@ describe("Webhook execution events", () => {
   });
 
   it("filters the events by status and shows the empty state", () => {
-    cy.visitSignedIn("/dashboard/webhooks");
+    cy.visitSignedIn("/dashboard/webhook-executions");
     cy.get("[data-testid=webhook-execution-events]").should("exist");
 
-    cy.get("#execution-status-filter").select("success");
+    cy.get("input#term").type("status:success{enter}");
 
+    cy.get("[data-testid=webhook-execution-events]").should("not.exist");
     cy.contains("No execution events yet.").should("be.visible");
     cy.wrap(listParams).should((params) => {
       expect(params.at(-1)).to.include({ status: "success", skip: 0 });
