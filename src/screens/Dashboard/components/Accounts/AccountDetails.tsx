@@ -661,6 +661,10 @@ export default function AccountDetails({ onClose }: Props) {
           tenantId={tenantId}
           isOpen={isDeleteModalOpen}
           onClose={handleCloseDeleteModal}
+          onDeleted={() => {
+            handleCloseDeleteModal();
+            handleClose();
+          }}
         />
       )}
 

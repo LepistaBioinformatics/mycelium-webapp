@@ -8,6 +8,7 @@ import {
 } from "@/services/rpc/subscriptionsManager";
 import { useEffect, useMemo } from "react";
 import useLoadMore from "@/hooks/use-load-more";
+import useAccountsListVersion from "@/hooks/use-accounts-list-version";
 import { replaceSearchFilter } from "@/functions/search-term-filters";
 import DashBoardBody from "../DashBoardBody";
 import PaginatedContent from "../PaginatedContent";
@@ -287,6 +288,8 @@ export default function PaginatedAccounts({
     return null;
   }, [rpcParams, restrictAccountTypeTo]);
 
+  const accountsListVersion = useAccountsListVersion();
+
   const accounts = useLoadMore<Account>({
     baseKey:
       rpcParams && !deferred
@@ -295,6 +298,7 @@ export default function PaginatedAccounts({
             "subscriptionsManager.accounts.list",
             JSON.stringify(rpcParams),
             JSON.stringify(effectiveAccountTypes),
+            accountsListVersion,
           ]
         : null,
     pageSize: initialPageSize,

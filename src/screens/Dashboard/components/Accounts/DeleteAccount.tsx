@@ -5,6 +5,8 @@ import Modal from "@/components/ui/Modal";
 import Typography from "@/components/ui/Typography";
 import useProfile from "@/hooks/use-profile";
 import useSuspenseError from "@/hooks/use-suspense-error";
+import { describeError } from "@/functions/describe-error";
+import { bumpAccountsListVersion } from "@/hooks/use-accounts-list-version";
 import { accountsDeleteSubscriptionAccount } from "@/services/rpc/tenantManager";
 import { components } from "@/services/openapi/mycelium-schema";
 import { MycPermission } from "@/types/MyceliumPermission";
@@ -18,6 +20,8 @@ interface Props {
   account: Account;
   isOpen: boolean;
   onClose: () => void;
+  /** Called once the gateway confirmed the deletion */
+  onDeleted: () => void;
   tenantId: string;
 }
 
@@ -25,6 +29,7 @@ export default function DeleteAccount({
   account,
   isOpen,
   onClose,
+  onDeleted,
   tenantId,
 }: Props) {
   const { t } = useTranslation();
@@ -35,25 +40,33 @@ export default function DeleteAccount({
     restrictSystemAccount: true,
   });
 
-  const { dispatchError } = useSuspenseError();
+  const { dispatchError, dispacheSuccess } = useSuspenseError();
 
   const [isLoading, setIsLoading] = useState(false);
 
   const handleDelete = async () => {
-    setIsLoading(true);
-
     if (!account.id) return;
+
+    setIsLoading(true);
 
     try {
       await accountsDeleteSubscriptionAccount(
         { tenantId, accountId: account.id },
         getAccessTokenSilently
       );
+
+      dispacheSuccess(
+        t("screens.Dashboard.Accounts.DeleteAccount.deleted", {
+          name: account.name,
+        })
+      );
+      bumpAccountsListVersion();
+      onDeleted();
     } catch (err: unknown) {
-      dispatchError(err instanceof Error ? err.message : String(err));
+      dispatchError(describeError(err));
+      onClose();
     } finally {
       setIsLoading(false);
-      onClose();
     }
   };
 

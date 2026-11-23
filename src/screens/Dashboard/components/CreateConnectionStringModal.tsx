@@ -1,3 +1,4 @@
+import { describeError } from "@/functions/describe-error";
 import Button from "@/components/ui/Button";
 import DetailsBox from "@/components/ui/DetailsBox";
 import Divider from "@/components/ui/Divider";
@@ -185,7 +186,7 @@ export default function CreateConnectionStringModal({
 
       setConnectionString(data.connectionString);
     } catch (error) {
-      dispatchWarning(String(error));
+      dispatchWarning(describeError(error));
     } finally {
       setIsSubmitting(false);
     }
