@@ -209,6 +209,29 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/_adm/beginners/tokens/notifications": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create Notification Connection String
+         * @description This action creates a connection string a downstream service uses to send
+         *     emails through the gateway. The connection string carries the
+         *     `notify:email` scope and the service sender tag, and it is rejected on
+         *     every other gateway surface.
+         */
+        post: operations["create_notification_connection_string"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/_adm/beginners/users": {
         parameters: {
             query?: never;
@@ -672,6 +695,39 @@ export interface paths {
          *     new owner to the tenant.
          */
         patch: operations["register_tenant_owner"];
+        trace?: never;
+    };
+    "/_adm/notifications/email": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Send Service Email
+         * @description Render an operator-deployed template of the calling service and queue
+         *     one email per recipient. The caller authenticates ONLY with a
+         *     notification connection string (`notify:email` scope) in the
+         *     `x-mycelium-connection-string` header; JWTs and general connection
+         *     strings are refused. The service is the one bound to the string, never
+         *     one named in the body.
+         *
+         *     **The connection string is a long-lived secret. Never log it, never put
+         *     it in a URL, and never echo it in error reports.** Treat recipient
+         *     addresses and template variables as personal data too.
+         *
+         *     The body accepts only `to`, `template`, `variables` and `locale`. Sender,
+         *     reply address, subject, headers and HTML are always set by the gateway.
+         *     Delivery is asynchronous: 202 means queued, not delivered.
+         */
+        post: operations["send_service_email"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
         trace?: never;
     };
     "/_adm/staffs/accounts/{account_id}/downgrade": {
@@ -1476,6 +1532,28 @@ export interface paths {
         patch: operations["unarchive_account"];
         trace?: never;
     };
+    "/error-codes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List public error codes
+         * @description Lists the error codes meant to be shown to callers (`isInternal = false`).
+         *     Internal error codes are never returned. The page size is capped at 100.
+         *     No authentication required.
+         */
+        get: operations["list_public_error_codes"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/health": {
         parameters: {
             query?: never;
@@ -1593,7 +1671,7 @@ export interface components {
              *     account.
              */
             isDeleted: boolean;
-            verboseStatus?: null | components["schemas"]["VerboseStatus"];
+            verboseStatus?: components["schemas"]["VerboseStatus"] | null;
             isSystemAccount: boolean;
             /**
              * @description The Account Owners
@@ -1609,19 +1687,19 @@ export interface components {
              *     categorize the account.
              */
             accountType: components["schemas"]["AccountType"];
-            guestUsers?: null | components["schemas"]["Children_GuestUser_String"];
+            guestUsers?: components["schemas"]["Children_GuestUser_String"] | null;
             /**
              * Format: date-time
              * @description The Account Created Date
              */
             createdAt: string;
-            createdBy?: null | components["schemas"]["WrittenBy"];
+            createdBy?: components["schemas"]["WrittenBy"] | null;
             /**
              * Format: date-time
              * @description The Account Updated Date
              */
             updatedAt?: string | null;
-            updatedBy?: null | components["schemas"]["WrittenBy"];
+            updatedBy?: components["schemas"]["WrittenBy"] | null;
             /**
              * @description The Account Meta
              *
@@ -1756,7 +1834,7 @@ export interface components {
                  *     account.
                  */
                 isDeleted: boolean;
-                verboseStatus?: null | components["schemas"]["VerboseStatus"];
+                verboseStatus?: components["schemas"]["VerboseStatus"] | null;
                 isSystemAccount: boolean;
                 /**
                  * @description The Account Owners
@@ -1772,19 +1850,19 @@ export interface components {
                  *     categorize the account.
                  */
                 accountType: components["schemas"]["AccountType"];
-                guestUsers?: null | components["schemas"]["Children_GuestUser_String"];
+                guestUsers?: components["schemas"]["Children_GuestUser_String"] | null;
                 /**
                  * Format: date-time
                  * @description The Account Created Date
                  */
                 createdAt: string;
-                createdBy?: null | components["schemas"]["WrittenBy"];
+                createdBy?: components["schemas"]["WrittenBy"] | null;
                 /**
                  * Format: date-time
                  * @description The Account Updated Date
                  */
                 updatedAt?: string | null;
-                updatedBy?: null | components["schemas"]["WrittenBy"];
+                updatedBy?: components["schemas"]["WrittenBy"] | null;
                 /**
                  * @description The Account Meta
                  *
@@ -1828,7 +1906,7 @@ export interface components {
                  *     Gateway, defined in `SystemActor`
                  */
                 system: boolean;
-                children?: null | components["schemas"]["Children_GuestRole_String"];
+                children?: components["schemas"]["Children_GuestRole_String"] | null;
             }[];
         } | {
             ids: string[];
@@ -1865,7 +1943,7 @@ export interface components {
                  * @description The last updated date
                  */
                 updated?: string | null;
-                accounts?: null | components["schemas"]["Children_Account_String"];
+                accounts?: components["schemas"]["Children_Account_String"] | null;
                 /**
                  * @description The guest user is verified
                  *
@@ -1927,7 +2005,7 @@ export interface components {
                 created: string;
                 /** Format: date-time */
                 updated?: string | null;
-                account?: null | components["schemas"]["Parent_Account_String"];
+                account?: components["schemas"]["Parent_Account_String"] | null;
                 /**
                  * @description If the user is the principal user of the account.
                  *
@@ -1939,7 +2017,7 @@ export interface components {
                  *     other users connected.
                  */
                 isPrincipal: boolean;
-                provider?: null | components["schemas"]["Provider"];
+                provider?: components["schemas"]["Provider"] | null;
                 /**
                  * @description The user TOTP
                  *
@@ -1992,6 +2070,15 @@ export interface components {
              *     the right HMAC key for constant-time comparison.
              */
             kvr: number;
+        } | {
+            /**
+             * @description The scopes granted to a scoped (notification) connection string.
+             *     Present only on scoped strings, which never resolve a profile.
+             */
+            scp: components["schemas"]["NotificationScope"][];
+        } | {
+            /** @description The sender tag of the service a notification string was issued for. */
+            svc: string;
         };
         /**
          * @description Content Schema
@@ -2074,8 +2161,34 @@ export interface components {
         CreateGuestRoleBody: {
             name: string;
             description: string;
-            permission?: null | components["schemas"]["Permission"];
+            permission?: components["schemas"]["Permission"] | null;
             system: boolean;
+        };
+        CreateNotificationTokenBody: {
+            /**
+             * Format: int64
+             * @description The expiration time of the token
+             *
+             *     The expiration time of the token in seconds. It must be positive and
+             *     not above the instance `maxConnectionStringTtlInDays`.
+             */
+            expiration: number;
+            /** @description The name of the token */
+            name: string;
+            /**
+             * Format: uuid
+             * @description A single tenant ID
+             *
+             *     The tenant the token is bound to. Required when the service
+             *     `recipientPolicy` is `tenantMembers`.
+             */
+            tenantId?: string | null;
+            /**
+             * @description The service sender tag
+             *
+             *     The `senderTag` of the service allowed to send emails with the token.
+             */
+            senderTag: string;
         };
         CreateRoleAssociatedAccountBody: {
             accountName: string;
@@ -2162,8 +2275,8 @@ export interface components {
             description?: string | null;
             url: string;
             trigger: components["schemas"]["WebHookTrigger"];
-            method?: null | components["schemas"]["HttpMethod"];
-            secret?: null | components["schemas"]["HttpSecret"];
+            method?: components["schemas"]["HttpMethod"] | null;
+            secret?: components["schemas"]["HttpSecret"] | null;
         };
         DeleteAccountMetaParams: {
             key: string;
@@ -2211,6 +2324,23 @@ export interface components {
             /** @description Whether the error is native of mycelium or not. */
             isNative: boolean;
         };
+        /**
+         * @description A grant the subject holds on a peer instance (FED-27)
+         *
+         *     Carried apart from the local `licensedResources`, so a filter never takes
+         *     a foreign grant for a local one unless asked to (FED-31, I-2). Its tenant
+         *     and account ids are the issuer's, guarded against collisions with this
+         *     instance's own (I-1).
+         */
+        FederatedResource: components["schemas"]["LicensedResource"] & {
+            /**
+             * Format: uuid
+             * @description The instance id of the peer that asserted the grant
+             */
+            issuer: string;
+        };
+        /** @description Every federated grant of a profile */
+        FederatedResources: components["schemas"]["FederatedResource"][];
         FetchResourceAuditTrailParams: {
             /** @description The coarse category of the audited resource. */
             resourceType: components["schemas"]["ResourceAuditResourceType"];
@@ -2244,7 +2374,7 @@ export interface components {
              *     Gateway, defined in `SystemActor`
              */
             system: boolean;
-            children?: null | components["schemas"]["Children_GuestRole_String"];
+            children?: components["schemas"]["Children_GuestRole_String"] | null;
         };
         GuestTenantOwnerBody: {
             email: string;
@@ -2274,7 +2404,7 @@ export interface components {
              * @description The last updated date
              */
             updated?: string | null;
-            accounts?: null | components["schemas"]["Children_Account_String"];
+            accounts?: components["schemas"]["Children_Account_String"] | null;
             /**
              * @description The guest user is verified
              *
@@ -2420,6 +2550,24 @@ export interface components {
          * @enum {string}
          */
         IdentitySource: "telegram";
+        /**
+         * @description A service the caller can issue notification connection strings for.
+         *
+         *     Carries only what an issuer needs to fill the issuance form; the service
+         *     issuer roles, templates, quotas and allowed domains stay private.
+         */
+        IssuableNotificationService: {
+            /** @description The service senderTag, sent back on issuance */
+            senderTag: string;
+            /** @description The service display name */
+            displayName: string;
+            /** @description Who the service may email */
+            recipientPolicy: components["schemas"]["RecipientPolicy"];
+            /** @description Tenants the caller can bind a string of this service to */
+            tenantIds: string[];
+            /** @description Whether a string can be issued without a tenant */
+            allowsNoTenant: boolean;
+        };
         ItemsType: components["schemas"]["Schema"] | boolean;
         LicensedResource: {
             /**
@@ -2538,6 +2686,15 @@ export interface components {
             /** @description The guest user was verified */
             wasVerified?: boolean | null;
         };
+        ListPublicErrorCodesParams: {
+            /** @description Filter by the error prefix (e.g. `MYC`) */
+            prefix?: string | null;
+            /**
+             * Format: int32
+             * @description Filter by the error number (e.g. `23` for `MYC00023`)
+             */
+            code?: number | null;
+        };
         ListRoutesByServiceParams: {
             /** Format: uuid */
             id?: string | null;
@@ -2580,10 +2737,10 @@ export interface components {
         ListSubscriptionAccountParams: {
             term?: string | null;
             tagValue?: string | null;
-            accountType?: null | components["schemas"]["APIAccountType"];
+            accountType?: components["schemas"]["APIAccountType"] | null;
             isOwnerActive?: boolean | null;
-            status?: null | components["schemas"]["VerboseStatus"];
-            actor?: null | components["schemas"]["SystemActor"];
+            status?: components["schemas"]["VerboseStatus"] | null;
+            actor?: components["schemas"]["SystemActor"] | null;
         };
         ListTenantParams: {
             /** @description Filter tenants by name */
@@ -2611,12 +2768,12 @@ export interface components {
             tagMeta?: string | null;
         };
         ListWebHookExecutionsParams: {
-            trigger?: null | components["schemas"]["WebHookTrigger"];
-            status?: null | components["schemas"]["WebHookExecutionStatus"];
+            trigger?: components["schemas"]["WebHookTrigger"] | null;
+            status?: components["schemas"]["WebHookExecutionStatus"] | null;
         };
         ListWebHooksParams: {
             name?: string | null;
-            trigger?: null | components["schemas"]["WebHookTrigger"];
+            trigger?: components["schemas"]["WebHookTrigger"] | null;
         };
         /** @enum {string} */
         Location: "query" | "path" | "header" | "cookie";
@@ -2633,13 +2790,32 @@ export interface components {
             duration: string;
             totpRequired: boolean;
         };
+        /** @description What the caller can issue notification connection strings for */
+        NotificationIssuanceOptions: {
+            /**
+             * Format: int32
+             * @description The instance cap on the string expiration, in days
+             */
+            maxConnectionStringTtlInDays: number;
+            /** @description The services the caller can issue for, sorted by display name */
+            services: components["schemas"]["IssuableNotificationService"][];
+        };
+        /**
+         * @description A capability granted by a scoped (notification) connection string
+         *
+         *     A connection string carrying any scope is not a general credential: it is
+         *     accepted only by the endpoint that requires that scope, and rejected on
+         *     every surface that resolves a profile.
+         * @enum {string}
+         */
+        NotificationScope: "notify:email";
         Operation: {
             operationId?: string | null;
             tags?: string[];
             summary?: string | null;
             description?: string | null;
             parameters?: components["schemas"]["Parameter"][] | null;
-            requestBody?: null | components["schemas"]["Content"];
+            requestBody?: components["schemas"]["Content"] | null;
             responses?: {
                 [key: string]: components["schemas"]["Content"];
             } | null;
@@ -2731,7 +2907,7 @@ export interface components {
                  *     account.
                  */
                 isDeleted: boolean;
-                verboseStatus?: null | components["schemas"]["VerboseStatus"];
+                verboseStatus?: components["schemas"]["VerboseStatus"] | null;
                 isSystemAccount: boolean;
                 /**
                  * @description The Account Owners
@@ -2747,19 +2923,19 @@ export interface components {
                  *     categorize the account.
                  */
                 accountType: components["schemas"]["AccountType"];
-                guestUsers?: null | components["schemas"]["Children_GuestUser_String"];
+                guestUsers?: components["schemas"]["Children_GuestUser_String"] | null;
                 /**
                  * Format: date-time
                  * @description The Account Created Date
                  */
                 createdAt: string;
-                createdBy?: null | components["schemas"]["WrittenBy"];
+                createdBy?: components["schemas"]["WrittenBy"] | null;
                 /**
                  * Format: date-time
                  * @description The Account Updated Date
                  */
                 updatedAt?: string | null;
-                updatedBy?: null | components["schemas"]["WrittenBy"];
+                updatedBy?: components["schemas"]["WrittenBy"] | null;
                 /**
                  * @description The Account Meta
                  *
@@ -2810,7 +2986,7 @@ export interface components {
                  * @description The last updated date
                  */
                 updated?: string | null;
-                accounts?: null | components["schemas"]["Children_Account_String"];
+                accounts?: components["schemas"]["Children_Account_String"] | null;
                 /**
                  * @description The guest user is verified
                  *
@@ -2888,7 +3064,7 @@ export interface components {
                  *     account.
                  */
                 isDeleted: boolean;
-                verboseStatus?: null | components["schemas"]["VerboseStatus"];
+                verboseStatus?: components["schemas"]["VerboseStatus"] | null;
                 isSystemAccount: boolean;
                 /**
                  * @description The Account Owners
@@ -2904,19 +3080,19 @@ export interface components {
                  *     categorize the account.
                  */
                 accountType: components["schemas"]["AccountType"];
-                guestUsers?: null | components["schemas"]["Children_GuestUser_String"];
+                guestUsers?: components["schemas"]["Children_GuestUser_String"] | null;
                 /**
                  * Format: date-time
                  * @description The Account Created Date
                  */
                 createdAt: string;
-                createdBy?: null | components["schemas"]["WrittenBy"];
+                createdBy?: components["schemas"]["WrittenBy"] | null;
                 /**
                  * Format: date-time
                  * @description The Account Updated Date
                  */
                 updatedAt?: string | null;
-                updatedBy?: null | components["schemas"]["WrittenBy"];
+                updatedBy?: components["schemas"]["WrittenBy"] | null;
                 /**
                  * @description The Account Meta
                  *
@@ -2960,7 +3136,7 @@ export interface components {
                  *     Gateway, defined in `SystemActor`
                  */
                 system: boolean;
-                children?: null | components["schemas"]["Children_GuestRole_String"];
+                children?: components["schemas"]["Children_GuestRole_String"] | null;
             };
         } | {
             id: string;
@@ -3026,7 +3202,7 @@ export interface components {
                  *     When true, the service will be discovered by LLM agents.
                  */
                 discoverable?: boolean | null;
-                serviceType?: null | components["schemas"]["ServiceType"];
+                serviceType?: components["schemas"]["ServiceType"] | null;
                 /**
                  * @description If is a context api
                  *
@@ -3092,6 +3268,7 @@ export interface components {
                  *     ```
                  */
                 proxyAddress?: string | null;
+                notifications?: components["schemas"]["ServiceNotificationConfig"] | null;
             };
         } | {
             id: string;
@@ -3101,7 +3278,7 @@ export interface components {
         Permission: "read" | "write";
         PermissionedRole: {
             name: string;
-            permission?: null | components["schemas"]["Permission"];
+            permission?: components["schemas"]["Permission"] | null;
         };
         /** @description This object should be used over the application layer operations. */
         Profile: {
@@ -3176,9 +3353,10 @@ export interface components {
              *     included at default filtering actions.
              */
             accountWasDeleted: boolean;
-            verboseStatus?: null | components["schemas"]["VerboseStatus"];
-            licensedResources?: null | components["schemas"]["LicensedResources"];
-            tenantsOwnership?: null | components["schemas"]["TenantsOwnership"];
+            verboseStatus?: components["schemas"]["VerboseStatus"] | null;
+            licensedResources?: components["schemas"]["LicensedResources"] | null;
+            federatedResources?: components["schemas"]["FederatedResources"] | null;
+            tenantsOwnership?: components["schemas"]["TenantsOwnership"] | null;
             /**
              * @description The Account Meta
              *
@@ -3268,6 +3446,11 @@ export interface components {
             /** @description The scope of the token */
             scope: components["schemas"]["ConnectionStringBean"][];
         };
+        /**
+         * @description Who a service may send notification emails to.
+         * @enum {string}
+         */
+        RecipientPolicy: "owner" | "tenantMembers" | "domains" | "any";
         ResetPasswordBody: {
             token: string;
             email: string;
@@ -3310,7 +3493,7 @@ export interface components {
             createdAt: string;
         };
         /** @enum {string} */
-        ResourceAuditResourceType: "account" | "accountMeta" | "user" | "tenant" | "tenantMeta" | "guestRole" | "webhook";
+        ResourceAuditResourceType: "account" | "accountMeta" | "user" | "tenant" | "tenantMeta" | "guestRole" | "webhook" | "federationResolution" | "federationTranslation";
         RevokeUserGuestToSubscriptionManagerAccountParams: {
             email: string;
         };
@@ -3349,8 +3532,8 @@ export interface components {
              *     ```
              */
             callbacks?: string[] | null;
-            identitySource?: null | components["schemas"]["IdentitySource"];
-            retry?: null | components["schemas"]["RouteRetryPolicy"];
+            identitySource?: components["schemas"]["IdentitySource"] | null;
+            retry?: components["schemas"]["RouteRetryPolicy"] | null;
         };
         /**
          * @description Opt-in retry of a route's downstream request (issue #137).
@@ -3391,7 +3574,7 @@ export interface components {
         };
         Schema: {
             $ref?: string | null;
-            type?: null | components["schemas"]["SchemaType"];
+            type?: components["schemas"]["SchemaType"] | null;
             title?: string | null;
             format?: string | null;
             nullable?: boolean | null;
@@ -3399,7 +3582,7 @@ export interface components {
             properties?: {
                 [key: string]: components["schemas"]["Schema"];
             } | null;
-            items?: null | components["schemas"]["ItemsType"];
+            items?: components["schemas"]["ItemsType"] | null;
             enumValues?: unknown[] | null;
             description?: string | null;
             default?: unknown;
@@ -3563,6 +3746,40 @@ export interface components {
             protectedByRoles: components["schemas"]["PermissionedRole"][];
         };
         /**
+         * @description Body of a downstream service email request
+         *
+         *     Only these four fields exist, and unknown fields are rejected, so the
+         *     caller can never choose the sender, the reply address, the subject, raw
+         *     HTML or any mail header: those come from the gateway config and the
+         *     operator-deployed template.
+         */
+        SendServiceEmailRequest: {
+            /**
+             * @description Recipient addresses, one message each (recipients never see each
+             *     other). Each entry must be a single bare address.
+             */
+            to: string[];
+            /** @description Name of a template declared in the service `templates` list. */
+            template: string;
+            /**
+             * @description Flat object of strings, numbers and booleans used by the template.
+             *     At most 8192 bytes once serialized as compact JSON.
+             */
+            variables: Record<string, never>;
+            /**
+             * @description Preferred locale. Falls back to the tenant, the instance and finally
+             *     the default locale of the service templates.
+             */
+            locale?: string | null;
+        };
+        SendServiceEmailResponse: {
+            /**
+             * @description One id per recipient, in request order. Each id is also sent in the
+             *     `X-Mycelium-Message-Id` mail header.
+             */
+            messageIds: string[];
+        };
+        /**
          * @description The Upstream Service
          *
          *     The service is the upstream service that the route will proxy to.
@@ -3616,7 +3833,7 @@ export interface components {
              *     When true, the service will be discovered by LLM agents.
              */
             discoverable?: boolean | null;
-            serviceType?: null | components["schemas"]["ServiceType"];
+            serviceType?: components["schemas"]["ServiceType"] | null;
             /**
              * @description If is a context api
              *
@@ -3682,8 +3899,50 @@ export interface components {
              *     ```
              */
             proxyAddress?: string | null;
+            notifications?: components["schemas"]["ServiceNotificationConfig"] | null;
         };
         ServiceHost: string | string[];
+        /**
+         * @description Per-service opt-in for downstream email notifications.
+         *
+         *     An absent block is deny-by-default: the service can not obtain
+         *     notification connection strings nor send emails.
+         *
+         *     ```toml
+         *     [service-01.notifications]
+         *     senderTag = "service-01"
+         *     displayName = "Service 01"
+         *     issuerRoles = ["service-01-admin"]
+         *     issuerTenants = []
+         *     recipientPolicy = "owner"
+         *     allowedDomains = []
+         *     templates = ["invoice-ready"]
+         *     quotaPerHour = 100
+         *     maxRecipientsPerMessage = 10
+         *     ```
+         */
+        ServiceNotificationConfig: {
+            /**
+             * @description Unique tag identifying the service as an email sender
+             *     (`^[a-z0-9-]{1,32}$`).
+             */
+            senderTag: string;
+            /** @description Name shown on the `From` header (`"{displayName} via ..."`). */
+            displayName: string;
+            /** @description Roles the issuer must hold to create notification strings. */
+            issuerRoles: string[];
+            /** @description Tenants allowed to issue notification strings. Empty means any. */
+            issuerTenants: string[];
+            recipientPolicy: components["schemas"]["RecipientPolicy"];
+            /** @description Required and non-empty when `recipientPolicy = "domains"`. */
+            allowedDomains: string[];
+            /** @description Template names the service may send. */
+            templates: string[];
+            /** Format: int32 */
+            quotaPerHour: number;
+            /** Format: int32 */
+            maxRecipientsPerMessage: number;
+        };
         ServiceSecret: components["schemas"]["SecretResolver_HttpSecret"] & {
             name: string;
         };
@@ -3761,7 +4020,7 @@ export interface components {
              *     tenant owner should be set on tenant creation.
              */
             owners: components["schemas"]["Children_Owner_String"];
-            manager?: null | components["schemas"]["Parent_Account_String"];
+            manager?: components["schemas"]["Parent_Account_String"] | null;
             /**
              * @description The tags of the tenant
              *
@@ -4021,7 +4280,7 @@ export interface components {
         UpdateWebHookBody: {
             name?: string | null;
             description?: string | null;
-            secret?: null | components["schemas"]["HttpSecret"];
+            secret?: components["schemas"]["HttpSecret"] | null;
             isActive?: boolean | null;
         };
         UpgradeAccountPrivilegesBody: {
@@ -4041,7 +4300,7 @@ export interface components {
             created: string;
             /** Format: date-time */
             updated?: string | null;
-            account?: null | components["schemas"]["Parent_Account_String"];
+            account?: components["schemas"]["Parent_Account_String"] | null;
             /**
              * @description If the user is the principal user of the account.
              *
@@ -4053,7 +4312,7 @@ export interface components {
              *     other users connected.
              */
             isPrincipal: boolean;
-            provider?: null | components["schemas"]["Provider"];
+            provider?: components["schemas"]["Provider"] | null;
             /**
              * @description The user TOTP
              *
@@ -4080,7 +4339,7 @@ export interface components {
             url: string;
             /** @description The webhook trigger */
             trigger: components["schemas"]["WebHookTrigger"];
-            method?: null | components["schemas"]["HttpMethod"];
+            method?: components["schemas"]["HttpMethod"] | null;
             /** @description The webhook is active */
             isActive: boolean;
             /**
@@ -4088,14 +4347,14 @@ export interface components {
              * @description The webhook created date
              */
             created: string;
-            createdBy?: null | components["schemas"]["WrittenBy"];
+            createdBy?: components["schemas"]["WrittenBy"] | null;
             /**
              * Format: date-time
              * @description The webhook updated date
              */
             updated?: string | null;
-            updatedBy?: null | components["schemas"]["WrittenBy"];
-            secret?: null | components["schemas"]["HttpSecret"];
+            updatedBy?: components["schemas"]["WrittenBy"] | null;
+            secret?: components["schemas"]["HttpSecret"] | null;
         };
         /** @description Where the dispatcher is with an event. */
         WebHookDispatchState: {
@@ -4171,12 +4430,13 @@ export interface components {
              * @description The ID of the user or account who performed the action.
              */
             id?: string | null;
-            from?: null | components["schemas"]["IDSource"];
+            from?: components["schemas"]["IDSource"] | null;
             /** @description Base64-encoded email of the actor, when known. */
             email?: string | null;
         };
     };
     responses: {
+        /** @description Email status */
         CheckEmailStatusResponse: {
             headers: {
                 [name: string]: unknown;
@@ -4190,6 +4450,7 @@ export interface components {
                 };
             };
         };
+        /** @description Token created */
         CreateTokenResponse: {
             headers: {
                 [name: string]: unknown;
@@ -4200,6 +4461,7 @@ export interface components {
                 };
             };
         };
+        /** @description JSON message */
         HttpJsonResponse: {
             headers: {
                 [name: string]: unknown;
@@ -4212,6 +4474,7 @@ export interface components {
                 };
             };
         };
+        /** @description Registered services */
         ListServicesResponse: {
             headers: {
                 [name: string]: unknown;
@@ -4248,6 +4511,7 @@ export interface components {
                 };
             };
         };
+        /** @description Login succeeded */
         MyceliumLoginResponse: {
             headers: {
                 [name: string]: unknown;
@@ -4260,6 +4524,7 @@ export interface components {
                 };
             };
         };
+        /** @description TOTP activation finished */
         TotpActivationFinishedResponse: {
             headers: {
                 [name: string]: unknown;
@@ -4270,6 +4535,7 @@ export interface components {
                 };
             };
         };
+        /** @description TOTP activation started */
         TotpActivationStartedResponse: {
             headers: {
                 [name: string]: unknown;
@@ -5160,6 +5426,66 @@ export interface operations {
             };
         };
     };
+    create_notification_connection_string: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateNotificationTokenBody"];
+            };
+        };
+        responses: {
+            /** @description Token created. */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CreateTokenResponse"];
+                };
+            };
+            /** @description Bad request. MYC00035: invalid expiration, or the service requires a tenant. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Unauthorized. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Forbidden. MYC00036: service notifications not enabled. MYC00037: issuer not allowed. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Unknown internal server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+        };
+    };
     create_default_user: {
         parameters: {
             query?: never;
@@ -5760,6 +6086,8 @@ export interface operations {
                 query?: string | null;
                 method?: string | null;
                 scoreCutoff?: number | null;
+                /** @description Leave out the gateway's own operations (service mag) */
+                excludeGateway?: boolean | null;
             };
             header?: never;
             path?: never;
@@ -6640,6 +6968,75 @@ export interface operations {
             };
         };
     };
+    send_service_email: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SendServiceEmailRequest"];
+            };
+        };
+        responses: {
+            /** @description Queued, one message per recipient. */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SendServiceEmailResponse"];
+                };
+            };
+            /** @description Missing, tampered, expired, revoked or general connection string. MYC00030/MYC00031/MYC00032: invalid signature. MYC00034: the string lacks the notify:email scope. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description MYC00036: service notifications not enabled. MYC00037: the string creator is no longer an allowed issuer. MYC00039: a recipient is not allowed by the service recipient policy. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description MYC00038: unknown body field, template not declared or not found, missing or non-scalar variable, variables over 8192 bytes, invalid recipient or recipient count out of range. */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description MYC00040: hourly quota of the service exceeded. The `Retry-After` header gives the seconds to wait. */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Unknown internal server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+        };
+    };
     downgrade_account_privileges: {
         parameters: {
             query?: never;
@@ -6771,10 +7168,10 @@ export interface operations {
             query?: {
                 term?: string | null;
                 tagValue?: string | null;
-                accountType?: null | components["schemas"]["APIAccountType"];
+                accountType?: components["schemas"]["APIAccountType"] | null;
                 isOwnerActive?: boolean | null;
-                status?: null | components["schemas"]["VerboseStatus"];
-                actor?: null | components["schemas"]["SystemActor"];
+                status?: components["schemas"]["VerboseStatus"] | null;
+                actor?: components["schemas"]["SystemActor"] | null;
                 skip?: number | null;
                 pageSize?: number | null;
             };
@@ -8111,7 +8508,7 @@ export interface operations {
         parameters: {
             query?: {
                 name?: string | null;
-                trigger?: null | components["schemas"]["WebHookTrigger"];
+                trigger?: components["schemas"]["WebHookTrigger"] | null;
             };
             header?: never;
             path?: never;
@@ -8228,12 +8625,12 @@ export interface operations {
         parameters: {
             query?: {
                 /** @description Only events of this trigger */
-                trigger?: null | components["schemas"]["WebHookTrigger"];
+                trigger?: components["schemas"]["WebHookTrigger"] | null;
                 /**
                  * @description Only events in this status (pending, processing, success, failed,
                  *     exhausted, skipped, unknown)
                  */
-                status?: null | components["schemas"]["WebHookExecutionStatus"];
+                status?: components["schemas"]["WebHookExecutionStatus"] | null;
                 skip?: number | null;
                 pageSize?: number | null;
             };
@@ -9894,6 +10291,49 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["HttpJsonResponse"];
                 };
+            };
+            /** @description Unknown internal server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+        };
+    };
+    list_public_error_codes: {
+        parameters: {
+            query?: {
+                /** @description Filter by the error prefix (e.g. `MYC`) */
+                prefix?: string | null;
+                /** @description Filter by the error number (e.g. `23` for `MYC00023`) */
+                code?: number | null;
+                skip?: number | null;
+                pageSize?: number | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Fetching success. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorCode"][];
+                };
+            };
+            /** @description Not found. */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Unknown internal server error. */
             500: {

@@ -7,7 +7,7 @@ import Modal from "@/components/ui/Modal";
 import Typography from "@/components/ui/Typography";
 import useProfile from "@/hooks/use-profile";
 import useSuspenseError from "@/hooks/use-suspense-error";
-import { tenantsGetPublicInfo, tokensCreate } from "@/services/rpc/beginners";
+import { tokensCreate } from "@/services/rpc/beginners";
 import { MycPermission } from "@/types/MyceliumPermission";
 import { Select, TextInput } from "@/components/ui/Input";
 import Spinner from "@/components/ui/Spinner";
@@ -15,7 +15,7 @@ import { ReactNode, useMemo, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { FaCheck, FaCopy, FaTimes } from "react-icons/fa";
-import useSWR from "swr";
+import useTenantName from "@/hooks/use-tenant-name";
 import ConnectionStringScope, {
   PermissionedRole,
 } from "./ConnectionStringScope";
@@ -407,25 +407,6 @@ export default function CreateConnectionStringModal({
       </Modal.Body>
     </Modal>
   );
-}
-
-/**
- * The namespace name, when the connection string is restricted to one.
- * Shares the cache key of `useTenantDetails`.
- */
-function useTenantName(tenantId?: string | null): string | undefined {
-  const { getAccessTokenSilently } = useProfile();
-
-  const { data } = useSWR(
-    tenantId ? ["rpc", "beginners.tenants.getPublicInfo", tenantId] : null,
-    ([, , id]: [string, string, string]) =>
-      tenantsGetPublicInfo({ tenantId: id }, getAccessTokenSilently).then(
-        (tenant) => ({ active: tenant })
-      ),
-    { revalidateOnFocus: false, revalidateIfStale: false }
-  );
-
-  return data?.active?.name;
 }
 
 function DecodedConnectionString({
