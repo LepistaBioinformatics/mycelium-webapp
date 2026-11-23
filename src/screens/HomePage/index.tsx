@@ -23,6 +23,7 @@ import { InvalidCodeError } from "@/types/NativeAuth";
 import useProfile from "@/hooks/use-profile";
 import { useAppConfig } from "@/hooks/use-app-config";
 import useHostedLogin from "@/hooks/use-hosted-login";
+import { withBasePath } from "@/functions/with-base-path";
 
 type EmailForm = { email: string };
 type CodeForm = { code: string };
@@ -34,7 +35,8 @@ export default function HomePage() {
   const { setAuth } = useNativeAuthContext();
   const { isAuthenticated, isLoadingUser, logout } = useProfile();
   const { appConfig } = useAppConfig();
-  const { isHostedLogin, isRedirecting, signIn } = useHostedLogin();
+  const { isHostedLogin, isMagicLink, isRedirecting, signIn } =
+    useHostedLogin();
 
   const [searchParams, setSearchParams] = useSearchParams();
   const step = (searchParams.get("step") as "email" | "code") ?? "email";
@@ -152,7 +154,7 @@ export default function HomePage() {
             </button>
           )}
 
-          {!isHostedLogin && step === "email" && (
+          {isMagicLink && step === "email" && (
             <form
               onSubmit={emailForm.handleSubmit(onSubmitEmail)}
               className="flex flex-col gap-6"
@@ -186,7 +188,7 @@ export default function HomePage() {
             </form>
           )}
 
-          {!isHostedLogin && step === "code" && (
+          {isMagicLink && step === "code" && (
             <form
               onSubmit={codeForm.handleSubmit(onSubmitCode)}
               className="flex flex-col gap-6"
@@ -290,12 +292,12 @@ export default function HomePage() {
           <div className="flex flex-col gap-5">
             <div className="flex items-center gap-3">
               <img
-                src="/logo-icon-square.png"
+                src={withBasePath("logo-icon-square.png")}
                 alt="MAG"
                 className="hidden dark:block w-7 h-7 object-contain"
               />
               <img
-                src="/logo-blackwhite.png"
+                src={withBasePath("logo-blackwhite.png")}
                 alt="MAG"
                 className="block dark:hidden w-7 h-7 object-contain opacity-80"
               />

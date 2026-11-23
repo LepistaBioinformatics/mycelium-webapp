@@ -30,6 +30,7 @@ import CreateConnectionStringModal from "../CreateConnectionStringModal";
 import getLicensedResourcesOrNull from "@/functions/get-licensed-resources-or-null";
 import { MycPermission } from "@/types/MyceliumPermission";
 import GuestsByEmail from "./GuestsByEmail";
+import { withBasePath } from "@/functions/with-base-path";
 
 type Account = components["schemas"]["Account"];
 type GuestUser = components["schemas"]["GuestUser"];
@@ -296,7 +297,7 @@ export default function AccountDetails({ onClose }: Props) {
       <Container>
         <div className="flex flex-col gap-8 items-center justify-center h-full">
           <img
-            src="/undraw.co/undraw_void_wez2.svg"
+            src={withBasePath("undraw.co/undraw_void_wez2.svg")}
             alt="No access"
             width={200}
             height={200}

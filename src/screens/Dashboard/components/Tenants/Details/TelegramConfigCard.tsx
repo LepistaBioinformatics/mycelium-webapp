@@ -38,7 +38,7 @@ export default function TelegramConfigCard({ tenant }: Props) {
   const [copied, setCopied] = useState(false);
   const copyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const webhookUrl = `${MYCELIUM_API_URL}/auth/telegram/webhook/${tenant.id}`;
+  const webhookUrl = `${MYCELIUM_API_URL || window.location.origin}/auth/telegram/webhook/${tenant.id}`;
 
   const handleCopy = () => {
     navigator.clipboard.writeText(webhookUrl);

@@ -2,6 +2,7 @@ import { useRouteError } from "react-router";
 import PageBody from "./ui/PageBody";
 import Card from "./ui/Card";
 import Typography from "./ui/Typography";
+import { withBasePath } from "@/functions/with-base-path";
 
 export default function ErrorBoundary() {
   const error = useRouteError();
@@ -17,7 +18,7 @@ export default function ErrorBoundary() {
           <Typography as="span">{error as string}</Typography>
 
           <img
-            src="/undraw.co/undraw_server-down_lxs9.svg"
+            src={withBasePath("undraw.co/undraw_server-down_lxs9.svg")}
             alt="Unexpected error"
             width={250}
             height={250}
