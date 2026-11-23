@@ -1,5 +1,6 @@
 "use client";
 
+import { describeError } from "@/functions/describe-error";
 import Button from "@/components/ui/Button";
 import Modal from "@/components/ui/Modal";
 import Typography from "@/components/ui/Typography";
@@ -56,7 +57,7 @@ export default function CreateSubscriptionManagerAccountModal({
       );
       handleLocalSuccess();
     } catch (err: unknown) {
-      dispatchError(err instanceof Error ? err.message : String(err));
+      dispatchError(describeError(err));
     } finally {
       setIsLoading(false);
     }

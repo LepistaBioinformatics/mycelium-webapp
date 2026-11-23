@@ -1,3 +1,4 @@
+import { describeError } from "@/functions/describe-error";
 import Modal from "@/components/ui/Modal";
 import { AccountModalProps } from "./AccountModal";
 import Typography from "@/components/ui/Typography";
@@ -94,7 +95,7 @@ export default function UpgradeOrDowngradeAccountModal({
         }
       } catch (err) {
         setIsLoading(false);
-        dispatchError(err instanceof Error ? err.message : String(err));
+        dispatchError(describeError(err));
         return;
       }
 

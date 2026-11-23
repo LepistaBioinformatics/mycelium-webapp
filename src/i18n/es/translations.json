@@ -812,7 +812,8 @@
           "title": "Borrar",
           "description": "Eliminar la cuenta eliminará todos los datos de la cuenta y no se puede revertir.",
           "delete": "Borrar",
-          "deleting": "Eliminar ..."
+          "deleting": "Eliminar ...",
+          "deleted": "Cuenta {{name}} eliminada"
         },
         "UnInviteGuestModal": {
           "title": "Eliminar la invitación",

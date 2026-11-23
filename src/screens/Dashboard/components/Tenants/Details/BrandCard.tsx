@@ -1,3 +1,4 @@
+import { describeError } from "@/functions/describe-error";
 import Card from "@/components/ui/Card";
 import Divider from "@/components/ui/Divider";
 import FormField from "@/components/ui/FomField";
@@ -195,7 +196,7 @@ export default function BrandCard({ tenant, mutateTenantStatus }: Props) {
 
         resetIdentity(values);
       } catch (err) {
-        dispatchError(err instanceof Error ? err.message : String(err));
+        dispatchError(describeError(err));
       } finally {
         setIsSavingIdentity(false);
         mutateTenantStatus();
@@ -227,7 +228,7 @@ export default function BrandCard({ tenant, mutateTenantStatus }: Props) {
         compressedKb: result.compressedKb,
       });
     } catch (err) {
-      dispatchError(err instanceof Error ? err.message : String(err));
+      dispatchError(describeError(err));
     } finally {
       setIsProcessing(false);
     }
@@ -282,7 +283,7 @@ export default function BrandCard({ tenant, mutateTenantStatus }: Props) {
       setSizeInfo(null);
       setUpdatingBrand(false);
     } catch (err) {
-      dispatchError(err instanceof Error ? err.message : String(err));
+      dispatchError(describeError(err));
     } finally {
       setIsUploading(false);
       mutateTenantStatus();

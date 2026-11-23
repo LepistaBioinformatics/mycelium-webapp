@@ -891,7 +891,8 @@
           "title": "Delete",
           "description": "Deleting the account will remove all account data and cannot be reversed.",
           "delete": "Delete",
-          "deleting": "Deleting ..."
+          "deleting": "Deleting ...",
+          "deleted": "Account {{name}} deleted"
         },
         "UnInviteGuestModal": {
           "title": "Remove invitation",

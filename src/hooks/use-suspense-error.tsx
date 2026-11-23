@@ -2,18 +2,29 @@
 
 import { setNotification } from "@/states/notification.state";
 import { useDispatch } from "react-redux";
+import { describeError } from "@/functions/describe-error";
 
 export default function useSuspenseError() {
   const dispatch = useDispatch();
 
   const parseHttpError = async (
-    res: Response,
+    res: Response | unknown,
     args?: { rawResponse?: boolean }
   ) => {
     //
     // If the response is null, return null.
     //
     if (!res) return null;
+
+    //
+    // RPC calls reject with an Error, not a Response: show its message.
+    //
+    if (!(res instanceof Response)) {
+      dispatch(setNotification({
+        notification: describeError(res), title: "Error", type: "error"
+      }));
+      return null;
+    }
 
     //
     // If the response is ok, return the response json.
