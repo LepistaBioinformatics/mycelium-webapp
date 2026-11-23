@@ -125,9 +125,13 @@ export default function Profile() {
       : "";
     if (account?.name && account.name !== email) return account.name;
 
-    const firstName = principalOwner?.firstName ?? user?.firstName ?? "";
-    const lastName = principalOwner?.lastName ?? user?.lastName ?? "";
-    return `${firstName} ${lastName}`.trim();
+    // Users who signed up by email code or magic link have empty names, so
+    // `||` (not `??`) skips them; without any name, show the email's local
+    // part rather than an empty header.
+    const firstName = principalOwner?.firstName || user?.firstName || "";
+    const lastName = principalOwner?.lastName || user?.lastName || "";
+    const fullName = `${firstName} ${lastName}`.trim();
+    return fullName || user?.email?.username || email;
   }, [account?.name, principalOwner, user]);
 
   const activeTab = useMemo(() => {
@@ -243,30 +247,6 @@ export default function Profile() {
                       )}
                     >
                       <HoldToReveal value={contactInfo.phone_number} />
-                    </IntroSection.Item>
-                  )}
-
-                  {contactInfo.emergency_contact_name && (
-                    <IntroSection.Item
-                      prefix={t(
-                        "screens.Dashboard.Profile.personalInfo.emergencyContactName"
-                      )}
-                    >
-                      <HoldToReveal
-                        value={contactInfo.emergency_contact_name}
-                      />
-                    </IntroSection.Item>
-                  )}
-
-                  {contactInfo.emergency_contact_phone && (
-                    <IntroSection.Item
-                      prefix={t(
-                        "screens.Dashboard.Profile.personalInfo.emergencyContactPhone"
-                      )}
-                    >
-                      <HoldToReveal
-                        value={contactInfo.emergency_contact_phone}
-                      />
                     </IntroSection.Item>
                   )}
                 </IntroSection>

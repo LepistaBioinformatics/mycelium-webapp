@@ -15,15 +15,14 @@ import {
   TableCell,
   TableHead,
   TableHeadCell,
-  TableRow,
-} from "flowbite-react";
+  TableRow
+} from "@/components/ui/DataTable";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   cellClassName,
   rowClassName,
-  tableTheme,
-} from "../WebHooks/ExecutionEvents/table-theme";
+  } from "../WebhookExecutions/ExecutionEvents/table-theme";
 import ConfirmModal from "./ConfirmModal";
 import {
   formatDate,
@@ -69,7 +68,7 @@ export default function PeersTab() {
             )}
             {!!peers.data?.length && (
               <div className="overflow-x-auto scrollbar w-full">
-                <Table theme={tableTheme} data-testid="federation-peers">
+                <Table data-testid="federation-peers">
                   <TableHead>
                     <TableHeadCell>{t(`${TAB}.columns.name`)}</TableHeadCell>
                     <TableHeadCell>{t(`${TAB}.columns.baseUrl`)}</TableHeadCell>

@@ -1,12 +1,12 @@
 import { cva, VariantProps } from "class-variance-authority";
 
 const styles = cva(
-  "flex flex-col text-left gap-1 border border-l-4 border-brand-600 px-4 py-2 mx-auto w-full xl:max-w-4xl",
+  "flex flex-col text-left gap-1 rounded-lg border border-border bg-card px-4 py-3 mx-auto w-full xl:max-w-4xl shadow-xs transition-[color,box-shadow,border-color] hover:shadow-card hover:border-brand-600/40 dark:hover:border-brand-400/30",
   {
     variants: {
       _index: {
-        even: "bg-white dark:bg-surface-950",
-        odd: "bg-zinc-50 dark:bg-surface-900",
+        even: "",
+        odd: "",
       },
     },
     defaultVariants: {},

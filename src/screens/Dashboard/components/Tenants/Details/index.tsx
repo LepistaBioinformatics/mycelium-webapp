@@ -37,6 +37,8 @@ import {
 import CreateConnectionStringModal from "../../CreateConnectionStringModal";
 import Banner from "@/components/ui/Banner";
 import Button from "@/components/ui/Button";
+import { buttonStyles } from "@/components/ui/button-styles";
+import { ArrowRight } from "lucide-react";
 import CreateSubscriptionManagerAccountModal from "./CreateSubscriptionManagerAccountModal";
 import CreateManagementAccount from "../CreateManagementAccount";
 import DeleteTenant from "../DeleteTenant";
@@ -388,16 +390,17 @@ export default function AdvancedManagement() {
           <Section.Body>
             <Link
               to={`/dashboard/tenants/${tenantId}/accounts`}
-              className="flex gap-2 items-center align-center hover:underline text-lg text-brand-violet-500 dark:text-brand-violet-500 mt-2"
+              className={`${buttonStyles({ intent: "primary", size: "sm" })} group/link mt-2 w-fit`}
               title={t(
                 "screens.Dashboard.Tenants.AdvancedManagement.manageAccountsDescription"
               )}
             >
-              <MdManageAccounts
-                size={24}
-                className="inline text-brand-violet-500 dark:text-brand-violet-500"
-              />
+              <MdManageAccounts size={18} />
               {t("screens.Dashboard.Tenants.AdvancedManagement.manageAccounts")}
+              <ArrowRight
+                aria-hidden
+                className="size-4 transition-transform group-hover/link:translate-x-0.5"
+              />
             </Link>
           </Section.Body>
         </Section>

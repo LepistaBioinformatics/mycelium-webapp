@@ -5,9 +5,8 @@ import useProfile from "@/hooks/use-profile";
 import useSearchBarParams from "@/hooks/use-search-bar-params";
 import { components } from "@/services/openapi/mycelium-schema";
 import { webhooksList } from "@/services/rpc/systemManager";
-import PaginatedRecords from "@/types/PaginatedRecords";
-import { useMemo, useState } from "react";
-import useSWR from "swr";
+import { useState } from "react";
+import useLoadMore from "@/hooks/use-load-more";
 import DashBoardBody from "../DashBoardBody";
 import Button from "@/components/ui/Button";
 import PaginatedContent from "../PaginatedContent";
@@ -24,10 +23,11 @@ import IntroSection from "@/components/ui/IntroSection";
 import WebhookModal from "./WebhookModal";
 import EditWebhookModal from "./EditWebhookModal";
 import DeleteWebHook from "./DeleteWebHook";
-import ExecutionEvents from "./ExecutionEvents";
 import { describeSecretToken } from "@/functions/read-secret-token";
 
 type WebHook = components["schemas"]["WebHook"];
+
+const PAGE_SIZE = 20;
 
 export default function Webhooks() {
   const { t } = useTranslation();
@@ -47,63 +47,45 @@ export default function Webhooks() {
     permissions: [MycPermission.Read, MycPermission.Write],
   });
 
-  const { skip, pageSize, setSkip, setPageSize, searchTerm, setSearchTerm } =
-    useSearchBarParams({
-      initialSkip: 0,
-      initialPageSize: 10,
-    });
+  const { searchTerm, setSearchTerm } = useSearchBarParams({
+    initialSkip: 0,
+    initialPageSize: PAGE_SIZE,
+  });
 
-  const swrKey = useMemo(() => {
-    if (!isAuthenticated) return null;
-    if (!hasEnoughPermissions) return null;
-
-    return ["rpc", "systemManager.webhooks.list", skip, pageSize, searchTerm];
-  }, [searchTerm, skip, pageSize, isAuthenticated, hasEnoughPermissions]);
-
-  const {
-    data: webhooks,
-    isLoading: isLoadingWebhooks,
-    mutate: mutateWebhooks,
-  } = useSWR<PaginatedRecords<WebHook>>(
-    swrKey,
-    async () => {
-      return webhooksList(
+  const webhooks = useLoadMore<WebHook>({
+    baseKey:
+      isAuthenticated && hasEnoughPermissions
+        ? ["rpc", "systemManager.webhooks.list", searchTerm ?? ""]
+        : null,
+    pageSize: PAGE_SIZE,
+    fetchPage: (skip, pageSize) =>
+      webhooksList(
         {
-          skip: skip ?? undefined,
-          pageSize: pageSize ?? undefined,
-          name: searchTerm && searchTerm !== "" ? searchTerm : undefined,
+          skip: skip || undefined,
+          pageSize,
+          name: searchTerm || undefined,
         },
         getAccessTokenSilently
-      );
-    },
-    {
-      revalidateIfStale: true,
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false,
-      revalidateOnMount: true,
-      refreshInterval: 1000 * 60,
-    }
-  );
+      ),
+  });
 
   const handleCloseModal = () => {
     setIsNewModalOpen(false);
     setIsEditModalOpen(false);
     setIsDeleteModalOpen(false);
     setCurrentWebhook(null);
-    mutateWebhooks(webhooks, { rollbackOnError: true });
+    webhooks.mutate();
   };
 
   const handleSuccess = () => {
     handleCloseModal();
-    mutateWebhooks(webhooks, { rollbackOnError: true });
+    webhooks.mutate();
   };
 
   const onSubmit = (term?: string) => {
-    setSkip(0);
-
     if (term !== undefined) setSearchTerm(term);
 
-    mutateWebhooks(undefined, { rollbackOnError: true });
+    webhooks.mutate();
   };
 
   const handleEditWebhookClick = (webhook: WebHook) => {
@@ -124,8 +106,6 @@ export default function Webhooks() {
         </PageBody.Breadcrumb.Item>
       }
       onSubmit={onSubmit}
-      setSkip={setSkip}
-      setPageSize={setPageSize}
       isLoading={isLoadingUser}
       authorized={hasEnoughPermissions}
     >
@@ -148,14 +128,14 @@ export default function Webhooks() {
         </div>
 
         <PaginatedContent
-          isLoading={isLoadingWebhooks}
-          records={webhooks}
-          mutation={mutateWebhooks}
-          skip={skip}
-          setSkip={setSkip}
-          pageSize={pageSize}
+          isLoading={webhooks.isLoading}
+          loaded={webhooks.records.length}
+          total={webhooks.count}
+          hasMore={webhooks.hasMore}
+          isLoadingMore={webhooks.isLoadingMore}
+          onLoadMore={webhooks.loadMore}
         >
-          {webhooks?.records?.map((webhook) => (
+          {webhooks.records.map((webhook) => (
             <ListItem key={webhook?.id}>
               <div className="flex justify-between gap-3">
                 <Typography as="h3">{webhook?.name}</Typography>
@@ -235,10 +215,6 @@ export default function Webhooks() {
             </ListItem>
           ))}
         </PaginatedContent>
-
-        <div className="mx-auto w-full sm:max-w-4xl mb-24">
-          <ExecutionEvents />
-        </div>
       </div>
 
       <WebhookModal

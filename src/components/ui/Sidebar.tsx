@@ -5,7 +5,6 @@ import { Link, useLocation } from "react-router";
 import Typography from "./Typography";
 import { PiSidebarSimple } from "react-icons/pi";
 import { TbLanguage } from "react-icons/tb";
-import Divider from "./Divider";
 import SignOutButton from "./SignOutButton";
 import { useTranslation } from "react-i18next";
 import { Language } from "@/i18n/config";
@@ -13,7 +12,7 @@ import { Language } from "@/i18n/config";
 // Sidebar container — always absolutely positioned so hover-expansion never
 // pushes content. A matching spacer div in the parent holds the layout slot.
 const containerStyles = cva(
-  "hidden sm:flex bg-zinc-50 dark:bg-surface-950 absolute top-0 left-0 h-full z-40 overflow-hidden pt-2 pb-5 flex-col gap-6 justify-between border-r border-zinc-200 dark:border-brand-900 group/sidebar transition-all duration-300 ease-in-out",
+  "hidden sm:flex bg-sidebar text-sidebar-foreground absolute top-0 left-0 h-full z-40 overflow-hidden pt-2 pb-4 flex-col gap-6 justify-between border-r border-sidebar-border group/sidebar transition-all duration-300 ease-in-out",
   {
     variants: {
       open: {
@@ -27,7 +26,8 @@ const containerStyles = cva(
 
 // Row skeleton — no gap between children; gap is handled by the text span's
 // margin so it disappears completely when the text is hidden (max-w-0 + ml-0).
-const ROW = "flex items-center px-3 w-full min-h-[2.5rem]";
+const ROW =
+  "flex items-center mx-1.5 px-2 w-[calc(100%-0.75rem)] min-h-9 rounded-md text-sm outline-none focus-visible:ring-[3px] focus-visible:ring-sidebar-ring/50";
 
 // Icon slot — fixed size so layout never shifts
 const ICON = "shrink-0 w-4 h-4 flex items-center justify-center";
@@ -61,18 +61,18 @@ function Container({
     <aside className={containerStyles({ open: isOpen })}>
       <div className="flex flex-col gap-5 w-full">
         {mainHeader}
-        <nav className="flex flex-col gap-0.5 w-full">{children}</nav>
+        <nav className="flex flex-col gap-1 w-full">{children}</nav>
       </div>
 
       <div className="flex flex-col gap-2 w-full">
-        <Divider style="partial" marginY="none" thickness="sm" />
+        <div className="mx-3 h-px bg-sidebar-border" />
 
         <SidebarLanguage isOpen={isOpen} />
 
         <button
           onClick={toggle}
           title={isOpen ? "Collapse sidebar" : "Expand sidebar"}
-          className={`${ROW} border-l-2 border-transparent text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-zinc-700 dark:hover:text-zinc-200 transition-colors`}
+          className={`${ROW} text-muted-foreground hover:bg-zinc-200/60 dark:hover:bg-surface-800 hover:text-foreground transition-colors`}
         >
           <span className={ICON}>
             <PiSidebarSimple className={isOpen ? "" : "scale-x-[-1]"} />
@@ -84,7 +84,7 @@ function Container({
           </span>
         </button>
 
-        <Divider style="partial" marginY="none" thickness="sm" />
+        <div className="mx-3 h-px bg-sidebar-border" />
 
         <SignOutButton logout={logout} isOpen={isOpen} />
       </div>
@@ -93,12 +93,12 @@ function Container({
 }
 
 const itemStyles = cva(
-  `${ROW} border-l-2 transition-colors duration-150`,
+  `${ROW} transition-colors duration-150`,
   {
     variants: {
       active: {
-        true: "bg-brand-violet-50 dark:bg-brand-violet-950 text-brand-violet-700 dark:text-brand-violet-300 border-brand-violet-500 dark:border-brand-violet-400",
-        false: "border-transparent text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-zinc-800 dark:hover:text-zinc-200",
+        true: "bg-card shadow-card text-brand-800 dark:text-brand-100 font-medium [&_svg]:text-primary dark:[&_svg]:text-infra-400",
+        false: "text-muted-foreground hover:bg-zinc-200/60 dark:hover:bg-surface-800 hover:text-foreground",
       },
     },
     defaultVariants: { active: false },
@@ -141,7 +141,7 @@ function SidebarLanguage({ isOpen }: { isOpen: boolean }) {
   return (
     <div
       title="Language"
-      className={`${ROW} border-l-2 border-transparent text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-zinc-700 dark:hover:text-zinc-200 transition-colors`}
+      className={`${ROW} text-muted-foreground hover:bg-zinc-200/60 dark:hover:bg-surface-800 hover:text-foreground transition-colors`}
     >
       <span className={ICON}>
         <TbLanguage />
@@ -150,7 +150,7 @@ function SidebarLanguage({ isOpen }: { isOpen: boolean }) {
         <select
           value={current}
           onChange={(e) => i18n.changeLanguage(e.target.value)}
-          className="w-full bg-transparent text-sm text-zinc-600 dark:text-zinc-400 focus:outline-none cursor-pointer"
+          className="w-full bg-transparent text-sm text-zinc-600 dark:text-zinc-400 focus:outline-hidden cursor-pointer"
         >
           {ALL_LANGS.map((lang) => (
             <option key={lang} value={lang}>

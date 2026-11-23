@@ -20,8 +20,6 @@ function isContactInfoComplete(account: Account | null | undefined): boolean {
 
   return !!(
     meta.phone_number &&
-    meta.emergency_contact_name &&
-    meta.emergency_contact_phone &&
     meta.job_title
   );
 }

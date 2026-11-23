@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { useForm } from "react-hook-form";
-import { TextInput } from "flowbite-react";
+import { TextInput } from "@/components/ui/Input";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 
@@ -16,6 +16,8 @@ import { setNotification } from "@/states/notification.state";
 import { useNativeAuthContext } from "@/contexts/NativeAuthContext";
 import { InvalidCodeError } from "@/types/NativeAuth";
 import useHostedLogin from "@/hooks/use-hosted-login";
+import CtaButton from "@/components/ui/CtaButton";
+import { KeyRound, LogIn, Mail } from "lucide-react";
 
 type EmailForm = { email: string };
 type CodeForm = { code: string };
@@ -90,25 +92,30 @@ export default function LoginPage() {
       <AppHeader discrete logout={() => undefined} />
 
       <PageBody.Content gap={3} padding="none">
-        <div className="flex flex-col items-center justify-center w-full h-full">
-          <div className="flex flex-col gap-6 w-full max-w-sm mx-auto">
+        <div className="flex flex-col items-center justify-center w-full min-h-[85vh] px-4">
+          <div
+            className={
+              isHostedLogin
+                ? "flex flex-col items-center gap-6 w-full max-w-sm mx-auto"
+                : "flex flex-col gap-6 w-full max-w-sm mx-auto rounded-xl border border-border bg-card p-6 sm:p-8 shadow-card"
+            }
+          >
             {isHostedLogin && (
               <>
                 <Typography as="h2" center>
                   {t("screens.LoginPage.emailStep.title")}
                 </Typography>
 
-                <Button
-                  type="button"
-                  fullWidth
-                  center
-                  onClick={signIn}
-                  disabled={isRedirecting}
-                >
+                <CtaButton
+              variant="link"
+              icon={LogIn}
+              onClick={signIn}
+              loading={isRedirecting}
+            >
                   {isRedirecting
                     ? t("screens.HostedLogin.redirecting")
                     : t("screens.HostedLogin.signIn")}
-                </Button>
+                </CtaButton>
               </>
             )}
 
@@ -134,15 +141,13 @@ export default function LoginPage() {
                     />
                   </FormField>
 
-                  <Button
+                  <CtaButton
                     type="submit"
-                    fullWidth
-                    center
-                   
-                    disabled={emailForm.formState.isSubmitting}
+                    icon={Mail}
+                    loading={emailForm.formState.isSubmitting}
                   >
                     {t("screens.LoginPage.emailStep.submit")}
-                  </Button>
+                  </CtaButton>
                 </form>
               </>
             )}
@@ -186,15 +191,13 @@ export default function LoginPage() {
                     )}
                   </FormField>
 
-                  <Button
+                  <CtaButton
                     type="submit"
-                    fullWidth
-                    center
-                   
-                    disabled={codeForm.formState.isSubmitting}
+                    icon={KeyRound}
+                    loading={codeForm.formState.isSubmitting}
                   >
                     {t("screens.LoginPage.codeStep.submit")}
-                  </Button>
+                  </CtaButton>
 
                   <Button
                     type="button"
@@ -210,6 +213,13 @@ export default function LoginPage() {
               </>
             )}
           </div>
+
+          <Link
+            to="/error-codes"
+            className="mt-6 text-sm text-muted-foreground hover:text-foreground hover:underline underline-offset-4"
+          >
+            {t("screens.PublicErrorCodes.loginLink")}
+          </Link>
         </div>
       </PageBody.Content>
     </PageBody>

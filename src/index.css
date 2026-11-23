@@ -1,90 +1,216 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* -------------------------------------------------------------------------
+ * Lepista DS palette — the single source of truth for every color in the
+ * app. Each value becomes a Tailwind color (`bg-brand-600`,
+ * `dark:bg-surface-950/90`, ...) and a CSS variable of the same name.
+ * Change a color here, never hardcode a hex in components.
+ * ---------------------------------------------------------------------- */
+@theme {
+  --color-brand-50: #f3edf9;
+  --color-brand-100: #e4d4f2;
+  --color-brand-200: #cbade7;
+  --color-brand-300: #ac7dd6;
+  --color-brand-400: #9260c4;
+  --color-brand-500: #7b49a0;
+  --color-brand-600: #663a88;
+  --color-brand-700: #512d6e;
+  --color-brand-800: #3d2154;
+  --color-brand-900: #2a153a;
+  --color-brand-950: #120a19;
+  --color-brand-975: #0d0713;
+  --color-surface-700: #36363b;
+  --color-surface-800: #27272b;
+  --color-surface-900: #1b1b1f;
+  --color-surface-950: #121214;
+  --color-surface-975: #0c0c0e;
+  --color-infra-50: #eef9fd;
+  --color-infra-100: #d5f0fa;
+  --color-infra-200: #abe1f5;
+  --color-infra-300: #80d2f0;
+  --color-infra-400: #64c5eb;
+  --color-infra-500: #3ba8d4;
+  --color-infra-600: #2d88ad;
+  --color-infra-700: #236a87;
+  --color-infra-800: #1a4d62;
+  --color-infra-900: #11313e;
+  --color-saas-50: #fef1f6;
+  --color-saas-100: #fdd5e6;
+  --color-saas-200: #faaacb;
+  --color-saas-300: #f57cae;
+  --color-saas-400: #e84d8a;
+  --color-saas-500: #c93570;
+  --color-saas-600: #a62a5b;
+  --color-saas-700: #812147;
+  --color-saas-800: #5d1833;
+  --color-saas-900: #3b0f20;
+  --color-science-50: #fffbeb;
+  --color-science-100: #fef3c7;
+  --color-science-200: #fde68a;
+  --color-science-300: #fcd34d;
+  --color-science-400: #feb326;
+  --color-science-500: #d99b1e;
+  --color-science-600: #b37f17;
+  --color-science-700: #8c6311;
+  --color-science-800: #66470c;
+  --color-science-900: #402d07;
+  --color-status-production: #22c55e;
+  --color-status-stable: #3b82f6;
+  --color-status-research: #f59e0b;
+  --color-status-contributions: #8b5cf6;
+
+  /* Legacy subkey: brand-violet-* follows the brand scale. */
+  --color-brand-violet-50: var(--color-brand-50);
+  --color-brand-violet-100: var(--color-brand-100);
+  --color-brand-violet-200: var(--color-brand-200);
+  --color-brand-violet-300: var(--color-brand-300);
+  --color-brand-violet-400: var(--color-brand-400);
+  --color-brand-violet-500: var(--color-brand-500);
+  --color-brand-violet-600: var(--color-brand-600);
+  --color-brand-violet-700: var(--color-brand-700);
+  --color-brand-violet-800: var(--color-brand-800);
+  --color-brand-violet-900: var(--color-brand-900);
+  --color-brand-violet-950: var(--color-brand-950);
+
+  /* Lepista DS type roles. */
+  --font-display: "Bricolage Grotesque", sans-serif;
+  --font-sans: "Hanken Grotesk", sans-serif;
+  --font-mono: "Space Mono", monospace;
+
+  /* Signature neobrutalist hard-offset shadow (marketing/hero only). */
+  --shadow-neo: 4px 4px 0 0 var(--color-infra-400);
+  --shadow-neo-hover: 6px 6px 0 0 var(--color-infra-400);
+
+  --animate-fadeIn: fadeIn 1s ease-in-out;
+  --animate-fadeOut: fadeOut 1s ease-in-out;
+
+  @keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+
+  @keyframes fadeOut {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+}
+
+/* -------------------------------------------------------------------------
+ * shadcn/ui semantic tokens, mapped onto the Lepista palette (spec D-01).
+ * ---------------------------------------------------------------------- */
+:root {
+  --radius: 0.5rem;
+  /* Light mode sits on a soft grey page so white surfaces do not glare;
+   * surfaces are lifted by shadow, not by heavy borders. */
+  --background: #f6f6f8;
+  --foreground: var(--color-zinc-900);
+  --card: #ffffff;
+  --card-foreground: var(--color-zinc-900);
+  --popover: #ffffff;
+  --popover-foreground: var(--color-zinc-900);
+  --primary: var(--color-brand-600);
+  --primary-foreground: #ffffff;
+  --secondary: var(--color-brand-50);
+  --secondary-foreground: var(--color-brand-700);
+  --muted: #f1f1f4;
+  --muted-foreground: var(--color-zinc-500);
+  --accent: var(--color-infra-50);
+  --accent-foreground: var(--color-infra-800);
+  --destructive: var(--color-red-600);
+  --border: var(--color-zinc-200);
+  --input: var(--color-zinc-300);
+  --field: #ffffff;
+  --ring: var(--color-infra-400);
+  --sidebar: #fbfbfc;
+  --sidebar-foreground: var(--color-zinc-900);
+  --sidebar-primary: var(--color-brand-600);
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: var(--color-brand-50);
+  --sidebar-accent-foreground: var(--color-brand-700);
+  --sidebar-border: var(--color-zinc-200);
+  --sidebar-ring: var(--color-infra-400);
+
+  --elevation-card: 0 1px 2px rgb(24 24 27 / 0.05), 0 4px 14px -4px rgb(24 24 27 / 0.1);
+  --elevation-raised: 0 2px 4px rgb(24 24 27 / 0.06), 0 12px 28px -8px rgb(24 24 27 / 0.18);
+}
+
+.dark {
+  --background: var(--color-surface-950);
+  --foreground: var(--color-zinc-100);
+  --card: var(--color-surface-900);
+  --card-foreground: var(--color-zinc-100);
+  --popover: var(--color-surface-900);
+  --popover-foreground: var(--color-zinc-100);
+  --primary: var(--color-brand-500);
+  --primary-foreground: #ffffff;
+  --secondary: var(--color-surface-800);
+  --secondary-foreground: var(--color-brand-200);
+  --muted: var(--color-surface-800);
+  --muted-foreground: var(--color-zinc-400);
+  --accent: var(--color-surface-800);
+  --accent-foreground: var(--color-infra-300);
+  --destructive: var(--color-red-500);
+  --border: var(--color-surface-800);
+  --input: var(--color-surface-700);
+  --field: var(--color-surface-900);
+  --ring: var(--color-infra-400);
+  --sidebar: var(--color-surface-950);
+  --sidebar-foreground: var(--color-zinc-100);
+  --sidebar-primary: var(--color-brand-500);
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: var(--color-surface-800);
+  --sidebar-accent-foreground: var(--color-brand-200);
+  --sidebar-border: var(--color-surface-800);
+  --sidebar-ring: var(--color-infra-400);
+
+  --elevation-card: 0 1px 2px rgb(0 0 0 / 0.4), 0 4px 14px -4px rgb(0 0 0 / 0.5);
+  --elevation-raised: 0 2px 4px rgb(0 0 0 / 0.45), 0 12px 28px -8px rgb(0 0 0 / 0.65);
+}
+
+@theme inline {
+  --shadow-card: var(--elevation-card);
+  --shadow-raised: var(--elevation-raised);
+  --color-field: var(--field);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+body {
+  background-color: var(--background);
+}
 
 :root {
-  /* ---------------------------------------------------------------------
-   * Color palette — the single source of truth for every color in the app.
-   * Tailwind classes (`bg-brand-600`, `dark:bg-surface-950/90`, ...) read
-   * these variables (tailwind.config.js), so changing a value here changes
-   * it across the whole portal. Values are space-separated RGB channels so
-   * Tailwind's opacity modifiers keep working; the hex is in the comment.
-   * ------------------------------------------------------------------- */
-
-  /* brand — Lepista DS brand violet — lab identity (borders, filled buttons, highlights). */
-  --color-brand-50: 243 237 249; /* #f3edf9 */
-  --color-brand-100: 228 212 242; /* #e4d4f2 */
-  --color-brand-200: 203 173 231; /* #cbade7 */
-  --color-brand-300: 172 125 214; /* #ac7dd6 */
-  --color-brand-400: 146 96 196; /* #9260c4 */
-  --color-brand-500: 123 73 160; /* #7b49a0 */
-  --color-brand-600: 102 58 136; /* #663a88 */
-  --color-brand-700: 81 45 110; /* #512d6e */
-  --color-brand-800: 61 33 84; /* #3d2154 */
-  --color-brand-900: 42 21 58; /* #2a153a */
-  --color-brand-950: 18 10 25; /* #120a19 */
-  --color-brand-975: 13 7 19; /* #0d0713 */
-
-  /* surface — Neutral dark-mode backgrounds. Tiers: base 950, nested/alternate 900, hover 800. */
-  --color-surface-700: 54 54 59; /* #36363b */
-  --color-surface-800: 39 39 43; /* #27272b */
-  --color-surface-900: 27 27 31; /* #1b1b1f */
-  --color-surface-950: 18 18 20; /* #121214 */
-  --color-surface-975: 12 12 14; /* #0c0c0e */
-
-  /* infra — Infrastructure / Mycelium accent (cyan) — this app's group accent. */
-  --color-infra-50: 238 249 253; /* #eef9fd */
-  --color-infra-100: 213 240 250; /* #d5f0fa */
-  --color-infra-200: 171 225 245; /* #abe1f5 */
-  --color-infra-300: 128 210 240; /* #80d2f0 */
-  --color-infra-400: 100 197 235; /* #64c5eb */
-  --color-infra-500: 59 168 212; /* #3ba8d4 */
-  --color-infra-600: 45 136 173; /* #2d88ad */
-  --color-infra-700: 35 106 135; /* #236a87 */
-  --color-infra-800: 26 77 98; /* #1a4d62 */
-  --color-infra-900: 17 49 62; /* #11313e */
-
-  /* saas — LepOps accent (magenta). Not used app-wide; kept for DS completeness. */
-  --color-saas-50: 254 241 246; /* #fef1f6 */
-  --color-saas-100: 253 213 230; /* #fdd5e6 */
-  --color-saas-200: 250 170 203; /* #faaacb */
-  --color-saas-300: 245 124 174; /* #f57cae */
-  --color-saas-400: 232 77 138; /* #e84d8a */
-  --color-saas-500: 201 53 112; /* #c93570 */
-  --color-saas-600: 166 42 91; /* #a62a5b */
-  --color-saas-700: 129 33 71; /* #812147 */
-  --color-saas-800: 93 24 51; /* #5d1833 */
-  --color-saas-900: 59 15 32; /* #3b0f20 */
-
-  /* science — Bioinformatics accent (amber; shared with AI). */
-  --color-science-50: 255 251 235; /* #fffbeb */
-  --color-science-100: 254 243 199; /* #fef3c7 */
-  --color-science-200: 253 230 138; /* #fde68a */
-  --color-science-300: 252 211 77; /* #fcd34d */
-  --color-science-400: 254 179 38; /* #feb326 */
-  --color-science-500: 217 155 30; /* #d99b1e */
-  --color-science-600: 179 127 23; /* #b37f17 */
-  --color-science-700: 140 99 17; /* #8c6311 */
-  --color-science-800: 102 71 12; /* #66470c */
-  --color-science-900: 64 45 7; /* #402d07 */
-
-  /* status — Functional maturity-badge colors — never confused with group accents. */
-  --color-status-production: 34 197 94; /* #22c55e */
-  --color-status-stable: 59 130 246; /* #3b82f6 */
-  --color-status-research: 245 158 11; /* #f59e0b */
-  --color-status-contributions: 139 92 246; /* #8b5cf6 */
-
-  /* Named aliases used by plain CSS below. */
-  --color-brand-primary: rgb(var(--color-brand-400));
-  --color-brand-primary-active: rgb(var(--color-brand-700));
-  --color-brand-accent: rgb(var(--color-infra-200));
-  --color-brand-growth: rgb(var(--color-status-production));
-
-  /* Lepista DS — type roles. */
-  --font-display: 'Bricolage Grotesque', sans-serif;
-  --font-sans: 'Hanken Grotesk', sans-serif;
-  --font-mono: 'Space Mono', monospace;
-
   font-size: 18px;
   font-family: var(--font-sans);
   line-height: 1.5;
@@ -98,60 +224,79 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-@layer utilities {
-  /* Reserve the scrollbar gutter at all times so layout never shifts. */
-  .scrollbar {
-    scrollbar-gutter: stable;
-    /* Firefox */
-    scrollbar-color: transparent transparent;
-    scrollbar-width: thin;
+@layer base {
+  /* Tailwind v3 defaults the app was written against. */
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-zinc-200, currentColor);
   }
 
-  .scrollbar:hover {
+  input::placeholder,
+  textarea::placeholder {
+    color: var(--color-zinc-400);
+  }
+
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+}
+
+/* Reserve the scrollbar gutter at all times so layout never shifts. */
+@utility scrollbar {
+  scrollbar-gutter: stable;
+  /* Firefox */
+  scrollbar-color: transparent transparent;
+  scrollbar-width: thin;
+
+  &:hover {
     /* Firefox — show thumb on hover */
     scrollbar-color: #425a925d transparent;
   }
 
   /* WebKit — fixed size so the gutter is always reserved */
-  .scrollbar::-webkit-scrollbar {
+  &::-webkit-scrollbar {
     width: 10px;
     height: 10px;
   }
 
-  .scrollbar::-webkit-scrollbar-track {
+  &::-webkit-scrollbar-track {
     background: transparent;
   }
 
   /* Hidden by default — transparent preserves the space */
-  .scrollbar::-webkit-scrollbar-thumb {
+  &::-webkit-scrollbar-thumb {
     background: transparent;
     border-radius: 100vh;
   }
 
   /* Reveal on hover */
-  .scrollbar:hover::-webkit-scrollbar-thumb {
+  &:hover::-webkit-scrollbar-thumb {
     background: #425a925d;
   }
 
-  .scrollbar:hover::-webkit-scrollbar-thumb:hover {
-    background: var(--color-brand-growth);
+  &:hover::-webkit-scrollbar-thumb:hover {
+    background: var(--color-status-production);
   }
 
-  .scrollbar:hover::-webkit-scrollbar-thumb:active {
-    background: var(--color-brand-primary-active);
+  &:hover::-webkit-scrollbar-thumb:active {
+    background: var(--color-brand-700);
   }
+}
 
-  .dont-break-out {
-    overflow-wrap: break-word;
-    word-wrap: break-word;
-    -ms-word-break: break-all;
-    word-break: break-all;
-    word-break: break-word;
-    -ms-hyphens: auto;
-    -moz-hyphens: auto;
-    -webkit-hyphens: auto;
-    hyphens: auto;
-  }
+@utility dont-break-out {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  -ms-word-break: break-all;
+  word-break: break-all;
+  word-break: break-word;
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  -webkit-hyphens: auto;
+  hyphens: auto;
 }
 
 [data-testid="right-icon"] {

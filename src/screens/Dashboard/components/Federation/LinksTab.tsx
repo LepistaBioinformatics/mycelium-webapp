@@ -9,16 +9,15 @@ import {
   TableCell,
   TableHead,
   TableHeadCell,
-  TableRow,
-} from "flowbite-react";
+  TableRow
+} from "@/components/ui/DataTable";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import useSWR from "swr";
 import {
   cellClassName,
   rowClassName,
-  tableTheme,
-} from "../WebHooks/ExecutionEvents/table-theme";
+  } from "../WebhookExecutions/ExecutionEvents/table-theme";
 import ConfirmModal from "./ConfirmModal";
 import {
   formatDate,
@@ -62,7 +61,7 @@ export default function LinksTab() {
           )}
           {!!links.data?.length && (
             <div className="overflow-x-auto scrollbar w-full">
-              <Table theme={tableTheme} data-testid="federation-links">
+              <Table data-testid="federation-links">
                 <TableHead>
                   <TableHeadCell>{t(`${TAB}.columns.email`)}</TableHeadCell>
                   <TableHeadCell>{t(`${PREFIX}.peer`)}</TableHeadCell>

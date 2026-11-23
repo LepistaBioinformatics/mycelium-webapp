@@ -7,7 +7,7 @@ import useSuspenseError from "@/hooks/use-suspense-error";
 import { components } from "@/services/openapi/mycelium-schema";
 import { ownerGuest } from "@/services/rpc/tenantOwner";
 import { MycPermission } from "@/types/MyceliumPermission";
-import { TextInput } from "flowbite-react";
+import { TextInput } from "@/components/ui/Input";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -132,18 +132,8 @@ export default function GuestOwnerModal({
                 "screens.Dashboard.Tenants.AdvancedManagement.legalSettingsAndPeople.owners.guestOwner.form.email.placeholder"
               )}
               sizing="lg"
-              color="custom"
               autoFocus
-              theme={{
-                field: {
-                  input: {
-                    colors: {
-                      custom:
-                        "border-brand-600 bg-brand-violet-50 text-zinc-900 focus:border-infra-400 focus:ring-zinc-500 dark:bg-surface-950 dark:text-white placeholder-zinc-500 dark:placeholder-zinc-400 dark:focus:border-brand-violet-500 dark:focus:ring-brand-violet-500",
-                    },
-                  },
-                },
-              }}
+             
               {...register("email")}
             />
             {errors.email && <span>This field is required</span>}

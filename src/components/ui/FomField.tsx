@@ -1,5 +1,5 @@
 import { cva, VariantProps } from "class-variance-authority";
-import { Label } from "flowbite-react";
+import { Label } from "@/components/shadcn/label";
 import Typography from "./Typography";
 
 const styles = cva("flex flex-col text-left gap-1 my-2", {

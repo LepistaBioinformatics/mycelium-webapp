@@ -64,9 +64,7 @@
           "title": "Seu e-mail"
         },
         "personalInfo": {
-          "phoneNumber": "Telefone",
-          "emergencyContactName": "Contato de emergência",
-          "emergencyContactPhone": "Telefone de emergência"
+          "phoneNumber": "Telefone"
         },
         "ContactInfoSection": {
           "tabName": "Informações de contato",
@@ -83,14 +81,6 @@
             "title": "Cargo",
             "placeholder": "ex: Líder de Infraestrutura"
           },
-          "emergencyContactName": {
-            "title": "Nome do contato de emergência",
-            "description": "Alguém que possamos contatar em seu nome, se necessário.",
-            "placeholder": "Nome completo"
-          },
-          "emergencyContactPhone": {
-            "title": "Telefone do contato de emergência"
-          },
           "save": "Salvar",
           "saving": "Salvando...",
           "error": "Alguns campos falharam ao salvar"
@@ -99,14 +89,7 @@
       "AdvancedOptionsModal": {
         "title": "Criar string de conexão",
         "tabName": "Opções avançadas",
-        "accountId": "Restrito a conta",
-        "accountIdDescription": "A string de conexão será restrita à conta com o ID.",
-        "tenantId": "Restrito ao inquilino",
-        "tenantIdDescription": "A string de conexão será restrita ao inquilino com o ID.",
-        "permissionedRoles": "Papéis e permissões",
-        "permissionedRolesDescription": "A string de conexão será restrita aos papéis e permissões selecionados.",
-        "removeRole": "Não incluir esse papel no filtro",
-        "explain": "A string de conexão será restrita a conta, tenant, papéis e permissões selecionados nessa etapa. Para verificar se o token gerado possui o escopo adequado, utilize ferramentas como base64decode.org",
+        "explain": "Uma connection string permite que um script ou outro serviço chame o gateway em seu nome. Ela carrega apenas o escopo listado abaixo, até expirar.",
         "form": {
           "expiration": {
             "label": "Selecionar expiração",
@@ -147,6 +130,27 @@
             "serviceAccount": "Conta de serviço",
             "roles": "Papéis",
             "expiresAt": "Expira em"
+          }
+        },
+        "scope": {
+          "title": "O que esta connection string pode acessar",
+          "description": "As requisições feitas com ela ficam limitadas a:",
+          "unrestricted": "Nenhuma restrição se aplica: esta connection string carrega todas as suas permissões atuais. Crie-a a partir de um namespace ou de uma conta para restringi-la.",
+          "tenant": {
+            "label": "Namespace",
+            "hint": "Só são aceitas requisições para este namespace."
+          },
+          "account": {
+            "label": "Conta",
+            "hint": "Ela atua somente sobre esta conta."
+          },
+          "roles": {
+            "label": "Papéis",
+            "count": "{{included}} de {{total}} incluídos",
+            "hint": "Só os papéis selecionados entram na connection string. Clique em um papel para deixá-lo de fora.",
+            "noneSelected": "Selecione pelo menos um papel.",
+            "remove": "Deixar {{role}} de fora",
+            "include": "Incluir {{role}}"
           }
         }
       },
@@ -649,6 +653,10 @@
               "desctiption": "Remover o convite irá remover os acessos do usuário convidado.",
               "confirm": "Prosseguir"
             }
+          },
+          "unverified": {
+            "label": "Não verificado",
+            "title": "O convidado ainda não confirmou este convite"
           }
         },
         "AccountDetails": {
@@ -718,6 +726,11 @@
           "yourPermissions": {
             "title": "Suas permissões",
             "prefix": "Suas permissões"
+          },
+          "myGuestsEmpty": "{{email}} não tem convites em {{tenant}}",
+          "myGuestsNoTenant": {
+            "title": "Selecione um namespace para ver os convites",
+            "description": "Os convites são listados por namespace. Marque um namespace com a estrela na tela de Namespaces para ver os convites deste usuário nele."
           }
         },
         "PermissionsOnAccount": {
@@ -766,19 +779,33 @@
           "title": "Convide um usuário",
           "form": {
             "email": {
-              "label": "1. Com esse e-mail",
+              "label": "E-mail",
               "placeholder": "exemplo@email.com",
-              "title": "O endereço de e-mail do usuário convidado. O usuário será notificado por e-mail sobre o convite"
+              "title": "O endereço de e-mail do usuário convidado. O usuário será notificado por e-mail sobre o convite",
+              "invalid": "Digite um e-mail válido"
             },
             "account": {
-              "label": "2. Para essa conta",
+              "label": "Convidar para",
               "title": "A conta para convidar o usuário"
             },
             "role": {
-              "label": "3. Com essa função",
+              "label": "Papel",
               "title": "A função do usuário convidado"
             },
-            "invite": "Convidar"
+            "invite": "Enviar convite"
+          },
+          "steps": {
+            "label": "Etapas do convite",
+            "email": "E-mail",
+            "role": "Papel"
+          },
+          "continue": "Continuar",
+          "back": "Voltar",
+          "changeEmail": "Alterar",
+          "sending": "Enviando…",
+          "errors": {
+            "missingTenant": "Selecione um namespace antes de convidar para esta conta",
+            "generic": "Não foi possível enviar o convite"
           }
         },
         "DeleteAccount": {
@@ -917,9 +944,27 @@
         "GuestRoleSelector": {
           "label": "Papel filho",
           "title": "Selecione um papel filho",
-          "placeholder": "Selecione um papel filho",
-          "loading": "Carregando...",
-          "button": "Clique para selecionar"
+          "placeholder": "Busque papéis pelo nome…",
+          "change": "Trocar",
+          "empty": "Nenhum papel corresponde à busca",
+          "permissions": {
+            "read": "Leitura",
+            "write": "Escrita"
+          },
+          "unavailable": {
+            "ignored": "Já atribuído",
+            "sameAsParent": "Igual ao papel pai",
+            "notBelowParent": "Precisa ter permissão menor que a do papel pai"
+          }
+        },
+        "initializer": {
+          "button": "Papéis de sistema",
+          "title": "Inicializar papéis de sistema",
+          "description": "Cria os papéis de convidado nativos do gateway, um com permissão de leitura e outro de escrita para cada ator abaixo. Managers os usam para delegar a administração do gateway.",
+          "idempotent": "Papéis que já existem são mantidos como estão, então executar de novo é seguro.",
+          "confirm": "Inicializar",
+          "cancel": "Cancelar",
+          "success": "Papéis de sistema prontos"
         }
       },
       "ErrorCodes": {
@@ -931,6 +976,18 @@
         "native": "Nativo",
         "yes": "Sim",
         "no": "Não"
+      },
+      "Discovery": {
+        "filters": {
+          "origin": "Origem",
+          "hideGateway": "Ocultar endpoints do gateway",
+          "hideGatewayDescription": "Remove as operações do próprio API gateway e lista só os serviços downstream",
+          "method": "Método HTTP"
+        }
+      },
+      "WebhookExecutions": {
+        "title": "Execuções de webhooks",
+        "searchPlaceholder": "Filtre com status:failed ou trigger:userAccount.created"
       },
       "Webhooks": {
         "title": "Webhooks",
@@ -1097,12 +1154,6 @@
           "complete": "Conta criada"
         },
         "meta": {
-          "telegram": {
-            "title": "Telegram",
-            "linkHint": "Opcional — conecte o Telegram para entrar e receber notificações pelo bot.",
-            "linkedHint": "Telegram conectado.",
-            "button": "Conectar Telegram"
-          },
           "locale": {
             "title": "Idioma preferido",
             "description": "Define o idioma do painel e dos e-mails do sistema.",
@@ -1113,7 +1164,21 @@
         "saving": "Salvando...",
         "saved": "Salvo",
         "edit": "Editar informações",
-        "error": "Erro inesperado"
+        "error": "Erro inesperado",
+        "name": {
+          "title": "Seu nome",
+          "description": "Como as pessoas vão ver você no portal e nos convites.",
+          "label": "Nome completo",
+          "placeholder": "ex.: Ana Silva"
+        },
+        "contact": {
+          "title": "Contato profissional",
+          "requiredDescription": "Seu papel tem privilégios elevados, então precisamos de uma forma de falar com você caso algo exija sua atenção.",
+          "optionalDescription": "Opcional — ajuda os administradores a falarem com você caso algo exija sua atenção.",
+          "phone": "Telefone",
+          "jobTitle": "Cargo",
+          "jobTitlePlaceholder": "ex.: Líder de Infraestrutura"
+        }
       },
       "Federation": {
         "title": "Federação",
@@ -1246,6 +1311,10 @@
             "submit": "Criar",
             "created": "Regra de tradução criada"
           }
+        },
+        "unavailable": {
+          "title": "A federação não está disponível neste gateway",
+          "description": "Esta instância foi compilada sem federação, então não pode participar de uma rede de peers. A federação não é suportada no modo standalone; ela exige um build full ou postgres-only com a feature de federação."
         }
       }
     },
@@ -1265,7 +1334,7 @@
       }
     },
     "HostedLogin": {
-      "signIn": "Entrar",
+      "signIn": "Entrar no portal",
       "redirecting": "Redirecionando para o login…",
       "startError": "Não foi possível iniciar o login. Tente novamente.",
       "callback": {
@@ -1274,20 +1343,28 @@
         "failedDetail": "O link de acesso é inválido, expirou ou foi aberto em outro navegador.",
         "retry": "Tentar novamente"
       }
+    },
+    "PublicErrorCodes": {
+      "title": "Códigos de erro",
+      "description": "Consulte um erro retornado por este gateway ou por seus serviços. Busque pelo código (MYC00023), prefixo (MYC) ou número (23).",
+      "searchPlaceholder": "Busque pelo código, ex.: MYC00023",
+      "back": "Início",
+      "empty": "Nenhum código de erro corresponde à busca",
+      "unavailable": "Não foi possível carregar os códigos de erro agora",
+      "footerLink": "Códigos de erro",
+      "loginLink": "Recebeu um código de erro? Consulte aqui"
     }
   },
   "components": {
     "SearchBar": {
       "placeholder": "Pesquise resultados...",
+      "removeFilter": "Remover filtro {{filter}}",
+      "clearFilters": "Limpar filtros",
+      "refinePlaceholder": "Refine com um termo de busca…",
       "clear": "Limpar busca",
       "commandPalette": {
         "title": "Filtros"
       }
-    },
-    "Pager": {
-      "records": "{{number}} resultados",
-      "prev": "Anterior",
-      "next": "Próximo"
     },
     "RequiredContactInfoBanner": {
       "title": "Complete suas informações de contato",
@@ -1312,6 +1389,17 @@
       "description": "Não conseguimos falar com a API do Mycelium agora. O portal fica pausado para não mostrar informações erradas e volta sozinho assim que a conexão for restabelecida.",
       "retry": "Tentar agora",
       "retrying": "Verificando…"
+    },
+    "AccountName": {
+      "serviceAccount": "Conta de serviço",
+      "tenantManager": "Gestão do namespace",
+      "role": "Papel {{role}}",
+      "actor": "{{actor}}"
+    },
+    "LoadMore": {
+      "showing": "Mostrando {{loaded}} de {{total}}",
+      "button": "Carregar mais",
+      "loading": "Carregando…"
     }
   },
   "Menu": {
@@ -1325,9 +1413,12 @@
     "accounts": "Contas",
     "guestRoles": "Papéis de convidado",
     "webhooks": "Webhooks",
+    "webhookExecutions": "Execuções de webhooks",
     "errorCodes": "Códigos de erro",
     "operations": "Operações",
     "dashboard": "Dashboard",
-    "federation": "Federação"
+    "federation": "Federação",
+    "gettingStarted": "Primeiros passos",
+    "onboardingProgress": "{{percent}}% configurado"
   }
 }

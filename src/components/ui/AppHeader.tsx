@@ -38,14 +38,14 @@ export default function AppHeader({
         <div>
           <Typography
             as="h2"
-            reverseBackground={true}
+            reverseBackground={!discrete}
             uppercase
             decoration="bold"
           >
             <Link to="/">Mycelium</Link>
           </Typography>
         </div>
-        <div className="flex items-center gap-8 rounded-lg border border-transparent hover:border-brand-600 transition-colors p-2">
+        <div className="flex items-center gap-8 rounded-lg p-2 transition-colors hover:bg-muted">
           {user && (
             <div onClick={logout} className="cursor-pointer">
               <PiSignOutBold className="text-zinc-800 dark:text-zinc-300" />

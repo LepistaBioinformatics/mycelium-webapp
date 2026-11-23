@@ -1,35 +1,38 @@
-import Pager, { PagerProps } from "@/components/ui/Pager";
+import LoadMore from "@/components/ui/LoadMore";
 import Skeleton from "@/components/ui/Skeleton";
 
-interface Props extends BaseProps, PagerProps {
+interface Props extends BaseProps {
   isLoading: boolean;
+  loaded: number;
+  total: number;
+  hasMore: boolean;
+  isLoadingMore: boolean;
+  onLoadMore: () => void;
 }
 
+/** A list whose pages accumulate with a "Load more" button at the end */
 export default function PaginatedContent({
   children,
   isLoading,
-  records,
-  ...props
+  loaded,
+  total,
+  hasMore,
+  isLoadingMore,
+  onLoadMore,
 }: Props) {
-  if (!isLoading && !records) return null;
+  if (isLoading) return <Skeleton.ListRows />;
 
   return (
-    <div id="PaginatedContent">
-      {isLoading ? (
-        <Skeleton.ListRows />
-      ) : (
-        <div className="flex flex-col gap-4 w-full mb-24">
-          <Pager {...props} records={records} />
+    <div id="PaginatedContent" className="flex flex-col gap-4 w-full mb-24">
+      {children}
 
-          {children}
-
-          {records?.count && records?.records?.length > 0 ? (
-            <Pager {...props} records={records} />
-          ) : (
-            <></>
-          )}
-        </div>
-      )}
+      <LoadMore
+        loaded={loaded}
+        total={total}
+        hasMore={hasMore}
+        isLoadingMore={isLoadingMore}
+        onLoadMore={onLoadMore}
+      />
     </div>
   );
 }
