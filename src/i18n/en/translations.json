@@ -53,12 +53,6 @@
           "staff": "Team user",
           "manager": "Manager"
         },
-        "createConnectionString": {
-          "cta": "Advanced options",
-          "title": "Create global connection string",
-          "description": "Global connection strings provide full access to your account. This connection string will be used to authenticate your account programmatically.",
-          "button": "To create"
-        },
         "email": {
           "prefix": "E-mail",
           "title": "Your email"
@@ -88,7 +82,6 @@
       },
       "AdvancedOptionsModal": {
         "title": "Create Connection String",
-        "tabName": "Advanced Options",
         "explain": "A connection string lets a script or another service call the gateway on your behalf. It only carries the scope listed below, until it expires.",
         "form": {
           "expiration": {
@@ -251,8 +244,13 @@
           "account": "Account",
           "serviceAccount": "Service account",
           "roles": "Roles",
-          "endpoint": "Endpoint"
-        }
+          "endpoint": "Endpoint",
+          "service": "Service allowed to send with this string",
+          "serviceTag": "service: {{service}}"
+        },
+        "issueNotification": "Notification string",
+        "create": "Create connection string",
+        "description": "Strings let scripts and services call the gateway on your behalf, limited to the scope you choose."
       },
       "LicensedResourcesSection": {
         "title": "Accounts you have access",
@@ -1395,6 +1393,36 @@
         "unavailable": {
           "title": "Federation is not available on this gateway",
           "description": "This instance was built without federation, so it cannot join a peer mesh. Federation is not supported in standalone mode; it needs a full or postgres-only build with the federation feature."
+        }
+      },
+      "NotificationConnectionString": {
+        "title": "Notification connection string",
+        "description": "A downstream service uses this string to send templated emails through Mycelium. It can only send notifications for the service you pick.",
+        "form": {
+          "name": "Name",
+          "service": "Service",
+          "tenant": "Namespace",
+          "noTenant": "No namespace",
+          "tenantRequired": "This service only emails members of a namespace, so pick one.",
+          "expiration": "Expiration",
+          "days_one": "{{count}} day",
+          "days_other": "{{count}} days",
+          "expirationCap_one": "This instance allows at most {{count}} day.",
+          "expirationCap_other": "This instance allows at most {{count}} days.",
+          "create": "Create"
+        },
+        "issued": {
+          "warningTitle": "Copy it now: it will not be shown again",
+          "warning": "This is a long-lived secret. Store it in the downstream service's secret store. It only sends notifications for this service and works nowhere else in the gateway.",
+          "label": "Notification connection string",
+          "copy": "Copy",
+          "copied": "Copied",
+          "done": "Done"
+        },
+        "errors": {
+          "invalidRequest": "The expiration is above the instance limit, or this service needs a namespace.",
+          "notificationsDisabled": "Notifications are not enabled for this service.",
+          "issuerNotAllowed": "You are not allowed to issue notification strings for this service or namespace."
         }
       }
     },

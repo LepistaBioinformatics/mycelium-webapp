@@ -53,12 +53,6 @@
           "staff": "Usuario del equipo",
           "manager": "Gerente"
         },
-        "createConnectionString": {
-          "cta": "Opciones avanzadas",
-          "title": "Crear cadena de conexión global",
-          "description": "Las cadenas de conexión globales proporcionan acceso completo a su cuenta. Esta cadena de conexión se utilizará para autenticar su cuenta mediante programación.",
-          "button": "Crear"
-        },
         "email": {
           "prefix": "Correo electrónico",
           "title": "Tu correo electrónico"
@@ -88,7 +82,6 @@
       },
       "AdvancedOptionsModal": {
         "title": "Crear cadena de conexión",
-        "tabName": "Opciones avanzadas",
         "explain": "Una connection string permite que un script u otro servicio llame al gateway en tu nombre. Solo lleva el alcance indicado abajo, hasta que expire.",
         "form": {
           "expiration": {
@@ -251,8 +244,13 @@
           "account": "Cuenta",
           "serviceAccount": "Cuenta de servicio",
           "roles": "Roles",
-          "endpoint": "Endpoint"
-        }
+          "endpoint": "Endpoint",
+          "service": "Servicio autorizado a enviar con esta string",
+          "serviceTag": "servicio: {{service}}"
+        },
+        "issueNotification": "String de notificación",
+        "create": "Crear connection string",
+        "description": "Las strings permiten que scripts y servicios llamen al gateway en tu nombre, limitadas al alcance que elijas."
       },
       "LicensedResourcesSection": {
         "title": "Cuentas a las que tiene acceso",
@@ -1316,6 +1314,36 @@
         "unavailable": {
           "title": "La federación no está disponible en este gateway",
           "description": "Esta instancia se compiló sin federación, así que no puede unirse a una red de peers. La federación no es compatible con el modo standalone; requiere un build full o postgres-only con la feature de federación."
+        }
+      },
+      "NotificationConnectionString": {
+        "title": "Connection string de notificación",
+        "description": "Un servicio downstream usa esta string para enviar emails con plantillas a través de Mycelium. Solo envía notificaciones del servicio elegido.",
+        "form": {
+          "name": "Nombre",
+          "service": "Servicio",
+          "tenant": "Namespace",
+          "noTenant": "Sin namespace",
+          "tenantRequired": "Este servicio solo envía emails a miembros de un namespace, así que elige uno.",
+          "expiration": "Expiración",
+          "days_one": "{{count}} día",
+          "days_other": "{{count}} días",
+          "expirationCap_one": "Esta instancia permite como máximo {{count}} día.",
+          "expirationCap_other": "Esta instancia permite como máximo {{count}} días.",
+          "create": "Crear"
+        },
+        "issued": {
+          "warningTitle": "Cópiala ahora: no se volverá a mostrar",
+          "warning": "Es un secreto de larga duración. Guárdalo en el almacén de secretos del servicio downstream. Solo envía notificaciones de este servicio y no funciona en ningún otro lugar del gateway.",
+          "label": "Connection string de notificación",
+          "copy": "Copiar",
+          "copied": "Copiado",
+          "done": "Listo"
+        },
+        "errors": {
+          "invalidRequest": "La expiración supera el límite de la instancia, o este servicio requiere un namespace.",
+          "notificationsDisabled": "Las notificaciones no están habilitadas para este servicio.",
+          "issuerNotAllowed": "No tienes permiso para emitir strings de notificación para este servicio o namespace."
         }
       }
     },

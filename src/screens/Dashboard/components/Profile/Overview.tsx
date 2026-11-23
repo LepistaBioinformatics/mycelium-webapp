@@ -5,7 +5,7 @@ import Typography from "@/components/ui/Typography";
 import { components } from "@/services/openapi/mycelium-schema";
 import { MdManageAccounts, MdOutlineLinkOff, MdContactPhone } from "react-icons/md";
 import { SlOrganization } from "react-icons/sl";
-import { IoOptions, IoSettingsOutline } from "react-icons/io5";
+import { IoOptions } from "react-icons/io5";
 import { ActiveTab } from "./active-tab";
 
 type Profile = components["schemas"]["Profile"];
@@ -73,12 +73,6 @@ export default function Overview({
       tab: ActiveTab.ListConnectionStrings,
       icon: <IoOptions size={20} />,
       labelKey: "screens.Dashboard.ListConnectionStringsSection.tabName",
-      status: t(`${BASE}.manage`),
-    },
-    {
-      tab: ActiveTab.AdvancedOptions,
-      icon: <IoSettingsOutline size={20} />,
-      labelKey: "screens.Dashboard.AdvancedOptionsModal.tabName",
       status: t(`${BASE}.manage`),
     },
     {

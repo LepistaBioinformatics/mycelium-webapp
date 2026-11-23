@@ -5,7 +5,7 @@ import Skeleton from "@/components/ui/Skeleton";
 import Typography from "@/components/ui/Typography";
 import useProfile from "@/hooks/use-profile";
 import { components } from "@/services/openapi/mycelium-schema";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { RiDashboardFill } from "react-icons/ri";
 import Section from "@/components/ui/Section";
 import getTenantsOwnershipOrNull from "@/functions/get-tenant-ownership-or-null";
@@ -21,24 +21,19 @@ import { GrUserAdmin } from "react-icons/gr";
 import IntroSection from "@/components/ui/IntroSection";
 import { useTranslation } from "react-i18next";
 import CopyToClipboard from "@/components/ui/CopyToClipboard";
-import CreateConnectionStringModal from "../CreateConnectionStringModal";
-import Button from "@/components/ui/Button";
-import Banner from "@/components/ui/Banner";
-import Card from "@/components/ui/Card";
 import VerticalTabNav from "@/components/ui/VerticalTabNav";
 import { SlOrganization } from "react-icons/sl";
 import { MdManageAccounts } from "react-icons/md";
 import { IoOptions } from "react-icons/io5";
-import { IoSettingsOutline } from "react-icons/io5";
 import { MdOutlineLinkOff } from "react-icons/md";
 import { MdContactPhone } from "react-icons/md";
 import { MdOutlineDashboard } from "react-icons/md";
 import { useSearchParams } from "react-router";
-import useSWR, { useSWRConfig } from "swr";
+import useSWR from "swr";
 import { accountsGet } from "@/services/rpc/beginners";
 import HoldToReveal from "@/components/ui/HoldToReveal";
 import Overview from "./Overview";
-import { ActiveTab } from "./active-tab";
+import { ActiveTab, LEGACY_TABS } from "./active-tab";
 
 type Profile = components["schemas"]["Profile"];
 type Account = components["schemas"]["Account"];
@@ -71,11 +66,6 @@ const NAV_ITEMS: NavItem[] = [
     icon: <IoOptions size={16} />,
   },
   {
-    tab: ActiveTab.AdvancedOptions,
-    labelKey: "screens.Dashboard.AdvancedOptionsModal.tabName",
-    icon: <IoSettingsOutline size={16} />,
-  },
-  {
     tab: ActiveTab.TelegramIdentity,
     labelKey: "screens.Dashboard.TelegramIdentity.tabName",
     icon: <MdOutlineLinkOff size={16} />,
@@ -91,8 +81,6 @@ export default function Profile() {
   const { t } = useTranslation();
 
   const [searchParams, setSearchParams] = useSearchParams();
-
-  const { mutate } = useSWRConfig();
 
   const { user, profile, isLoadingUser, getAccessTokenSilently } =
     useProfile();
@@ -135,7 +123,8 @@ export default function Profile() {
   }, [account?.name, principalOwner, user]);
 
   const activeTab = useMemo(() => {
-    const tab = searchParams.get("tab");
+    const requested = searchParams.get("tab");
+    const tab = (requested && LEGACY_TABS[requested]) || requested;
 
     if (!tab || !Object.values(ActiveTab).includes(tab as ActiveTab)) {
       return ActiveTab.Overview;
@@ -153,24 +142,6 @@ export default function Profile() {
     () => getLicensedResourcesOrNull(profile?.licensedResources),
     [profile?.licensedResources]
   );
-
-  const [
-    isCreateConnectionStringModalOpen,
-    setIsCreateConnectionStringModalOpen,
-  ] = useState(false);
-
-  const handleCreateConnectionStringModalOpen = () => {
-    setIsCreateConnectionStringModalOpen(true);
-  };
-
-  const handleCreateConnectionStringModalClose = () => {
-    setIsCreateConnectionStringModalOpen(false);
-  };
-
-  const handleCreateConnectionStringModalSuccess = () => {
-    setIsCreateConnectionStringModalOpen(false);
-    mutate(["rpc", "beginners.tokens.list"]);
-  };
 
   return (
     <>
@@ -296,61 +267,10 @@ export default function Profile() {
 
               {activeTab === ActiveTab.ContactInfo && <ContactInfoSection />}
 
-              {activeTab === ActiveTab.AdvancedOptions && (
-                <Card padding="sm" width="alwaysFull" height="adaptive">
-                  <Card.Header>
-                    <Typography as="h5" decoration="faded">
-                      {t(
-                        "screens.Dashboard.LicensedResourcesSection.title"
-                      )}
-                    </Typography>
-                  </Card.Header>
-
-                  <Card.Body width="full">
-                    <Banner intent="warning">
-                      <div className="flex flex-col sm:flex-row justify-between gap-2 my-5">
-                        <div className="flex flex-col gap-2">
-                          <Typography as="h4" decoration="semibold">
-                            {t(
-                              "screens.Dashboard.Profile.createConnectionString.title"
-                            )}
-                          </Typography>
-
-                          <Typography
-                            decoration="smooth"
-                            as="p"
-                            width="md"
-                          >
-                            {t(
-                              "screens.Dashboard.Profile.createConnectionString.description"
-                            )}
-                          </Typography>
-                        </div>
-
-                        <div>
-                          <Button
-                            onClick={handleCreateConnectionStringModalOpen}
-                          >
-                            {t(
-                              "screens.Dashboard.Profile.createConnectionString.button"
-                            )}
-                          </Button>
-                        </div>
-                      </div>
-                    </Banner>
-                  </Card.Body>
-                </Card>
-              )}
             </div>
           </div>
         </PageBody.Content>
       </PageBody>
-
-      <CreateConnectionStringModal
-        isOpen={isCreateConnectionStringModalOpen}
-        onClose={handleCreateConnectionStringModalClose}
-        onSuccess={handleCreateConnectionStringModalSuccess}
-      />
     </>
   );
 }
