@@ -1,68 +1,53 @@
 import { cva, VariantProps } from "class-variance-authority";
 import Typography from "./Typography";
-import { IoCloseSharp } from "react-icons/io5";
+import { X } from "lucide-react";
 import { useNavigate } from "react-router";
-import { createPortal } from "react-dom";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+} from "@/components/shadcn/dialog";
 
-const containerStyles = cva(
-  "text-zinc-500 dark:text-zinc-50 fixed inset-0 z-[999] flex flex-col justify-center items-center bg-opacity-50 sm:bg-opacity-60 bg-black h-full sm:pt-1 sm:px-1",
-  {
-    variants: {
-      open: {
-        true: "block",
-        false: "hidden",
-      },
-    },
-    defaultVariants: {
-      open: false,
-    },
-  }
+const contentStyles = cva(
+  "flex flex-col gap-0 p-2 bg-card shadow-raised text-zinc-500 dark:text-zinc-50 border-brand-600/25 dark:border-brand-400/20 overflow-y-auto scrollbar h-[95vh] sm:h-fit max-h-[95vh] w-full max-w-full sm:max-w-[min(90vw,48rem)] rounded-none sm:rounded-xl"
 );
 
-interface ContainerProps
-  extends BaseProps,
-    VariantProps<typeof containerStyles> {
+interface ContainerProps extends BaseProps, VariantProps<typeof contentStyles> {
+  open?: boolean | null;
   handleClose?: () => void;
 }
 
-function Container({ children, open, handleClose, ...props }: ContainerProps) {
-  // Portaled to document.body — nesting this fixed overlay inside the
-  // dashboard's scrollable containers makes some mobile browsers paint it
-  // relative to the scrolled ancestor instead of the real viewport, cutting
-  // off content until the page is scrolled back to the top.
-  return createPortal(
-    <main
-      id="modal-container"
-      className={containerStyles({ open })}
-      {...props}
-      onClick={(e: any) => {
-        // Stop the click from bubbling to an ancestor SideCurtain's
-        // outside-click handler: Modal is portaled to document.body, so in
-        // the DOM its content is a sibling of #side-curtain, not a
-        // descendant — SideCurtain's closest() check can't see it and would
-        // otherwise close both overlays on any click inside the modal.
-        e.stopPropagation();
-        if (!e.target.closest("#modal-container-content")) {
-          handleClose?.();
-        }
+function Container({ children, open, handleClose }: ContainerProps) {
+  return (
+    <Dialog
+      open={!!open}
+      onOpenChange={(next) => {
+        if (!next) handleClose?.();
       }}
     >
-      <div
+      <DialogContent
         id="modal-container-content"
-        className="bg-white dark:bg-brand-950 sm:rounded-lg p-2 border border-brand-600 shadow-sm dark:shadow-none overflow-y-auto scrollbar mb-16 sm:my-2 h-[95vh] sm:h-fit w-full sm:min-w-1/2 md:w-2/5"
+        showCloseButton={false}
+        aria-describedby={undefined}
+        className={contentStyles()}
+        // Modal is portaled to document.body, but React events still bubble
+        // to React ancestors: stop them here so an ancestor SideCurtain's
+        // outside-click handler does not close both overlays.
+        onClick={(e) => e.stopPropagation()}
+        // Toasts live outside the dialog; clicking one must not close it.
+        onInteractOutside={(e) => {
+          const target = e.target as HTMLElement | null;
+          if (target?.closest("[data-app-notification]")) e.preventDefault();
+        }}
       >
         {children}
-      </div>
-    </main>,
-    document.body
+      </DialogContent>
+    </Dialog>
   );
 }
 
 const headerStyles = cva(
-  "text-zinc-500 dark:text-zinc-50 flex justify-between items-center gap-8 min-h-fit p-3",
-  {
-    variants: {},
-  }
+  "sticky -top-2 z-10 -mx-2 -mt-2 px-5 py-3 bg-card text-zinc-500 dark:text-zinc-50 flex justify-between items-center gap-8 min-h-fit border-b border-border"
 );
 
 interface HeaderProps extends BaseProps, VariantProps<typeof headerStyles> {
@@ -83,21 +68,27 @@ function Header({ children, handleClose, ...props }: HeaderProps) {
 
   return (
     <div className={headerStyles()} {...props}>
-      <Typography as="div" decoration="smooth">
-        {children}
-      </Typography>
-      <button onClick={defaultHandleClose}>
-        <IoCloseSharp className="text-3xl text-brand-violet-500 dark:text-brand-violet-500" />
+      <DialogTitle asChild>
+        <div>
+          <Typography as="div" decoration="smooth">
+            {children}
+          </Typography>
+        </div>
+      </DialogTitle>
+      <button
+        type="button"
+        onClick={defaultHandleClose}
+        className="rounded-md p-1 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
+      >
+        <X className="size-6" />
+        <span className="sr-only">Close</span>
       </button>
     </div>
   );
 }
 
 const bodyStyles = cva(
-  "text-zinc-500 dark:text-zinc-50 flex justify-between items-center min-h-24 p-3",
-  {
-    variants: {},
-  }
+  "text-zinc-500 dark:text-zinc-50 flex justify-between items-center min-h-24 p-3"
 );
 
 interface BodyProps extends BaseProps, VariantProps<typeof bodyStyles> {}

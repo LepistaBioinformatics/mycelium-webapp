@@ -1,6 +1,7 @@
 "use client";
 
 import AuthorizedOr from "@/components/ui/AuthorizedOr";
+import Skeleton from "@/components/ui/Skeleton";
 import PageBody from "@/components/ui/PageBody";
 import useProfile from "@/hooks/use-profile";
 import { MycPermission } from "@/types/MyceliumPermission";
@@ -36,6 +37,8 @@ import {
 import CreateConnectionStringModal from "../../CreateConnectionStringModal";
 import Banner from "@/components/ui/Banner";
 import Button from "@/components/ui/Button";
+import { buttonStyles } from "@/components/ui/button-styles";
+import { ArrowRight } from "lucide-react";
 import CreateSubscriptionManagerAccountModal from "./CreateSubscriptionManagerAccountModal";
 import CreateManagementAccount from "../CreateManagementAccount";
 import DeleteTenant from "../DeleteTenant";
@@ -46,6 +49,7 @@ import VerticalTabNav from "@/components/ui/VerticalTabNav";
 import Overview from "./Overview";
 import { ActiveTab } from "./active-tab";
 import { useEffect } from "react";
+import { withBasePath } from "@/functions/with-base-path";
 
 interface NavItem {
   tab: ActiveTab;
@@ -277,7 +281,12 @@ export default function AdvancedManagement() {
   );
 
   if (isLoadingTenantStatus) {
-    return <BasePage>Loading...</BasePage>;
+    return (
+      <BasePage>
+        <Skeleton.Header lines={3} />
+        <Skeleton.Fields count={4} columns={2} />
+      </BasePage>
+    );
   }
 
   if (tenantStatusError) {
@@ -293,7 +302,7 @@ export default function AdvancedManagement() {
           </Typography>
 
           <img
-            src="/undraw.co/undraw_towing_e407.svg"
+            src={withBasePath("undraw.co/undraw_towing_e407.svg")}
             alt="403"
             className="mx-auto"
             width={300}
@@ -313,7 +322,7 @@ export default function AdvancedManagement() {
           </Typography>
 
           <img
-            src="/undraw.co/undraw_secure-login_m11a.svg"
+            src={withBasePath("undraw.co/undraw_secure-login_m11a.svg")}
             alt="403"
             className="mx-auto"
             width={300}
@@ -381,16 +390,17 @@ export default function AdvancedManagement() {
           <Section.Body>
             <Link
               to={`/dashboard/tenants/${tenantId}/accounts`}
-              className="flex gap-2 items-center align-center hover:underline text-lg text-brand-violet-500 dark:text-brand-violet-500 mt-2"
+              className={`${buttonStyles({ intent: "primary", size: "sm" })} group/link mt-2 w-fit`}
               title={t(
                 "screens.Dashboard.Tenants.AdvancedManagement.manageAccountsDescription"
               )}
             >
-              <MdManageAccounts
-                size={24}
-                className="inline text-brand-violet-500 dark:text-brand-violet-500"
-              />
+              <MdManageAccounts size={18} />
               {t("screens.Dashboard.Tenants.AdvancedManagement.manageAccounts")}
+              <ArrowRight
+                aria-hidden
+                className="size-4 transition-transform group-hover/link:translate-x-0.5"
+              />
             </Link>
           </Section.Body>
         </Section>

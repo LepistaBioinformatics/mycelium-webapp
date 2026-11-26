@@ -7,9 +7,8 @@ import {
   errorCodesList,
   ErrorCodesListParams,
 } from "@/services/rpc/systemManager";
-import PaginatedRecords from "@/types/PaginatedRecords";
 import { useMemo } from "react";
-import useSWR from "swr";
+import useLoadMore from "@/hooks/use-load-more";
 import DashBoardBody from "../DashBoardBody";
 import PaginatedContent from "../PaginatedContent";
 import CopyToClipboard from "@/components/ui/CopyToClipboard";
@@ -21,6 +20,8 @@ import { useTranslation } from "react-i18next";
 import IntroSection from "@/components/ui/IntroSection";
 
 type ErrorCode = components["schemas"]["ErrorCode"];
+
+const PAGE_SIZE = 20;
 
 export default function ErrorCodes() {
   const { t } = useTranslation();
@@ -35,20 +36,16 @@ export default function ErrorCodes() {
     permissions: [MycPermission.Read, MycPermission.Write],
   });
 
-  const { skip, pageSize, setSkip, setPageSize, searchTerm, setSearchTerm } =
-    useSearchBarParams({
-      initialSkip: 0,
-      initialPageSize: 10,
-    });
+  const { searchTerm, setSearchTerm } = useSearchBarParams({
+    initialSkip: 0,
+    initialPageSize: PAGE_SIZE,
+  });
 
   const rpcParams = useMemo<ErrorCodesListParams | null>(() => {
     if (!isAuthenticated) return null;
     if (!hasEnoughPermissions) return null;
 
-    const params: ErrorCodesListParams = {
-      skip: skip ?? undefined,
-      pageSize: pageSize ?? undefined,
-    };
+    const params: ErrorCodesListParams = {};
 
     if (searchTerm && searchTerm !== "") {
       //
@@ -90,46 +87,30 @@ export default function ErrorCodes() {
     }
 
     return params;
-  }, [searchTerm, skip, pageSize, isAuthenticated, hasEnoughPermissions]);
+  }, [searchTerm, isAuthenticated, hasEnoughPermissions]);
 
-  const swrKey = useMemo(() => {
-    if (!rpcParams) return null;
-
-    return [
-      "rpc",
-      "systemManager.errorCodes.list",
-      rpcParams.skip,
-      rpcParams.pageSize,
-      rpcParams.prefix,
-      rpcParams.code,
-      rpcParams.isInternal,
-    ];
-  }, [rpcParams]);
-
-  const {
-    data: errorCodes,
-    isLoading: isLoadingErrorCodes,
-    mutate: mutateErrorCodes,
-  } = useSWR<PaginatedRecords<ErrorCode>>(
-    swrKey,
-    async () => {
-      return errorCodesList(rpcParams!, getAccessTokenSilently);
-    },
-    {
-      revalidateIfStale: true,
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false,
-      revalidateOnMount: true,
-      refreshInterval: 1000 * 60,
-    }
-  );
+  const errorCodes = useLoadMore<ErrorCode>({
+    baseKey: rpcParams
+      ? [
+          "rpc",
+          "systemManager.errorCodes.list",
+          rpcParams.prefix,
+          rpcParams.code,
+          rpcParams.isInternal,
+        ]
+      : null,
+    pageSize: PAGE_SIZE,
+    fetchPage: (skip, pageSize) =>
+      errorCodesList(
+        { ...rpcParams!, skip: skip || undefined, pageSize },
+        getAccessTokenSilently
+      ),
+  });
 
   const onSubmit = (term?: string) => {
-    setSkip(0);
-
     if (term !== undefined) setSearchTerm(term);
 
-    mutateErrorCodes(errorCodes, { rollbackOnError: true });
+    errorCodes.mutate();
   };
 
   /**
@@ -154,8 +135,6 @@ export default function ErrorCodes() {
       placeholder={t("screens.Dashboard.ErrorCodes.placeholder", {
         example: "MYC code=23 internal=yes",
       })}
-      setSkip={setSkip}
-      setPageSize={setPageSize}
       isLoading={isLoadingUser}
       authorized={hasEnoughPermissions}
     >
@@ -164,14 +143,14 @@ export default function ErrorCodes() {
         className="flex flex-col justify-center gap-4 w-full mx-auto"
       >
         <PaginatedContent
-          isLoading={isLoadingErrorCodes}
-          records={errorCodes}
-          mutation={mutateErrorCodes}
-          skip={skip}
-          setSkip={setSkip}
-          pageSize={pageSize}
+          isLoading={errorCodes.isLoading}
+          loaded={errorCodes.records.length}
+          total={errorCodes.count}
+          hasMore={errorCodes.hasMore}
+          isLoadingMore={errorCodes.isLoadingMore}
+          onLoadMore={errorCodes.loadMore}
         >
-          {errorCodes?.records?.map((errorCode) => (
+          {errorCodes.records.map((errorCode) => (
             <ListItem key={buildErrorCodeId(errorCode)}>
               <div className="flex justify-between gap-3">
                 <Typography as="h3">

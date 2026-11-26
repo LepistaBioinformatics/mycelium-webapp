@@ -12,7 +12,7 @@ const { width, height, padding, margin } = projectVariants;
 // ? ---------------------------------------------------------------------------
 
 const cardContainerStyles = cva(
-  "p-2 rounded-lg border border-brand-600 shadow-sm dark:shadow-none text-zinc-500 bg-white dark:bg-brand-950",
+  "p-2 rounded-xl border border-brand-600/25 dark:border-brand-400/20 shadow-card text-muted-foreground bg-card",
   {
     variants: {
       height,
@@ -55,7 +55,6 @@ const cardContainerStyles = cva(
     },
     defaultVariants: {
       ...projectDefaultVariants,
-      width: "md",
       padding: "md",
       textAlign: "left",
       group: false,
@@ -103,7 +102,7 @@ function CardContainer({
 // ? Header Container
 // ? ---------------------------------------------------------------------------
 
-const headerStyles = cva("text-xl text-zinc-800 dark:text-zinc-100 py-3", {
+const headerStyles = cva("font-display text-xl font-semibold tracking-tight text-card-foreground py-3", {
   variants: {},
 });
 

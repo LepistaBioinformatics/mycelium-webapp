@@ -1,10 +1,11 @@
 "use client";
 
 import PageBody from "@/components/ui/PageBody";
+import Skeleton from "@/components/ui/Skeleton";
 import Typography from "@/components/ui/Typography";
 import useProfile from "@/hooks/use-profile";
 import { components } from "@/services/openapi/mycelium-schema";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { RiDashboardFill } from "react-icons/ri";
 import Section from "@/components/ui/Section";
 import getTenantsOwnershipOrNull from "@/functions/get-tenant-ownership-or-null";
@@ -15,29 +16,26 @@ import LicensedResourcesSection from "./LicensedResourcesSection";
 import ListConnectionStringsSection from "./ListConnectionStringsSection";
 import IdentitySection from "./IdentitySection";
 import ContactInfoSection from "./ContactInfoSection";
+import PendingInvitationsSection from "./PendingInvitationsSection";
+import { MdOutlineMarkEmailUnread } from "react-icons/md";
 import { GiWizardStaff } from "react-icons/gi";
 import { GrUserAdmin } from "react-icons/gr";
 import IntroSection from "@/components/ui/IntroSection";
 import { useTranslation } from "react-i18next";
 import CopyToClipboard from "@/components/ui/CopyToClipboard";
-import CreateConnectionStringModal from "../CreateConnectionStringModal";
-import Button from "@/components/ui/Button";
-import Banner from "@/components/ui/Banner";
-import Card from "@/components/ui/Card";
 import VerticalTabNav from "@/components/ui/VerticalTabNav";
 import { SlOrganization } from "react-icons/sl";
 import { MdManageAccounts } from "react-icons/md";
 import { IoOptions } from "react-icons/io5";
-import { IoSettingsOutline } from "react-icons/io5";
 import { MdOutlineLinkOff } from "react-icons/md";
 import { MdContactPhone } from "react-icons/md";
 import { MdOutlineDashboard } from "react-icons/md";
 import { useSearchParams } from "react-router";
-import useSWR, { useSWRConfig } from "swr";
+import useSWR from "swr";
 import { accountsGet } from "@/services/rpc/beginners";
 import HoldToReveal from "@/components/ui/HoldToReveal";
 import Overview from "./Overview";
-import { ActiveTab } from "./active-tab";
+import { ActiveTab, LEGACY_TABS } from "./active-tab";
 
 type Profile = components["schemas"]["Profile"];
 type Account = components["schemas"]["Account"];
@@ -60,6 +58,11 @@ const NAV_ITEMS: NavItem[] = [
     icon: <MdManageAccounts size={16} />,
   },
   {
+    tab: ActiveTab.Invitations,
+    labelKey: "screens.Dashboard.PendingInvitationsSection.tabName",
+    icon: <MdOutlineMarkEmailUnread size={16} />,
+  },
+  {
     tab: ActiveTab.TenantOwnership,
     labelKey: "screens.Dashboard.TenantOwnershipSection.tabName",
     icon: <SlOrganization size={16} />,
@@ -68,11 +71,6 @@ const NAV_ITEMS: NavItem[] = [
     tab: ActiveTab.ListConnectionStrings,
     labelKey: "screens.Dashboard.ListConnectionStringsSection.tabName",
     icon: <IoOptions size={16} />,
-  },
-  {
-    tab: ActiveTab.AdvancedOptions,
-    labelKey: "screens.Dashboard.AdvancedOptionsModal.tabName",
-    icon: <IoSettingsOutline size={16} />,
   },
   {
     tab: ActiveTab.TelegramIdentity,
@@ -91,12 +89,12 @@ export default function Profile() {
 
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const { mutate } = useSWRConfig();
-
   const { user, profile, isLoadingUser, getAccessTokenSilently } =
     useProfile();
 
-  const { data: account } = useSWR<Account | null>(
+  const { data: account, isLoading: isLoadingAccount } = useSWR<
+    Account | null
+  >(
     "rpc:beginners.accounts.get",
     () => accountsGet(getAccessTokenSilently),
     { revalidateOnFocus: false, revalidateOnReconnect: false }
@@ -122,13 +120,18 @@ export default function Profile() {
       : "";
     if (account?.name && account.name !== email) return account.name;
 
-    const firstName = principalOwner?.firstName ?? user?.firstName ?? "";
-    const lastName = principalOwner?.lastName ?? user?.lastName ?? "";
-    return `${firstName} ${lastName}`.trim();
+    // Users who signed up by email code or magic link have empty names, so
+    // `||` (not `??`) skips them; without any name, show the email's local
+    // part rather than an empty header.
+    const firstName = principalOwner?.firstName || user?.firstName || "";
+    const lastName = principalOwner?.lastName || user?.lastName || "";
+    const fullName = `${firstName} ${lastName}`.trim();
+    return fullName || user?.email?.username || email;
   }, [account?.name, principalOwner, user]);
 
   const activeTab = useMemo(() => {
-    const tab = searchParams.get("tab");
+    const requested = searchParams.get("tab");
+    const tab = (requested && LEGACY_TABS[requested]) || requested;
 
     if (!tab || !Object.values(ActiveTab).includes(tab as ActiveTab)) {
       return ActiveTab.Overview;
@@ -147,24 +150,6 @@ export default function Profile() {
     [profile?.licensedResources]
   );
 
-  const [
-    isCreateConnectionStringModalOpen,
-    setIsCreateConnectionStringModalOpen,
-  ] = useState(false);
-
-  const handleCreateConnectionStringModalOpen = () => {
-    setIsCreateConnectionStringModalOpen(true);
-  };
-
-  const handleCreateConnectionStringModalClose = () => {
-    setIsCreateConnectionStringModalOpen(false);
-  };
-
-  const handleCreateConnectionStringModalSuccess = () => {
-    setIsCreateConnectionStringModalOpen(false);
-    mutate(["rpc", "beginners.tokens.list"]);
-  };
-
   return (
     <>
       <PageBody padding="md" height="fit">
@@ -178,10 +163,8 @@ export default function Profile() {
         <PageBody.Content padding="md" container flex="col" gap={12}>
           <Section>
             <Section.Header>
-              {isLoadingUser ? (
-                <Typography>
-                  {t("screens.Dashboard.Profile.loading")}
-                </Typography>
+              {isLoadingUser || isLoadingAccount ? (
+                <Skeleton.Header lines={2} />
               ) : (
                 <IntroSection
                   prefix={t("screens.Dashboard.Profile.loggedInAs.prefix")}
@@ -244,30 +227,6 @@ export default function Profile() {
                       <HoldToReveal value={contactInfo.phone_number} />
                     </IntroSection.Item>
                   )}
-
-                  {contactInfo.emergency_contact_name && (
-                    <IntroSection.Item
-                      prefix={t(
-                        "screens.Dashboard.Profile.personalInfo.emergencyContactName"
-                      )}
-                    >
-                      <HoldToReveal
-                        value={contactInfo.emergency_contact_name}
-                      />
-                    </IntroSection.Item>
-                  )}
-
-                  {contactInfo.emergency_contact_phone && (
-                    <IntroSection.Item
-                      prefix={t(
-                        "screens.Dashboard.Profile.personalInfo.emergencyContactPhone"
-                      )}
-                    >
-                      <HoldToReveal
-                        value={contactInfo.emergency_contact_phone}
-                      />
-                    </IntroSection.Item>
-                  )}
                 </IntroSection>
               )}
             </Section.Header>
@@ -286,7 +245,7 @@ export default function Profile() {
               {activeTab === ActiveTab.Overview && (
                 <Overview
                   profile={profile}
-                  contactInfo={contactInfo}
+                  contactInfo={account === undefined ? undefined : contactInfo}
                   licensedResourcesCount={licensedResources?.length ?? 0}
                   tenantsOwnershipCount={tenantsOwnership?.length ?? 0}
                   onNavigate={(tab) => setSearchParams({ tab })}
@@ -297,6 +256,10 @@ export default function Profile() {
                 <LicensedResourcesSection
                   licensedResources={licensedResources}
                 />
+              )}
+
+              {activeTab === ActiveTab.Invitations && (
+                <PendingInvitationsSection />
               )}
 
               {activeTab === ActiveTab.TenantOwnership && (
@@ -315,61 +278,10 @@ export default function Profile() {
 
               {activeTab === ActiveTab.ContactInfo && <ContactInfoSection />}
 
-              {activeTab === ActiveTab.AdvancedOptions && (
-                <Card padding="sm" width="alwaysFull" height="adaptive">
-                  <Card.Header>
-                    <Typography as="h5" decoration="faded">
-                      {t(
-                        "screens.Dashboard.LicensedResourcesSection.title"
-                      )}
-                    </Typography>
-                  </Card.Header>
-
-                  <Card.Body width="full">
-                    <Banner intent="warning">
-                      <div className="flex flex-col sm:flex-row justify-between gap-2 my-5">
-                        <div className="flex flex-col gap-2">
-                          <Typography as="h4" decoration="semibold">
-                            {t(
-                              "screens.Dashboard.Profile.createConnectionString.title"
-                            )}
-                          </Typography>
-
-                          <Typography
-                            decoration="smooth"
-                            as="p"
-                            width="md"
-                          >
-                            {t(
-                              "screens.Dashboard.Profile.createConnectionString.description"
-                            )}
-                          </Typography>
-                        </div>
-
-                        <div>
-                          <Button
-                            onClick={handleCreateConnectionStringModalOpen}
-                          >
-                            {t(
-                              "screens.Dashboard.Profile.createConnectionString.button"
-                            )}
-                          </Button>
-                        </div>
-                      </div>
-                    </Banner>
-                  </Card.Body>
-                </Card>
-              )}
             </div>
           </div>
         </PageBody.Content>
       </PageBody>
-
-      <CreateConnectionStringModal
-        isOpen={isCreateConnectionStringModalOpen}
-        onClose={handleCreateConnectionStringModalClose}
-        onSuccess={handleCreateConnectionStringModalSuccess}
-      />
     </>
   );
 }

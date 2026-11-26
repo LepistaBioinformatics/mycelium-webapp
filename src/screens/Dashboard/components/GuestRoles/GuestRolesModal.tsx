@@ -13,7 +13,7 @@ import {
 } from "@/services/rpc/guestManager";
 import { MycPermission } from "@/types/MyceliumPermission";
 import { MycRole } from "@/types/MyceliumRole";
-import { Select, Textarea, TextInput } from "flowbite-react";
+import { Select, Textarea, TextInput } from "@/components/ui/Input";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -146,18 +146,8 @@ export default function GuestRolesModal({
                 "screens.Dashboard.GuestRoles.GuestRolesModal.form.name.placeholder"
               )}
               sizing="lg"
-              color="custom"
               autoFocus
-              theme={{
-                field: {
-                  input: {
-                    colors: {
-                      custom:
-                        "border-brand-600 bg-brand-violet-50 text-zinc-900 focus:border-infra-400 focus:ring-zinc-500 dark:bg-brand-950 dark:text-white placeholder-zinc-500 dark:placeholder-zinc-400 dark:focus:border-brand-violet-500 dark:focus:ring-brand-violet-500",
-                    },
-                  },
-                },
-              }}
+             
               {...register("name")}
             />
             {errors.name && <span>This field is required</span>}
@@ -178,13 +168,7 @@ export default function GuestRolesModal({
                 "screens.Dashboard.GuestRoles.GuestRolesModal.form.description.placeholder"
               )}
               rows={4}
-              color="custom"
-              theme={{
-                colors: {
-                  custom:
-                    "border-brand-600 bg-brand-violet-50 text-zinc-900 focus:border-infra-400 focus:ring-zinc-500 dark:bg-brand-950 dark:text-white placeholder-zinc-500 dark:placeholder-zinc-400 dark:focus:border-brand-violet-500 dark:focus:ring-brand-violet-500",
-                },
-              }}
+             
               {...register("description")}
             />
             {errors.description && <span>This field is required</span>}
@@ -207,17 +191,7 @@ export default function GuestRolesModal({
             <Select
               id="permission"
               sizing="lg"
-              color="custom"
-              theme={{
-                field: {
-                  select: {
-                    colors: {
-                      custom:
-                        "border-brand-600 bg-brand-violet-50 text-zinc-900 focus:border-infra-400 focus:ring-zinc-500 dark:bg-brand-950 dark:text-white placeholder-zinc-500 dark:placeholder-zinc-400 dark:focus:border-brand-violet-500 dark:focus:ring-brand-violet-500",
-                    },
-                  },
-                },
-              }}
+             
               disabled={!!guestRole}
               title={
                 guestRole

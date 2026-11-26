@@ -13,7 +13,7 @@ import LanguageSwitcher from "../LanguageSwitcher";
 import SignOutButton from "./SignOutButton";
 
 const styles = cva(
-  "sm:hidden h-16 z-[999] fixed bottom-0 left-0 right-0 bg-white dark:bg-brand-950 flex items-center justify-around px-4 border-t-2 border-zinc-200 dark:border-brand-900",
+  "sm:hidden h-16 z-998 fixed bottom-0 left-0 right-0 bg-background flex items-center justify-around px-4 border-t border-border",
   {
     variants: {},
   }
@@ -27,7 +27,7 @@ export default function MobileNavbar() {
     <div className={styles({})}>
       <NavbarItem
         icon={
-          <IoHomeSharp className="text-2xl text-brand-violet-500 dark:text-brand-violet-500" />
+          <IoHomeSharp className="text-2xl text-primary dark:text-brand-300" />
         }
         label="Profile"
         href="/dashboard/profile"
@@ -35,7 +35,7 @@ export default function MobileNavbar() {
 
       <NavbarItem
         icon={
-          <TiThMenu className="text-2xl text-brand-violet-500 dark:text-brand-violet-500" />
+          <TiThMenu className="text-2xl text-primary dark:text-brand-300" />
         }
         label="Menu"
         onClick={() => setIsMenuOpen(true)}
@@ -43,7 +43,7 @@ export default function MobileNavbar() {
 
       <NavbarItem
         icon={
-          <IoMdSettings className="text-2xl text-brand-violet-500 dark:text-brand-violet-500" />
+          <IoMdSettings className="text-2xl text-primary dark:text-brand-300" />
         }
         label="Settings"
         onClick={() => setIsSettingsOpen(true)}
@@ -118,7 +118,7 @@ function MenuModal({
               onClick={onClose}
               className="flex items-center gap-2"
             >
-              <span className="text-2xl text-brand-violet-500 dark:text-brand-violet-500">
+              <span className="text-2xl text-primary dark:text-brand-300">
                 {route.icon}
               </span>
               <Typography>{route.name}</Typography>
@@ -151,7 +151,7 @@ function SettingsModal({
         <div className="flex flex-col gap-3 px-4 w-full">
           <div className="flex flex-col gap-2">
             <Typography>{t("Menu.subtitle")}</Typography>
-            <div className="items-center text-center rounded-lg bg-brand-violet-50 dark:bg-brand-900 p-2 transition-all">
+            <div className="items-center text-center rounded-lg bg-brand-violet-50 dark:bg-surface-900 p-2 transition-all">
               <LanguageSwitcher horizontal keepOpen />
             </div>
           </div>

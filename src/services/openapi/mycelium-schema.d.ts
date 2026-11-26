@@ -60,6 +60,29 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/_adm/audit": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Fetch the audit trail of a resource
+         * @description Returns the immutable audit trail for a single resource, newest first.
+         *     Staff can read any resource's trail; tenant owners/managers can read
+         *     resources belonging to their own tenant; personal-account owners can read
+         *     their own account's trail. Every other caller is denied.
+         */
+        get: operations["fetch_resource_audit_trail"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/_adm/beginners/accounts": {
         parameters: {
             query?: never;
@@ -76,8 +99,6 @@ export interface paths {
         /**
          * Create a user related account
          * @description A user related account is an account that is created for a physical person.
-         *
-         *
          */
         post: operations["create_default_account"];
         delete?: never;
@@ -99,8 +120,6 @@ export interface paths {
         /**
          * Delete my account
          * @description Delete the account associated with the current user.
-         *
-         *
          */
         delete: operations["delete_my_account"];
         options?: never;
@@ -108,8 +127,6 @@ export interface paths {
         /**
          * Update account name
          * @description Update the account name of the account owner.
-         *
-         *
          */
         patch: operations["update_own_account_name"];
         trace?: never;
@@ -177,8 +194,6 @@ export interface paths {
         /**
          * List My Connection Strings
          * @description This action lists all connection strings for the current user.
-         *
-         *
          */
         get: operations["list_my_connection_strings"];
         put?: never;
@@ -186,10 +201,31 @@ export interface paths {
          * Create Connection String
          * @description This action creates a connection string that is associated with the user
          *     account. The connection string has the same permissions of the user account.
-         *
-         *
          */
         post: operations["create_connection_string"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/_adm/beginners/tokens/notifications": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create Notification Connection String
+         * @description This action creates a connection string a downstream service uses to send
+         *     emails through the gateway. The connection string carries the
+         *     `notify:email` scope and the service sender tag, and it is rejected on
+         *     every other gateway surface.
+         */
+        post: operations["create_notification_connection_string"];
         delete?: never;
         options?: never;
         head?: never;
@@ -210,8 +246,6 @@ export interface paths {
          * @description This route should be used to register a new user. If the Bearer token is
          *     included in the request, the user will be registered with the provider
          *     informed in the token. Otherwise, the password is required.
-         *
-         *
          */
         post: operations["create_default_user"];
         delete?: never;
@@ -234,8 +268,6 @@ export interface paths {
          * @description This route should be used to login with email and password. If the user has
          *     enabled the TOTP app, the user will be redirected to the TOTP activation
          *     route.
-         *
-         *
          */
         post: operations["login_with_email_and_password"];
         delete?: never;
@@ -256,8 +288,6 @@ export interface paths {
         /**
          * Check token and reset password
          * @description This route should be used to check the token and reset the password.
-         *
-         *
          */
         post: operations["check_token_and_reset_password"];
         delete?: never;
@@ -278,8 +308,6 @@ export interface paths {
         /**
          * Start password redefinition
          * @description This route should be used to start the password redefinition process.
-         *
-         *
          */
         post: operations["start_password_redefinition"];
         delete?: never;
@@ -298,10 +326,6 @@ export interface paths {
         /**
          * DEPRECATED: Check email status
          * @description This endpoint is deprecated. Please use the /status endpoint instead.
-         *
-         *
-         *
-         *
          */
         get: operations["check_email_registration_status"];
         put?: never;
@@ -325,8 +349,6 @@ export interface paths {
          * Check TOTP token
          * @description This route should be used to check the TOTP token when tht totp app is
          *     enabled.
-         *
-         *
          */
         post: operations["totp_check_token"];
         delete?: never;
@@ -347,8 +369,6 @@ export interface paths {
         /**
          * Disable TOTP
          * @description This route should be used to disable the TOTP app.
-         *
-         *
          */
         post: operations["totp_disable"];
         delete?: never;
@@ -370,8 +390,6 @@ export interface paths {
          * Enable TOTP
          * @description This route should be used to enable the TOTP app. Before enabling the TOTP
          *     the user must be authenticated using the `/login/` route.
-         *
-         *
          */
         post: operations["totp_start_activation"];
         delete?: never;
@@ -392,8 +410,6 @@ export interface paths {
         /**
          * Validate TOTP app
          * @description This route should be used to validate the TOTP app after enabling it.
-         *
-         *
          */
         post: operations["totp_finish_activation"];
         delete?: never;
@@ -414,8 +430,6 @@ export interface paths {
         /**
          * Check token and activate user
          * @description This route should be used to check the token and activate the user.
-         *
-         *
          */
         post: operations["check_user_token"];
         delete?: never;
@@ -435,8 +449,6 @@ export interface paths {
          * List routes by service
          * @description This function is restricted to the GatewayManager users. List routes by
          *     service name or service id.
-         *
-         *
          */
         get: operations["list_routes_by_service"];
         put?: never;
@@ -458,8 +470,6 @@ export interface paths {
          * List routes by service
          * @description This function is restricted to the GatewayManager users. List routes by
          *     service name or service id.
-         *
-         *
          */
         get: operations["list_services"];
         put?: never;
@@ -481,8 +491,6 @@ export interface paths {
          * List routes by service
          * @description This function is restricted to the GatewayManager users. List routes by
          *     service name or service id.
-         *
-         *
          */
         get: operations["list_operations"];
         put?: never;
@@ -620,8 +628,6 @@ export interface paths {
          *     - Gateway Manager
          *     - System Manager
          *     - Tenant Manager
-         *
-         *
          */
         post: operations["create_system_level_guest_roles"];
         delete?: never;
@@ -679,8 +685,6 @@ export interface paths {
          * Exclude a tenant owner
          * @description A single tenant can have multiple owners. This endpoint allows to exclude an
          *     owner from the tenant.
-         *
-         *
          */
         delete: operations["exclude_tenant_owner"];
         options?: never;
@@ -689,10 +693,41 @@ export interface paths {
          * Include a tenant owner
          * @description A single tenant can have multiple owners. This endpoint allows to include a
          *     new owner to the tenant.
-         *
-         *
          */
         patch: operations["register_tenant_owner"];
+        trace?: never;
+    };
+    "/_adm/notifications/email": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Send Service Email
+         * @description Render an operator-deployed template of the calling service and queue
+         *     one email per recipient. The caller authenticates ONLY with a
+         *     notification connection string (`notify:email` scope) in the
+         *     `x-mycelium-connection-string` header; JWTs and general connection
+         *     strings are refused. The service is the one bound to the string, never
+         *     one named in the body.
+         *
+         *     **The connection string is a long-lived secret. Never log it, never put
+         *     it in a URL, and never echo it in error reports.** Treat recipient
+         *     addresses and template variables as personal data too.
+         *
+         *     The body accepts only `to`, `template`, `variables` and `locale`. Sender,
+         *     reply address, subject, headers and HTML are always set by the gateway.
+         *     Delivery is asynchronous: 202 means queued, not delivered.
+         */
+        post: operations["send_service_email"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
         trace?: never;
     };
     "/_adm/staffs/accounts/{account_id}/downgrade": {
@@ -748,8 +783,6 @@ export interface paths {
          *
          *     List accounts with pagination. The `records` field contains a vector of
          *     `Account` model.
-         *
-         *
          */
         get: operations["list_accounts_by_type"];
         put?: never;
@@ -923,7 +956,13 @@ export interface paths {
         delete: operations["uninvite_guest"];
         options?: never;
         head?: never;
-        patch?: never;
+        /**
+         * Guest a user to work on account.
+         * @description This action gives the ability of the target account (specified through
+         *     the `account` argument) to perform actions specified in the `role`
+         *     path argument.
+         */
+        patch: operations["update_flags_from_subscription_account"];
         trace?: never;
     };
     "/_adm/subscriptions-manager/tags": {
@@ -972,8 +1011,6 @@ export interface paths {
          * List available error codes.
          * @description List accounts with pagination. The `records` field contains a vector of
          *     `ErrorCode` model.
-         *
-         *
          */
         get: operations["list_error_codes"];
         put?: never;
@@ -998,8 +1035,6 @@ export interface paths {
         /**
          * Get an error code.
          * @description Get error code by prefix and code.
-         *
-         *
          */
         get: operations["get_error_code"];
         put?: never;
@@ -1007,8 +1042,6 @@ export interface paths {
         /**
          * Delete an error code.
          * @description Delete error code by prefix and code.
-         *
-         *
          */
         delete: operations["delete_error_code"];
         options?: never;
@@ -1016,8 +1049,6 @@ export interface paths {
         /**
          * Update an error code.
          * @description Update error code message and details.
-         *
-         *
          */
         patch: operations["update_error_code_message_and_details"];
         trace?: never;
@@ -1034,6 +1065,48 @@ export interface paths {
         put?: never;
         /** Create a webhook */
         post: operations["create_webhook"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/_adm/system-manager/webhooks/executions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List webhook execution events
+         * @description Newest first, optionally filtered by trigger and status. Shows the
+         *     dispatching state and delivery counts only: never payloads, target URLs or
+         *     response bodies.
+         */
+        get: operations["list_webhook_executions"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/_adm/system-manager/webhooks/executions/summary": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Summarize webhook execution events
+         * @description Event counts grouped by trigger and status.
+         */
+        get: operations["summarize_webhook_executions"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -1071,8 +1144,6 @@ export interface paths {
          * Create a subscription manager account
          * @description This action is restricted to tenant managers. This action will create a
          *     tenant-related subscription manager account.
-         *
-         *
          */
         post: operations["create_subscription_manager_account"];
         delete?: never;
@@ -1094,8 +1165,6 @@ export interface paths {
         /**
          * Delete a subscription account
          * @description This action is restricted to tenant managers.
-         *
-         *
          */
         delete: operations["delete_subscription_account"];
         options?: never;
@@ -1207,8 +1276,6 @@ export interface paths {
          * Create a management account
          * @description Management accounts are used to manage tenant resources. Tenant managers
          *     should manage subscription accounts.
-         *
-         *
          */
         post: operations["create_management_account"];
         delete?: never;
@@ -1230,8 +1297,6 @@ export interface paths {
         /**
          * Delete a tenant manager account
          * @description This action will soft delete the tenant manager account.
-         *
-         *
          */
         delete: operations["delete_tenant_manager_account"];
         options?: never;
@@ -1467,6 +1532,28 @@ export interface paths {
         patch: operations["unarchive_account"];
         trace?: never;
     };
+    "/error-codes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List public error codes
+         * @description Lists the error codes meant to be shown to callers (`isInternal = false`).
+         *     Internal error codes are never returned. The page size is capped at 100.
+         *     No authentication required.
+         */
+        get: operations["list_public_error_codes"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/health": {
         parameters: {
             query?: never;
@@ -1519,8 +1606,6 @@ export interface paths {
          * List routes by service
          * @description This function is restricted to the GatewayManager users. List routes by
          *     service name or service id.
-         *
-         *
          */
         get: operations["list_discoverable_services"];
         put?: never;
@@ -1545,98 +1630,114 @@ export interface components {
             id?: string | null;
             /** @description The Account Name */
             name: string;
-            /** @description The Account Slug
+            /**
+             * @description The Account Slug
              *
              *     This is generated from the account name. This is used for programmatic
              *     access and verification of the account.
-             *      */
+             */
             slug: string;
-            /** @description Account Tags
+            /**
+             * @description Account Tags
              *
              *     Information about the account. This is used for categorizing and filter
              *     account.
-             *      */
+             */
             tags?: components["schemas"]["Tag"][] | null;
-            /** @description Account is active
+            /**
+             * @description Account is active
              *
              *     If the account is active. This is used for logic trash and restore
              *     account.
-             *      */
+             */
             isActive: boolean;
-            /** @description Account is checked
+            /**
+             * @description Account is checked
              *
              *     If the account was verified by a human. This is used for account
              *     verification.
-             *      */
+             */
             isChecked: boolean;
-            /** @description Account is archived
+            /**
+             * @description Account is archived
              *
              *     If the account is archived. This is used for account archiving.
-             *      */
+             */
             isArchived: boolean;
-            /** @description Account is deleted
+            /**
+             * @description Account is deleted
              *
              *     If the account is deleted. This is used for logic trash and restore
              *     account.
-             *      */
+             */
             isDeleted: boolean;
-            verboseStatus?: null | components["schemas"]["VerboseStatus"];
+            verboseStatus?: components["schemas"]["VerboseStatus"] | null;
             isSystemAccount: boolean;
-            /** @description The Account Owners
+            /**
+             * @description The Account Owners
              *
              *     This is the list of account owners. The account owners are the users who
-             *     have the account owner role. */
+             *     have the account owner role.
+             */
             owners: components["schemas"]["Children_User_String"];
-            /** @description The Account Type
+            /**
+             * @description The Account Type
              *
              *     Account type is the type of the account. The account type is used to
-             *     categorize the account. */
+             *     categorize the account.
+             */
             accountType: components["schemas"]["AccountType"];
-            guestUsers?: null | components["schemas"]["Children_GuestUser_String"];
+            guestUsers?: components["schemas"]["Children_GuestUser_String"] | null;
             /**
              * Format: date-time
              * @description The Account Created Date
              */
             createdAt: string;
-            createdBy?: null | components["schemas"]["WrittenBy"];
+            createdBy?: components["schemas"]["WrittenBy"] | null;
             /**
              * Format: date-time
              * @description The Account Updated Date
              */
             updatedAt?: string | null;
-            updatedBy?: null | components["schemas"]["WrittenBy"];
-            /** @description The Account Meta
+            updatedBy?: components["schemas"]["WrittenBy"] | null;
+            /**
+             * @description The Account Meta
              *
              *     Store metadata about the account.
-             *      */
+             */
             meta?: {
                 [key: string]: string;
             } | null;
         };
         AccountType: "staff" | "manager" | "user" | {
-            /** @description Subscription account type
+            /**
+             * @description Subscription account type
              *
              *     A subscription account is a special account type that is used to
-             *     represent legal entities that have a subscription to the service. */
+             *     represent legal entities that have a subscription to the service.
+             */
             subscription: {
                 /** Format: uuid */
                 tenantId: string;
             };
         } | {
-            /** @description Role associated account type
+            /**
+             * @description Role associated account type
              *
              *     Role associated account type is an special type of account, created to
-             *     connect users to a specific standard role in the application. */
+             *     connect users to a specific standard role in the application.
+             */
             roleAssociated: {
                 /**
                  * Format: uuid
                  * @description The tenant ID
                  */
                 tenantId: string;
-                /** @description The role name
+                /**
+                 * @description The role name
                  *
                  *     The role name should be the same for the read and write roles.
-                 *      */
+                 */
                 roleName: string;
                 /**
                  * Format: uuid
@@ -1644,7 +1745,6 @@ export interface components {
                  *
                  *     The read role ID is the ID of the role that will be used to read the
                  *     data from the account.
-                 *
                  */
                 readRoleId: string;
                 /**
@@ -1653,7 +1753,6 @@ export interface components {
                  *
                  *     The write role ID is the ID of the role that will be used to write
                  *     the data to the account.
-                 *
                  */
                 writeRoleId: string;
             };
@@ -1679,10 +1778,12 @@ export interface components {
             email: string;
             password: string;
         };
-        /** @description A children record
+        /**
+         * @description A children record
          *
          *     This enumerator allow represents the children elements using their primary
-         *     keys (Ids option) or the true records (Record option). */
+         *     keys (Ids option) or the true records (Record option).
+         */
         Children_Account_String: {
             records: {
                 /**
@@ -1692,70 +1793,81 @@ export interface components {
                 id?: string | null;
                 /** @description The Account Name */
                 name: string;
-                /** @description The Account Slug
+                /**
+                 * @description The Account Slug
                  *
                  *     This is generated from the account name. This is used for programmatic
                  *     access and verification of the account.
-                 *      */
+                 */
                 slug: string;
-                /** @description Account Tags
+                /**
+                 * @description Account Tags
                  *
                  *     Information about the account. This is used for categorizing and filter
                  *     account.
-                 *      */
+                 */
                 tags?: components["schemas"]["Tag"][] | null;
-                /** @description Account is active
+                /**
+                 * @description Account is active
                  *
                  *     If the account is active. This is used for logic trash and restore
                  *     account.
-                 *      */
+                 */
                 isActive: boolean;
-                /** @description Account is checked
+                /**
+                 * @description Account is checked
                  *
                  *     If the account was verified by a human. This is used for account
                  *     verification.
-                 *      */
+                 */
                 isChecked: boolean;
-                /** @description Account is archived
+                /**
+                 * @description Account is archived
                  *
                  *     If the account is archived. This is used for account archiving.
-                 *      */
+                 */
                 isArchived: boolean;
-                /** @description Account is deleted
+                /**
+                 * @description Account is deleted
                  *
                  *     If the account is deleted. This is used for logic trash and restore
                  *     account.
-                 *      */
+                 */
                 isDeleted: boolean;
-                verboseStatus?: null | components["schemas"]["VerboseStatus"];
+                verboseStatus?: components["schemas"]["VerboseStatus"] | null;
                 isSystemAccount: boolean;
-                /** @description The Account Owners
+                /**
+                 * @description The Account Owners
                  *
                  *     This is the list of account owners. The account owners are the users who
-                 *     have the account owner role. */
+                 *     have the account owner role.
+                 */
                 owners: components["schemas"]["Children_User_String"];
-                /** @description The Account Type
+                /**
+                 * @description The Account Type
                  *
                  *     Account type is the type of the account. The account type is used to
-                 *     categorize the account. */
+                 *     categorize the account.
+                 */
                 accountType: components["schemas"]["AccountType"];
-                guestUsers?: null | components["schemas"]["Children_GuestUser_String"];
+                guestUsers?: components["schemas"]["Children_GuestUser_String"] | null;
                 /**
                  * Format: date-time
                  * @description The Account Created Date
                  */
                 createdAt: string;
-                createdBy?: null | components["schemas"]["WrittenBy"];
+                createdBy?: components["schemas"]["WrittenBy"] | null;
                 /**
                  * Format: date-time
                  * @description The Account Updated Date
                  */
                 updatedAt?: string | null;
-                updatedBy?: null | components["schemas"]["WrittenBy"];
-                /** @description The Account Meta
+                updatedBy?: components["schemas"]["WrittenBy"] | null;
+                /**
+                 * @description The Account Meta
                  *
                  *     Store metadata about the account.
-                 *      */
+                 */
                 meta?: {
                     [key: string]: string;
                 } | null;
@@ -1763,10 +1875,12 @@ export interface components {
         } | {
             ids: string[];
         };
-        /** @description A children record
+        /**
+         * @description A children record
          *
          *     This enumerator allow represents the children elements using their primary
-         *     keys (Ids option) or the true records (Record option). */
+         *     keys (Ids option) or the true records (Record option).
+         */
         Children_GuestRole_String: {
             records: {
                 /** Format: uuid */
@@ -1785,21 +1899,24 @@ export interface components {
                  * @description The date and time the role was last updated
                  */
                 updated?: string | null;
-                /** @description If it is a system role
+                /**
+                 * @description If it is a system role
                  *
                  *     System roles represents standard core actors of the Mycelium API
                  *     Gateway, defined in `SystemActor`
-                 *      */
+                 */
                 system: boolean;
-                children?: null | components["schemas"]["Children_GuestRole_String"];
+                children?: components["schemas"]["Children_GuestRole_String"] | null;
             }[];
         } | {
             ids: string[];
         };
-        /** @description A children record
+        /**
+         * @description A children record
          *
          *     This enumerator allow represents the children elements using their primary
-         *     keys (Ids option) or the true records (Record option). */
+         *     keys (Ids option) or the true records (Record option).
+         */
         Children_GuestUser_String: {
             records: {
                 /**
@@ -1807,11 +1924,12 @@ export interface components {
                  * @description The guest user id
                  */
                 id?: string | null;
-                /** @description The guest user email
+                /**
+                 * @description The guest user email
                  *
                  *     The email is used to identify the guest user connection with the target
                  *     account.
-                 *      */
+                 */
                 email: components["schemas"]["Email"];
                 /** @description The guest user role */
                 guestRole: components["schemas"]["Parent_GuestRole_String"];
@@ -1825,31 +1943,36 @@ export interface components {
                  * @description The last updated date
                  */
                 updated?: string | null;
-                accounts?: null | components["schemas"]["Children_Account_String"];
-                /** @description The guest user is verified
+                accounts?: components["schemas"]["Children_Account_String"] | null;
+                /**
+                 * @description The guest user is verified
                  *
                  *     WHile the user is not verified, the user will not be able to access
                  *     the account.
-                 *      */
+                 */
                 wasVerified: boolean;
             }[];
         } | {
             ids: string[];
         };
-        /** @description A children record
+        /**
+         * @description A children record
          *
          *     This enumerator allow represents the children elements using their primary
-         *     keys (Ids option) or the true records (Record option). */
+         *     keys (Ids option) or the true records (Record option).
+         */
         Children_Owner_String: {
             records: {
                 /** Format: uuid */
                 id: string;
-                /** @description The owner email
+                /**
+                 * @description The owner email
                  *
                  *     The email of the user that administrate the profile. Email denotes the
                  *     central part of the profile management. Email should be used to collect
                  *     licensed IDs and perform guest operations. Thus, it should be unique in
-                 *     the Mycelium platform. */
+                 *     the Mycelium platform.
+                 */
                 email: string;
                 /** @description The owner first name */
                 firstName?: string | null;
@@ -1863,10 +1986,12 @@ export interface components {
         } | {
             ids: string[];
         };
-        /** @description A children record
+        /**
+         * @description A children record
          *
          *     This enumerator allow represents the children elements using their primary
-         *     keys (Ids option) or the true records (Record option). */
+         *     keys (Ids option) or the true records (Record option).
+         */
         Children_User_String: {
             records: {
                 /** Format: uuid */
@@ -1880,8 +2005,9 @@ export interface components {
                 created: string;
                 /** Format: date-time */
                 updated?: string | null;
-                account?: null | components["schemas"]["Parent_Account_String"];
-                /** @description If the user is the principal user of the account.
+                account?: components["schemas"]["Parent_Account_String"] | null;
+                /**
+                 * @description If the user is the principal user of the account.
                  *
                  *     The principal user contains information of the first email that created
                  *     the account. This information is used to send emails to the principal
@@ -1889,13 +2015,14 @@ export interface components {
                  *
                  *     Principal users should not be deleted or deactivated if the account has
                  *     other users connected.
-                 *      */
+                 */
                 isPrincipal: boolean;
-                provider?: null | components["schemas"]["Provider"];
-                /** @description The user TOTP
+                provider?: components["schemas"]["Provider"] | null;
+                /**
+                 * @description The user TOTP
                  *
                  *     When enabled the user has verified the TOTP and the auth url is set.
-                 *      */
+                 */
                 mfa: components["schemas"]["MultiFactorAuthentication"];
             }[];
         } | {
@@ -1934,8 +2061,27 @@ export interface components {
         } | {
             /** @description The endpoint URL */
             url: string;
+        } | {
+            /**
+             * Format: int32
+             * @description The HMAC key version used to sign the token (Key Version for
+             *     Rotation). Present in every token issued at/after Etapa 3 of the
+             *     HMAC rotation rollout; required by `verify_signature` to locate
+             *     the right HMAC key for constant-time comparison.
+             */
+            kvr: number;
+        } | {
+            /**
+             * @description The scopes granted to a scoped (notification) connection string.
+             *     Present only on scoped strings, which never resolve a profile.
+             */
+            scp: components["schemas"]["NotificationScope"][];
+        } | {
+            /** @description The sender tag of the service a notification string was issued for. */
+            svc: string;
         };
-        /** @description Content Schema
+        /**
+         * @description Content Schema
          *
          *     Should used to represent the content of the response.
          *
@@ -1977,7 +2123,7 @@ export interface components {
          *     ```
          *
          *     This struct refers to the value of the schema in response.
-         *      */
+         */
         Content: {
             content?: {
                 [key: string]: components["schemas"]["ValueSchema"];
@@ -2015,8 +2161,34 @@ export interface components {
         CreateGuestRoleBody: {
             name: string;
             description: string;
-            permission?: null | components["schemas"]["Permission"];
+            permission?: components["schemas"]["Permission"] | null;
             system: boolean;
+        };
+        CreateNotificationTokenBody: {
+            /**
+             * Format: int64
+             * @description The expiration time of the token
+             *
+             *     The expiration time of the token in seconds. It must be positive and
+             *     not above the instance `maxConnectionStringTtlInDays`.
+             */
+            expiration: number;
+            /** @description The name of the token */
+            name: string;
+            /**
+             * Format: uuid
+             * @description A single tenant ID
+             *
+             *     The tenant the token is bound to. Required when the service
+             *     `recipientPolicy` is `tenantMembers`.
+             */
+            tenantId?: string | null;
+            /**
+             * @description The service sender tag
+             *
+             *     The `senderTag` of the service allowed to send emails with the token.
+             */
+            senderTag: string;
         };
         CreateRoleAssociatedAccountBody: {
             accountName: string;
@@ -2059,13 +2231,13 @@ export interface components {
              * @description The expiration time of the token
              *
              *     The expiration time of the token in seconds.
-             *
              */
             expiration: number;
-            /** @description The name of the token
+            /**
+             * @description The name of the token
              *
              *     The name of the token.
-             *      */
+             */
             name: string;
             /**
              * Format: uuid
@@ -2074,7 +2246,6 @@ export interface components {
              *     If specified, the actions allowed by the token will be scoped to the
              *     tenant. If not specified, the actions allowed by the token will be
              *     scoped to the user profile.
-             *
              */
             tenantId?: string | null;
             /**
@@ -2085,15 +2256,15 @@ export interface components {
              *     service account. Service account should be a subscription account,
              *     tenant management account, or role scoped account. If not specified, the
              *     actions allowed by the token will be scoped to the user profile.
-             *
              */
             serviceAccountId?: string | null;
-            /** @description A list of roles
+            /**
+             * @description A list of roles
              *
              *     If specified, the actions allowed by the token will be scoped to the
              *     roles. If not specified, the actions allowed by the token will be
              *     scoped to the user profile.
-             *      */
+             */
             roles?: components["schemas"]["PermissionedRole"][] | null;
         };
         CreateTokenResponse: {
@@ -2104,8 +2275,8 @@ export interface components {
             description?: string | null;
             url: string;
             trigger: components["schemas"]["WebHookTrigger"];
-            method?: null | components["schemas"]["HttpMethod"];
-            secret?: null | components["schemas"]["HttpSecret"];
+            method?: components["schemas"]["HttpMethod"] | null;
+            secret?: components["schemas"]["HttpSecret"] | null;
         };
         DeleteAccountMetaParams: {
             key: string;
@@ -2126,12 +2297,14 @@ export interface components {
             username: string;
             domain: string;
         };
-        /** @description ErrorCode is a struct that represents an error code.
+        /**
+         * @description ErrorCode is a struct that represents an error code.
          *
          *     It is used to represent errors that occur in the system. Error should be
          *     internal or external. Internal errors are errors that are not expected to
          *     occur in the system. External errors are errors that are not expected to
-         *     occur in the system. */
+         *     occur in the system.
+         */
         ErrorCode: {
             /** @description The prefix of the error. */
             prefix: string;
@@ -2151,6 +2324,32 @@ export interface components {
             /** @description Whether the error is native of mycelium or not. */
             isNative: boolean;
         };
+        /**
+         * @description A grant the subject holds on a peer instance (FED-27)
+         *
+         *     Carried apart from the local `licensedResources`, so a filter never takes
+         *     a foreign grant for a local one unless asked to (FED-31, I-2). Its tenant
+         *     and account ids are the issuer's, guarded against collisions with this
+         *     instance's own (I-1).
+         */
+        FederatedResource: components["schemas"]["LicensedResource"] & {
+            /**
+             * Format: uuid
+             * @description The instance id of the peer that asserted the grant
+             */
+            issuer: string;
+        };
+        /** @description Every federated grant of a profile */
+        FederatedResources: components["schemas"]["FederatedResource"][];
+        FetchResourceAuditTrailParams: {
+            /** @description The coarse category of the audited resource. */
+            resourceType: components["schemas"]["ResourceAuditResourceType"];
+            /**
+             * Format: uuid
+             * @description The audited resource's own identifier.
+             */
+            resourceId: string;
+        };
         GuestRole: {
             /** Format: uuid */
             id?: string | null;
@@ -2168,13 +2367,14 @@ export interface components {
              * @description The date and time the role was last updated
              */
             updated?: string | null;
-            /** @description If it is a system role
+            /**
+             * @description If it is a system role
              *
              *     System roles represents standard core actors of the Mycelium API
              *     Gateway, defined in `SystemActor`
-             *      */
+             */
             system: boolean;
-            children?: null | components["schemas"]["Children_GuestRole_String"];
+            children?: components["schemas"]["Children_GuestRole_String"] | null;
         };
         GuestTenantOwnerBody: {
             email: string;
@@ -2185,11 +2385,12 @@ export interface components {
              * @description The guest user id
              */
             id?: string | null;
-            /** @description The guest user email
+            /**
+             * @description The guest user email
              *
              *     The email is used to identify the guest user connection with the target
              *     account.
-             *      */
+             */
             email: components["schemas"]["Email"];
             /** @description The guest user role */
             guestRole: components["schemas"]["Parent_GuestRole_String"];
@@ -2203,12 +2404,13 @@ export interface components {
              * @description The last updated date
              */
             updated?: string | null;
-            accounts?: null | components["schemas"]["Children_Account_String"];
-            /** @description The guest user is verified
+            accounts?: components["schemas"]["Children_Account_String"] | null;
+            /**
+             * @description The guest user is verified
              *
              *     WHile the user is not verified, the user will not be able to access
              *     the account.
-             *      */
+             */
             wasVerified: boolean;
         };
         GuestUserBody: {
@@ -2225,42 +2427,37 @@ export interface components {
         HashMap: {
             [key: string]: string;
         };
-        /** @description The health status of the service
+        /**
+         * @description The health status of the service
          *
          *     The status should be Unknown, Healthy or Unhealthy. At the startup of the
          *     service, the status should be Unknown. When the health check is successful,
          *     the status should be Healthy. When the health check is not successful, the
          *     status should be Unhealthy.
-         *      */
+         */
         HealthStatus: "unknown" | {
-            /** @description The health status is healthy
-             *      */
+            /** @description The health status is healthy */
             healthy: {
                 /**
                  * Format: date-time
                  * @description The timestamp for the last health check
-                 *
                  */
                 checkedAt: string;
             };
         } | {
-            /** @description The health status is fully unhealthy
-             *      */
+            /** @description The health status is fully unhealthy */
             unhealthy: {
                 /**
                  * Format: date-time
                  * @description The timestamp for the last health check
-                 *
                  */
                 checkedAt: string;
                 /**
                  * Format: int32
                  * @description The number of attempts with unhealthy status
-                 *
                  */
                 attempts: number;
-                /** @description Unhealthy instances
-                 *      */
+                /** @description Unhealthy instances */
                 unhealthyInstances: components["schemas"]["UnhealthyInstance"][];
             };
         } | {
@@ -2268,17 +2465,14 @@ export interface components {
                 /**
                  * Format: date-time
                  * @description The timestamp for the last health check
-                 *
                  */
                 checkedAt: string;
                 /**
                  * Format: int32
                  * @description The number of attempts with unavailable status
-                 *
                  */
                 attempts: number;
-                /** @description The error message
-                 *      */
+                /** @description The error message */
                 errorMessage: string;
             };
         };
@@ -2288,52 +2482,92 @@ export interface components {
             body?: string | null;
         };
         /** @enum {string} */
-        HttpMethod: "GET" | "HEAD" | "PATCH" | "POST" | "PUT" | "DELETE" | "CONNECT" | "OPTIONS" | "TRACE" | "ALL" | "NONE";
+        HttpMethod: "GET" | "HEAD" | "PATCH" | "POST" | "PUT" | "DELETE" | "CONNECT" | "OPTIONS" | "TRACE" | "ALL" | "READ" | "WRITE" | "NONE";
         HttpSecret: {
-            /** @description Authentication header
+            /**
+             * @description Authentication header
              *
              *     The secret is passed as an authentication header.
-             *      */
+             */
             authorizationHeader: {
-                /** @description The header name
+                /**
+                 * @description The header name
                  *
                  *     The name of the header. For example, if the name is `Authorization`,
                  *     the header will be `Authorization Bear: <token value>`. The default
                  *     value is `Authorization`.
-                 *      */
+                 */
                 headerName?: string | null;
-                /** @description The header prefix
+                /**
+                 * @description The header prefix
                  *
                  *     If present the prefix is added to the header. For example, if the
                  *     prefix is `Bearer`, the header will be `Authorization Bearer: <token
                  *     value>`.
-                 *      */
+                 */
                 prefix?: string | null;
-                /** @description The header token
+                /**
+                 * @description The header token
                  *
                  *     The token is the value of the header. For example, if the token is
                  *     `1234`, the header will be `Authorization Bearer: 123
-                 *      */
-                token: string;
+                 */
+                token: components["schemas"]["SecretResolver_String"];
             };
         } | {
             queryParameter: {
-                /** @description The query parameter name
+                /**
+                 * @description The query parameter name
                  *
                  *     The name of the query parameter. For example, if the name is `token`,
                  *     the query parameter will be `?token=<token value>`.
-                 *      */
+                 */
                 name: string;
-                /** @description The query parameter value
+                /**
+                 * @description The query parameter value
                  *
                  *     The value of the query parameter. For example, if the value is `1234`,
                  *     the query parameter will be `?token=1234`.
-                 *      */
-                token: string;
+                 */
+                token: components["schemas"]["SecretResolver_String"];
             };
         };
         /** @enum {string} */
         IDSource: "user" | "account";
+        /**
+         * @description The source platform from which the request identity is extracted when a
+         *     route uses body-passthrough authentication.
+         *
+         *     When set on a `Route`, `check_security_group` resolves the caller's
+         *     identity from the request body instead of a JWT or connection string.
+         *     Source reliability (IP allowlist) is mandatory and enforced before
+         *     extraction.
+         *
+         *     Add a new messaging IdP by:
+         *     1. Adding a variant here.
+         *     2. Implementing `BodyIdpResolver` for it in `ports/api`.
+         *     3. Registering it in `build_body_idp_resolver`.
+         * @enum {string}
+         */
+        IdentitySource: "telegram";
+        /**
+         * @description A service the caller can issue notification connection strings for.
+         *
+         *     Carries only what an issuer needs to fill the issuance form; the service
+         *     issuer roles, templates, quotas and allowed domains stay private.
+         */
+        IssuableNotificationService: {
+            /** @description The service senderTag, sent back on issuance */
+            senderTag: string;
+            /** @description The service display name */
+            displayName: string;
+            /** @description Who the service may email */
+            recipientPolicy: components["schemas"]["RecipientPolicy"];
+            /** @description Tenants the caller can bind a string of this service to */
+            tenantIds: string[];
+            /** @description Whether a string can be issued without a tenant */
+            allowsNoTenant: boolean;
+        };
         ItemsType: components["schemas"]["Schema"] | boolean;
         LicensedResource: {
             /**
@@ -2344,10 +2578,12 @@ export interface components {
              *     resource to be managed.
              */
             accId: string;
-            /** @description If the guest account is a system account
+            /**
+             * @description If the guest account is a system account
              *
              *     System accounts has permissions to act as special users into the
-             *     Mycelium system. */
+             *     Mycelium system.
+             */
             sysAcc: boolean;
             /**
              * Format: uuid
@@ -2357,15 +2593,19 @@ export interface components {
              *     to be managed.
              */
             tenantId: string;
-            /** @description The guest account name
+            /**
+             * @description The guest account name
              *
              *     This is the name of the account that is own of the resource to be
-             *     managed. */
+             *     managed.
+             */
             accName: string;
-            /** @description The guest account role verbose name
+            /**
+             * @description The guest account role verbose name
              *
              *     This is the verbose name of the role that is own of the resource to be
-             *     managed. */
+             *     managed.
+             */
             role: string;
             /**
              * Format: uuid
@@ -2375,16 +2615,49 @@ export interface components {
              *     managed.
              */
             roleId: string;
-            /** @description The guest role permissions
+            /**
+             * @description The guest role permissions
              *
-             *     This is the list of permissions that the guest role has. */
+             *     This is the list of permissions that the guest role has.
+             */
             perm: components["schemas"]["Permission"];
-            /** @description If the guest account was verified
+            /**
+             * @description If the guest account was verified
              *
              *     If the user accepted the invitation to join the account, the account
              *     should be verified.
-             *      */
+             */
             verified: boolean;
+            /**
+             * @description Permit Flags
+             *
+             *     This is the list of flags that the guest role has.
+             *
+             *     Example:
+             *
+             *     ```json
+             *     [
+             *       "managementScreen",
+             *       "clickToActionButton",
+             *     ]
+             *     ```
+             */
+            permitFlags?: string[] | null;
+            /**
+             * @description Deny Flags
+             *
+             *     This is the list of flags that the guest role does not have.
+             *
+             *     Example:
+             *
+             *     ```json
+             *     [
+             *       "dashboardScreen",
+             *       "viewTenantUrl",
+             *     ]
+             *     ```
+             */
+            denyFlags?: string[] | null;
         };
         LicensedResources: {
             records: components["schemas"]["LicensedResource"][];
@@ -2413,6 +2686,15 @@ export interface components {
             /** @description The guest user was verified */
             wasVerified?: boolean | null;
         };
+        ListPublicErrorCodesParams: {
+            /** @description Filter by the error prefix (e.g. `MYC`) */
+            prefix?: string | null;
+            /**
+             * Format: int32
+             * @description Filter by the error number (e.g. `23` for `MYC00023`)
+             */
+            code?: number | null;
+        };
         ListRoutesByServiceParams: {
             /** Format: uuid */
             id?: string | null;
@@ -2424,39 +2706,41 @@ export interface components {
             name?: string | null;
         };
         ListServicesResponse: {
-            /** @description Description
+            /**
+             * @description Description
              *
              *     The description of the service.
-             *      */
+             */
             description: string;
-            /** @description The contexts
+            /**
+             * @description The contexts
              *
              *     The contexts of the service. This key snould include the context where
              *     the service should run, including authentication and authorization
              *     information.
-             *      */
+             */
             contexts: components["schemas"]["Tool"][];
             /**
              * Format: date-time
              * @description The last updated date
              *
              *     The last updated date of the service.
-             *
              */
             lastUpdated?: string | null;
-            /** @description A list of tools
+            /**
+             * @description A list of tools
              *
              *     A list of tools that are discoverable by the service.
-             *      */
+             */
             tools: components["schemas"]["Tool"][];
         };
         ListSubscriptionAccountParams: {
             term?: string | null;
             tagValue?: string | null;
-            accountType?: null | components["schemas"]["APIAccountType"];
+            accountType?: components["schemas"]["APIAccountType"] | null;
             isOwnerActive?: boolean | null;
-            status?: null | components["schemas"]["VerboseStatus"];
-            actor?: null | components["schemas"]["SystemActor"];
+            status?: components["schemas"]["VerboseStatus"] | null;
+            actor?: components["schemas"]["SystemActor"] | null;
         };
         ListTenantParams: {
             /** @description Filter tenants by name */
@@ -2468,22 +2752,37 @@ export interface components {
             owner?: string | null;
             /** @description Filter tenants by metadata key */
             metadata?: string | null;
-            /** @description Filter tenants by tag
+            /**
+             * @description Filter tenants by the value of one of their tags
              *
-             *     Example: `key=value` */
+             *     Example: `rolling-circle.environment`
+             */
             tag?: string | null;
+            /**
+             * @description Filter tenants by a key/value pair in the meta of one of their tags
+             *
+             *     Combined with `tag`, both criteria must match the same tag.
+             *
+             *     Example: `environment=production`
+             */
+            tagMeta?: string | null;
+        };
+        ListWebHookExecutionsParams: {
+            trigger?: components["schemas"]["WebHookTrigger"] | null;
+            status?: components["schemas"]["WebHookExecutionStatus"] | null;
         };
         ListWebHooksParams: {
             name?: string | null;
-            trigger?: null | components["schemas"]["WebHookTrigger"];
+            trigger?: components["schemas"]["WebHookTrigger"] | null;
         };
         /** @enum {string} */
         Location: "query" | "path" | "header" | "cookie";
         MultiFactorAuthentication: {
-            /** @description The TOTP
+            /**
+             * @description The TOTP
              *
              *     The TOTP is disabled by default.
-             *      */
+             */
             totp: components["schemas"]["Totp"];
         };
         MyceliumLoginResponse: components["schemas"]["User"] & {
@@ -2491,13 +2790,32 @@ export interface components {
             duration: string;
             totpRequired: boolean;
         };
+        /** @description What the caller can issue notification connection strings for */
+        NotificationIssuanceOptions: {
+            /**
+             * Format: int32
+             * @description The instance cap on the string expiration, in days
+             */
+            maxConnectionStringTtlInDays: number;
+            /** @description The services the caller can issue for, sorted by display name */
+            services: components["schemas"]["IssuableNotificationService"][];
+        };
+        /**
+         * @description A capability granted by a scoped (notification) connection string
+         *
+         *     A connection string carrying any scope is not a general credential: it is
+         *     accepted only by the endpoint that requires that scope, and rejected on
+         *     every surface that resolves a profile.
+         * @enum {string}
+         */
+        NotificationScope: "notify:email";
         Operation: {
             operationId?: string | null;
             tags?: string[];
             summary?: string | null;
             description?: string | null;
             parameters?: components["schemas"]["Parameter"][] | null;
-            requestBody?: null | components["schemas"]["Content"];
+            requestBody?: components["schemas"]["Content"] | null;
             responses?: {
                 [key: string]: components["schemas"]["Content"];
             } | null;
@@ -2507,12 +2825,14 @@ export interface components {
         Owner: {
             /** Format: uuid */
             id: string;
-            /** @description The owner email
+            /**
+             * @description The owner email
              *
              *     The email of the user that administrate the profile. Email denotes the
              *     central part of the profile management. Email should be used to collect
              *     licensed IDs and perform guest operations. Thus, it should be unique in
-             *     the Mycelium platform. */
+             *     the Mycelium platform.
+             */
             email: string;
             /** @description The owner first name */
             firstName?: string | null;
@@ -2523,12 +2843,14 @@ export interface components {
             /** @description If the owner is the principal account owner */
             isPrincipal: boolean;
         };
-        /** @description A default pagination response
+        /**
+         * @description A default pagination response
          *
          *     A paginated record include the total number of records found into a query
          *     plus page size which records will be retrieved, the number of records to be
          *     ignored (such value should be discovered after the first query), and the
-         *     records itself. */
+         *     records itself.
+         */
         PaginatedRecord_Account: {
             /** Format: int64 */
             count: number;
@@ -2544,81 +2866,94 @@ export interface components {
                 id?: string | null;
                 /** @description The Account Name */
                 name: string;
-                /** @description The Account Slug
+                /**
+                 * @description The Account Slug
                  *
                  *     This is generated from the account name. This is used for programmatic
                  *     access and verification of the account.
-                 *      */
+                 */
                 slug: string;
-                /** @description Account Tags
+                /**
+                 * @description Account Tags
                  *
                  *     Information about the account. This is used for categorizing and filter
                  *     account.
-                 *      */
+                 */
                 tags?: components["schemas"]["Tag"][] | null;
-                /** @description Account is active
+                /**
+                 * @description Account is active
                  *
                  *     If the account is active. This is used for logic trash and restore
                  *     account.
-                 *      */
+                 */
                 isActive: boolean;
-                /** @description Account is checked
+                /**
+                 * @description Account is checked
                  *
                  *     If the account was verified by a human. This is used for account
                  *     verification.
-                 *      */
+                 */
                 isChecked: boolean;
-                /** @description Account is archived
+                /**
+                 * @description Account is archived
                  *
                  *     If the account is archived. This is used for account archiving.
-                 *      */
+                 */
                 isArchived: boolean;
-                /** @description Account is deleted
+                /**
+                 * @description Account is deleted
                  *
                  *     If the account is deleted. This is used for logic trash and restore
                  *     account.
-                 *      */
+                 */
                 isDeleted: boolean;
-                verboseStatus?: null | components["schemas"]["VerboseStatus"];
+                verboseStatus?: components["schemas"]["VerboseStatus"] | null;
                 isSystemAccount: boolean;
-                /** @description The Account Owners
+                /**
+                 * @description The Account Owners
                  *
                  *     This is the list of account owners. The account owners are the users who
-                 *     have the account owner role. */
+                 *     have the account owner role.
+                 */
                 owners: components["schemas"]["Children_User_String"];
-                /** @description The Account Type
+                /**
+                 * @description The Account Type
                  *
                  *     Account type is the type of the account. The account type is used to
-                 *     categorize the account. */
+                 *     categorize the account.
+                 */
                 accountType: components["schemas"]["AccountType"];
-                guestUsers?: null | components["schemas"]["Children_GuestUser_String"];
+                guestUsers?: components["schemas"]["Children_GuestUser_String"] | null;
                 /**
                  * Format: date-time
                  * @description The Account Created Date
                  */
                 createdAt: string;
-                createdBy?: null | components["schemas"]["WrittenBy"];
+                createdBy?: components["schemas"]["WrittenBy"] | null;
                 /**
                  * Format: date-time
                  * @description The Account Updated Date
                  */
                 updatedAt?: string | null;
-                updatedBy?: null | components["schemas"]["WrittenBy"];
-                /** @description The Account Meta
+                updatedBy?: components["schemas"]["WrittenBy"] | null;
+                /**
+                 * @description The Account Meta
                  *
                  *     Store metadata about the account.
-                 *      */
+                 */
                 meta?: {
                     [key: string]: string;
                 } | null;
             }[];
         };
-        /** @description A default pagination response
+        /**
+         * @description A default pagination response
          *
          *     A paginated record include the total number of records found into a query
          *     plus page size which records will be retrieved, the number of records to be
          *     ignored (such value should be discovered after the first query), and the
-         *     records itself. */
+         *     records itself.
+         */
         PaginatedRecord_GuestUser: {
             /** Format: int64 */
             count: number;
@@ -2632,11 +2967,12 @@ export interface components {
                  * @description The guest user id
                  */
                 id?: string | null;
-                /** @description The guest user email
+                /**
+                 * @description The guest user email
                  *
                  *     The email is used to identify the guest user connection with the target
                  *     account.
-                 *      */
+                 */
                 email: components["schemas"]["Email"];
                 /** @description The guest user role */
                 guestRole: components["schemas"]["Parent_GuestRole_String"];
@@ -2650,12 +2986,13 @@ export interface components {
                  * @description The last updated date
                  */
                 updated?: string | null;
-                accounts?: null | components["schemas"]["Children_Account_String"];
-                /** @description The guest user is verified
+                accounts?: components["schemas"]["Children_Account_String"] | null;
+                /**
+                 * @description The guest user is verified
                  *
                  *     WHile the user is not verified, the user will not be able to access
                  *     the account.
-                 *      */
+                 */
                 wasVerified: boolean;
             }[];
         };
@@ -2671,10 +3008,12 @@ export interface components {
             schema: components["schemas"]["SchemaOrOneOf"];
             security?: unknown;
         };
-        /** @description A parent record
+        /**
+         * @description A parent record
          *
          *     This enumerator allow represents the parent elements using their primary
-         *     key (Id option) or the true record (Record option). */
+         *     key (Id option) or the true record (Record option).
+         */
         Parent_Account_String: {
             record: {
                 /**
@@ -2684,70 +3023,81 @@ export interface components {
                 id?: string | null;
                 /** @description The Account Name */
                 name: string;
-                /** @description The Account Slug
+                /**
+                 * @description The Account Slug
                  *
                  *     This is generated from the account name. This is used for programmatic
                  *     access and verification of the account.
-                 *      */
+                 */
                 slug: string;
-                /** @description Account Tags
+                /**
+                 * @description Account Tags
                  *
                  *     Information about the account. This is used for categorizing and filter
                  *     account.
-                 *      */
+                 */
                 tags?: components["schemas"]["Tag"][] | null;
-                /** @description Account is active
+                /**
+                 * @description Account is active
                  *
                  *     If the account is active. This is used for logic trash and restore
                  *     account.
-                 *      */
+                 */
                 isActive: boolean;
-                /** @description Account is checked
+                /**
+                 * @description Account is checked
                  *
                  *     If the account was verified by a human. This is used for account
                  *     verification.
-                 *      */
+                 */
                 isChecked: boolean;
-                /** @description Account is archived
+                /**
+                 * @description Account is archived
                  *
                  *     If the account is archived. This is used for account archiving.
-                 *      */
+                 */
                 isArchived: boolean;
-                /** @description Account is deleted
+                /**
+                 * @description Account is deleted
                  *
                  *     If the account is deleted. This is used for logic trash and restore
                  *     account.
-                 *      */
+                 */
                 isDeleted: boolean;
-                verboseStatus?: null | components["schemas"]["VerboseStatus"];
+                verboseStatus?: components["schemas"]["VerboseStatus"] | null;
                 isSystemAccount: boolean;
-                /** @description The Account Owners
+                /**
+                 * @description The Account Owners
                  *
                  *     This is the list of account owners. The account owners are the users who
-                 *     have the account owner role. */
+                 *     have the account owner role.
+                 */
                 owners: components["schemas"]["Children_User_String"];
-                /** @description The Account Type
+                /**
+                 * @description The Account Type
                  *
                  *     Account type is the type of the account. The account type is used to
-                 *     categorize the account. */
+                 *     categorize the account.
+                 */
                 accountType: components["schemas"]["AccountType"];
-                guestUsers?: null | components["schemas"]["Children_GuestUser_String"];
+                guestUsers?: components["schemas"]["Children_GuestUser_String"] | null;
                 /**
                  * Format: date-time
                  * @description The Account Created Date
                  */
                 createdAt: string;
-                createdBy?: null | components["schemas"]["WrittenBy"];
+                createdBy?: components["schemas"]["WrittenBy"] | null;
                 /**
                  * Format: date-time
                  * @description The Account Updated Date
                  */
                 updatedAt?: string | null;
-                updatedBy?: null | components["schemas"]["WrittenBy"];
-                /** @description The Account Meta
+                updatedBy?: components["schemas"]["WrittenBy"] | null;
+                /**
+                 * @description The Account Meta
                  *
                  *     Store metadata about the account.
-                 *      */
+                 */
                 meta?: {
                     [key: string]: string;
                 } | null;
@@ -2755,10 +3105,12 @@ export interface components {
         } | {
             id: string;
         };
-        /** @description A parent record
+        /**
+         * @description A parent record
          *
          *     This enumerator allow represents the parent elements using their primary
-         *     key (Id option) or the true record (Record option). */
+         *     key (Id option) or the true record (Record option).
+         */
         Parent_GuestRole_String: {
             record: {
                 /** Format: uuid */
@@ -2777,26 +3129,30 @@ export interface components {
                  * @description The date and time the role was last updated
                  */
                 updated?: string | null;
-                /** @description If it is a system role
+                /**
+                 * @description If it is a system role
                  *
                  *     System roles represents standard core actors of the Mycelium API
                  *     Gateway, defined in `SystemActor`
-                 *      */
+                 */
                 system: boolean;
-                children?: null | components["schemas"]["Children_GuestRole_String"];
+                children?: components["schemas"]["Children_GuestRole_String"] | null;
             };
         } | {
             id: string;
         };
-        /** @description A parent record
+        /**
+         * @description A parent record
          *
          *     This enumerator allow represents the parent elements using their primary
-         *     key (Id option) or the true record (Record option). */
+         *     key (Id option) or the true record (Record option).
+         */
         Parent_Service_String: {
-            /** @description The Upstream Service
+            /**
+             * @description The Upstream Service
              *
              *     The service is the upstream service that the route will proxy to.
-             *      */
+             */
             record: {
                 /**
                  * Format: uuid
@@ -2804,85 +3160,96 @@ export interface components {
                  *
                  *     The id of the service. If the id is not provided, the service will be
                  *     generated using the name of the service.
-                 *
                  */
                 id?: string;
-                /** @description The service unique name
+                /**
+                 * @description The service unique name
                  *
                  *     The name of the service. The name should be unique and is used to
                  *     identify the service and call it from the gateway url path.
-                 *      */
+                 */
                 name: string;
-                /** @description The service host
+                /**
+                 * @description The service host
                  *
                  *     The host of the service. The host should include the port number. It
                  *     can be a single host or a vector of hosts.
-                 *      */
+                 */
                 host: components["schemas"]["ServiceHost"];
-                /** @description The service protocol
+                /**
+                 * @description The service protocol
                  *
                  *     The protocol of the service.
-                 *      */
+                 */
                 protocol?: components["schemas"]["Protocol"];
-                /** @description The service routes
+                /**
+                 * @description The service routes
                  *
                  *     The routes of the service.
-                 *      */
+                 */
                 routes: components["schemas"]["Route"][];
-                /** @description The health status of the service
-                 *      */
+                /** @description The health status of the service */
                 healthStatus?: components["schemas"]["HealthStatus"];
-                /** @description The service health check configuration
+                /**
+                 * @description The service health check configuration
                  *
                  *     The health check configuration for the service.
-                 *      */
+                 */
                 healthCheckPath: string;
-                /** @description The service discoverable
+                /**
+                 * @description The service discoverable
                  *
                  *     When true, the service will be discovered by LLM agents.
-                 *      */
+                 */
                 discoverable?: boolean | null;
-                serviceType?: null | components["schemas"]["ServiceType"];
-                /** @description If is a context api
+                serviceType?: components["schemas"]["ServiceType"] | null;
+                /**
+                 * @description If is a context api
                  *
                  *     If is a context api, the service will be discovered by LLM agents.
-                 *      */
+                 */
                 isContextApi?: boolean | null;
-                /** @description The service capabilities
+                /**
+                 * @description The service capabilities
                  *
                  *     Optional together with discoverable field. The capabilities of the
                  *     service.
-                 *      */
+                 */
                 capabilities?: string[] | null;
-                /** @description The service description
+                /**
+                 * @description The service description
                  *
                  *     Optional together with discoverable field. The description of the
                  *     service. The description should be used during the service discovery by
                  *     LLM agents.
-                 *      */
+                 */
                 description?: string | null;
-                /** @description The service openapi path
+                /**
+                 * @description The service openapi path
                  *
                  *     Optional together with discoverable field. The path to the openapi.json
                  *     file. The file should be used for external clients to discover the
                  *     service. Is is used for the service discovery by LLM agents.
-                 *      */
+                 */
                 openapiPath?: string | null;
-                /** @description The service secrets
+                /**
+                 * @description The service secrets
                  *
                  *     The secrets of the service. Secrets are used to authenticate the api
                  *     gateway at the downstream service. Individual routes can request a
                  *     specific secret of this secrets vector.
-                 *      */
+                 */
                 secrets?: components["schemas"]["ServiceSecret"][] | null;
-                /** @description The allowed sources
+                /**
+                 * @description The allowed sources
                  *
                  *     A list of sources with permissions to access the downstream service.
                  *     Values can be a domain name, ip address, a cidr block or a wildcard
                  *     domain name.
-                 *      */
+                 */
                 allowedSources?: string[] | null;
-                /** @description The proxy address
+                /**
+                 * @description The proxy address
                  *
                  *     The proxy address of the service. This is used to forward requests to
                  *     the service through a proxy. If the service is not behind a proxy, this
@@ -2899,8 +3266,9 @@ export interface components {
                  *     ```bash
                  *     http://proxy.example.com:8080/http://service.example.com:8080/api/v1/service/1234567890
                  *     ```
-                 *      */
+                 */
                 proxyAddress?: string | null;
+                notifications?: components["schemas"]["ServiceNotificationConfig"] | null;
             };
         } | {
             id: string;
@@ -2910,7 +3278,7 @@ export interface components {
         Permission: "read" | "write";
         PermissionedRole: {
             name: string;
-            permission?: null | components["schemas"]["Permission"];
+            permission?: components["schemas"]["Permission"] | null;
         };
         /** @description This object should be used over the application layer operations. */
         Profile: {
@@ -2925,61 +3293,80 @@ export interface components {
              *     application flow.
              */
             accId: string;
-            /** @description If profile belongs to a `subscription` account
+            /**
+             * @description If profile belongs to a `subscription` account
              *
              *     Subscription accounts should be used to manage legal entities. Only
-             *     subscription accounts should receive guest accounts. */
+             *     subscription accounts should receive guest accounts.
+             */
             isSubscription: boolean;
-            /** @description If profile belongs to a `manager` account
+            /**
+             * @description If profile belongs to a `manager` account
              *
              *     Manager accounts should be used by users with elevated privileges inside
              *     the Mycelium platform. Such user should perform actions like create
              *     roles, guest-roles, guest default-user accounts to work into
-             *     subscription accounts. */
+             *     subscription accounts.
+             */
             isManager: boolean;
-            /** @description If profile belongs to a `staff` account
+            /**
+             * @description If profile belongs to a `staff` account
              *
              *     Staff user has elevated roles into the application. Like managers, staff
              *     users has elevated privileges. Only staff user has permission to
-             *     delegate other staffs. */
+             *     delegate other staffs.
+             */
             isStaff: boolean;
-            /** @description If the account owner is active
+            /**
+             * @description If the account owner is active
              *
              *     Profiles exists to abstract account privileges. If the profile is
              *     related to an inactive owner the profile could not perform any action.
-             *     Only staff or manager user should perform the activation of such users. */
+             *     Only staff or manager user should perform the activation of such users.
+             */
             ownerIsActive: boolean;
-            /** @description If the account itself is inactive
+            /**
+             * @description If the account itself is inactive
              *
-             *     When inactive accounts should not perform internal operations. */
+             *     When inactive accounts should not perform internal operations.
+             */
             accountIsActive: boolean;
-            /** @description If the account was approved after registration
+            /**
+             * @description If the account was approved after registration
              *
              *     New accounts should be approved by manager or staff users after their
              *     registration into the Mycelium platform. Case the approval was
-             *     performed, this flag should be true. */
+             *     performed, this flag should be true.
+             */
             accountWasApproved: boolean;
-            /** @description If the account was archived after registration
+            /**
+             * @description If the account was archived after registration
              *
              *     New accounts should be archived. After archived accounts should not be
-             *     included at default filtering actions. */
+             *     included at default filtering actions.
+             */
             accountWasArchived: boolean;
-            /** @description If the account was deleted after registration
+            /**
+             * @description If the account was deleted after registration
              *
              *     New accounts should be deleted. After deleted accounts should not be
-             *     included at default filtering actions. */
+             *     included at default filtering actions.
+             */
             accountWasDeleted: boolean;
-            verboseStatus?: null | components["schemas"]["VerboseStatus"];
-            licensedResources?: null | components["schemas"]["LicensedResources"];
-            tenantsOwnership?: null | components["schemas"]["TenantsOwnership"];
-            /** @description The Account Meta
+            verboseStatus?: components["schemas"]["VerboseStatus"] | null;
+            licensedResources?: components["schemas"]["LicensedResources"] | null;
+            federatedResources?: components["schemas"]["FederatedResources"] | null;
+            tenantsOwnership?: components["schemas"]["TenantsOwnership"] | null;
+            /**
+             * @description The Account Meta
              *
              *     Store metadata about the account.
-             *      */
+             */
             meta?: {
                 [key: string]: string;
             } | null;
-            /** @description This argument stores the licensed resources state
+            /**
+             * @description This argument stores the licensed resources state
              *
              *     The licensed_resources_state should store the current filtering state.
              *     The filtering state should be populated when a filtering cascade is
@@ -3016,7 +3403,7 @@ export interface components {
              *      "3:tenantId:123e4567-e89b-12d3-a456-426614174001",
              *     ]
              *     ```
-             *      */
+             */
             filteringState?: string[] | null;
         };
         /** @enum {string} */
@@ -3059,11 +3446,54 @@ export interface components {
             /** @description The scope of the token */
             scope: components["schemas"]["ConnectionStringBean"][];
         };
+        /**
+         * @description Who a service may send notification emails to.
+         * @enum {string}
+         */
+        RecipientPolicy: "owner" | "tenantMembers" | "domains" | "any";
         ResetPasswordBody: {
             token: string;
             email: string;
             newPassword: string;
         };
+        /** @enum {string} */
+        ResourceAuditEventKind: "created" | "updated" | "deleted";
+        ResourceAuditLog: {
+            /**
+             * Format: uuid
+             * @description The audit row's own identifier.
+             */
+            id: string;
+            /** @description The coarse category of the resource this row describes. */
+            resourceType: components["schemas"]["ResourceAuditResourceType"];
+            /**
+             * Format: uuid
+             * @description The identifier of the affected resource.
+             */
+            resourceId: string;
+            /**
+             * Format: uuid
+             * @description The tenant the affected resource belongs to, when applicable.
+             */
+            tenantId?: string | null;
+            /** @description The kind of event this row describes. */
+            event: components["schemas"]["ResourceAuditEventKind"];
+            /** @description Who performed the action. */
+            performedBy: components["schemas"]["WrittenBy"];
+            /**
+             * @description Arbitrary, use-case-defined context about the event (e.g. what
+             *     changed on an `Updated` event).
+             */
+            metadata: unknown;
+            /**
+             * Format: date-time
+             * @description The moment the triggering operation succeeded -- captured
+             *     synchronously by the caller, not derived from insert time.
+             */
+            createdAt: string;
+        };
+        /** @enum {string} */
+        ResourceAuditResourceType: "account" | "accountMeta" | "user" | "tenant" | "tenantMeta" | "guestRole" | "webhook" | "federationResolution" | "federationTranslation";
         RevokeUserGuestToSubscriptionManagerAccountParams: {
             email: string;
         };
@@ -3083,16 +3513,68 @@ export interface components {
             path: string;
             /** @description The route secret name if it exists */
             secretName?: string | null;
-            /** @description The route without tls
+            /**
+             * @description The route without tls
              *
              *     This field should be evaluated if the route should request a secret to
              *     be send to the downstream service, if the route is not secure.
-             *      */
+             */
             acceptInsecureRouting?: boolean | null;
+            /**
+             * @description Callbacks
+             *
+             *     A vector of callback names to execute.
+             *
+             *     Example:
+             *
+             *     ```json
+             *     ["my_callback", "my_callback_2"]
+             *     ```
+             */
+            callbacks?: string[] | null;
+            identitySource?: components["schemas"]["IdentitySource"] | null;
+            retry?: components["schemas"]["RouteRetryPolicy"] | null;
+        };
+        /**
+         * @description Opt-in retry of a route's downstream request (issue #137).
+         *
+         *     ```toml
+         *     [[my-service.path]]
+         *     group = "authenticated"
+         *     path = "/items/*"
+         *     methods = ["GET", "PUT"]
+         *     retry = { maxAttempts = 3, baseDelayMs = 100, maxDelayMs = 2000 }
+         *     ```
+         *
+         *     Each attempt is bounded by `api.gatewayTimeout`, so the worst case for a
+         *     request is `maxAttempts * gatewayTimeout` plus the delays.
+         */
+        RouteRetryPolicy: {
+            /**
+             * Format: int32
+             * @description Attempts in total, the first one included (1 to 10).
+             */
+            maxAttempts: number;
+            /**
+             * Format: int64
+             * @description Delay before the first retry; the n-th retry waits
+             *     `baseDelayMs * n²`, capped at `maxDelayMs`.
+             */
+            baseDelayMs: number;
+            /** Format: int64 */
+            maxDelayMs: number;
+            /** @description Downstream response statuses that trigger a retry (5xx or 429). */
+            retryOnStatus: number[];
+            /**
+             * @description Also retry POST/PATCH/CONNECT, which may not be safe to repeat.
+             *     Connection failures only; a request that may have reached the service
+             *     is never repeated for these methods.
+             */
+            retryNonIdempotent: boolean;
         };
         Schema: {
             $ref?: string | null;
-            type?: null | components["schemas"]["SchemaType"];
+            type?: components["schemas"]["SchemaType"] | null;
             title?: string | null;
             format?: string | null;
             nullable?: boolean | null;
@@ -3100,7 +3582,7 @@ export interface components {
             properties?: {
                 [key: string]: components["schemas"]["Schema"];
             } | null;
-            items?: null | components["schemas"]["ItemsType"];
+            items?: components["schemas"]["ItemsType"] | null;
             enumValues?: unknown[] | null;
             description?: string | null;
             default?: unknown;
@@ -3109,13 +3591,15 @@ export interface components {
             oneOf?: components["schemas"]["Schema"][] | null;
         };
         SchemaType: string | string[];
-        /** @description A secret resolver
+        /**
+         * @description A secret resolver
          *
          *     The secret resolver is a way to resolve a secret value from different
          *     sources.
-         *      */
+         */
         SecretResolver_HttpSecret: {
-            /** @description Retrieve the value from the environment variable
+            /**
+             * @description Retrieve the value from the environment variable
              *
              *     The value should be the name of the environment variable.
              *
@@ -3131,10 +3615,11 @@ export interface components {
              *     ```
              *
              *     The value of `databaseUrl` will be `my_value`
-             *      */
+             */
             env: string;
         } | {
-            /** @description Retrieve the value from the vault
+            /**
+             * @description Retrieve the value from the vault
              *
              *     The value should be the name of the vault secret.
              *
@@ -3149,66 +3634,156 @@ export interface components {
              *
              *     The value of `databaseUrl` will be the value of the secret located at
              *     `path/my_vault_secret` in the vault.
-             *      */
+             */
             vault: {
                 path: string;
                 key: string;
             };
         } | {
             value: {
-                /** @description Authentication header
+                /**
+                 * @description Authentication header
                  *
                  *     The secret is passed as an authentication header.
-                 *      */
+                 */
                 authorizationHeader: {
-                    /** @description The header name
+                    /**
+                     * @description The header name
                      *
                      *     The name of the header. For example, if the name is `Authorization`,
                      *     the header will be `Authorization Bear: <token value>`. The default
                      *     value is `Authorization`.
-                     *      */
+                     */
                     headerName?: string | null;
-                    /** @description The header prefix
+                    /**
+                     * @description The header prefix
                      *
                      *     If present the prefix is added to the header. For example, if the
                      *     prefix is `Bearer`, the header will be `Authorization Bearer: <token
                      *     value>`.
-                     *      */
+                     */
                     prefix?: string | null;
-                    /** @description The header token
+                    /**
+                     * @description The header token
                      *
                      *     The token is the value of the header. For example, if the token is
                      *     `1234`, the header will be `Authorization Bearer: 123
-                     *      */
-                    token: string;
+                     */
+                    token: components["schemas"]["SecretResolver_String"];
                 };
             } | {
                 queryParameter: {
-                    /** @description The query parameter name
+                    /**
+                     * @description The query parameter name
                      *
                      *     The name of the query parameter. For example, if the name is `token`,
                      *     the query parameter will be `?token=<token value>`.
-                     *      */
+                     */
                     name: string;
-                    /** @description The query parameter value
+                    /**
+                     * @description The query parameter value
                      *
                      *     The value of the query parameter. For example, if the value is `1234`,
                      *     the query parameter will be `?token=1234`.
-                     *      */
-                    token: string;
+                     */
+                    token: components["schemas"]["SecretResolver_String"];
                 };
             };
         };
+        /**
+         * @description A secret resolver
+         *
+         *     The secret resolver is a way to resolve a secret value from different
+         *     sources.
+         */
+        SecretResolver_String: {
+            /**
+             * @description Retrieve the value from the environment variable
+             *
+             *     The value should be the name of the environment variable.
+             *
+             *     # Example
+             *
+             *     ```bash
+             *     export MY_ENV_VAR="my_value"
+             *     ```
+             *
+             *     ```yaml
+             *     databaseUrl:
+             *         env: "MY_ENV_VAR"
+             *     ```
+             *
+             *     The value of `databaseUrl` will be `my_value`
+             */
+            env: string;
+        } | {
+            /**
+             * @description Retrieve the value from the vault
+             *
+             *     The value should be the name of the vault secret.
+             *
+             *     # Example
+             *
+             *     ```yaml
+             *     databaseUrl:
+             *         vault:
+             *             path: "my_vault_secret"
+             *             key: "my_key"
+             *     ```
+             *
+             *     The value of `databaseUrl` will be the value of the secret located at
+             *     `path/my_vault_secret` in the vault.
+             */
+            vault: {
+                path: string;
+                key: string;
+            };
+        } | {
+            value: string;
+        };
         SecurityGroup: "public" | "authenticated" | "protected" | {
-            /** @description
-             *     Protect the route with the user profile filtered by roles
-             *      */
+            /** @description Protect the route with the user profile filtered by roles */
             protectedByRoles: components["schemas"]["PermissionedRole"][];
         };
-        /** @description The Upstream Service
+        /**
+         * @description Body of a downstream service email request
+         *
+         *     Only these four fields exist, and unknown fields are rejected, so the
+         *     caller can never choose the sender, the reply address, the subject, raw
+         *     HTML or any mail header: those come from the gateway config and the
+         *     operator-deployed template.
+         */
+        SendServiceEmailRequest: {
+            /**
+             * @description Recipient addresses, one message each (recipients never see each
+             *     other). Each entry must be a single bare address.
+             */
+            to: string[];
+            /** @description Name of a template declared in the service `templates` list. */
+            template: string;
+            /**
+             * @description Flat object of strings, numbers and booleans used by the template.
+             *     At most 8192 bytes once serialized as compact JSON.
+             */
+            variables: Record<string, never>;
+            /**
+             * @description Preferred locale. Falls back to the tenant, the instance and finally
+             *     the default locale of the service templates.
+             */
+            locale?: string | null;
+        };
+        SendServiceEmailResponse: {
+            /**
+             * @description One id per recipient, in request order. Each id is also sent in the
+             *     `X-Mycelium-Message-Id` mail header.
+             */
+            messageIds: string[];
+        };
+        /**
+         * @description The Upstream Service
          *
          *     The service is the upstream service that the route will proxy to.
-         *      */
+         */
         Service: {
             /**
              * Format: uuid
@@ -3216,85 +3791,96 @@ export interface components {
              *
              *     The id of the service. If the id is not provided, the service will be
              *     generated using the name of the service.
-             *
              */
             id?: string;
-            /** @description The service unique name
+            /**
+             * @description The service unique name
              *
              *     The name of the service. The name should be unique and is used to
              *     identify the service and call it from the gateway url path.
-             *      */
+             */
             name: string;
-            /** @description The service host
+            /**
+             * @description The service host
              *
              *     The host of the service. The host should include the port number. It
              *     can be a single host or a vector of hosts.
-             *      */
+             */
             host: components["schemas"]["ServiceHost"];
-            /** @description The service protocol
+            /**
+             * @description The service protocol
              *
              *     The protocol of the service.
-             *      */
+             */
             protocol?: components["schemas"]["Protocol"];
-            /** @description The service routes
+            /**
+             * @description The service routes
              *
              *     The routes of the service.
-             *      */
+             */
             routes: components["schemas"]["Route"][];
-            /** @description The health status of the service
-             *      */
+            /** @description The health status of the service */
             healthStatus?: components["schemas"]["HealthStatus"];
-            /** @description The service health check configuration
+            /**
+             * @description The service health check configuration
              *
              *     The health check configuration for the service.
-             *      */
+             */
             healthCheckPath: string;
-            /** @description The service discoverable
+            /**
+             * @description The service discoverable
              *
              *     When true, the service will be discovered by LLM agents.
-             *      */
+             */
             discoverable?: boolean | null;
-            serviceType?: null | components["schemas"]["ServiceType"];
-            /** @description If is a context api
+            serviceType?: components["schemas"]["ServiceType"] | null;
+            /**
+             * @description If is a context api
              *
              *     If is a context api, the service will be discovered by LLM agents.
-             *      */
+             */
             isContextApi?: boolean | null;
-            /** @description The service capabilities
+            /**
+             * @description The service capabilities
              *
              *     Optional together with discoverable field. The capabilities of the
              *     service.
-             *      */
+             */
             capabilities?: string[] | null;
-            /** @description The service description
+            /**
+             * @description The service description
              *
              *     Optional together with discoverable field. The description of the
              *     service. The description should be used during the service discovery by
              *     LLM agents.
-             *      */
+             */
             description?: string | null;
-            /** @description The service openapi path
+            /**
+             * @description The service openapi path
              *
              *     Optional together with discoverable field. The path to the openapi.json
              *     file. The file should be used for external clients to discover the
              *     service. Is is used for the service discovery by LLM agents.
-             *      */
+             */
             openapiPath?: string | null;
-            /** @description The service secrets
+            /**
+             * @description The service secrets
              *
              *     The secrets of the service. Secrets are used to authenticate the api
              *     gateway at the downstream service. Individual routes can request a
              *     specific secret of this secrets vector.
-             *      */
+             */
             secrets?: components["schemas"]["ServiceSecret"][] | null;
-            /** @description The allowed sources
+            /**
+             * @description The allowed sources
              *
              *     A list of sources with permissions to access the downstream service.
              *     Values can be a domain name, ip address, a cidr block or a wildcard
              *     domain name.
-             *      */
+             */
             allowedSources?: string[] | null;
-            /** @description The proxy address
+            /**
+             * @description The proxy address
              *
              *     The proxy address of the service. This is used to forward requests to
              *     the service through a proxy. If the service is not behind a proxy, this
@@ -3311,49 +3897,104 @@ export interface components {
              *     ```bash
              *     http://proxy.example.com:8080/http://service.example.com:8080/api/v1/service/1234567890
              *     ```
-             *      */
+             */
             proxyAddress?: string | null;
+            notifications?: components["schemas"]["ServiceNotificationConfig"] | null;
         };
         ServiceHost: string | string[];
+        /**
+         * @description Per-service opt-in for downstream email notifications.
+         *
+         *     An absent block is deny-by-default: the service can not obtain
+         *     notification connection strings nor send emails.
+         *
+         *     ```toml
+         *     [service-01.notifications]
+         *     senderTag = "service-01"
+         *     displayName = "Service 01"
+         *     issuerRoles = ["service-01-admin"]
+         *     issuerTenants = []
+         *     recipientPolicy = "owner"
+         *     allowedDomains = []
+         *     templates = ["invoice-ready"]
+         *     quotaPerHour = 100
+         *     maxRecipientsPerMessage = 10
+         *     ```
+         */
+        ServiceNotificationConfig: {
+            /**
+             * @description Unique tag identifying the service as an email sender
+             *     (`^[a-z0-9-]{1,32}$`).
+             */
+            senderTag: string;
+            /** @description Name shown on the `From` header (`"{displayName} via ..."`). */
+            displayName: string;
+            /** @description Roles the issuer must hold to create notification strings. */
+            issuerRoles: string[];
+            /** @description Tenants allowed to issue notification strings. Empty means any. */
+            issuerTenants: string[];
+            recipientPolicy: components["schemas"]["RecipientPolicy"];
+            /** @description Required and non-empty when `recipientPolicy = "domains"`. */
+            allowedDomains: string[];
+            /** @description Template names the service may send. */
+            templates: string[];
+            /** Format: int32 */
+            quotaPerHour: number;
+            /** Format: int32 */
+            maxRecipientsPerMessage: number;
+        };
         ServiceSecret: components["schemas"]["SecretResolver_HttpSecret"] & {
             name: string;
         };
         /** @enum {string} */
         ServiceType: "rest-api" | "unknown";
         ServiceWrapper: {
-            /** @description The service name
+            /**
+             * @description The service name
              *
              *     The name of the service.
-             *      */
+             */
             name: string;
-            /** @description The service health status
+            /**
+             * @description The service health status
              *
              *     The health status of the service.
-             *      */
+             */
             health_status: components["schemas"]["HealthStatus"];
-            /** @description The service capabilities
+            /**
+             * @description The service capabilities
              *
              *     The capabilities of the service.
-             *      */
+             */
             capabilities?: string[] | null;
-            /** @description The service description
+            /**
+             * @description The service description
              *
              *     The description of the service. The description should be used during
              *     the service discovery by LLM agents.
-             *      */
+             */
             description?: string | null;
         };
         StartPasswordResetBody: {
             email: string;
         };
-        /** @description The System Actors
+        SummarizeWebHookExecutionsParams: {
+            /**
+             * Format: date-time
+             * @description Only events created at or after this time (RFC 3339)
+             */
+            since?: string | null;
+        };
+        /**
+         * @description The System Actors
          *
          *     Standard actors used to validate operations during the authorization process
          *     in system use-cases.
-         *      */
-        SystemActor: {
+         */
+        SystemActor: "beginner" | "subscriptionsManager" | "usersManager" | "accountManager" | "guestsManager" | "gatewayManager" | "systemManager" | "tenantOwner" | "tenantManager" | "service" | {
+            /** @description Custom role */
             customRole: string;
-        } | "beginner" | "subscriptionsManager" | "usersManager" | "accountManager" | "guestsManager" | "gatewayManager" | "systemManager" | "tenantOwner" | "tenantManager" | "service";
+        };
         Tag: {
             /** Format: uuid */
             id: string;
@@ -3372,30 +4013,38 @@ export interface components {
             name: string;
             /** @description The description of the tenant */
             description?: string | null;
-            /** @description The owner of the tenant
+            /**
+             * @description The owner of the tenant
              *
              *     This is the email of the tenant owner, which is also the pub owner. The
-             *     tenant owner should be set on tenant creation. */
+             *     tenant owner should be set on tenant creation.
+             */
             owners: components["schemas"]["Children_Owner_String"];
-            manager?: null | components["schemas"]["Parent_Account_String"];
-            /** @description The tags of the tenant
+            manager?: components["schemas"]["Parent_Account_String"] | null;
+            /**
+             * @description The tags of the tenant
              *
              *     This is the list of tags of the tenant. The tags are used to categorize
-             *     the tenant. The tags are used to categorize the tenant. */
+             *     the tenant. The tags are used to categorize the tenant.
+             */
             tags?: components["schemas"]["Tag"][] | null;
-            /** @description Meta information
+            /**
+             * @description Meta information
              *
              *     This is the meta information of the tenant. The meta information is a
              *     key-value pair of string. The key is the name of the meta information,
-             *     and the value is the value of the meta information. */
+             *     and the value is the value of the meta information.
+             */
             meta?: {
                 [key: string]: string;
             } | null;
-            /** @description The status of the tenant
+            /**
+             * @description The status of the tenant
              *
              *     This is the status of the tenant. The status is a key-value pair of
              *     string. The key is the name of the status (defined in `StatusKey`), and
-             *     the value is the value of the status. */
+             *     the value is the value of the status.
+             */
             status?: components["schemas"]["TenantStatus"][] | null;
             /**
              * Format: date-time
@@ -3408,10 +4057,12 @@ export interface components {
              */
             updated?: string | null;
         };
-        TenantMetaKey: "federal_revenue_register" | "federal_revenue_register_type" | "country" | "state" | "province" | "city" | "address1" | "address2" | "zip_code" | "website_url" | "support_email" | "locale" | "legal_name" | "trading_name" | "contact_person" | {
-            /** @description To specify any other meta key
+        TenantMetaKey: "federal_revenue_register" | "federal_revenue_register_type" | "country" | "state" | "province" | "city" | "address1" | "address2" | "zip_code" | "website_url" | "support_email" | "locale" | "legal_name" | "trading_name" | "contact_person" | "telegram_bot_token" | "telegram_webhook_secret" | {
+            /**
+             * @description To specify any other meta key
              *
-             *     Specify any other meta key that is not listed here. */
+             *     Specify any other meta key that is not listed here.
+             */
             custom: string;
         };
         TenantOwnerConnection: {
@@ -3464,82 +4115,95 @@ export interface components {
             urls: string[];
         };
         Tool: {
-            /** @description The service unique name
+            /**
+             * @description The service unique name
              *
              *     The name of the service. The name should be unique and is used to
              *     identify the service and call it from the gateway url path.
-             *      */
+             */
             name: string;
-            /** @description The service description
+            /**
+             * @description The service description
              *
              *     Optional together with discoverable field. The description of the
              *     service. The description should be used during the service discovery by
              *     LLM agents.
-             *      */
+             */
             description: string;
-            /** @description The service type
+            /**
+             * @description The service type
              *
              *     The type of the service.
-             *      */
+             */
             toolType: components["schemas"]["ServiceType"];
-            /** @description If is a context api
+            /**
+             * @description If is a context api
              *
              *     If is a context api, the service will be discovered by LLM agents.
-             *      */
+             */
             isContextApi: boolean;
-            /** @description The service capabilities
+            /**
+             * @description The service capabilities
              *
              *     The capabilities of the service.
-             *      */
+             */
             capabilities: string[];
-            /** @description The service openapi path
+            /**
+             * @description The service openapi path
              *
              *     Optional together with discoverable field. The path to the openapi.json
              *     file. The file should be used for external clients to discover the
              *     service. Is is used for the service discovery by LLM agents.
-             *      */
+             */
             openapiPath: string;
-            /** @description The service health status
+            /**
+             * @description The service health status
              *
              *     The health status of the service.
-             *      */
+             */
             healthStatus: components["schemas"]["HealthStatus"];
         };
         ToolOperation: components["schemas"]["Operation"] & {
-            /** @description The path
+            /**
+             * @description The path
              *
              *     The openapi operation path. This should include the parent service
              *     name.
-             *      */
+             */
             path: string;
-            /** @description The method
+            /**
+             * @description The method
              *
              *     The allowed method of the operation.
-             *      */
+             */
             method: components["schemas"]["HttpMethod"];
-            /** @description The operation value
+            /**
+             * @description The operation value
              *
              *     The operation value.
-             *      */
+             */
             operation_value?: unknown;
-            /** @description The mycelium security group
+            /**
+             * @description The mycelium security group
              *
              *     The mycelium security group for the operation.
-             *      */
+             */
             security_group: components["schemas"]["SecurityGroup"];
-            /** @description The related service
+            /**
+             * @description The related service
              *
              *     The related service of the operation.
-             *      */
+             */
             service: components["schemas"]["ServiceWrapper"];
         };
         Totp: "unknown" | "disabled" | {
-            /** @description The TOTP when enabled
+            /**
+             * @description The TOTP when enabled
              *
              *     The TOTP is enabled when the user has verified the TOTP and the auth
              *     url is set. The secret is not serialized to avoid that the secret is
              *     exposed to the outside.
-             *      */
+             */
             enabled: {
                 verified: boolean;
                 issuer: string;
@@ -3552,31 +4216,27 @@ export interface components {
         TotpUpdatingValidationBody: {
             token: string;
         };
-        /** @description The unhealthy instance
+        /**
+         * @description The unhealthy instance
          *
          *     The unhealthy instance is a single instance of the service that is
          *     unhealthy.
-         *      */
+         */
         UnhealthyInstance: {
-            /** @description The instance ID
-             *      */
+            /** @description The instance ID */
             host: string;
             /**
              * Format: int32
              * @description The instance status code
-             *
              */
             statusCode: number;
-            /** @description The instance response body
-             *      */
+            /** @description The instance response body */
             responseBody?: string | null;
-            /** @description The error message
-             *      */
+            /** @description The error message */
             errorMessage?: string | null;
             /**
              * Format: date-time
              * @description The timestamp for the last health check
-             *
              */
             checkedAt: string;
         };
@@ -3591,6 +4251,10 @@ export interface components {
         UpdateErrorCodeMessageAndDetailsBody: {
             message: string;
             details?: string | null;
+        };
+        UpdateFlagsFromSubscriptionAccountBody: {
+            permitFlags?: string[] | null;
+            denyFlags?: string[] | null;
         };
         UpdateGuestRoleNameAndDescriptionBody: {
             name?: string | null;
@@ -3616,7 +4280,7 @@ export interface components {
         UpdateWebHookBody: {
             name?: string | null;
             description?: string | null;
-            secret?: null | components["schemas"]["HttpSecret"];
+            secret?: components["schemas"]["HttpSecret"] | null;
             isActive?: boolean | null;
         };
         UpgradeAccountPrivilegesBody: {
@@ -3636,8 +4300,9 @@ export interface components {
             created: string;
             /** Format: date-time */
             updated?: string | null;
-            account?: null | components["schemas"]["Parent_Account_String"];
-            /** @description If the user is the principal user of the account.
+            account?: components["schemas"]["Parent_Account_String"] | null;
+            /**
+             * @description If the user is the principal user of the account.
              *
              *     The principal user contains information of the first email that created
              *     the account. This information is used to send emails to the principal
@@ -3645,13 +4310,14 @@ export interface components {
              *
              *     Principal users should not be deleted or deactivated if the account has
              *     other users connected.
-             *      */
+             */
             isPrincipal: boolean;
-            provider?: null | components["schemas"]["Provider"];
-            /** @description The user TOTP
+            provider?: components["schemas"]["Provider"] | null;
+            /**
+             * @description The user TOTP
              *
              *     When enabled the user has verified the TOTP and the auth url is set.
-             *      */
+             */
             mfa: components["schemas"]["MultiFactorAuthentication"];
         };
         ValueSchema: {
@@ -3673,7 +4339,7 @@ export interface components {
             url: string;
             /** @description The webhook trigger */
             trigger: components["schemas"]["WebHookTrigger"];
-            method?: null | components["schemas"]["HttpMethod"];
+            method?: components["schemas"]["HttpMethod"] | null;
             /** @description The webhook is active */
             isActive: boolean;
             /**
@@ -3681,28 +4347,96 @@ export interface components {
              * @description The webhook created date
              */
             created: string;
-            createdBy?: null | components["schemas"]["WrittenBy"];
+            createdBy?: components["schemas"]["WrittenBy"] | null;
             /**
              * Format: date-time
              * @description The webhook updated date
              */
             updated?: string | null;
-            updatedBy?: null | components["schemas"]["WrittenBy"];
-            secret?: null | components["schemas"]["HttpSecret"];
+            updatedBy?: components["schemas"]["WrittenBy"] | null;
+            secret?: components["schemas"]["HttpSecret"] | null;
+        };
+        /** @description Where the dispatcher is with an event. */
+        WebHookDispatchState: {
+            status: components["schemas"]["WebHookExecutionStatus"];
+            /** Format: int32 */
+            attempts: number;
+            /** Format: date-time */
+            created: string;
+            /**
+             * Format: date-time
+             * @description When the last delivery attempt happened.
+             */
+            attempted?: string | null;
+        };
+        /**
+         * @description One webhook execution event as super users see it: the dispatching
+         *     state, never the payload.
+         */
+        WebHookExecutionEvent: {
+            /** Format: uuid */
+            id: string;
+            trigger: components["schemas"]["WebHookTrigger"];
+            payloadId: string;
+            dispatch: components["schemas"]["WebHookDispatchState"];
+            propagations: components["schemas"]["WebHookPropagationSummary"];
+        };
+        /** @enum {string} */
+        WebHookExecutionStatus: "pending" | "processing" | "success" | "failed" | "exhausted" | "skipped" | "unknown";
+        /** @description Execution events grouped by trigger and status. */
+        WebHookExecutionSummary: {
+            trigger: components["schemas"]["WebHookTrigger"];
+            status: components["schemas"]["WebHookExecutionStatus"];
+            /** Format: int64 */
+            count: number;
+            /**
+             * Format: date-time
+             * @description Creation time of the newest event in the group.
+             */
+            latest: string;
+        };
+        /**
+         * @description How the deliveries of one execution event went, without the target URLs
+         *     or response bodies (which can carry secrets or personal data).
+         */
+        WebHookPropagationSummary: {
+            /**
+             * Format: int32
+             * @description Deliveries attempted to subscribed webhooks.
+             */
+            total: number;
+            /**
+             * Format: int32
+             * @description Deliveries answered with a non-2xx status.
+             */
+            failed: number;
+            /**
+             * Format: int32
+             * @description HTTP status of the most recent delivery, if any.
+             */
+            lastResponseStatus?: number | null;
         };
         /** @enum {string} */
         WebHookTrigger: "subscriptionAccount.created" | "subscriptionAccount.updated" | "subscriptionAccount.deleted" | "userAccount.created" | "userAccount.updated" | "userAccount.deleted";
+        /**
+         * @description Identifies who performed a write. `id`/`from` are `None` whenever no
+         *     User/Account exists yet at write time (e.g. the staff bootstrap flow,
+         *     where only the operator's typed email is known before any account is
+         *     created) -- `email` alone still carries useful information in that case.
+         */
         WrittenBy: {
             /**
              * Format: uuid
-             * @description The ID of the user who created the account
+             * @description The ID of the user or account who performed the action.
              */
-            id: string;
-            /** @description The ID source */
-            from: components["schemas"]["IDSource"];
+            id?: string | null;
+            from?: components["schemas"]["IDSource"] | null;
+            /** @description Base64-encoded email of the actor, when known. */
+            email?: string | null;
         };
     };
     responses: {
+        /** @description Email status */
         CheckEmailStatusResponse: {
             headers: {
                 [name: string]: unknown;
@@ -3716,6 +4450,7 @@ export interface components {
                 };
             };
         };
+        /** @description Token created */
         CreateTokenResponse: {
             headers: {
                 [name: string]: unknown;
@@ -3726,6 +4461,7 @@ export interface components {
                 };
             };
         };
+        /** @description JSON message */
         HttpJsonResponse: {
             headers: {
                 [name: string]: unknown;
@@ -3738,40 +4474,44 @@ export interface components {
                 };
             };
         };
+        /** @description Registered services */
         ListServicesResponse: {
             headers: {
                 [name: string]: unknown;
             };
             content: {
                 "application/json": {
-                    /** @description Description
+                    /**
+                     * @description Description
                      *
                      *     The description of the service.
-                     *      */
+                     */
                     description: string;
-                    /** @description The contexts
+                    /**
+                     * @description The contexts
                      *
                      *     The contexts of the service. This key snould include the context where
                      *     the service should run, including authentication and authorization
                      *     information.
-                     *      */
+                     */
                     contexts: components["schemas"]["Tool"][];
                     /**
                      * Format: date-time
                      * @description The last updated date
                      *
                      *     The last updated date of the service.
-                     *
                      */
                     lastUpdated?: string | null;
-                    /** @description A list of tools
+                    /**
+                     * @description A list of tools
                      *
                      *     A list of tools that are discoverable by the service.
-                     *      */
+                     */
                     tools: components["schemas"]["Tool"][];
                 };
             };
         };
+        /** @description Login succeeded */
         MyceliumLoginResponse: {
             headers: {
                 [name: string]: unknown;
@@ -3784,6 +4524,7 @@ export interface components {
                 };
             };
         };
+        /** @description TOTP activation finished */
         TotpActivationFinishedResponse: {
             headers: {
                 [name: string]: unknown;
@@ -3794,6 +4535,7 @@ export interface components {
                 };
             };
         };
+        /** @description TOTP activation started */
         TotpActivationStartedResponse: {
             headers: {
                 [name: string]: unknown;
@@ -3976,6 +4718,74 @@ export interface operations {
                 };
             };
             /** @description Bad request. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Unauthorized. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Forbidden. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Unknown internal server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+        };
+    };
+    fetch_resource_audit_trail: {
+        parameters: {
+            query: {
+                /** @description The coarse category of the audited resource. */
+                resourceType: components["schemas"]["ResourceAuditResourceType"];
+                /** @description The audited resource's own identifier. */
+                resourceId: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Audit trail fetched, newest first. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResourceAuditLog"][];
+                };
+            };
+            /** @description No audit rows for this resource. */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Invalid resource reference. */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -4616,6 +5426,66 @@ export interface operations {
             };
         };
     };
+    create_notification_connection_string: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateNotificationTokenBody"];
+            };
+        };
+        responses: {
+            /** @description Token created. */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CreateTokenResponse"];
+                };
+            };
+            /** @description Bad request. MYC00035: invalid expiration, or the service requires a tenant. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Unauthorized. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Forbidden. MYC00036: service notifications not enabled. MYC00037: issuer not allowed. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Unknown internal server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+        };
+    };
     create_default_user: {
         parameters: {
             query?: never;
@@ -5216,6 +6086,8 @@ export interface operations {
                 query?: string | null;
                 method?: string | null;
                 scoreCutoff?: number | null;
+                /** @description Leave out the gateway's own operations (service mag) */
+                excludeGateway?: boolean | null;
             };
             header?: never;
             path?: never;
@@ -5809,10 +6681,20 @@ export interface operations {
                 owner?: string | null;
                 /** @description Filter tenants by metadata key */
                 metadata?: string | null;
-                /** @description Filter tenants by tag
+                /**
+                 * @description Filter tenants by the value of one of their tags
                  *
-                 *     Example: `key=value` */
+                 *     Example: `rolling-circle.environment`
+                 */
                 tag?: string | null;
+                /**
+                 * @description Filter tenants by a key/value pair in the meta of one of their tags
+                 *
+                 *     Combined with `tag`, both criteria must match the same tag.
+                 *
+                 *     Example: `environment=production`
+                 */
+                tagMeta?: string | null;
                 skip?: number | null;
                 pageSize?: number | null;
             };
@@ -6086,6 +6968,75 @@ export interface operations {
             };
         };
     };
+    send_service_email: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SendServiceEmailRequest"];
+            };
+        };
+        responses: {
+            /** @description Queued, one message per recipient. */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SendServiceEmailResponse"];
+                };
+            };
+            /** @description Missing, tampered, expired, revoked or general connection string. MYC00030/MYC00031/MYC00032: invalid signature. MYC00034: the string lacks the notify:email scope. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description MYC00036: service notifications not enabled. MYC00037: the string creator is no longer an allowed issuer. MYC00039: a recipient is not allowed by the service recipient policy. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description MYC00038: unknown body field, template not declared or not found, missing or non-scalar variable, variables over 8192 bytes, invalid recipient or recipient count out of range. */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description MYC00040: hourly quota of the service exceeded. The `Retry-After` header gives the seconds to wait. */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Unknown internal server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+        };
+    };
     downgrade_account_privileges: {
         parameters: {
             query?: never;
@@ -6217,10 +7168,10 @@ export interface operations {
             query?: {
                 term?: string | null;
                 tagValue?: string | null;
-                accountType?: null | components["schemas"]["APIAccountType"];
+                accountType?: components["schemas"]["APIAccountType"] | null;
                 isOwnerActive?: boolean | null;
-                status?: null | components["schemas"]["VerboseStatus"];
-                actor?: null | components["schemas"]["SystemActor"];
+                status?: components["schemas"]["VerboseStatus"] | null;
+                actor?: components["schemas"]["SystemActor"] | null;
                 skip?: number | null;
                 pageSize?: number | null;
             };
@@ -6979,6 +7930,83 @@ export interface operations {
             };
         };
     };
+    update_flags_from_subscription_account: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description The tenant unique id. */
+                "x-mycelium-tenant-id": string;
+            };
+            path: {
+                /** @description The account primary key. */
+                account_id: string;
+                /** @description The guest-role unique id. */
+                role_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateFlagsFromSubscriptionAccountBody"];
+            };
+        };
+        responses: {
+            /** @description Flags already updated. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GuestUser"];
+                };
+            };
+            /** @description Flags updated. */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GuestUser"];
+                };
+            };
+            /** @description Bad request. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Unauthorized. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Forbidden. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Unknown internal server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+        };
+    };
     register_account_tag: {
         parameters: {
             query?: never;
@@ -7480,7 +8508,7 @@ export interface operations {
         parameters: {
             query?: {
                 name?: string | null;
-                trigger?: null | components["schemas"]["WebHookTrigger"];
+                trigger?: components["schemas"]["WebHookTrigger"] | null;
             };
             header?: never;
             path?: never;
@@ -7563,6 +8591,127 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["WebHook"];
                 };
+            };
+            /** @description Unauthorized. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Forbidden. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Unknown internal server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+        };
+    };
+    list_webhook_executions: {
+        parameters: {
+            query?: {
+                /** @description Only events of this trigger */
+                trigger?: components["schemas"]["WebHookTrigger"] | null;
+                /**
+                 * @description Only events in this status (pending, processing, success, failed,
+                 *     exhausted, skipped, unknown)
+                 */
+                status?: components["schemas"]["WebHookExecutionStatus"] | null;
+                skip?: number | null;
+                pageSize?: number | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Fetching success. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WebHookExecutionEvent"][];
+                };
+            };
+            /** @description Not found. */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Forbidden. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+            /** @description Unknown internal server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+        };
+    };
+    summarize_webhook_executions: {
+        parameters: {
+            query?: {
+                /** @description Only events created at or after this time (RFC 3339) */
+                since?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Fetching success. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WebHookExecutionSummary"][];
+                };
+            };
+            /** @description Not found. */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Unauthorized. */
             401: {
@@ -9142,6 +10291,49 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["HttpJsonResponse"];
                 };
+            };
+            /** @description Unknown internal server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HttpJsonResponse"];
+                };
+            };
+        };
+    };
+    list_public_error_codes: {
+        parameters: {
+            query?: {
+                /** @description Filter by the error prefix (e.g. `MYC`) */
+                prefix?: string | null;
+                /** @description Filter by the error number (e.g. `23` for `MYC00023`) */
+                code?: number | null;
+                skip?: number | null;
+                pageSize?: number | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Fetching success. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorCode"][];
+                };
+            };
+            /** @description Not found. */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Unknown internal server error. */
             500: {

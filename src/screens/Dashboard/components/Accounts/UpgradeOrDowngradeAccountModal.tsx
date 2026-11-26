@@ -1,3 +1,4 @@
+import { describeError } from "@/functions/describe-error";
 import Modal from "@/components/ui/Modal";
 import { AccountModalProps } from "./AccountModal";
 import Typography from "@/components/ui/Typography";
@@ -5,7 +6,7 @@ import { useCallback, useMemo, useState } from "react";
 import useProfile from "@/hooks/use-profile";
 import Button from "@/components/ui/Button";
 import useSuspenseError from "@/hooks/use-suspense-error";
-import { Spinner } from "flowbite-react";
+import Spinner from "@/components/ui/Spinner";
 import Countdown from "react-countdown";
 import { useTranslation } from "react-i18next";
 import {
@@ -94,7 +95,7 @@ export default function UpgradeOrDowngradeAccountModal({
         }
       } catch (err) {
         setIsLoading(false);
-        dispatchError(err instanceof Error ? err.message : String(err));
+        dispatchError(describeError(err));
         return;
       }
 

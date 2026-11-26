@@ -1,163 +1,61 @@
-"use client";
-
-import { cva, VariantProps } from "class-variance-authority";
-import { MdManageAccounts } from "react-icons/md";
+import { buttonStyles } from "@/components/ui/button-styles";
 import { formatDDMMYY } from "@/functions/format-dd-mm-yy";
-import { useCallback } from "react";
-import MiniBox from "@/components/ui/MiniBox";
-import IntroSection from "@/components/ui/IntroSection";
-import { Link } from "react-router";
+import { ArrowRight } from "lucide-react";
+import { MdManageAccounts } from "react-icons/md";
 import { useTranslation } from "react-i18next";
-import { IoMdMore } from "react-icons/io";
-import { TableCell, TableRow } from "flowbite-react";
+import { Link, useNavigate } from "react-router";
 
 interface Props {
   since: string;
-  index?: number;
   tenantId: string;
   tenantName?: string;
 }
 
-export function TenantOwnershipInfoTableRow({
-  since,
-  tenantId,
-  tenantName,
-  index,
-}: Props) {
+/**
+ * One namespace the user owns. The row opens the namespace; "See accounts"
+ * goes straight to its accounts.
+ */
+export function TenantOwnershipListItem({ since, tenantId, tenantName }: Props) {
   const { t } = useTranslation();
-
-  const ActionsCell = () => (
-    <TableCell>
-      <TenantOwnershipInfoActions tenantId={tenantId} />
-    </TableCell>
-  );
-
-  const Since = () => (
-    <TableCell>{formatDDMMYY(new Date(since), true)}</TableCell>
-  );
-
-  const EmptyCell = () => <TableCell>---</TableCell>;
-
-  const HeaderCell = useCallback(
-    ({ name }: { name?: string }) => {
-      if (!name) return <EmptyCell />;
-
-      return (
-        <TableCell className="text-brand-violet-500 dark:text-brand-violet-500 hover:underline font-semibold text-lg">
-          <Link to={`/dashboard/tenants/${tenantId}`}>{name}</Link>
-        </TableCell>
-      );
-    },
-    [tenantId, t]
-  );
-
-  const Container = ({ children }: BaseProps) => (
-    <TableRow
-      key={index}
-      className="bg-white dark:border-brand-900 dark:bg-brand-950"
-    >
-      {children}
-      <ActionsCell />
-    </TableRow>
-  );
+  const navigate = useNavigate();
 
   return (
-    <Container>
-      <HeaderCell name={tenantName} />
-      <Since />
-    </Container>
-  );
-}
-
-export function TenantOwnershipInfoCard({
-  since,
-  tenantId,
-  tenantName,
-}: Props) {
-  const { t } = useTranslation();
-
-  const Since = () => (
-    <IntroSection.Item
-      prefix={t("screens.Dashboard.TenantOwnershipInfo.since.prefix")}
-      title={t("screens.Dashboard.TenantOwnershipInfo.since.title", {
-        tenantId,
-      })}
+    <li
+      className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-lg border border-border bg-card px-4 py-3 shadow-xs transition-[box-shadow,border-color] hover:shadow-card hover:border-brand-600/40 dark:hover:border-brand-400/30 cursor-pointer"
+      onClick={() => navigate(`/dashboard/tenants/${tenantId}`)}
     >
-      {formatDDMMYY(new Date(since), true)}
-    </IntroSection.Item>
-  );
-
-  const TenantData = useCallback(() => {
-    return (
-      <div>
-        <IntroSection
-          content={
-            <div className="flex items-center gap-2">
-              <Link
-                title={t("screens.Dashboard.TenantOwnershipInfo.name")}
-                className="text-brand-violet-500 dark:text-brand-violet-500 hover:underline"
-                to={`/dashboard/tenants/${tenantId}`}
-              >
-                {tenantName}
-              </Link>
-            </div>
-          }
+      <div className="flex flex-col gap-0.5 min-w-0">
+        <Link
+          to={`/dashboard/tenants/${tenantId}`}
+          onClick={(event) => event.stopPropagation()}
+          className="font-display text-lg font-semibold text-primary dark:text-brand-300 hover:underline truncate rounded-sm outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
         >
-          <Since />
-        </IntroSection>
+          {tenantName || "---"}
+        </Link>
+        <span
+          className="text-sm text-muted-foreground"
+          title={t("screens.Dashboard.TenantOwnershipInfo.since.title", {
+            tenantId,
+          })}
+        >
+          {t("screens.Dashboard.TenantOwnershipInfo.since.prefix")}{" "}
+          {formatDDMMYY(new Date(since), true)}
+        </span>
       </div>
-    );
-  }, [Since, t, tenantName, tenantId]);
 
-  return (
-    <MiniBox>
-      <div className="flex items-center justify-between gap-3 group">
-        <TenantData />
-        <div className="h-full flex items-center justify-center">
-          <IoMdMore className="text-3xl hidden sm:block group-hover:hidden transition-all duration-500" />
-
-          <div className="min-h-full sm:hidden sm:group-hover:block transition-all duration-500">
-            <TenantOwnershipInfoActions
-              tenantId={tenantId}
-              direction="column"
-            />
-          </div>
-        </div>
-      </div>
-    </MiniBox>
-  );
-}
-
-const styles = cva("flex items-center gap-12 sm:gap-4", {
-  variants: {
-    direction: {
-      row: "flex-row",
-      column: "flex-col",
-    },
-  },
-  defaultVariants: {
-    direction: "row",
-  },
-});
-
-function TenantOwnershipInfoActions({
-  tenantId,
-  direction,
-}: VariantProps<typeof styles> & { tenantId: string }) {
-  const { t } = useTranslation();
-
-  return (
-    <div className={styles({ direction })}>
       <Link
         to={`/dashboard/tenants/${tenantId}/accounts`}
-        className="flex flex-col items-center gap-2 p-1 bg-brand-violet-500 dark:bg-brand-violet-500"
+        onClick={(event) => event.stopPropagation()}
         title={t("screens.Dashboard.TenantOwnershipInfo.manageAccounts")}
+        className={`${buttonStyles({ intent: "primary", size: "xs" })} group/link w-fit shrink-0`}
       >
-        <MdManageAccounts
-          size={18}
-          className="text-zinc-50 dark:text-zinc-900"
+        <MdManageAccounts size={16} />
+        {t("screens.Dashboard.TenantOwnershipInfo.manageAccounts")}
+        <ArrowRight
+          aria-hidden
+          className="size-3.5 transition-transform group-hover/link:translate-x-0.5"
         />
       </Link>
-    </div>
+    </li>
   );
 }

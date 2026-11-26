@@ -1,7 +1,7 @@
 import { cva, VariantProps } from "class-variance-authority";
 import { createContext, useContext, useState } from "react";
 
-const containerStyles = cva("rounded-lg border border-brand-600 px-4", {
+const containerStyles = cva("rounded-lg border border-border bg-card shadow-xs px-4", {
   variants: {
     open: {
       true: "open",
@@ -71,7 +71,7 @@ function Container({
 }
 
 const summaryStyles = cva(
-  "w-full text-left cursor-pointer border-opacity-20 dark:border-opacity-20 border-brand-violet-400 dark:border-brand-violet-600 sm:hover:border-brand-violet-400 dark:sm:hover:border-brand-violet-400 px-0 hover:px-2 transition-all duration-300 py-1 hover:bg-brand-violet-50 dark:hover:bg-brand-900 text-brand-violet-500 dark:text-brand-violet-400",
+  "w-full text-left cursor-pointer border-brand-violet-400/20 dark:border-brand-violet-600/20 sm:hover:border-brand-violet-400 dark:sm:hover:border-brand-violet-400 px-0 hover:px-2 transition-all duration-300 py-1 hover:bg-brand-violet-50 dark:hover:bg-surface-900 text-brand-violet-500 dark:text-brand-violet-400",
   {
     variants: {
       marginTop: {
@@ -137,14 +137,14 @@ const contentStyles = cva("flex flex-col gap-8 py-5 px-0", {
       false: "min-h-fit",
       screen: "min-h-screen",
       full: "min-h-full",
-      "30": "!min-h-[30vh]",
-      "40": "!min-h-[40vh]",
-      "50": "!min-h-[50vh]",
-      "60": "!min-h-[60vh]",
-      "70": "!min-h-[70vh]",
-      "80": "!min-h-[80vh]",
-      "90": "!min-h-[90vh]",
-      "100": "!min-h-[100vh]",
+      "30": "min-h-[30vh]!",
+      "40": "min-h-[40vh]!",
+      "50": "min-h-[50vh]!",
+      "60": "min-h-[60vh]!",
+      "70": "min-h-[70vh]!",
+      "80": "min-h-[80vh]!",
+      "90": "min-h-[90vh]!",
+      "100": "min-h-screen!",
     },
   },
   defaultVariants: {

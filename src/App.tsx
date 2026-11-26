@@ -3,17 +3,31 @@ import { Routes, Route } from "react-router";
 import NotFound from "./components/NotFound";
 import useProfile from "./hooks/use-profile";
 import buildRoutes, { HOME_ROUTE, DASHBOARD_ROUTE } from "./constants/routes";
-import { Fragment, lazy, Suspense, useMemo } from "react";
+import { Fragment, lazy, Suspense, useMemo, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import LoginPage from "@/screens/LoginPage";
-import { HorizontalLoadingBar } from "@/components/ui/HorizontalLoadingBar";
+import HostedLoginCallback from "@/screens/HostedLoginCallback";
+import { HOSTED_LOGIN_CALLBACK_PATH } from "@/services/auth/hosted-login";
+import Skeleton from "@/components/ui/Skeleton";
+import GatewayUnavailableOverlay from "@/components/GatewayUnavailableOverlay";
+import PublicErrorCodes from "@/screens/PublicErrorCodes";
 
 const Onboarding = lazy(() => import("@/screens/Dashboard/components/Onboarding"));
+
+/** Dashboard screens are lazy chunks: show a page skeleton while one loads. */
+function withPageSkeleton(element: ReactNode) {
+  return <Suspense fallback={<Skeleton.Page />}>{element}</Suspense>;
+}
 
 export default function App() {
   const { t } = useTranslation();
 
-  const { profile } = useProfile();
+  const { profile, isLoadingUser, isLoadingProfile } = useProfile();
+
+  // The dashboard routes only exist once the profile is loaded. Right after a
+  // refresh the URL is still unmatched while the session and profile load, so
+  // show a page skeleton instead of the not-found page.
+  const isResolvingRoutes = isLoadingUser || (!profile && isLoadingProfile);
 
   const ROUTES = useMemo(() => {
     if (!profile) return [];
@@ -22,31 +36,45 @@ export default function App() {
   }, [profile, t]);
 
   return (
-    <div id="App" className="bg-white dark:bg-brand-950">
+    <div id="App" className="bg-background">
+      <GatewayUnavailableOverlay />
       <Routes>
-          <Route path="*" element={<NotFound />} />
+          <Route
+            path="*"
+            element={
+              isResolvingRoutes ? (
+                <Skeleton.Page />
+              ) : (
+                <NotFound />
+              )
+            }
+          />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/error-codes" element={<PublicErrorCodes />} />
+          <Route
+            path={HOSTED_LOGIN_CALLBACK_PATH}
+            element={<HostedLoginCallback />}
+          />
           <Route path={HOME_ROUTE.path} element={HOME_ROUTE.element} />
-          <Route path={DASHBOARD_ROUTE.path} element={DASHBOARD_ROUTE.element}>
-            <Route
-              index
-              element={
-                <Suspense fallback={<HorizontalLoadingBar isLoading />}>
-                  <Onboarding />
-                </Suspense>
-              }
-            />
+          <Route
+            path={DASHBOARD_ROUTE.path}
+            element={withPageSkeleton(DASHBOARD_ROUTE.element)}
+          >
+            <Route index element={withPageSkeleton(<Onboarding />)} />
 
             {ROUTES.sort((a, b) => a.position - b.position).map((route) => (
               <Fragment key={route.path}>
-                <Route path={route.path} element={route.element} />
+                <Route
+                  path={route.path}
+                  element={withPageSkeleton(route.element)}
+                />
 
                 {route?.children?.map((child) => (
                   <Fragment key={child.path}>
                     <Route
                       key={child.path}
                       path={child.path}
-                      element={child.element}
+                      element={withPageSkeleton(child.element)}
                     />
 
                     {child?.children?.map((child) => (
@@ -54,7 +82,7 @@ export default function App() {
                         <Route
                           key={child.path}
                           path={child.path}
-                          element={child.element}
+                          element={withPageSkeleton(child.element)}
                         />
                       </Fragment>
                     ))}

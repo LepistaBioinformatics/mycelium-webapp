@@ -1,6 +1,6 @@
 //
-// Try to fetch profile from the session storage. Case it not exists, fetch from
-// the API and save it in the session storage.
+// Fetch the requester profile through SWR, shared by every component that
+// calls `useProfile`.
 //
 
 import { components } from "@/services/openapi/mycelium-schema";
@@ -8,15 +8,26 @@ import { profileGet } from "@/services/rpc/beginners";
 import { MycPermission } from "@/types/MyceliumPermission";
 import { MycRole } from "@/types/MyceliumRole";
 import useNativeAuth from "@/hooks/use-native-auth";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo } from "react";
+import useSWR, { mutate as mutateGlobal } from "swr";
 import useSuspenseError from "./use-suspense-error";
 
-const PROFILE_KEY = "myc-profile";
+const PROFILE_SWR_KEY = "myc-profile";
 
 type Profile = components["schemas"]["Profile"];
 
-interface ProfileWithTtl extends Profile {
-  ttl: number;
+/**
+ * Refetch the profile in every mounted `useProfile`.
+ *
+ * Call it right after anything that changes the current user's profile, e.g.
+ * creating the account: otherwise the app keeps the profile it loaded before
+ * (`null` for a user who had no account yet, leaving the dashboard routes
+ * unregistered) until the next revalidation.
+ */
+export async function invalidateProfile(): Promise<void> {
+  await mutateGlobal(
+    (key) => Array.isArray(key) && key[0] === PROFILE_SWR_KEY
+  );
 }
 
 interface Props {
@@ -73,10 +84,43 @@ export default function useProfile(args?: Props) {
     error,
   } = useNativeAuth();
 
-  const [profile, setProfile] = useState<Profile | null>(null);
-  const [isLoadingProfile, setIsLoadingProfile] = useState(false);
 
   const { parseAuthError } = useSuspenseError();
+
+  const emailKey = user?.email
+    ? `${user.email.username}@${user.email.domain}`
+    : null;
+
+  const fetchProfile = useCallback(async (): Promise<Profile | null> => {
+    if (!emailKey) return null;
+
+    const profile = await profileGet({ withUrl: false }, getAccessTokenSilently);
+
+    if (!profile.owners.map((owner) => owner.email).includes(emailKey)) {
+      return null;
+    }
+
+    return profile;
+  }, [emailKey, getAccessTokenSilently]);
+
+  // No browser-side TTL cache: profile changes (an invitation, a tenant
+  // ownership) must show up quickly. SWR keeps the last profile in memory
+  // while it revalidates — when a screen mounts (deduped across the many
+  // `useProfile` callers) and when the tab regains focus — so screens never
+  // flash empty. A user without an account gets an error here (403) and no
+  // profile; the onboarding creates the account and calls
+  // `invalidateProfile`.
+  const { data, isLoading: isLoadingProfile } = useSWR(
+    emailKey ? [PROFILE_SWR_KEY, emailKey] : null,
+    fetchProfile,
+    {
+      revalidateOnFocus: true,
+      revalidateOnReconnect: true,
+      shouldRetryOnError: false,
+    }
+  );
+
+  const profile = data ?? null;
 
   useEffect(() => {
     if (error) parseAuthError(error);
@@ -172,94 +216,6 @@ export default function useProfile(args?: Props) {
     args?.restrictSystemAccount,
   ]);
 
-  /**
-   * Try to fetch profile from the session storage. Case it not exists, fetch
-   * from the API and save it in the session storage.
-   */
-  const localProfile = useMemo(() => {
-    if (!user || !user.email) {
-      return null;
-    }
-
-    const profile = sessionStorage.getItem(PROFILE_KEY);
-
-    if (profile) {
-      let parsedProfile: ProfileWithTtl;
-
-      try {
-        parsedProfile = JSON.parse(profile);
-
-        const emailKey = `${user.email.username}@${user.email.domain}`;
-
-        if (
-          !parsedProfile?.owners
-            .map((owner) => owner.email)
-            .includes(emailKey)
-        ) {
-          sessionStorage.removeItem(PROFILE_KEY);
-          return null;
-        }
-      } catch (error) {
-        console.error("Failed to parse profile from session storage", error);
-
-        return null;
-      }
-
-      if (parsedProfile.ttl < Date.now()) {
-        sessionStorage.removeItem(PROFILE_KEY);
-        return null;
-      }
-
-      return parsedProfile;
-    }
-
-    return null;
-  }, [user]);
-
-  /**
-   * Fetch the profile from the API. If the profile is already in the session
-   * storage, return it.
-   */
-  const fetchProfile = useCallback(async () => {
-    if (!user || !user.email) {
-      return null;
-    }
-
-    if (localProfile) {
-      return localProfile;
-    }
-
-    setIsLoadingProfile(true);
-
-    const profile = await profileGet(
-      { withUrl: false },
-      getAccessTokenSilently
-    ).finally(() => setIsLoadingProfile(false));
-
-    const emailKey = `${user.email.username}@${user.email.domain}`;
-    if (!profile.owners.map((owner) => owner.email).includes(emailKey)) {
-      return null;
-    }
-
-    const profileWithTtl = {
-      ...profile,
-      ttl: Date.now() + 1000 * 60 * 1, // 1 minute
-    } as ProfileWithTtl;
-
-    sessionStorage.setItem(PROFILE_KEY, JSON.stringify(profileWithTtl));
-
-    return profile;
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user, localProfile]);
-
-  /**
-   * Observe the local profile and fetch the remote profile if it changes and
-   * the localProfile response is null.
-   */
-  useEffect(() => {
-    fetchProfile().then(setProfile).catch(console.error);
-  }, [fetchProfile]);
 
   return {
     isAuthenticated,

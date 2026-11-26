@@ -7,9 +7,10 @@ import {
   AccountsListParams,
 } from "@/services/rpc/subscriptionsManager";
 import { useEffect, useMemo } from "react";
-import useSWR from "swr";
+import useLoadMore from "@/hooks/use-load-more";
+import useAccountsListVersion from "@/hooks/use-accounts-list-version";
+import { replaceSearchFilter } from "@/functions/search-term-filters";
 import DashBoardBody from "../DashBoardBody";
-import PaginatedRecords from "@/types/PaginatedRecords";
 import PaginatedContent from "../PaginatedContent";
 import Typography from "@/components/ui/Typography";
 import CopyToClipboard from "@/components/ui/CopyToClipboard";
@@ -25,9 +26,11 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/states/store";
 import { useTranslation } from "react-i18next";
 import IntroSection from "@/components/ui/IntroSection";
-import { Link, useLocation } from "react-router";
+import { Link } from "react-router";
+import AccountName from "@/components/AccountName";
+import useAccountDetailsLink from "@/hooks/use-account-details-link";
 
-const { padding } = projectVariants;
+type Padding = keyof typeof projectVariants.padding;
 
 type Account = components["schemas"]["Account"];
 
@@ -37,10 +40,11 @@ export interface PaginatedAccountsProps {
   omitToolbar?: boolean;
   omitNamespaceInfo?: boolean;
   breadcrumb?: React.ReactNode;
-  initialSkip?: number;
   initialPageSize?: number;
-  padding?: keyof typeof padding;
+  padding?: Padding;
   forceMutate?: Date | null;
+  /** Hold the list request (e.g. while account details are open on top) */
+  deferred?: boolean;
   restrictAccountTypeTo?: (
     | "subscription"
     | "actorAssociated"
@@ -144,20 +148,30 @@ const COMMANDS = {
   },
 };
 
+const PAGE_SIZE = 20;
+
+const ACCOUNT_TYPE_COMMANDS = Object.values(COMMANDS.accountType).map(
+  (item) => item.command
+);
+const ACCOUNT_STATUS_COMMANDS = Object.values(COMMANDS.status).map(
+  (item) => item.command
+);
+
 export default function PaginatedAccounts({
   tenantId,
   toolbar,
   omitToolbar,
   omitNamespaceInfo,
   breadcrumb,
-  initialSkip,
-  initialPageSize,
+  initialPageSize = PAGE_SIZE,
   forceMutate,
   restrictAccountTypeTo,
+  padding,
+  deferred,
 }: PaginatedAccountsProps) {
   const { t } = useTranslation();
 
-  const location = useLocation();
+  const accountDetailsLink = useAccountDetailsLink();
 
   const { tenantInfo } = useSelector((state: RootState) => state.tenant);
 
@@ -173,11 +187,10 @@ export default function PaginatedAccounts({
     restrictSystemAccount: true,
   });
 
-  const { skip, pageSize, setSkip, searchTerm, setSearchTerm } =
-    useSearchBarParams({
-      initialSkip,
-      initialPageSize,
-    });
+  const { searchTerm, setSearchTerm } = useSearchBarParams({
+    initialSkip: 0,
+    initialPageSize,
+  });
 
   const rpcParams = useMemo((): AccountsListParams | null => {
     if (!isAuthenticated) return null;
@@ -185,8 +198,6 @@ export default function PaginatedAccounts({
 
     const params: AccountsListParams = {};
 
-    if (skip) params.skip = skip;
-    if (pageSize) params.pageSize = pageSize;
     if (tenantId) params.tenantId = tenantId;
 
     if (searchTerm && searchTerm !== "") {
@@ -254,8 +265,6 @@ export default function PaginatedAccounts({
     return params;
   }, [
     searchTerm,
-    skip,
-    pageSize,
     tenantId,
     isAuthenticated,
     restrictAccountTypeTo,
@@ -268,66 +277,67 @@ export default function PaginatedAccounts({
   // command box already narrowed to a single explicit type.
   const effectiveAccountTypes = useMemo(() => {
     if (rpcParams?.accountType) return [rpcParams.accountType];
-    if (restrictAccountTypeTo) return restrictAccountTypeTo as string[];
+    // Without a type filter, list every type this screen allows. Actor
+    // associated accounts need an actor name, so they only appear when the
+    // search names one (`/actorAssociated <actor>`).
+    if (restrictAccountTypeTo) {
+      return (restrictAccountTypeTo as string[]).filter(
+        (accountType) => accountType !== "actorAssociated"
+      );
+    }
     return null;
   }, [rpcParams, restrictAccountTypeTo]);
 
-  const swrKey = useMemo(() => {
-    if (!rpcParams) return null;
-    return [
-      "rpc",
-      "subscriptionsManager.accounts.list",
-      JSON.stringify(rpcParams),
-      JSON.stringify(effectiveAccountTypes),
-    ] as const;
-  }, [rpcParams, effectiveAccountTypes]);
+  const accountsListVersion = useAccountsListVersion();
 
-  const {
-    data: accounts,
-    isLoading: isLoadingAccounts,
-    mutate: mutateAccounts,
-  } = useSWR<PaginatedRecords<Account>>(
-    swrKey,
-    () => {
+  const accounts = useLoadMore<Account>({
+    baseKey:
+      rpcParams && !deferred
+        ? [
+            "rpc",
+            "subscriptionsManager.accounts.list",
+            JSON.stringify(rpcParams),
+            JSON.stringify(effectiveAccountTypes),
+            accountsListVersion,
+          ]
+        : null,
+    pageSize: initialPageSize,
+    fetchPage: (skip, pageSize) => {
+      const params: AccountsListParams = { ...rpcParams!, pageSize };
+      if (skip) params.skip = skip;
+
       if (!effectiveAccountTypes) {
-        return accountsList(rpcParams!, getAccessTokenSilently);
+        return accountsList(params, getAccessTokenSilently);
       }
 
+      // One batched call per type per page, merged client-side (LM-05)
       if (effectiveAccountTypes.length > 1) {
         return accountsListMerged(
           effectiveAccountTypes,
-          rpcParams!,
+          params,
           getAccessTokenSilently
         );
       }
 
       return accountsList(
-        { ...rpcParams!, accountType: effectiveAccountTypes[0] },
+        { ...params, accountType: effectiveAccountTypes[0] },
         getAccessTokenSilently
       );
     },
-    {
-      revalidateIfStale: true,
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false,
-      revalidateOnMount: true,
-      refreshInterval: 1000 * 60,
-    }
-  );
+  });
 
-  useEffect(() => {
-    if (tenantId) mutateAccounts(accounts, { rollbackOnError: false });
-  }, [accounts, mutateAccounts, tenantId]);
+  const { mutate: mutateAccounts } = accounts;
 
+  // Refetch only when a parent asks (after creating an account). The base key
+  // already covers tenant and filters, so nothing else needs a manual mutate.
   useEffect(() => {
-    if (forceMutate) mutateAccounts(accounts, { rollbackOnError: true });
-  }, [forceMutate, mutateAccounts, accounts]);
+    if (forceMutate) mutateAccounts();
+  }, [forceMutate, mutateAccounts]);
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const onSubmit = (term?: string, _?: string) => {
-    setSkip(0);
     if (term !== undefined) setSearchTerm(term);
-    mutateAccounts(accounts, { rollbackOnError: true });
+    accounts.mutate();
   };
 
   return (
@@ -364,7 +374,15 @@ export default function PaginatedAccounts({
                   brief={value.brief}
                   command={value.command}
                   description={value?.description}
-                  onClick={() => setSearchTerm(value.command)}
+                  onClick={() =>
+                    setSearchTerm(
+                      replaceSearchFilter(
+                        searchTerm,
+                        value.command,
+                        ACCOUNT_TYPE_COMMANDS
+                      )
+                    )
+                  }
                   disabled={
                     (value.adminOnly && !hasEnoughPermissions) ||
                     (value.tenantNeeded && !tenantId)
@@ -386,7 +404,15 @@ export default function PaginatedAccounts({
                   brief={value.brief}
                   command={value.command}
                   description={value?.description}
-                  onClick={() => setSearchTerm(value.command)}
+                  onClick={() =>
+                    setSearchTerm(
+                      replaceSearchFilter(
+                        searchTerm,
+                        value.command,
+                        ACCOUNT_STATUS_COMMANDS
+                      )
+                    )
+                  }
                   disabled={
                     (value.adminOnly && !hasEnoughPermissions) ||
                     (value.tenantNeeded && !tenantId)
@@ -422,31 +448,22 @@ export default function PaginatedAccounts({
         )}
 
         <PaginatedContent
-          isLoading={isLoadingAccounts}
-          records={accounts}
-          mutation={mutateAccounts}
-          skip={skip}
-          setSkip={setSkip}
-          pageSize={pageSize}
+          isLoading={accounts.isLoading}
+          loaded={accounts.records.length}
+          total={accounts.count}
+          hasMore={accounts.hasMore}
+          isLoadingMore={accounts.isLoadingMore}
+          onLoadMore={accounts.loadMore}
         >
-          {accounts?.records?.map((account) => (
+          {accounts.records.map((account) => (
             <ListItem key={account?.id}>
               <div className="flex justify-between gap-3">
                 <Typography as="h4" truncate>
                   <Link
                     className="hover:underline text-brand-violet-500 dark:text-brand-violet-400 flex items-center gap-2"
-                    to={`${location.pathname}?accountId=${account?.id}`}
+                    to={accountDetailsLink(account?.id ?? "")}
                   >
-                    <div className="flex items-center gap-2">
-                      {account?.name.length > 0
-                        ? account?.name
-                        : account?.id?.slice(0, 8)}
-                    </div>
-                    {account.isSystemAccount && (
-                      <span className="text-xs text-zinc-500 dark:text-zinc-400">
-                        (Default)
-                      </span>
-                    )}
+                    <AccountName account={account} />
                   </Link>
                 </Typography>
                 <div className="flex gap-5">

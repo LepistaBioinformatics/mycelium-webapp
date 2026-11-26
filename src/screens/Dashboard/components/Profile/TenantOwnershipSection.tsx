@@ -1,12 +1,8 @@
 import Card from "@/components/ui/Card";
 import Typography from "@/components/ui/Typography";
-import {
-  TenantOwnershipInfoCard,
-  TenantOwnershipInfoTableRow,
-} from "./TenantOwnershipInfo";
+import { TenantOwnershipListItem } from "./TenantOwnershipInfo";
 import { components } from "@/services/openapi/mycelium-schema";
 import { useTranslation } from "react-i18next";
-import { Table, TableBody, TableHead, TableHeadCell } from "flowbite-react";
 
 type TenantOwnership = components["schemas"]["TenantOwnership"];
 
@@ -38,74 +34,20 @@ export default function TenantOwnershipSection({ tenantsOwnership }: Props) {
             </Typography>
           </div>
         )}
-        {tenantsOwnership && tenantsOwnership.length > 0 && <div className="hidden sm:block">
-          <div className="overflow-x-auto scrollbar">
-            <Table
-              striped
-              theme={{
-                root: {
-                  base: "w-full text-left text-sm text-zinc-500 dark:text-zinc-400",
-                },
-                head: {
-                  cell: {
-                    base: "bg-zinc-50 px-6 py-3 group-first/head:first:rounded-tl-lg group-first/head:last:rounded-tr-lg dark:bg-brand-900",
-                  },
-                },
-                body: {
-                  base: "bg-zinc-50 dark:bg-brand-900",
-                  cell: {
-                    base: "bg-zinc-50 dark:bg-brand-950 group-hover/row:bg-zinc-100 dark:group-hover/row:bg-brand-900 px-6 py-4 group-first/body:group-first/row:first:rounded-tl-lg group-first/body:group-first/row:last:rounded-tr-lg group-last/body:group-last/row:first:rounded-bl-lg group-last/body:group-last/row:last:rounded-br-lg",
-                  },
-                },
-                row: {
-                  base: "group/row bg-transparent",
-                  hovered: "hover:bg-zinc-100 dark:hover:bg-brand-900",
-                  striped:
-                    "odd:bg-white even:bg-zinc-50 odd:dark:bg-brand-950 even:dark:bg-brand-900",
-                },
-              }}
-            >
-              <TableHead>
-                <TableHeadCell>
-                  {t("screens.Dashboard.TenantOwnershipInfo.name")}
-                </TableHeadCell>
-                <TableHeadCell>
-                  {t("screens.Dashboard.TenantOwnershipInfo.since.prefix")}
-                </TableHeadCell>
-                <TableHeadCell>
-                  {t("screens.Dashboard.TenantOwnershipInfo.actions.title")}
-                </TableHeadCell>
-              </TableHead>
-
-              <TableBody className="divide-y">
-                {tenantsOwnership
-                  ?.sort((a, b) => b.since.localeCompare(a.since))
-                  ?.map((tenant, index) => (
-                    <TenantOwnershipInfoTableRow
-                      key={tenant.id + index}
-                      since={tenant.since}
-                      tenantId={tenant.id}
-                      tenantName={tenant.name}
-                      index={index}
-                    />
-                  ))}
-              </TableBody>
-            </Table>
-          </div>
-        </div>}
-
-        {tenantsOwnership && tenantsOwnership.length > 0 && <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3 scrollbar w-full sm:hidden">
-          {tenantsOwnership
-            ?.sort((a, b) => b.since.localeCompare(a.since))
-            ?.map((tenant) => (
-              <TenantOwnershipInfoCard
-                key={tenant.id}
-                since={tenant.since}
-                tenantId={tenant.id}
-                tenantName={tenant.name}
-              />
-            ))}
-        </div>}
+        {tenantsOwnership && tenantsOwnership.length > 0 && (
+          <ul className="flex flex-col gap-2 w-full">
+            {[...tenantsOwnership]
+              .sort((a, b) => b.since.localeCompare(a.since))
+              .map((tenant) => (
+                <TenantOwnershipListItem
+                  key={tenant.id}
+                  since={tenant.since}
+                  tenantId={tenant.id}
+                  tenantName={tenant.name}
+                />
+              ))}
+          </ul>
+        )}
       </Card.Body>
     </Card>
   );

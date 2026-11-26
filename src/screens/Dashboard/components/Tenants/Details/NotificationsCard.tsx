@@ -11,6 +11,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
+import { fieldStyles } from "@/components/ui/field-styles";
 
 type Tenant = components["schemas"]["Tenant"];
 type TenantMetaKey = components["schemas"]["TenantMetaKey"];
@@ -37,8 +38,7 @@ const NOTIFICATION_LOCALE_OPTIONS = [
   { value: "es", label: "Español" },
 ];
 
-const INPUT =
-  "w-full bg-transparent border-b border-zinc-300 dark:border-zinc-700 px-0 py-1.5 text-sm text-zinc-800 dark:text-zinc-200 focus:outline-none focus:border-brand-violet-500 dark:focus:border-brand-violet-400 placeholder-zinc-400 dark:placeholder-zinc-600";
+const INPUT = fieldStyles();
 const LABEL =
   "text-xs font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wide";
 
@@ -157,16 +157,16 @@ export default function NotificationsCard({
               </Typography>
               <select
                 {...register("locale")}
-                className={`${INPUT} cursor-pointer bg-white dark:bg-brand-950`}
+                className={`${INPUT} cursor-pointer`}
               >
-                <option value="" className="bg-white dark:bg-brand-950">
+                <option value="" className="bg-white dark:bg-surface-950">
                   {t(`${BASE}.locale.placeholder`)}
                 </option>
                 {NOTIFICATION_LOCALE_OPTIONS.map(({ value, label }) => (
                   <option
                     key={value}
                     value={value}
-                    className="bg-white dark:bg-brand-950"
+                    className="bg-white dark:bg-surface-950"
                   >
                     {label}
                   </option>

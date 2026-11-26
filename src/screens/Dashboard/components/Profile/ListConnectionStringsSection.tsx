@@ -1,4 +1,5 @@
 import useSWR from "swr";
+import Skeleton from "@/components/ui/Skeleton";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import {
@@ -7,8 +8,8 @@ import {
   TableCell,
   TableHead,
   TableHeadCell,
-  TableRow,
-} from "flowbite-react";
+  TableRow
+} from "@/components/ui/DataTable";
 import Card from "@/components/ui/Card";
 import Modal from "@/components/ui/Modal";
 import Button from "@/components/ui/Button";
@@ -16,10 +17,14 @@ import Typography from "@/components/ui/Typography";
 import { components } from "@/services/openapi/mycelium-schema";
 import {
   tokensListMy,
+  tokensListNotificationServices,
   tokensRevoke,
   tokensDelete,
 } from "@/services/rpc/beginners";
 import useProfile from "@/hooks/use-profile";
+import { KeyRound, Mail } from "lucide-react";
+import CreateConnectionStringModal from "../CreateConnectionStringModal";
+import CreateNotificationConnectionStringModal from "./CreateNotificationConnectionStringModal";
 
 type PublicConnectionStringInfo =
   components["schemas"]["PublicConnectionStringInfo"];
@@ -44,6 +49,9 @@ function isExpired(iso: string): boolean {
 interface ScopeBadgesProps {
   scope: ConnectionStringBean[];
 }
+
+const NOTIFICATION_BADGE_CLASS =
+  "inline-flex items-center gap-1 rounded-lg px-1.5 py-0.5 text-xs font-mono border border-infra-200 bg-infra-50 text-infra-800 dark:border-infra-800 dark:bg-infra-900/50 dark:text-infra-200";
 
 const BADGE_CLASS =
   "inline-block rounded-lg px-1.5 py-0.5 text-xs border border-zinc-300 dark:border-zinc-600 text-zinc-600 dark:text-zinc-300 bg-zinc-50 dark:bg-zinc-800";
@@ -78,6 +86,25 @@ function ScopeBadges({ scope }: ScopeBadgesProps) {
           {t("screens.Dashboard.ListConnectionStringsSection.scope.roles")}
         </span>,
       ];
+    if ("scp" in bean)
+      return bean.scp.map((scope) => (
+        <span key={`scp-${index}-${scope}`} className={NOTIFICATION_BADGE_CLASS}>
+          <Mail className="size-3" />
+          {scope}
+        </span>
+      ));
+    if ("svc" in bean)
+      return [
+        <span
+          key={`svc-${index}`}
+          className={BADGE_CLASS}
+          title={t("screens.Dashboard.ListConnectionStringsSection.scope.service")}
+        >
+          {t("screens.Dashboard.ListConnectionStringsSection.scope.serviceTag", {
+            service: bean.svc,
+          })}
+        </span>,
+      ];
     if ("url" in bean)
       return [
         <span key={`url-${index}`} className={BADGE_CLASS}>
@@ -109,7 +136,7 @@ function ConnectionStringRow({ token, onAction }: RowProps) {
   const expired = isExpired(token.expiration);
 
   return (
-    <TableRow className="bg-white dark:bg-brand-950">
+    <TableRow>
       <TableCell className="font-medium text-zinc-900 dark:text-white whitespace-nowrap">
         <div className="flex items-center gap-2">
           {token.name}
@@ -162,6 +189,8 @@ export default function ListConnectionStringsSection() {
   const { getAccessTokenSilently } = useProfile();
   const [pending, setPending] = useState<PendingAction | null>(null);
   const [busy, setBusy] = useState(false);
+  const [isIssuing, setIsIssuing] = useState(false);
+  const [isCreating, setIsCreating] = useState(false);
 
   const { data: tokens, isLoading, mutate } = useSWR<
     PublicConnectionStringInfo[] | null
@@ -170,6 +199,14 @@ export default function ListConnectionStringsSection() {
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
   });
+
+  const { data: notificationOptions } = useSWR(
+    ["rpc", "beginners.tokens.listNotificationServices"],
+    () => tokensListNotificationServices(getAccessTokenSilently),
+    { revalidateOnFocus: false, revalidateOnReconnect: false }
+  );
+
+  const canIssueNotifications = !!notificationOptions?.services.length;
 
   function openModal(token: PublicConnectionStringInfo, kind: ActionKind) {
     setPending({ token, kind });
@@ -232,6 +269,20 @@ export default function ListConnectionStringsSection() {
         </Modal.Body>
       </Modal>
 
+      <CreateConnectionStringModal
+        isOpen={isCreating}
+        onClose={() => setIsCreating(false)}
+        onSuccess={() => mutate()}
+      />
+
+      {isIssuing && notificationOptions && (
+        <CreateNotificationConnectionStringModal
+          options={notificationOptions}
+          onClose={() => setIsIssuing(false)}
+          onCreated={() => mutate()}
+        />
+      )}
+
       <Card padding="sm" width="alwaysFull" height="adaptive">
         <Card.Header>
           <Typography as="h5" decoration="faded">
@@ -240,13 +291,27 @@ export default function ListConnectionStringsSection() {
         </Card.Header>
 
         <Card.Body width="full">
-          {isLoading && (
-            <div className="py-8 flex justify-center">
-              <Typography decoration="smooth">
-                {t("screens.Dashboard.Profile.loading")}
-              </Typography>
+          <div className="mb-4 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+            <span className="min-w-0 flex-1 text-sm text-muted-foreground">
+              {t("screens.Dashboard.ListConnectionStringsSection.description")}
+            </span>
+            <div className="flex shrink-0 flex-wrap gap-2">
+              {canIssueNotifications && (
+                <Button size="sm" intent="info" onClick={() => setIsIssuing(true)}>
+                  <Mail className="size-4" />
+                  {t(
+                    "screens.Dashboard.ListConnectionStringsSection.issueNotification"
+                  )}
+                </Button>
+              )}
+              <Button size="sm" onClick={() => setIsCreating(true)}>
+                <KeyRound className="size-4" />
+                {t("screens.Dashboard.ListConnectionStringsSection.create")}
+              </Button>
             </div>
-          )}
+          </div>
+
+          {isLoading && <Skeleton.Table rows={3} cols={5} />}
 
           {isEmpty && (
             <div className="py-8 flex flex-col items-center gap-2 text-center">
@@ -264,13 +329,7 @@ export default function ListConnectionStringsSection() {
           {!isLoading && tokens && tokens.length > 0 && (
             <div className="overflow-x-auto scrollbar w-full">
               <Table
-                theme={{
-                  head: {
-                    cell: {
-                      base: "bg-zinc-50 px-6 py-3 group-first/head:first:rounded-tl-lg group-first/head:last:rounded-tr-lg dark:bg-brand-900",
-                    },
-                  },
-                }}
+               
               >
                 <TableHead>
                   <TableHeadCell>

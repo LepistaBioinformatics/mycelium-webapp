@@ -12,6 +12,7 @@ import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { LEGAL_FIELD_KEYS as FIELD_KEYS } from "./legal-field-keys";
+import { fieldStyles } from "@/components/ui/field-styles";
 
 type Tenant = components["schemas"]["Tenant"];
 
@@ -94,8 +95,7 @@ function isValidCnpj(raw: string): boolean {
   return clean.slice(12) === `${dv1}${dv2}`;
 }
 
-const INPUT =
-  "w-full bg-transparent border-b border-zinc-300 dark:border-zinc-700 px-0 py-1.5 text-sm text-zinc-800 dark:text-zinc-200 focus:outline-none focus:border-brand-violet-500 dark:focus:border-brand-violet-400 placeholder-zinc-400 dark:placeholder-zinc-600";
+const INPUT = fieldStyles();
 const LABEL =
   "text-xs font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wide";
 
@@ -208,13 +208,13 @@ export default function LegalSettings({ tenant, mutateTenantStatus }: Props) {
               </label>
               <select
                 {...register("federal_revenue_register_type")}
-                className={`${INPUT} cursor-pointer bg-white dark:bg-brand-950`}
+                className={`${INPUT} cursor-pointer`}
               >
                 {REGISTER_TYPE_OPTIONS.map(({ value, label }) => (
                   <option
                     key={value}
                     value={value}
-                    className="bg-white dark:bg-brand-950"
+                    className="bg-white dark:bg-surface-950"
                   >
                     {label}
                   </option>

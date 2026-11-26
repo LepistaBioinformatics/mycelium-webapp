@@ -3,7 +3,7 @@ import SideCurtain from "@/components/ui/SideCurtain";
 import Typography from "@/components/ui/Typography";
 import { components } from "@/services/openapi/mycelium-schema";
 import Banner from "@/components/ui/Banner";
-import DetailsBox from "@/components/ui/DetailsBox";
+import Tabs from "@/components/ui/Tabs";
 import { useMemo, useState } from "react";
 import CopyToClipboard from "@/components/ui/CopyToClipboard";
 import DeleteGuestRole from "./DeleteGuestRole";
@@ -23,9 +23,9 @@ interface Props {
 }
 
 enum OpenedSection {
-  Details,
-  Children,
-  AdvancedActions,
+  Details = "details",
+  Children = "children",
+  AdvancedActions = "advancedActions",
 }
 
 export default function GuestRoleDetails({
@@ -43,13 +43,6 @@ export default function GuestRoleDetails({
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isRegisterChildModalOpen, setIsRegisterChildModalOpen] =
     useState(false);
-
-  const handleToggleSection = (
-    section: OpenedSection,
-    state: "open" | "closed"
-  ) => {
-    if (state === "open") setOpenedSection(section);
-  };
 
   const handleEditFinish = () => {
     setIsEditModalOpen(false);
@@ -82,17 +75,27 @@ export default function GuestRoleDetails({
         />
       )}
 
-      <DetailsBox
-        open={openedSection === OpenedSection.Details}
-        onToggle={(state) => handleToggleSection(OpenedSection.Details, state)}
+      <Tabs
+        value={openedSection}
+        onValueChange={(value) => setOpenedSection(value as OpenedSection)}
       >
-        <DetailsBox.Summary>
-          <Typography as="span">
+        <Tabs.List>
+          <Tabs.Trigger value={OpenedSection.Details}>
             {t("screens.Dashboard.GuestRoles.GuestRoleDetails.details")}
-          </Typography>
-        </DetailsBox.Summary>
+          </Tabs.Trigger>
+          {children && (
+            <Tabs.Trigger value={OpenedSection.Children}>
+              {t(
+                "screens.Dashboard.GuestRoles.GuestRoleDetails.children.title"
+              )}
+            </Tabs.Trigger>
+          )}
+          <Tabs.Trigger value={OpenedSection.AdvancedActions}>
+            {t("screens.Dashboard.GuestRoles.GuestRoleDetails.advancedActions")}
+          </Tabs.Trigger>
+        </Tabs.List>
 
-        <DetailsBox.Content minHeight="50">
+        <Tabs.Content value={OpenedSection.Details}>
           <div className="flex flex-col gap-8">
             <IntroSection.Item
               prefix={t(
@@ -169,25 +172,10 @@ export default function GuestRoleDetails({
               </Typography>
             </IntroSection.Item>
           </div>
-        </DetailsBox.Content>
-      </DetailsBox>
+        </Tabs.Content>
 
       {children && (
-        <DetailsBox
-          open={openedSection === OpenedSection.Children}
-          onToggle={(state) =>
-            handleToggleSection(OpenedSection.Children, state)
-          }
-        >
-          <DetailsBox.Summary>
-            <Typography as="span">
-              {t(
-                "screens.Dashboard.GuestRoles.GuestRoleDetails.children.title"
-              )}
-            </Typography>
-          </DetailsBox.Summary>
-
-          <DetailsBox.Content minHeight="50">
+        <Tabs.Content value={OpenedSection.Children}>
             <div className="flex flex-col gap-8">
               {children?.map((child) => (
                 <div key={child.id}>
@@ -205,23 +193,10 @@ export default function GuestRoleDetails({
                 </div>
               ))}
             </div>
-          </DetailsBox.Content>
-        </DetailsBox>
+        </Tabs.Content>
       )}
 
-      <DetailsBox
-        open={openedSection === OpenedSection.AdvancedActions}
-        onToggle={(state) =>
-          handleToggleSection(OpenedSection.AdvancedActions, state)
-        }
-      >
-        <DetailsBox.Summary>
-          <Typography as="span">
-            {t("screens.Dashboard.GuestRoles.GuestRoleDetails.advancedActions")}
-          </Typography>
-        </DetailsBox.Summary>
-
-        <DetailsBox.Content minHeight="50">
+        <Tabs.Content value={OpenedSection.AdvancedActions}>
           <Banner intent="info">
             <div className="flex justify-between gap-2 my-5">
               <div className="flex flex-col gap-2">
@@ -311,8 +286,8 @@ export default function GuestRoleDetails({
               </div>
             </div>
           </Banner>
-        </DetailsBox.Content>
-      </DetailsBox>
+        </Tabs.Content>
+      </Tabs>
 
       <DeleteGuestRole
         guestRole={guestRole}

@@ -1,6 +1,7 @@
 import { cva, VariantProps } from "class-variance-authority";
 import React, { ComponentProps } from "react";
 import { Link } from "react-router";
+import { ChevronRight } from "lucide-react";
 import {
   projectVariants,
   projectDefaultVariants,
@@ -95,7 +96,7 @@ function Container({
   );
 }
 
-const breadcrumbStyles = cva("mt-1 pb-4 flex overflow-x-auto scrollbar gap-2", {
+const breadcrumbStyles = cva("mt-1 pb-4 flex items-center overflow-x-auto scrollbar gap-1.5 text-sm", {
   variants: {},
   defaultVariants: {},
 });
@@ -106,9 +107,11 @@ interface BreadcrumbProps
 
 function BreadcrumbContainer({ children, ...props }: BreadcrumbProps) {
   children = React.Children.map(children, (child, index) => (
-    <span key={index} className="flex gap-2">
-      <span className="mr-1 text-zinc-500">/</span>
-      <span className="mr-1">{child}</span>
+    <span key={index} className="flex items-center gap-1.5">
+      {index > 0 && (
+        <ChevronRight aria-hidden className="size-3.5 text-muted-foreground/60" />
+      )}
+      <span>{child}</span>
     </span>
   ));
 
@@ -119,11 +122,11 @@ function BreadcrumbContainer({ children, ...props }: BreadcrumbProps) {
   );
 }
 
-const breadcrumbItemStyles = cva("flex whitespace-nowrap gap-2", {
+const breadcrumbItemStyles = cva("flex items-center whitespace-nowrap gap-1.5 transition-colors", {
   variants: {
     withHref: {
-      true: "hover:underline text-brand-violet-500 dark:text-brand-violet-500",
-      false: "text-zinc-500",
+      true: "text-muted-foreground hover:text-foreground",
+      false: "text-foreground font-medium",
     },
   },
   defaultVariants: {},
@@ -146,7 +149,7 @@ function BreadcrumbItem({
 
   const content = (
     <>
-      {icon && <Icon className="mt-1" />}
+      {icon && <Icon className="size-3.5" />}
       {children}
     </>
   );

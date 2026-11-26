@@ -8,7 +8,7 @@ import useProfile from "@/hooks/use-profile";
 import useSuspenseError from "@/hooks/use-suspense-error";
 import { components } from "@/services/openapi/mycelium-schema";
 import { tenantsCreate } from "@/services/rpc/managers";
-import { Textarea, TextInput } from "flowbite-react";
+import { Textarea, TextInput } from "@/components/ui/Input";
 import { useMemo, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -135,18 +135,8 @@ export default function TenantModal({
                 "screens.Dashboard.Tenants.TenantModal.formFields.name.placeholder"
               )}
               sizing="lg"
-              color="custom"
               autoFocus
-              theme={{
-                field: {
-                  input: {
-                    colors: {
-                      custom:
-                        "border-brand-600 bg-brand-violet-50 text-zinc-900 focus:border-infra-400 focus:ring-zinc-500 dark:bg-brand-950 dark:text-white placeholder-zinc-500 dark:placeholder-zinc-400 dark:focus:border-brand-violet-500 dark:focus:ring-brand-violet-500",
-                    },
-                  },
-                },
-              }}
+             
               {...register("name")}
             />
             {errors.name && <span>This field is required</span>}
@@ -166,13 +156,7 @@ export default function TenantModal({
                 "screens.Dashboard.Tenants.TenantModal.formFields.description.placeholder"
               )}
               rows={4}
-              color="custom"
-              theme={{
-                colors: {
-                  custom:
-                    "border-brand-600 bg-brand-violet-50 text-zinc-900 focus:border-infra-400 focus:ring-zinc-500 dark:bg-brand-950 dark:text-white placeholder-zinc-500 dark:placeholder-zinc-400 dark:focus:border-brand-violet-500 dark:focus:ring-brand-violet-500",
-                },
-              }}
+             
               {...register("description")}
             />
             {errors.description && <span>This field is required</span>}

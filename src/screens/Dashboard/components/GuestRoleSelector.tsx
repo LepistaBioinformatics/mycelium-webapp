@@ -1,7 +1,10 @@
-import { cva, VariantProps } from "class-variance-authority";
+import { cva } from "class-variance-authority";
+import Skeleton from "@/components/ui/Skeleton";
 import FormField from "@/components/ui/FomField";
-import PermissionIcon from "@/components/ui/PermissionIcon";
-import Typography from "@/components/ui/Typography";
+import { buttonStyles } from "@/components/ui/button-styles";
+import { Check, Loader2, Search } from "lucide-react";
+import PermissionBadge from "@/components/ui/PermissionBadge";
+import { Popover } from "radix-ui";
 import useProfile from "@/hooks/use-profile";
 import useSearchBarParams from "@/hooks/use-search-bar-params";
 import { components } from "@/services/openapi/mycelium-schema";
@@ -11,9 +14,8 @@ import {
 } from "@/services/rpc/subscriptionsManager";
 import { MycPermission } from "@/types/MyceliumPermission";
 import { MycRole } from "@/types/MyceliumRole";
-import { TextInput } from "flowbite-react";
-import { useMemo, useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { TextInput } from "@/components/ui/Input";
+import { useMemo, useRef, useState } from "react";
 import useSWR from "swr";
 import { camelCaseToKebabCase } from "@/functions/camel-to-kebab-text";
 import { useTranslation } from "react-i18next";
@@ -23,9 +25,8 @@ import { RootState } from "@/states/store";
 type GuestRole = components["schemas"]["GuestRole"];
 type SystemActor = components["schemas"]["SystemActor"] | string;
 
-type Inputs = {
-  name: string;
-};
+const PREFIX = "screens.Dashboard.GuestRoles.GuestRoleSelector";
+const LISTBOX_ID = "guest-role-options";
 
 export interface GuestRoleSelectorProps {
   label: string;
@@ -36,6 +37,11 @@ export interface GuestRoleSelectorProps {
   setSelectedRole: (role: GuestRole) => void;
   shouldBeSystemRole: boolean;
   restrictRoleToSlug?: SystemActor;
+  /**
+   * The tenant to list roles of. Left undefined, the tenant in the Redux store
+   * is used; null lists roles without a tenant filter.
+   */
+  tenantId?: string | null;
 }
 
 /**
@@ -53,17 +59,20 @@ export default function GuestRoleSelector({
   ignoreList,
   shouldBeSystemRole,
   restrictRoleToSlug,
+  tenantId: tenantIdOverride,
 }: GuestRoleSelectorProps) {
   const { t } = useTranslation();
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isEditing, setIsEditing] = useState(selectedRole ? false : true);
+  const [isListOpen, setIsListOpen] = useState(false);
 
   const { tenantInfo } = useSelector((state: RootState) => state.tenant);
+  const tenantId =
+    tenantIdOverride === undefined ? tenantInfo?.id : tenantIdOverride;
 
   const { isAuthenticated, hasEnoughPermissions, getAccessTokenSilently } =
     useProfile({
-      tenantOwnerNeeded: [tenantInfo?.id || ""],
+      tenantOwnerNeeded: [tenantId || ""],
       roles: [MycRole.SubscriptionsManager],
       permissions: [MycPermission.Read],
     });
@@ -73,23 +82,13 @@ export default function GuestRoleSelector({
     initialPageSize: 5,
   });
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<Inputs>({
-    defaultValues: {
-      name: "",
-    },
-  });
-
   const swrParams = useMemo<GuestRolesListParams | null>(() => {
     if (!isAuthenticated || !hasEnoughPermissions) return null;
 
     const params: GuestRolesListParams = {
       pageSize,
       system: shouldBeSystemRole,
-      tenantId: tenantInfo?.id ?? undefined,
+      tenantId: tenantId ?? undefined,
     };
 
     if (searchTerm && searchTerm !== "") {
@@ -108,7 +107,7 @@ export default function GuestRoleSelector({
     searchTerm,
     restrictRoleToSlug,
     shouldBeSystemRole,
-    tenantInfo?.id,
+    tenantId,
   ]);
 
   const swrKey = swrParams
@@ -140,218 +139,261 @@ export default function GuestRoleSelector({
     }
   );
 
-  const onSubmit: SubmitHandler<Inputs> = async ({ name }) => {
-    setIsSubmitting(true);
-    setSearchTerm(name);
+  // Search as the user types, debounced so each keystroke does not fire a
+  // request.
+  const searchDelay = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const scheduleSearch = (name: string) => {
+    if (searchDelay.current) clearTimeout(searchDelay.current);
+    searchDelay.current = setTimeout(() => setSearchTerm(name.trim()), 300);
+  };
+
+  const searchNow = (name: string) => {
+    if (searchDelay.current) clearTimeout(searchDelay.current);
+    setSearchTerm(name.trim());
     mutate(guestRolesData, { rollbackOnError: true });
-    setIsSubmitting(false);
   };
 
   const handleSelectRole = (role: GuestRole) => {
+    setIsListOpen(false);
     setSelectedRole(role);
     setSearchTerm("");
     setIsEditing(false);
   };
 
+  const sortedRoles = [...(guestRolesData ?? [])].sort(
+    (a, b) =>
+      a.name.localeCompare(b.name) ||
+      getNumericPermission(a.permission as MycPermission) -
+        getNumericPermission(b.permission as MycPermission)
+  );
+
+  const isSearching = isLoading || isValidating;
+
   return (
     <FormField label={label} title={title}>
-      <div>
-        {selectedRole && !isEditing && (
-          <div className="flex flex-col gap-2">
-            <div onClick={() => setIsEditing(true)}>
-              <div className="flex items-center gap-2 rounded-lg border border-brand-600 pb-2 bg-brand-violet-50 dark:bg-brand-900 px-4 py-2 hover:cursor-pointer">
-                {selectedRole?.name}
-                {selectedRole?.permission && (
-                  <PermissionIcon permission={selectedRole?.permission} />
-                )}
-              </div>
-            </div>
-          </div>
-        )}
-
-        {isEditing && (
-          <div>
-            <form
-              className="flex flex-col gap-2 w-full"
-              onSubmit={handleSubmit(onSubmit)}
-            >
-              <TextInput
-                className="mb-2"
-                placeholder={t(
-                  "screens.Dashboard.GuestRoles.GuestRoleSelector.placeholder"
-                )}
-                defaultValue={selectedRole?.name ?? ""}
-                sizing="sm"
-                color="custom"
-                autoComplete="off"
-                aria-autocomplete="list"
-                theme={{
-                  field: {
-                    input: {
-                      colors: {
-                        custom:
-                          "border-brand-600 bg-brand-violet-50 text-zinc-900 focus:border-infra-400 focus:ring-zinc-500 dark:bg-brand-950 dark:text-white placeholder-zinc-500 dark:placeholder-zinc-400 dark:focus:border-infra-400 dark:focus:ring-infra-400",
-                      },
-                    },
-                  },
-                }}
-                {...register("name")}
-              />
-              {errors.name && <span>This field is required</span>}
-
-              <input type="submit" className="hidden" />
-            </form>
-
-            {isLoading || isValidating || isSubmitting ? (
-              <span>
-                {t("screens.Dashboard.GuestRoles.GuestRoleSelector.loading")}
+      {selectedRole && !isEditing && (
+        <div className="flex items-start justify-between gap-3 rounded-xl border border-brand-600/25 dark:border-brand-400/20 bg-card px-4 py-3 shadow-xs">
+          <div className="flex flex-col gap-1 min-w-0">
+            <span className="flex flex-wrap items-center gap-2">
+              <span className="font-medium text-foreground">
+                {selectedRole.name}
               </span>
-            ) : (
-              <Typography as="small" decoration="smooth">
-                {t("screens.Dashboard.GuestRoles.GuestRoleSelector.button")}
-              </Typography>
+              <PermissionBadge permission={selectedRole.permission} />
+            </span>
+            {selectedRole.description && (
+              <span className="text-xs text-muted-foreground line-clamp-2">
+                {selectedRole.description}
+              </span>
+            )}
+          </div>
+          <button
+            type="button"
+            onClick={() => {
+              setIsEditing(true);
+              setIsListOpen(true);
+            }}
+            className={buttonStyles({ intent: "secondary", size: "xs" })}
+          >
+            {t(`${PREFIX}.change`)}
+          </button>
+        </div>
+      )}
+
+      {isEditing && (
+        <Popover.Root open={isListOpen} onOpenChange={setIsListOpen}>
+          <Popover.Anchor asChild>
+            <div data-role-search>
+          <TextInput
+            icon={Search}
+            placeholder={t(`${PREFIX}.placeholder`)}
+            defaultValue={searchTerm ?? ""}
+            sizing="md"
+            autoComplete="off"
+            role="combobox"
+            aria-expanded
+            aria-controls={LISTBOX_ID}
+            aria-autocomplete="list"
+            onFocus={() => setIsListOpen(true)}
+            onClick={() => setIsListOpen(true)}
+            onChange={(event) => {
+              setIsListOpen(true);
+              scheduleSearch(event.target.value);
+            }}
+            onKeyDown={(event) => {
+              if (event.key === "Escape") {
+                setIsListOpen(false);
+                return;
+              }
+              // The selector lives inside the modal's form: Enter searches,
+              // it must not submit the invitation.
+              if (event.key !== "Enter") return;
+              event.preventDefault();
+              searchNow(event.currentTarget.value);
+            }}
+            rightIcon={
+              isSearching
+                ? () => (
+                    <Loader2 className="size-4 animate-spin text-muted-foreground" />
+                  )
+                : undefined
+            }
+          />
+            </div>
+          </Popover.Anchor>
+
+          <Popover.Portal>
+            <Popover.Content
+              align="start"
+              sideOffset={6}
+              collisionPadding={12}
+              // Keep the caret in the search field while the list is open.
+              onOpenAutoFocus={(event) => event.preventDefault()}
+              onInteractOutside={(event) => {
+                const target = event.target as HTMLElement | null;
+                if (target?.closest("[data-role-search]")) event.preventDefault();
+              }}
+              className="z-1001 w-(--radix-popover-trigger-width) outline-none animate-in fade-in-0 slide-in-from-top-1 duration-150"
+            >
+          <div
+            id={LISTBOX_ID}
+            role="listbox"
+            aria-label={t(`${PREFIX}.title`)}
+            className="flex flex-col gap-1 max-h-[min(18rem,var(--radix-popover-content-available-height))] overflow-y-auto scrollbar rounded-xl border border-border bg-popover p-1.5 shadow-raised"
+          >
+            {isLoading && !guestRolesData && (
+              <div className="p-2">
+                <Skeleton.ListRows count={3} lines={1} />
+              </div>
             )}
 
-            <div className="flex flex-col mt-2 rounded-lg border border-brand-600 shadow-sm dark:shadow-none bg-white dark:bg-brand-950 relative">
-              {guestRolesData
-                ?.sort(
-                  (a, b) =>
-                    a.name.localeCompare(b.name) ||
-                    getNumericPermission(a.permission as MycPermission) -
-                      getNumericPermission(b.permission as MycPermission)
-                )
-                ?.map((role) => (
-                  <SelectionItem
-                    key={role.id}
-                    desiredRole={role}
-                    parentRole={parentRole}
-                    onClick={handleSelectRole}
-                    ignoreList={ignoreList}
-                  />
-                ))}
-            </div>
+            {!isLoading && sortedRoles.length === 0 && (
+              <span className="px-3 py-6 text-center text-sm text-muted-foreground">
+                {t(`${PREFIX}.empty`)}
+              </span>
+            )}
+
+            {sortedRoles.map((role) => (
+              <SelectionItem
+                key={role.id}
+                desiredRole={role}
+                parentRole={parentRole}
+                selected={role.id === selectedRole?.id}
+                onClick={handleSelectRole}
+                ignoreList={ignoreList}
+              />
+            ))}
           </div>
-        )}
-      </div>
+            </Popover.Content>
+          </Popover.Portal>
+        </Popover.Root>
+      )}
     </FormField>
   );
 }
 
 const selectionItemStyles = cva(
-  "flex gap-0 bg-brand-violet-50 dark:bg-brand-900 p-2 border-t border-t-brand-violet-200 dark:border-t-brand-700 hover:bg-brand-violet-100 dark:hover:bg-brand-800",
+  "flex items-start justify-between gap-3 w-full rounded-lg px-3 py-2.5 text-left transition-colors outline-none focus-visible:ring-[3px] focus-visible:ring-ring/40",
   {
     variants: {
       active: {
-        true: "cursor-pointer",
-        false: "cursor-not-allowed opacity-50",
+        true: "cursor-pointer hover:bg-muted focus-visible:bg-muted dark:hover:bg-surface-800",
+        false: "cursor-not-allowed opacity-60",
+      },
+      selected: {
+        true: "bg-brand-50 dark:bg-brand-900/40",
+        false: "",
       },
     },
     defaultVariants: {
       active: false,
+      selected: false,
     },
   }
 );
 
-interface SelectionItemProps
-  extends BaseProps,
-    VariantProps<typeof selectionItemStyles> {
+interface SelectionItemProps {
   desiredRole: GuestRole;
   parentRole?: GuestRole | null;
+  selected: boolean;
   onClick: (role: GuestRole) => void;
   ignoreList?: string[];
+}
+
+type Availability = { active: true } | { active: false; reasonKey: string };
+
+function roleAvailability(
+  desiredRole: GuestRole,
+  parentRole?: GuestRole | null,
+  ignoreList?: string[]
+): Availability {
+  if (desiredRole.id && ignoreList?.includes(desiredRole.id)) {
+    return { active: false, reasonKey: "ignored" };
+  }
+
+  if (!parentRole) return { active: true };
+
+  if (parentRole.id === desiredRole.id) {
+    return { active: false, reasonKey: "sameAsParent" };
+  }
+
+  // A child with the parent's slug must have a lower permission.
+  if (
+    parentRole.slug === desiredRole.slug &&
+    getNumericPermission(desiredRole.permission as MycPermission) >=
+      getNumericPermission(parentRole.permission as MycPermission)
+  ) {
+    return { active: false, reasonKey: "notBelowParent" };
+  }
+
+  return { active: true };
 }
 
 function SelectionItem({
   desiredRole,
   parentRole,
+  selected,
   onClick,
   ignoreList,
-  ...props
 }: SelectionItemProps) {
-  const active = useMemo(() => {
-    //
-    // If the role is not in the ignore list, it is active
-    //
-    if (desiredRole?.id && ignoreList?.includes(desiredRole.id)) {
-      return {
-        active: false,
-        reason: "The role is in the ignore list",
-      };
-    }
-
-    //
-    // If there is no parent role, the role is active
-    //
-    if (!parentRole)
-      return {
-        active: true,
-        reason: "No parent role",
-      };
-
-    //
-    // If the parent role is the same as the desired role, the role is not
-    // active
-    //
-    if (parentRole.id === desiredRole.id)
-      return {
-        active: false,
-        reason: "The role is the same as the parent role",
-      };
-
-    //
-    // If the parent role has the same slug as the desired role, and the
-    // permissions are lower or equal, the role is active
-    //
-    if (parentRole.slug === desiredRole.slug) {
-      const desiredRolePermission = getNumericPermission(
-        desiredRole.permission as MycPermission
-      );
-
-      const parentRolePermission = getNumericPermission(
-        parentRole.permission as MycPermission
-      );
-
-      if (desiredRolePermission >= parentRolePermission)
-        return {
-          active: false,
-          reason:
-            "The role has the same slug as the parent role and the permissions are lower or equal",
-        };
-    }
-
-    //
-    // The role is active
-    //
-    return {
-      active: true,
-      reason: "The role is active",
-    };
-  }, [desiredRole, ignoreList, parentRole]);
-
-  const concreteOnClick = useMemo(() => {
-    if (!active) return undefined;
-
-    return () => onClick(desiredRole);
-  }, [active, desiredRole, onClick]);
+  const { t } = useTranslation();
+  const availability = roleAvailability(desiredRole, parentRole, ignoreList);
 
   return (
-    <div
-      title={active.active ? "Click to select" : active.reason}
-      className={selectionItemStyles({ active: active.active })}
-      onClick={concreteOnClick}
-      {...props}
+    <button
+      type="button"
+      role="option"
+      aria-selected={selected}
+      disabled={!availability.active}
+      className={selectionItemStyles({ active: availability.active, selected })}
+      onClick={() => onClick(desiredRole)}
     >
-      <div className="flex flex-col w-full gap-2">
-        <Typography>{desiredRole.name}</Typography>
-        <Typography as="small" decoration="smooth">
-          {desiredRole.description}
-        </Typography>
-      </div>
+      <span className="flex flex-col gap-1 min-w-0">
+        <span className="flex flex-wrap items-center gap-2">
+          <span className="font-medium text-foreground">{desiredRole.name}</span>
+          {desiredRole.slug && (
+            <span className="rounded bg-muted px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground dark:bg-surface-800">
+              {desiredRole.slug}
+            </span>
+          )}
+        </span>
+        {desiredRole.description && (
+          <span className="text-xs text-muted-foreground line-clamp-2">
+            {desiredRole.description}
+          </span>
+        )}
+        {!availability.active && (
+          <span className="text-xs text-amber-700 dark:text-amber-300">
+            {t(`${PREFIX}.unavailable.${availability.reasonKey}`)}
+          </span>
+        )}
+      </span>
 
-      <div className="flex items-center gap-2">
-        <PermissionIcon permission={desiredRole.permission} size="lg" />
-      </div>
-    </div>
+      <span className="flex items-center gap-2 shrink-0">
+        <PermissionBadge permission={desiredRole.permission} />
+        {selected && <Check className="size-4 text-primary dark:text-brand-300" />}
+      </span>
+    </button>
   );
 }
 

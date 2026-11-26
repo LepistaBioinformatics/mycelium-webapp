@@ -1,18 +1,27 @@
 import Sidebar from "@/components/ui/Sidebar";
+import Skeleton from "@/components/ui/Skeleton";
 import useToggleSidebar from "@/hooks/use-toggle-sidebar";
-import { Outlet } from "react-router";
+import { Link, Outlet } from "react-router";
 import Typography from "@/components/ui/Typography";
 import Button from "@/components/ui/Button";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
+import useSWR from "swr";
 import Modal from "@/components/ui/Modal";
 import buildRoutes from "@/constants/routes";
 import useProfile from "@/hooks/use-profile";
 import AppNotifications from "@/components/AppNotifications";
 import RequiredContactInfoBanner from "@/components/RequiredContactInfoBanner";
+import PendingInvitationsBanner from "@/components/PendingInvitationsBanner";
 import MobileNavbar from "@/components/ui/MobileNavbar";
 import { useTranslation } from "react-i18next";
 import { accountsGet } from "@/services/rpc/beginners";
 import { components } from "@/services/openapi/mycelium-schema";
+import {
+  hasRealAccountName,
+  onboardingProgress,
+} from "@/functions/onboarding-progress";
+import isPrivilegedAccount from "@/functions/is-privileged-account";
+import AccountDetails from "./components/Accounts/AccountDetails";
 
 export default function Dashboard() {
   const { t } = useTranslation();
@@ -64,7 +73,10 @@ export default function Dashboard() {
 
       <div className="flex-1 overflow-y-auto scrollbar pb-16 sm:pb-0">
         <RequiredContactInfoBanner />
+        <PendingInvitationsBanner />
         <Outlet />
+        {/* Account details open on top of any page (?accountId=) */}
+        <AccountDetails />
       </div>
 
       <LogoutModal show={showLogoutModal} setShow={setShowLogoutModal} />
@@ -112,77 +124,107 @@ function LogoutModal({
 
 type Account = components["schemas"]["Account"];
 
-// Mirrors Onboarding's required steps: account + locale. `telegram_user` is
-// an optional, uncounted extra there too (see Onboarding/index.tsx).
-const ONBOARDING_TOTAL = 2;
-
-function onboardingSteps(acc: Account | null): number {
-  if (!acc) return 0;
-  const meta = (acc.meta ?? {}) as Record<string, string>;
-  return 1 + (meta.locale ? 1 : 0);
-}
-
 function MainHeader({ isOpen }: { isOpen: boolean }) {
-  const { user, getAccessTokenSilently } = useProfile();
-  const [completedSteps, setCompletedSteps] = useState(0);
+  const { t } = useTranslation();
+  const { user, profile, getAccessTokenSilently } = useProfile();
 
-  useEffect(() => {
-    if (!user?.email) return;
-    accountsGet(getAccessTokenSilently)
-      .then((acc) => setCompletedSteps(onboardingSteps(acc)))
-      .catch(() => {});
-  }, [user?.email, getAccessTokenSilently]);
+  // Same SWR key as the Profile screen, so both share one request
+  const { data: account } = useSWR<Account | null>(
+    user?.email ? "rpc:beginners.accounts.get" : null,
+    () => accountsGet(getAccessTokenSilently),
+    { revalidateOnFocus: false, revalidateOnReconnect: false }
+  );
 
-  const initials = user?.email
-    ? (user.email.username[0] ?? "?").toUpperCase()
-    : "?";
-
-  const pct = Math.round((completedSteps / ONBOARDING_TOTAL) * 100);
-  const sw = 2;
-
-  // SVG ring sized to match the w-4 icon slot (16px) + px-3 sidebar rhythm
-  // Avatar fits inside the 2.5rem (40px) row height
-  const ringSize = 32;
-  const ringCx = ringSize / 2;
-  const ringR = ringCx - sw;
-  const ringCircumference = 2 * Math.PI * ringR;
-  const ringOffset = ringCircumference * (1 - pct / 100);
+  const email = user?.email
+    ? `${user.email.username}@${user.email.domain}`
+    : undefined;
+  const isLoading = account === undefined;
+  const progress = onboardingProgress(
+    account,
+    email,
+    isPrivilegedAccount(profile)
+  );
+  const showProgress = !isLoading && !progress.isComplete;
+  const displayName = hasRealAccountName(account, email)
+    ? account?.name
+    : user?.email?.username;
+  const initials = (displayName?.[0] ?? "?").toUpperCase();
 
   return (
-    <div className="flex items-center px-3 w-full min-h-[2.5rem]">
-      {/* Avatar with progress ring — same slot as nav icons */}
-      <div className="shrink-0 grid" style={{ width: ringSize, height: ringSize }}>
+    <Link
+      to="/dashboard"
+      title={t("Menu.gettingStarted")}
+      className="flex items-center mx-1.5 px-2 w-[calc(100%-0.75rem)] min-h-12 rounded-md transition-colors hover:bg-zinc-200/60 dark:hover:bg-surface-800 outline-none focus-visible:ring-[3px] focus-visible:ring-sidebar-ring/50"
+    >
+      <AvatarWithProgress
+        initials={initials}
+        percent={showProgress ? progress.percent : null}
+      />
+
+      <div
+        className={[
+          "flex flex-col min-w-0",
+          isOpen
+            ? "ml-2.5"
+            : "hidden group-hover/sidebar:flex group-hover/sidebar:ml-2.5",
+        ].join(" ")}
+      >
+        <span className="text-sm font-medium text-foreground truncate">
+          {displayName ?? "…"}
+        </span>
+        {isLoading && <Skeleton className="w-16 mt-1" />}
+        {showProgress && (
+          <span className="text-xs text-muted-foreground">
+            {t("Menu.onboardingProgress", { percent: progress.percent })}
+          </span>
+        )}
+        {!isLoading && !showProgress && (
+          <span className="text-[11px] leading-tight text-muted-foreground truncate">
+            {email}
+          </span>
+        )}
+      </div>
+    </Link>
+  );
+}
+
+/** The user's initial; while onboarding runs, wrapped in a progress ring */
+function AvatarWithProgress({
+  initials,
+  percent,
+}: {
+  initials: string;
+  percent: number | null;
+}) {
+  const ringSize = 32;
+  const strokeWidth = 2;
+  const center = ringSize / 2;
+  const radius = center - strokeWidth;
+  const circumference = 2 * Math.PI * radius;
+
+  return (
+    <div className="shrink-0 grid" style={{ width: ringSize, height: ringSize }}>
+      {percent !== null && (
         <svg
           width={ringSize}
           height={ringSize}
           viewBox={`0 0 ${ringSize} ${ringSize}`}
           style={{ gridArea: "1/1", transform: "scaleX(-1) rotate(-90deg)" }}
+          aria-hidden
         >
-          <circle cx={ringCx} cy={ringCx} r={ringR} fill="none" stroke="currentColor" strokeWidth={sw} className="text-zinc-200 dark:text-zinc-700" />
-          <circle cx={ringCx} cy={ringCx} r={ringR} fill="none" stroke="currentColor" strokeWidth={sw} strokeDasharray={ringCircumference} strokeDashoffset={ringOffset} strokeLinecap="butt" className="text-brand-violet-500 dark:text-brand-violet-400 transition-all duration-500" />
+          <circle cx={center} cy={center} r={radius} fill="none" stroke="currentColor" strokeWidth={strokeWidth} className="text-zinc-200 dark:text-zinc-700" />
+          <circle cx={center} cy={center} r={radius} fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeDasharray={circumference} strokeDashoffset={circumference * (1 - percent / 100)} className="text-primary dark:text-brand-300 transition-all duration-500" />
         </svg>
-        <div style={{ gridArea: "1/1" }} className="flex items-center justify-center">
-          <div className="w-5 h-5 rounded-full bg-brand-violet-500 dark:bg-brand-violet-400 flex items-center justify-center text-white text-xs font-bold select-none">
-            {initials}
-          </div>
+      )}
+      <div style={{ gridArea: "1/1" }} className="flex items-center justify-center">
+        <div
+          className={[
+            "rounded-full bg-brand-100 text-brand-700 dark:bg-brand-900/60 dark:text-brand-200 ring-1 ring-brand-200 dark:ring-brand-700 flex items-center justify-center font-bold select-none",
+            percent !== null ? "size-5 text-xs" : "size-8 text-sm",
+          ].join(" ")}
+        >
+          {initials}
         </div>
-      </div>
-
-      {/* Username + progress — visible when expanded */}
-      <div
-        className={[
-          "flex flex-col min-w-0",
-          isOpen
-            ? "ml-2"
-            : "hidden group-hover/sidebar:flex group-hover/sidebar:ml-2",
-        ].join(" ")}
-      >
-        <span className="text-sm font-medium text-zinc-800 dark:text-zinc-200 truncate">
-          {user?.email?.username ?? "…"}
-        </span>
-        <span className="text-xs text-zinc-500 dark:text-zinc-400">
-          {pct}%
-        </span>
       </div>
     </div>
   );

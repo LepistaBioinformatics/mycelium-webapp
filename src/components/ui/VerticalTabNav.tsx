@@ -54,7 +54,7 @@ export default function VerticalTabNav({
           if (node) updateScrollHint(node);
         }}
         onScroll={(e) => updateScrollHint(e.currentTarget)}
-        className="flex flex-row sm:flex-col border-b sm:border-b-0 sm:border-r border-zinc-200 dark:border-zinc-800 overflow-x-auto sm:overflow-x-visible scrollbar"
+        className="flex flex-row sm:flex-col gap-1 sm:pr-3 border-b sm:border-b-0 sm:border-r border-border overflow-x-auto sm:overflow-x-visible scrollbar"
       >
         {items.map(({ tab, labelKey, icon }) => {
           const isActive = activeTab === tab;
@@ -64,11 +64,11 @@ export default function VerticalTabNav({
               type="button"
               onClick={() => onSelect(tab)}
               className={[
-                "flex items-center gap-2 px-3 py-2.5 text-sm whitespace-nowrap sm:whitespace-normal transition-colors shrink-0 sm:w-full text-left",
-                "border-b-2 sm:border-b-0 sm:border-l-2",
+                "flex items-center gap-2 px-3 py-2 text-sm whitespace-nowrap sm:whitespace-normal transition-colors shrink-0 sm:w-full text-left outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50",
+                "border-b-2 sm:border-b-0 sm:rounded-md",
                 isActive
-                  ? "border-brand-violet-500 dark:border-brand-violet-400 text-brand-violet-700 dark:text-brand-violet-300 bg-brand-violet-50 dark:bg-brand-violet-950"
-                  : "border-transparent text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-zinc-800",
+                  ? "border-primary sm:border-transparent text-brand-800 dark:text-brand-100 bg-card shadow-card font-medium [&_svg]:text-primary dark:[&_svg]:text-infra-400"
+                  : "border-transparent text-muted-foreground hover:text-foreground hover:bg-card/70 dark:hover:bg-surface-800",
               ].join(" ")}
             >
               <span className="shrink-0">{icon}</span>
@@ -82,10 +82,10 @@ export default function VerticalTabNav({
           reveals its thumb on hover, which touch devices never trigger, so
           without this there's no cue that more tabs sit off-screen. */}
       {scrollHint.left && (
-        <div className="sm:hidden pointer-events-none absolute left-0 top-0 bottom-0 w-6 bg-gradient-to-r from-white dark:from-brand-950 to-transparent" />
+        <div className="sm:hidden pointer-events-none absolute left-0 top-0 bottom-0 w-6 bg-linear-to-r from-white dark:from-surface-950 to-transparent" />
       )}
       {scrollHint.right && (
-        <div className="sm:hidden pointer-events-none absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-white dark:from-brand-950 to-transparent" />
+        <div className="sm:hidden pointer-events-none absolute right-0 top-0 bottom-0 w-6 bg-linear-to-l from-white dark:from-surface-950 to-transparent" />
       )}
     </div>
   );

@@ -1,4 +1,5 @@
 import CopyToClipboard from "@/components/ui/CopyToClipboard";
+import Skeleton from "@/components/ui/Skeleton";
 import IntroSection from "@/components/ui/IntroSection";
 import ListItem from "@/components/ui/ListItem";
 import formatEmail from "@/functions/format-email";
@@ -34,7 +35,7 @@ export default function GuestsByEmail({ email }: Props) {
     return `rpc:subscriptionsManager.guests.listLicensedAccountsOfEmail:${formattedEmail}:${tenantInfo.id}`;
   }, [formattedEmail, tenantInfo?.id]);
 
-  const { data } = useSWR<LicensedResource[]>(
+  const { data, isLoading } = useSWR<LicensedResource[]>(
     swrKey,
     async () =>
       guestsListLicensedAccountsOfEmail(
@@ -42,6 +43,32 @@ export default function GuestsByEmail({ email }: Props) {
         getAccessTokenSilently
       )
   );
+
+  if (isLoading) return <Skeleton.ListRows count={2} lines={3} />;
+
+  // Licenses are listed per namespace (the gateway authorizes and filters
+  // by tenant), so without a selected namespace there is nothing to ask for.
+  if (!tenantInfo?.id) {
+    return (
+      <EmptyState
+        title={t("screens.Dashboard.Accounts.AccountDetails.myGuestsNoTenant.title")}
+        description={t(
+          "screens.Dashboard.Accounts.AccountDetails.myGuestsNoTenant.description"
+        )}
+      />
+    );
+  }
+
+  if (!data || data.length === 0) {
+    return (
+      <EmptyState
+        title={t("screens.Dashboard.Accounts.AccountDetails.myGuestsEmpty", {
+          email: formattedEmail,
+          tenant: tenantInfo.name,
+        })}
+      />
+    );
+  }
 
   return (
     <div className="flex flex-col gap-3">
@@ -97,6 +124,25 @@ export default function GuestsByEmail({ email }: Props) {
             </IntroSection>
           </ListItem>
         ))}
+    </div>
+  );
+}
+
+function EmptyState({
+  title,
+  description,
+}: {
+  title: string;
+  description?: string;
+}) {
+  return (
+    <div className="flex flex-col items-center gap-1 rounded-lg border border-dashed border-border px-4 py-8 text-center">
+      <span className="text-sm font-medium text-foreground">{title}</span>
+      {description && (
+        <span className="max-w-sm text-xs text-muted-foreground">
+          {description}
+        </span>
+      )}
     </div>
   );
 }

@@ -157,6 +157,42 @@ export function metaUpdate(
 }
 
 // ---------------------------------------------------------------------------
+// Tokens — notification-scoped strings
+// ---------------------------------------------------------------------------
+
+type NotificationIssuanceOptions =
+  components["schemas"]["NotificationIssuanceOptions"];
+
+export function tokensListNotificationServices(
+  getToken: () => Promise<string>
+): Promise<NotificationIssuanceOptions> {
+  return rpcCall<Record<string, never>, NotificationIssuanceOptions>(
+    "beginners.tokens.listNotificationServices",
+    {},
+    getToken
+  );
+}
+
+export interface TokensCreateNotificationParams {
+  name: string;
+  /** Seconds; capped by `maxConnectionStringTtlInDays` */
+  expiration: number;
+  senderTag: string;
+  tenantId?: string | null;
+}
+
+export function tokensCreateNotification(
+  params: TokensCreateNotificationParams,
+  getToken: () => Promise<string>
+): Promise<CreateTokenResponse> {
+  return rpcCall<TokensCreateNotificationParams, CreateTokenResponse>(
+    "beginners.tokens.createNotification",
+    params,
+    getToken
+  );
+}
+
+// ---------------------------------------------------------------------------
 // Tokens — list own
 // ---------------------------------------------------------------------------
 
@@ -198,3 +234,25 @@ export function tokensDelete(
 
 // Re-export TenantStatus for convenience
 export type { TenantStatus };
+
+// ---------------------------------------------------------------------------
+// Guests — accept own invitation
+// ---------------------------------------------------------------------------
+
+export interface GuestsAcceptInvitationParams {
+  accountId: string;
+  guestRoleName: string;
+  /** 0 = read, 1 = write */
+  permission: number;
+}
+
+export function guestsAcceptInvitation(
+  params: GuestsAcceptInvitationParams,
+  getToken: () => Promise<string>
+): Promise<unknown> {
+  return rpcCall<GuestsAcceptInvitationParams, unknown>(
+    "beginners.guests.acceptInvitation",
+    params,
+    getToken
+  );
+}

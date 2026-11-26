@@ -1,10 +1,11 @@
 import { ReactNode } from "react";
+import Skeleton from "@/components/ui/Skeleton";
 import { useTranslation } from "react-i18next";
 import Typography from "@/components/ui/Typography";
 import { components } from "@/services/openapi/mycelium-schema";
 import { MdManageAccounts, MdOutlineLinkOff, MdContactPhone } from "react-icons/md";
 import { SlOrganization } from "react-icons/sl";
-import { IoOptions, IoSettingsOutline } from "react-icons/io5";
+import { IoOptions } from "react-icons/io5";
 import { ActiveTab } from "./active-tab";
 
 type Profile = components["schemas"]["Profile"];
@@ -13,14 +14,13 @@ const BASE = "screens.Dashboard.Profile.Overview";
 
 const CONTACT_INFO_FIELD_KEYS = [
   "phone_number",
-  "emergency_contact_name",
-  "emergency_contact_phone",
   "job_title",
 ];
 
 interface Props {
   profile: Profile | null;
-  contactInfo: Record<string, string>;
+  /** `undefined` while the account (which holds the contact info) loads. */
+  contactInfo: Record<string, string> | undefined;
   licensedResourcesCount: number;
   tenantsOwnershipCount: number;
   onNavigate: (tab: ActiveTab) => void;
@@ -30,7 +30,7 @@ interface Tile {
   tab: ActiveTab;
   icon: ReactNode;
   labelKey: string;
-  status: string;
+  status: ReactNode;
 }
 
 export default function Overview({
@@ -45,7 +45,7 @@ export default function Overview({
   const telegramLinked = !!profile?.meta?.["telegram_user"];
 
   const contactInfoCount = CONTACT_INFO_FIELD_KEYS.filter(
-    (key) => contactInfo[key]
+    (key) => contactInfo?.[key]
   ).length;
 
   const tiles: Tile[] = [
@@ -76,12 +76,6 @@ export default function Overview({
       status: t(`${BASE}.manage`),
     },
     {
-      tab: ActiveTab.AdvancedOptions,
-      icon: <IoSettingsOutline size={20} />,
-      labelKey: "screens.Dashboard.AdvancedOptionsModal.tabName",
-      status: t(`${BASE}.manage`),
-    },
-    {
       tab: ActiveTab.TelegramIdentity,
       icon: <MdOutlineLinkOff size={20} />,
       labelKey: "screens.Dashboard.TelegramIdentity.tabName",
@@ -91,10 +85,14 @@ export default function Overview({
       tab: ActiveTab.ContactInfo,
       icon: <MdContactPhone size={20} />,
       labelKey: "screens.Dashboard.Profile.ContactInfoSection.tabName",
-      status: t(`${BASE}.contactInfoFieldsFilled`, {
-        count: contactInfoCount,
-        total: CONTACT_INFO_FIELD_KEYS.length,
-      }),
+      status: contactInfo ? (
+        t(`${BASE}.contactInfoFieldsFilled`, {
+          count: contactInfoCount,
+          total: CONTACT_INFO_FIELD_KEYS.length,
+        })
+      ) : (
+        <Skeleton className="w-28 mt-1" />
+      ),
     },
   ];
 
@@ -105,7 +103,7 @@ export default function Overview({
           key={tile.tab}
           type="button"
           onClick={() => onNavigate(tile.tab)}
-          className="flex flex-col gap-1 text-left p-3 rounded-lg border border-brand-600 shadow-sm dark:shadow-none bg-white dark:bg-brand-950 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors"
+          className="flex flex-col gap-1 text-left p-3 rounded-lg border border-border bg-card shadow-xs hover:shadow-card hover:border-brand-600/30 dark:hover:border-brand-400/30 transition-[box-shadow,border-color]"
         >
           <div className="flex items-center gap-2">
             {tile.icon}

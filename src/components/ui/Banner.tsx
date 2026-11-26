@@ -9,7 +9,7 @@ import { IoClose } from "react-icons/io5";
 const { width } = projectVariants;
 
 const styles = cva(
-  "px-2 py-1 text-left text-sm rounded-lg border dark:text-zinc-100 text-zinc-800 bg-white dark:bg-brand-950 w-full",
+  "px-4 py-3 text-left text-sm rounded-lg border dark:text-zinc-100 text-zinc-800 bg-card w-full",
   {
     variants: {
       width,
@@ -21,12 +21,12 @@ const styles = cva(
       },
       intent: {
         error:
-          "border-red-500 dark:border-red-500 bg-red-50 dark:bg-red-900",
-        info: "border-brand-600 dark:border-brand-400 bg-brand-50 dark:bg-brand-900",
+          "border-red-500/40 bg-red-50 dark:bg-red-950/40",
+        info: "border-brand-600/30 dark:border-brand-400/25 bg-brand-50/60 dark:bg-surface-900",
         success:
-          "border-green-500 dark:border-green-500 bg-green-50 dark:bg-green-900",
+          "border-green-500/40 bg-green-50 dark:bg-green-950/40",
         warning:
-          "border-yellow-500 dark:border-yellow-500 bg-yellow-50 dark:bg-yellow-900",
+          "border-amber-500/40 bg-amber-50 dark:bg-amber-950/40",
       },
     },
     defaultVariants: {
@@ -55,7 +55,7 @@ export default function Banner({
 }: Props) {
   return (
     <div className={styles({ intent, width, boxed })} {...props}>
-      <div className="text-lg font-semibold text-zinc-800 dark:text-zinc-100 mb-3 flex items-center justify-between">
+      <div className="text-base font-semibold text-zinc-900 dark:text-zinc-100 mb-2 flex items-center justify-between">
         {title && <div>{title}</div>}
         {closeable && (
           <button onClick={onClose}>

@@ -4,7 +4,6 @@ import PageBody from "@/components/ui/PageBody";
 import Dropdown from "@/components/ui/Dropdown";
 import { useEffect, useMemo, useState } from "react";
 import AccountModal, { AccountModalProps } from "./AccountModal";
-import AccountDetails from "./AccountDetails";
 import PaginatedAccounts, { PaginatedAccountsProps } from "./PaginatedAccounts";
 import useProfile from "@/hooks/use-profile";
 import { useParams, useSearchParams } from "react-router";
@@ -54,6 +53,12 @@ export default function Accounts({ restrictAccountTypeTo }: Props) {
 
   const [searchParams, setSearchParams] = useSearchParams();
 
+  // Arriving with ?accountId= (a link to an account's details) shows only the
+  // details: the list behind them is fetched once the details are closed.
+  const detailsOpen = !!searchParams.get("accountId");
+  const [isListRequested, setIsListRequested] = useState(!detailsOpen);
+  if (!detailsOpen && !isListRequested) setIsListRequested(true);
+
   const { hasAdminPrivileges } = useProfile({
     roles: [MycRole.SubscriptionsManager],
     permissions: [MycPermission.Write],
@@ -91,6 +96,7 @@ export default function Accounts({ restrictAccountTypeTo }: Props) {
   return (
     <div className="p-1 sm:p-5">
       <PaginatedAccounts
+        deferred={!isListRequested}
         tenantId={tenantId ?? ""}
         omitToolbar={!shouldCreateAccount || !tenantId}
         omitNamespaceInfo={!!tenantId}
@@ -195,7 +201,6 @@ export default function Accounts({ restrictAccountTypeTo }: Props) {
         }
       />
 
-      <AccountDetails />
 
       <AccountModal
         isOpen={isNewModalOpen}

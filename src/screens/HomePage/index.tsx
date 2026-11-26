@@ -3,7 +3,7 @@ import { useNavigate, useSearchParams } from "react-router";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
-import { TextInput } from "flowbite-react";
+import { TextInput } from "@/components/ui/Input";
 import { Link } from "react-router";
 import {
   FaArrowCircleDown,
@@ -11,10 +11,11 @@ import {
   FaGithub,
   FaLinkedin,
 } from "react-icons/fa";
-import { MdSecurity, MdSpeed, MdExtension } from "react-icons/md";
+import { MdSecurity, MdSpeed, MdExtension, MdErrorOutline } from "react-icons/md";
 
 import Typography from "@/components/ui/Typography";
 import AppHeader from "@/components/ui/AppHeader";
+import { buttonStyles } from "@/components/ui/button-styles";
 
 import { requestMagicLink, verifyMagicLink } from "@/services/auth/magic-link";
 import { setNotification } from "@/states/notification.state";
@@ -22,6 +23,10 @@ import { useNativeAuthContext } from "@/contexts/NativeAuthContext";
 import { InvalidCodeError } from "@/types/NativeAuth";
 import useProfile from "@/hooks/use-profile";
 import { useAppConfig } from "@/hooks/use-app-config";
+import useHostedLogin from "@/hooks/use-hosted-login";
+import { withBasePath } from "@/functions/with-base-path";
+import CtaButton from "@/components/ui/CtaButton";
+import { KeyRound, LogIn, Mail } from "lucide-react";
 
 type EmailForm = { email: string };
 type CodeForm = { code: string };
@@ -33,6 +38,8 @@ export default function HomePage() {
   const { setAuth } = useNativeAuthContext();
   const { isAuthenticated, isLoadingUser, logout } = useProfile();
   const { appConfig } = useAppConfig();
+  const { isHostedLogin, isMagicLink, isRedirecting, signIn } =
+    useHostedLogin();
 
   const [searchParams, setSearchParams] = useSearchParams();
   const step = (searchParams.get("step") as "email" | "code") ?? "email";
@@ -104,7 +111,7 @@ export default function HomePage() {
   if (isLoadingUser) return null;
 
   return (
-    <div className="bg-white dark:bg-brand-950 min-h-screen flex flex-col">
+    <div className="bg-background min-h-screen flex flex-col">
 
       {/* Full-page logo background — light mode */}
       <div className="fixed inset-0 z-0 dark:hidden bg-[url(/logo-blackwhite.png)] bg-center bg-cover opacity-[0.14]" />
@@ -117,7 +124,7 @@ export default function HomePage() {
       <section className="relative flex flex-1 items-center justify-center min-h-[calc(100vh-4rem)]">
 
         {/* Auth panel */}
-        <div className="relative z-10 w-full max-w-md px-6 flex flex-col gap-8">
+        <div className="relative z-10 w-full max-w-md px-4 flex flex-col gap-6">
 
           {/* Brand */}
           <div className="flex flex-col gap-2 text-center">
@@ -129,7 +136,29 @@ export default function HomePage() {
             </Typography>
           </div>
 
-          {step === "email" && (
+          {/* Forms (magic link) sit in a card; the hosted sign-in is a single
+              link, so it stands on the page without one. */}
+          <div
+            className={
+              isHostedLogin
+                ? "flex flex-col items-center"
+                : "flex flex-col gap-5 rounded-2xl border border-border bg-card p-6 sm:p-8 shadow-raised"
+            }
+          >
+          {isHostedLogin && (
+            <CtaButton
+              variant="link"
+              icon={LogIn}
+              onClick={signIn}
+              loading={isRedirecting}
+            >
+              {isRedirecting
+                ? t("screens.HostedLogin.redirecting")
+                : t("screens.HostedLogin.signIn")}
+            </CtaButton>
+          )}
+
+          {isMagicLink && step === "email" && (
             <form
               onSubmit={emailForm.handleSubmit(onSubmitEmail)}
               className="flex flex-col gap-6"
@@ -140,37 +169,29 @@ export default function HomePage() {
                 autoComplete="email"
                 autoFocus
                 placeholder="you@example.com"
-                className="[&_input]:text-2xl [&_input]:py-6 [&_input]:px-5 [&_input]:rounded-lg [&_input]:bg-white/90 [&_input]:dark:bg-brand-950/90 [&_input]:border-2 [&_input]:border-brand-600 [&_input]:shadow-neo [&_input]:focus:border-infra-400 [&_input]:focus:ring-0 [&_input]:focus:shadow-neo-hover"
+                prominent
                 {...emailForm.register("email", { required: true })}
               />
-              <button
+              <CtaButton
                 type="submit"
-                disabled={emailForm.formState.isSubmitting}
-                className="
-                  w-full py-4 px-6 text-lg font-mono uppercase tracking-wide
-                  rounded-lg border border-brand-600 transition-all duration-200
-                  bg-brand-800 hover:bg-brand-700 text-white
-                  disabled:opacity-50 disabled:cursor-not-allowed
-                  shadow-neo hover:shadow-neo-hover hover:-translate-x-0.5 hover:-translate-y-0.5
-                  focus:outline-none focus:ring-2 focus:ring-infra-400 focus:ring-offset-2
-                  dark:focus:ring-offset-brand-950
-                "
+                icon={Mail}
+                loading={emailForm.formState.isSubmitting}
               >
                 {emailForm.formState.isSubmitting
                   ? t(`${tHome}.auth.sending`)
                   : t("screens.LoginPage.emailStep.submit")}
-              </button>
+              </CtaButton>
             </form>
           )}
 
-          {step === "code" && (
+          {isMagicLink && step === "code" && (
             <form
               onSubmit={codeForm.handleSubmit(onSubmitCode)}
               className="flex flex-col gap-6"
             >
-              <p className="text-sm text-center text-zinc-500 dark:text-zinc-400">
+              <p className="text-sm text-center text-muted-foreground">
                 {t("screens.LoginPage.codeStep.instruction")}{" "}
-                <span className="text-brand-violet-600 dark:text-brand-violet-400 font-medium">
+                <span className="text-primary dark:text-brand-300 font-medium">
                   {submittedEmail}
                 </span>
               </p>
@@ -183,7 +204,8 @@ export default function HomePage() {
                 autoComplete="one-time-code"
                 autoFocus
                 placeholder="000000"
-                className="[&_input]:text-3xl [&_input]:tracking-[0.5em] [&_input]:text-center [&_input]:font-mono [&_input]:py-6 [&_input]:rounded-lg [&_input]:bg-white/90 [&_input]:dark:bg-brand-950/90 [&_input]:border-2 [&_input]:border-brand-600 [&_input]:shadow-neo [&_input]:focus:border-infra-400 [&_input]:focus:ring-0 [&_input]:focus:shadow-neo-hover"
+                prominent
+                className="[&_input]:text-2xl [&_input]:tracking-[0.5em] [&_input]:text-center [&_input]:font-mono"
                 {...codeForm.register("code", {
                   required: true,
                   pattern: /^[0-9]{6}$/,
@@ -194,48 +216,35 @@ export default function HomePage() {
                   {t("screens.LoginPage.codeStep.invalidCode")}
                 </p>
               )}
-              <button
+              <CtaButton
                 type="submit"
-                disabled={codeForm.formState.isSubmitting}
-                className="
-                  w-full py-4 px-6 text-lg font-mono uppercase tracking-wide
-                  rounded-lg border border-brand-600 transition-all duration-200
-                  bg-brand-800 hover:bg-brand-700 text-white
-                  disabled:opacity-50 disabled:cursor-not-allowed
-                  shadow-neo hover:shadow-neo-hover hover:-translate-x-0.5 hover:-translate-y-0.5
-                  focus:outline-none focus:ring-2 focus:ring-infra-400 focus:ring-offset-2
-                  dark:focus:ring-offset-brand-950
-                "
+                icon={KeyRound}
+                loading={codeForm.formState.isSubmitting}
               >
                 {codeForm.formState.isSubmitting
                   ? t(`${tHome}.auth.verifying`)
                   : t("screens.LoginPage.codeStep.submit")}
-              </button>
+              </CtaButton>
               <button
                 type="button"
                 onClick={handleBack}
-                className="
-                  w-full py-3 px-6 text-sm font-medium
-                  transition-colors duration-200
-                  text-zinc-500 dark:text-zinc-400
-                  hover:text-zinc-900 dark:hover:text-zinc-200
-                  focus:outline-none
-                "
+                className={buttonStyles({ intent: "link", size: "sm", fullWidth: true })}
               >
                 {t("screens.LoginPage.codeStep.back")}
               </button>
             </form>
           )}
+          </div>
         </div>
       </section>
 
       {/* ── Scroll hint ───────────────────────────────────────────────────── */}
       <div className="flex justify-center py-6">
-        <FaArrowCircleDown className="text-xl animate-bounce text-zinc-400 dark:text-zinc-600" />
+        <FaArrowCircleDown className="text-xl animate-bounce text-muted-foreground/60" />
       </div>
 
       {/* ── Features ──────────────────────────────────────────────────────── */}
-      <section className="relative z-10 bg-zinc-100 dark:bg-brand-900 px-6 py-20 border-t border-brand-600">
+      <section className="relative z-10 bg-muted/70 dark:bg-surface-900/80 px-6 py-20 border-t border-border backdrop-blur-sm">
         <div className="max-w-5xl mx-auto flex flex-col gap-12">
           <Typography as="h2" center decoration="bold">
             {t(`${tHome}.features.title`)}
@@ -243,17 +252,17 @@ export default function HomePage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
             <FeatureCard
-              icon={<MdSecurity className="text-3xl text-brand-violet-500" />}
+              icon={<MdSecurity className="size-6" />}
               title={t(`${tHome}.features.security.title`)}
               description={t(`${tHome}.features.security.description`)}
             />
             <FeatureCard
-              icon={<MdSpeed className="text-3xl text-brand-violet-500" />}
+              icon={<MdSpeed className="size-6" />}
               title={t(`${tHome}.features.performance.title`)}
               description={t(`${tHome}.features.performance.description`)}
             />
             <FeatureCard
-              icon={<MdExtension className="text-3xl text-brand-violet-500" />}
+              icon={<MdExtension className="size-6" />}
               title={t(`${tHome}.features.extensibility.title`)}
               description={t(`${tHome}.features.extensibility.description`)}
             />
@@ -262,17 +271,17 @@ export default function HomePage() {
       </section>
 
       {/* ── Footer ────────────────────────────────────────────────────────── */}
-      <footer className="relative z-10 bg-white dark:bg-brand-950 px-6 py-12 border-t border-brand-600">
+      <footer className="relative z-10 bg-card px-6 py-12 border-t border-border">
         <div className="max-w-5xl mx-auto flex flex-col sm:flex-row justify-between gap-8">
           <div className="flex flex-col gap-5">
             <div className="flex items-center gap-3">
               <img
-                src="/logo-icon-square.png"
+                src={withBasePath("logo-icon-square.png")}
                 alt="MAG"
                 className="hidden dark:block w-7 h-7 object-contain"
               />
               <img
-                src="/logo-blackwhite.png"
+                src={withBasePath("logo-blackwhite.png")}
                 alt="MAG"
                 className="block dark:hidden w-7 h-7 object-contain opacity-80"
               />
@@ -290,15 +299,23 @@ export default function HomePage() {
               <FooterLink href="https://github.com/LepistaBioinformatics/mycelium-webapp" icon={<FaGithub />}>
                 MyWAPP on GitHub
               </FooterLink>
-              <FooterLink href="https://lepistabioinformatics.github.io/mycelium-docs/" icon={<FaBookOpen />}>
+              <FooterLink href="https://lepistabioinformatics.github.io/mycelium/" icon={<FaBookOpen />}>
                 Documentation
               </FooterLink>
+              <Link
+                to="/error-codes"
+                className="flex gap-2 items-center text-sm text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <MdErrorOutline />
+                {t("screens.PublicErrorCodes.footerLink")}
+              </Link>
             </div>
           </div>
 
           <div className="flex flex-col justify-end">
             <Typography as="p" decoration="smooth">
-              {appConfig?.domainName ?? t(`${tHome}.hero.name`)} &copy; 2025
+              {appConfig?.domainName ?? t(`${tHome}.hero.name`)} &copy;{" "}
+              {new Date().getFullYear()}
             </Typography>
           </div>
         </div>
@@ -317,18 +334,11 @@ interface FeatureCardProps {
 
 function FeatureCard({ icon, title, description }: FeatureCardProps) {
   return (
-    <div className="
-      flex flex-col gap-4 p-6
-      rounded-lg bg-white border border-brand-600 shadow-neo
-      dark:bg-brand-950
-    ">
-      <div className="
-        w-12 h-12 flex items-center justify-center
-        bg-brand-violet-50 dark:bg-brand-violet-950
-      ">
+    <div className="flex flex-col gap-4 p-6 rounded-xl border border-border bg-card shadow-card transition-shadow hover:shadow-raised">
+      <div className="size-12 flex items-center justify-center rounded-lg border border-brand-200 bg-brand-100 text-brand-700 dark:border-brand-700 dark:bg-brand-900/60 dark:text-brand-200">
         {icon}
       </div>
-      <Typography as="h5" decoration="bold">{title}</Typography>
+      <Typography as="h5" decoration="semibold">{title}</Typography>
       <Typography as="p" decoration="smooth">{description}</Typography>
     </div>
   );
@@ -347,12 +357,7 @@ function FooterLink({ href, icon, children }: FooterLinkProps) {
     <Link
       to={href}
       target="_blank"
-      className="
-        flex gap-2 items-center text-sm
-        text-zinc-500 dark:text-zinc-500
-        hover:text-brand-violet-600 dark:hover:text-brand-violet-400
-        transition-colors
-      "
+      className="flex gap-2 items-center text-sm text-muted-foreground hover:text-foreground transition-colors"
     >
       {icon}
       {children}

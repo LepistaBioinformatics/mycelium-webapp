@@ -53,20 +53,12 @@
           "staff": "Usuário da equipe",
           "manager": "Usuário gerente"
         },
-        "createConnectionString": {
-          "cta": "Opções avançadas",
-          "title": "Criar string de conexão global",
-          "description": "As strings de conexão globais fornecem acesso total à sua conta. Essa string de conexão será usada para autenticar sua conta programaticamente.",
-          "button": "Criar"
-        },
         "email": {
           "prefix": "E-mail",
           "title": "Seu e-mail"
         },
         "personalInfo": {
-          "phoneNumber": "Telefone",
-          "emergencyContactName": "Contato de emergência",
-          "emergencyContactPhone": "Telefone de emergência"
+          "phoneNumber": "Telefone"
         },
         "ContactInfoSection": {
           "tabName": "Informações de contato",
@@ -83,14 +75,6 @@
             "title": "Cargo",
             "placeholder": "ex: Líder de Infraestrutura"
           },
-          "emergencyContactName": {
-            "title": "Nome do contato de emergência",
-            "description": "Alguém que possamos contatar em seu nome, se necessário.",
-            "placeholder": "Nome completo"
-          },
-          "emergencyContactPhone": {
-            "title": "Telefone do contato de emergência"
-          },
           "save": "Salvar",
           "saving": "Salvando...",
           "error": "Alguns campos falharam ao salvar"
@@ -98,15 +82,7 @@
       },
       "AdvancedOptionsModal": {
         "title": "Criar string de conexão",
-        "tabName": "Opções avançadas",
-        "accountId": "Restrito a conta",
-        "accountIdDescription": "A string de conexão será restrita à conta com o ID.",
-        "tenantId": "Restrito ao inquilino",
-        "tenantIdDescription": "A string de conexão será restrita ao inquilino com o ID.",
-        "permissionedRoles": "Papéis e permissões",
-        "permissionedRolesDescription": "A string de conexão será restrita aos papéis e permissões selecionados.",
-        "removeRole": "Não incluir esse papel no filtro",
-        "explain": "A string de conexão será restrita a conta, tenant, papéis e permissões selecionados nessa etapa. Para verificar se o token gerado possui o escopo adequado, utilize ferramentas como base64decode.org",
+        "explain": "Uma connection string permite que um script ou outro serviço chame o gateway em seu nome. Ela carrega apenas o escopo listado abaixo, até expirar.",
         "form": {
           "expiration": {
             "label": "Selecionar expiração",
@@ -147,6 +123,27 @@
             "serviceAccount": "Conta de serviço",
             "roles": "Papéis",
             "expiresAt": "Expira em"
+          }
+        },
+        "scope": {
+          "title": "O que esta connection string pode acessar",
+          "description": "As requisições feitas com ela ficam limitadas a:",
+          "unrestricted": "Nenhuma restrição se aplica: esta connection string carrega todas as suas permissões atuais. Crie-a a partir de um namespace ou de uma conta para restringi-la.",
+          "tenant": {
+            "label": "Namespace",
+            "hint": "Só são aceitas requisições para este namespace."
+          },
+          "account": {
+            "label": "Conta",
+            "hint": "Ela atua somente sobre esta conta."
+          },
+          "roles": {
+            "label": "Papéis",
+            "count": "{{included}} de {{total}} incluídos",
+            "hint": "Só os papéis selecionados entram na connection string. Clique em um papel para deixá-lo de fora.",
+            "noneSelected": "Selecione pelo menos um papel.",
+            "remove": "Deixar {{role}} de fora",
+            "include": "Incluir {{role}}"
           }
         }
       },
@@ -247,8 +244,13 @@
           "account": "Conta",
           "serviceAccount": "Conta de serviço",
           "roles": "Papéis",
-          "endpoint": "Endpoint"
-        }
+          "endpoint": "Endpoint",
+          "service": "Serviço autorizado a enviar com esta string",
+          "serviceTag": "serviço: {{service}}"
+        },
+        "issueNotification": "String de notificação",
+        "create": "Criar connection string",
+        "description": "Strings permitem que scripts e serviços chamem o gateway em seu nome, limitadas ao escopo que você escolher."
       },
       "LicensedResourcesSection": {
         "title": "Contas que você tem acesso",
@@ -267,7 +269,8 @@
           "title": "Permissão atribuída a você",
           "prefix": "Você pode"
         },
-        "verified": "Verificado"
+        "verified": "Verificado",
+        "pending": "Pendente — aceite o convite"
       },
       "TelegramConfig": {
         "title": "Integração com Telegram",
@@ -649,6 +652,10 @@
               "desctiption": "Remover o convite irá remover os acessos do usuário convidado.",
               "confirm": "Prosseguir"
             }
+          },
+          "unverified": {
+            "label": "Não verificado",
+            "title": "O convidado ainda não confirmou este convite"
           }
         },
         "AccountDetails": {
@@ -718,6 +725,11 @@
           "yourPermissions": {
             "title": "Suas permissões",
             "prefix": "Suas permissões"
+          },
+          "myGuestsEmpty": "{{email}} não tem convites em {{tenant}}",
+          "myGuestsNoTenant": {
+            "title": "Selecione um namespace para ver os convites",
+            "description": "Os convites são listados por namespace. Marque um namespace com a estrela na tela de Namespaces para ver os convites deste usuário nele."
           }
         },
         "PermissionsOnAccount": {
@@ -766,26 +778,41 @@
           "title": "Convide um usuário",
           "form": {
             "email": {
-              "label": "1. Com esse e-mail",
+              "label": "E-mail",
               "placeholder": "exemplo@email.com",
-              "title": "O endereço de e-mail do usuário convidado. O usuário será notificado por e-mail sobre o convite"
+              "title": "O endereço de e-mail do usuário convidado. O usuário será notificado por e-mail sobre o convite",
+              "invalid": "Digite um e-mail válido"
             },
             "account": {
-              "label": "2. Para essa conta",
+              "label": "Convidar para",
               "title": "A conta para convidar o usuário"
             },
             "role": {
-              "label": "3. Com essa função",
+              "label": "Papel",
               "title": "A função do usuário convidado"
             },
-            "invite": "Convidar"
+            "invite": "Enviar convite"
+          },
+          "steps": {
+            "label": "Etapas do convite",
+            "email": "E-mail",
+            "role": "Papel"
+          },
+          "continue": "Continuar",
+          "back": "Voltar",
+          "changeEmail": "Alterar",
+          "sending": "Enviando…",
+          "errors": {
+            "missingTenant": "Selecione um namespace antes de convidar para esta conta",
+            "generic": "Não foi possível enviar o convite"
           }
         },
         "DeleteAccount": {
           "title": "Deletar conta",
           "description": "Deletar a conta irá remover todos os dados da conta e não poderá ser revertido.",
           "delete": "Deletar",
-          "deleting": "Deletando..."
+          "deleting": "Deletando...",
+          "deleted": "Conta {{name}} excluída"
         },
         "UnInviteGuestModal": {
           "title": "Remover convite",
@@ -917,9 +944,27 @@
         "GuestRoleSelector": {
           "label": "Papel filho",
           "title": "Selecione um papel filho",
-          "placeholder": "Selecione um papel filho",
-          "loading": "Carregando...",
-          "button": "Clique para selecionar"
+          "placeholder": "Busque papéis pelo nome…",
+          "change": "Trocar",
+          "empty": "Nenhum papel corresponde à busca",
+          "permissions": {
+            "read": "Leitura",
+            "write": "Escrita"
+          },
+          "unavailable": {
+            "ignored": "Já atribuído",
+            "sameAsParent": "Igual ao papel pai",
+            "notBelowParent": "Precisa ter permissão menor que a do papel pai"
+          }
+        },
+        "initializer": {
+          "button": "Papéis de sistema",
+          "title": "Inicializar papéis de sistema",
+          "description": "Cria os papéis de convidado nativos do gateway, um com permissão de leitura e outro de escrita para cada ator abaixo. Managers os usam para delegar a administração do gateway.",
+          "idempotent": "Papéis que já existem são mantidos como estão, então executar de novo é seguro.",
+          "confirm": "Inicializar",
+          "cancel": "Cancelar",
+          "success": "Papéis de sistema prontos"
         }
       },
       "ErrorCodes": {
@@ -931,6 +976,18 @@
         "native": "Nativo",
         "yes": "Sim",
         "no": "Não"
+      },
+      "Discovery": {
+        "filters": {
+          "origin": "Origem",
+          "hideGateway": "Ocultar endpoints do gateway",
+          "hideGatewayDescription": "Remove as operações do próprio API gateway e lista só os serviços downstream",
+          "method": "Método HTTP"
+        }
+      },
+      "WebhookExecutions": {
+        "title": "Execuções de webhooks",
+        "searchPlaceholder": "Filtre com status:failed ou trigger:userAccount.created"
       },
       "Webhooks": {
         "title": "Webhooks",
@@ -1043,6 +1100,40 @@
           "description": "Tem certeza que deseja deletar o webhook?",
           "button": "Deletar",
           "loading": "Deletando..."
+        },
+        "ExecutionEvents": {
+          "title": "Eventos de execução",
+          "summaryTitle": "Totais por gatilho e status",
+          "eventsTitle": "Eventos",
+          "empty": "Nenhum evento de execução ainda.",
+          "loadError": "Não foi possível carregar os eventos de execução.",
+          "deliveries": "{{failed}} com falha de {{total}}",
+          "filters": {
+            "trigger": "Filtrar por gatilho",
+            "status": "Filtrar por status",
+            "allTriggers": "Todos os gatilhos",
+            "allStatuses": "Todos os status"
+          },
+          "columns": {
+            "trigger": "Gatilho",
+            "status": "Status",
+            "count": "Eventos",
+            "latest": "Mais recente",
+            "created": "Criado em",
+            "attempts": "Tentativas",
+            "deliveries": "Entregas",
+            "lastResponse": "Última resposta",
+            "attempted": "Última tentativa"
+          },
+          "statuses": {
+            "pending": "Pendente",
+            "processing": "Processando",
+            "success": "Sucesso",
+            "failed": "Falhou",
+            "exhausted": "Esgotado",
+            "skipped": "Ignorado",
+            "unknown": "Desconhecido"
+          }
         }
       },
       "Onboarding": {
@@ -1063,12 +1154,6 @@
           "complete": "Conta criada"
         },
         "meta": {
-          "telegram": {
-            "title": "Telegram",
-            "linkHint": "Opcional — conecte o Telegram para entrar e receber notificações pelo bot.",
-            "linkedHint": "Telegram conectado.",
-            "button": "Conectar Telegram"
-          },
           "locale": {
             "title": "Idioma preferido",
             "description": "Define o idioma do painel e dos e-mails do sistema.",
@@ -1079,7 +1164,199 @@
         "saving": "Salvando...",
         "saved": "Salvo",
         "edit": "Editar informações",
-        "error": "Erro inesperado"
+        "error": "Erro inesperado",
+        "name": {
+          "title": "Seu nome",
+          "description": "Como as pessoas vão ver você no portal e nos convites.",
+          "label": "Nome completo",
+          "placeholder": "ex.: Ana Silva"
+        },
+        "contact": {
+          "title": "Contato profissional",
+          "requiredDescription": "Seu papel tem privilégios elevados, então precisamos de uma forma de falar com você caso algo exija sua atenção.",
+          "optionalDescription": "Opcional — ajuda os administradores a falarem com você caso algo exija sua atenção.",
+          "phone": "Telefone",
+          "jobTitle": "Cargo",
+          "jobTitlePlaceholder": "ex.: Líder de Infraestrutura"
+        }
+      },
+      "Federation": {
+        "title": "Federação",
+        "tabs": {
+          "peers": "Pares",
+          "links": "Vínculos de identidade",
+          "assertions": "Asserções armazenadas",
+          "translations": "Regras de tradução"
+        },
+        "peer": "Par",
+        "actions": "Ações",
+        "cancel": "Cancelar",
+        "working": "Processando ...",
+        "done": "Concluído",
+        "loadError": "Não foi possível carregar os dados. Tente novamente mais tarde.",
+        "empty": "Nada por aqui ainda.",
+        "permissions": {
+          "read": "Leitura",
+          "write": "Escrita"
+        },
+        "statuses": {
+          "declared": "Declarado",
+          "handshaking": "Em handshake",
+          "active": "Ativo",
+          "degraded": "Degradado",
+          "unreachable": "Inacessível",
+          "quarantined": "Em quarentena",
+          "untrusted": "Não confiável",
+          "pending": "Pendente",
+          "revoked": "Revogado",
+          "enabled": "Ativada",
+          "disabled": "Desativada"
+        },
+        "Peers": {
+          "title": "Pares da federação",
+          "columns": {
+            "name": "Nome",
+            "baseUrl": "URL base",
+            "instanceId": "ID da instância",
+            "status": "Status",
+            "kinds": "Tipos negociados",
+            "lastContact": "Último contato",
+            "failures": "Falhas"
+          },
+          "quarantine": "Quarentena",
+          "release": "Liberar",
+          "quarantineTitle": "Colocar par em quarentena",
+          "quarantineDescription": "Colocar {{name}} em quarentena? Suas requisições são recusadas e as asserções armazenadas dele são descartadas até a liberação.",
+          "releaseTitle": "Liberar par",
+          "releaseDescription": "Liberar {{name}} da quarentena? Ele passa por um novo handshake antes de ser confiável.",
+          "switch": {
+            "title": "Chave da federação",
+            "description": "Liga ou desliga a federação nesta instância. Desligar é o kill-switch: a instância deixa de responder aos pares e recusa toda requisição de par. O gateway não informa o estado atual, então só o resultado de uma mudança feita aqui é exibido.",
+            "turnOn": "Ligar",
+            "turnOff": "Desligar",
+            "turnOnTitle": "Ligar a federação",
+            "turnOnDescription": "Ligar a federação? O gateway recusa enquanto a federação não estiver configurada.",
+            "turnOffTitle": "Desligar a federação",
+            "turnOffDescription": "Desligar a federação? Toda requisição de par é recusada até que ela seja ligada de novo.",
+            "nowOn": "A federação foi ligada ({{date}}).",
+            "nowOff": "A federação foi desligada ({{date}})."
+          }
+        },
+        "Links": {
+          "title": "Vínculos de identidade",
+          "columns": {
+            "email": "E-mail local",
+            "status": "Status",
+            "established": "Estabelecido",
+            "revoked": "Revogado"
+          },
+          "revoke": "Revogar",
+          "revokeTitle": "Revogar vínculo de identidade",
+          "revokeDescription": "Revogar o vínculo de identidade de {{email}}? As concessões declaradas por ele deixam de valer."
+        },
+        "Assertions": {
+          "title": "Asserções armazenadas",
+          "columns": {
+            "link": "Vínculo",
+            "kind": "Tipo",
+            "issued": "Emitida",
+            "expires": "Expira",
+            "grants": "Concessões"
+          }
+        },
+        "Translations": {
+          "title": "Regras de tradução",
+          "description": "Uma regra transforma uma concessão do par (tenant, papel e permissão mínima do emissor) em uma concessão de convidado local em uma conta local.",
+          "columns": {
+            "issuerTenant": "Tenant do emissor",
+            "issuerRole": "Papel do emissor",
+            "issuerMinPerm": "Permissão mín. do emissor",
+            "localAccount": "Conta local",
+            "localRole": "Papel de convidado local",
+            "localPerm": "Permissão local",
+            "enabled": "Ativada"
+          },
+          "create": "Criar regra",
+          "enable": "Ativar",
+          "disable": "Desativar",
+          "delete": "Excluir",
+          "enableTitle": "Ativar regra",
+          "enableDescription": "Ativar a regra do papel {{role}}? Ela vale a partir da próxima requisição.",
+          "disableTitle": "Desativar regra",
+          "disableDescription": "Desativar a regra do papel {{role}}? Ela deixa de valer na próxima requisição.",
+          "deleteTitle": "Excluir regra",
+          "deleteDescription": "Excluir a regra do papel {{role}}? Isso não pode ser desfeito.",
+          "CreateRule": {
+            "title": "Criar regra de tradução",
+            "description": "Escolha um par, depois a concessão do emissor a casar e a concessão local que ela vira.",
+            "peer": "Par",
+            "choosePeer": "Escolha um par",
+            "issuerRole": "Papel do emissor",
+            "issuerRoleHint": "O slug do papel no par",
+            "chooseRole": "Escolha um papel",
+            "issuerRolePlaceholder": "Slug do papel, ex.: editor",
+            "loadingRoles": "Carregando os papéis do par ...",
+            "rolesUnknown": "O par não compartilha seu vocabulário de papéis agora. Digite o slug do papel.",
+            "rolesRejected": "O vocabulário de papéis do par falhou na verificação ({{reason}}). Digite o slug do papel.",
+            "rolesError": "Não foi possível ler os papéis do par ({{reason}}). Digite o slug do papel.",
+            "issuerTenant": "ID do tenant do emissor",
+            "issuerMinPerm": "Permissão mínima do emissor",
+            "localAccount": "ID da conta local",
+            "localAccountHint": "Uma conta de tenant local; contas de sistema são recusadas",
+            "localRole": "Papel de convidado local",
+            "localRoleRequired": "Escolha um papel de convidado local.",
+            "localPerm": "Permissão local",
+            "required": "Obrigatório",
+            "invalidUuid": "Deve ser um UUID",
+            "submit": "Criar",
+            "created": "Regra de tradução criada"
+          }
+        },
+        "unavailable": {
+          "title": "A federação não está disponível neste gateway",
+          "description": "Esta instância foi compilada sem federação, então não pode participar de uma rede de peers. A federação não é suportada no modo standalone; ela exige um build full ou postgres-only com a feature de federação."
+        }
+      },
+      "NotificationConnectionString": {
+        "title": "Connection string de notificação",
+        "description": "Um serviço downstream usa esta string para enviar emails com templates pelo Mycelium. Ela só envia notificações do serviço escolhido.",
+        "form": {
+          "name": "Nome",
+          "service": "Serviço",
+          "tenant": "Namespace",
+          "noTenant": "Sem namespace",
+          "tenantRequired": "Este serviço só envia emails para membros de um namespace, então escolha um.",
+          "expiration": "Expiração",
+          "days_one": "{{count}} dia",
+          "days_other": "{{count}} dias",
+          "expirationCap_one": "Esta instância permite no máximo {{count}} dia.",
+          "expirationCap_other": "Esta instância permite no máximo {{count}} dias.",
+          "create": "Criar"
+        },
+        "issued": {
+          "warningTitle": "Copie agora: ela não será mostrada de novo",
+          "warning": "Este é um segredo de longa duração. Guarde-o no cofre de segredos do serviço downstream. Ele só envia notificações deste serviço e não funciona em nenhum outro lugar do gateway.",
+          "label": "Connection string de notificação",
+          "copy": "Copiar",
+          "copied": "Copiado",
+          "done": "Concluir"
+        },
+        "errors": {
+          "invalidRequest": "A expiração passa do limite da instância, ou este serviço exige um namespace.",
+          "notificationsDisabled": "As notificações não estão habilitadas para este serviço.",
+          "issuerNotAllowed": "Você não tem permissão para emitir strings de notificação para este serviço ou namespace."
+        }
+      },
+      "PendingInvitationsSection": {
+        "tabName": "Convites",
+        "title": "Convites pendentes",
+        "description": "Você foi convidado a colaborar nestas contas. Aceite um convite para começar a usar o acesso que ele concede.",
+        "tenant": "Namespace",
+        "accept": "Aceitar",
+        "accepting": "Aceitando…",
+        "accepted": "Convite aceito. O novo acesso pode levar até um minuto para ser aplicado.",
+        "empty": "Nenhum convite pendente",
+        "emptyDescription": "Quando um gestor de conta convidar o seu email para uma conta, o convite aparece aqui."
       }
     },
     "LoginPage": {
@@ -1096,20 +1373,39 @@
         "invalidCode": "Código inválido ou expirado",
         "back": "Voltar"
       }
+    },
+    "HostedLogin": {
+      "signIn": "Entrar no portal",
+      "redirecting": "Redirecionando para o login…",
+      "startError": "Não foi possível iniciar o login. Tente novamente.",
+      "callback": {
+        "signingIn": "Entrando…",
+        "failed": "Não foi possível entrar",
+        "failedDetail": "O link de acesso é inválido, expirou ou foi aberto em outro navegador.",
+        "retry": "Tentar novamente"
+      }
+    },
+    "PublicErrorCodes": {
+      "title": "Códigos de erro",
+      "description": "Consulte um erro retornado por este gateway ou por seus serviços. Busque pelo código (MYC00023), prefixo (MYC) ou número (23).",
+      "searchPlaceholder": "Busque pelo código, ex.: MYC00023",
+      "back": "Início",
+      "empty": "Nenhum código de erro corresponde à busca",
+      "unavailable": "Não foi possível carregar os códigos de erro agora",
+      "footerLink": "Códigos de erro",
+      "loginLink": "Recebeu um código de erro? Consulte aqui"
     }
   },
   "components": {
     "SearchBar": {
       "placeholder": "Pesquise resultados...",
+      "removeFilter": "Remover filtro {{filter}}",
+      "clearFilters": "Limpar filtros",
+      "refinePlaceholder": "Refine com um termo de busca…",
       "clear": "Limpar busca",
       "commandPalette": {
         "title": "Filtros"
       }
-    },
-    "Pager": {
-      "records": "{{number}} resultados",
-      "prev": "Anterior",
-      "next": "Próximo"
     },
     "RequiredContactInfoBanner": {
       "title": "Complete suas informações de contato",
@@ -1125,6 +1421,32 @@
         "title": "Atualizado por",
         "prefix": "Atualizado por"
       }
+    },
+    "Skeleton": {
+      "loading": "Carregando…"
+    },
+    "GatewayUnavailableOverlay": {
+      "title": "Serviço indisponível",
+      "description": "Não conseguimos falar com a API do Mycelium agora. O portal fica pausado para não mostrar informações erradas e volta sozinho assim que a conexão for restabelecida.",
+      "retry": "Tentar agora",
+      "retrying": "Verificando…"
+    },
+    "AccountName": {
+      "serviceAccount": "Conta de serviço",
+      "tenantManager": "Gestão do namespace",
+      "role": "Papel {{role}}",
+      "actor": "{{actor}}"
+    },
+    "LoadMore": {
+      "showing": "Mostrando {{loaded}} de {{total}}",
+      "button": "Carregar mais",
+      "loading": "Carregando…"
+    },
+    "PendingInvitationsBanner": {
+      "title_one": "Você tem {{count}} convite pendente",
+      "title_other": "Você tem {{count}} convites pendentes",
+      "description": "Revise as contas para as quais você foi convidado e aceite os convites que você esperava.",
+      "button": "Ver convites"
     }
   },
   "Menu": {
@@ -1138,8 +1460,12 @@
     "accounts": "Contas",
     "guestRoles": "Papéis de convidado",
     "webhooks": "Webhooks",
+    "webhookExecutions": "Execuções de webhooks",
     "errorCodes": "Códigos de erro",
     "operations": "Operações",
-    "dashboard": "Dashboard"
+    "dashboard": "Dashboard",
+    "federation": "Federação",
+    "gettingStarted": "Primeiros passos",
+    "onboardingProgress": "{{percent}}% configurado"
   }
 }

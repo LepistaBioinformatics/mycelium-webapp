@@ -7,7 +7,7 @@ import useProfile from "@/hooks/use-profile";
 import useSuspenseError from "@/hooks/use-suspense-error";
 import { components } from "@/services/openapi/mycelium-schema";
 import { metaCreate } from "@/services/rpc/tenantOwner";
-import { TextInput } from "flowbite-react";
+import { TextInput } from "@/components/ui/Input";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
@@ -107,17 +107,7 @@ export default function EditMetadataModal({
               placeholder="Value of your metadata"
               sizing="lg"
               autoFocus
-              color="custom"
-              theme={{
-                field: {
-                  input: {
-                    colors: {
-                      custom:
-                        "border-brand-600 bg-brand-violet-50 text-zinc-900 focus:border-infra-400 focus:ring-zinc-500 dark:bg-brand-950 dark:text-white placeholder-zinc-500 dark:placeholder-zinc-400 dark:focus:border-brand-violet-500 dark:focus:ring-brand-violet-500",
-                    },
-                  },
-                },
-              }}
+             
               {...register("value")}
             />
             {errors.value && <span>This field is required</span>}

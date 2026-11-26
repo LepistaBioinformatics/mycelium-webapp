@@ -4,9 +4,14 @@
 export enum ActiveTab {
   Overview = "overview",
   LicensedResources = "licensedResources",
+  Invitations = "invitations",
   TenantOwnership = "tenantOwnership",
   ListConnectionStrings = "listConnectionStrings",
-  AdvancedOptions = "advancedOptions",
   TelegramIdentity = "telegramIdentity",
   ContactInfo = "contactInfo",
 }
+
+// Tabs that were merged into another one; old links keep working.
+export const LEGACY_TABS: Record<string, ActiveTab> = {
+  advancedOptions: ActiveTab.ListConnectionStrings,
+};

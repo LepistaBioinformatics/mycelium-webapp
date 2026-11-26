@@ -1,6 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { renderHook, waitFor } from "@testing-library/react";
-import useProfile from "./use-profile";
+import { createElement, type ReactNode } from "react";
+import { SWRConfig } from "swr";
+import useProfile, { invalidateProfile } from "./use-profile";
 
 // ---------------------------------------------------------------------------
 // Module mocks — declared before any imports that might trigger them
@@ -42,6 +44,15 @@ vi.mock("@/services/rpc/beginners", () => ({
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
+
+// Fresh SWR cache per render: the profile is cached by SWR across hooks.
+function wrapper({ children }: { children: ReactNode }) {
+  return createElement(
+    SWRConfig,
+    { value: { provider: () => new Map(), dedupingInterval: 0 } },
+    children
+  );
+}
 
 import useNativeAuth from "@/hooks/use-native-auth";
 
@@ -93,7 +104,7 @@ beforeEach(() => {
 
 describe("useProfile — basic behavior", () => {
   it("returns null profile when user is not authenticated", () => {
-    const { result } = renderHook(() => useProfile());
+    const { result } = renderHook(() => useProfile(), { wrapper });
 
     expect(result.current.profile).toBeNull();
     expect(result.current.isAuthenticated).toBe(false);
@@ -104,7 +115,7 @@ describe("useProfile — basic behavior", () => {
     const profile = makeProfile();
     mockProfileGet.mockResolvedValueOnce(profile);
 
-    const { result } = renderHook(() => useProfile());
+    const { result } = renderHook(() => useProfile(), { wrapper });
 
     await waitFor(() => {
       expect(result.current.profile).toEqual(profile);
@@ -113,76 +124,30 @@ describe("useProfile — basic behavior", () => {
     expect(mockProfileGet).toHaveBeenCalledOnce();
   });
 
-  it("stores fetched profile in sessionStorage with TTL", async () => {
+  it("ignores a profile left in sessionStorage and asks the API", async () => {
     setAuthUser("admin@example.com");
-    const profile = makeProfile();
-    mockProfileGet.mockResolvedValueOnce(profile);
+    // Left over by older builds, which cached the profile for a minute
+    sessionStorage.setItem(
+      "myc-profile",
+      JSON.stringify({ ...makeProfile(), ttl: Date.now() + 60_000 })
+    );
+    const fresh = makeProfile({ isManager: true });
+    mockProfileGet.mockResolvedValueOnce(fresh);
 
-    renderHook(() => useProfile());
+    const { result } = renderHook(() => useProfile(), { wrapper });
 
-    await waitFor(() => {
-      const stored = sessionStorage.getItem("myc-profile");
-      expect(stored).not.toBeNull();
-    });
-
-    const stored = JSON.parse(sessionStorage.getItem("myc-profile")!);
-    expect(stored.owners).toEqual(profile.owners);
-    expect(stored.ttl).toBeGreaterThan(Date.now());
-  });
-
-  it("reads profile from sessionStorage cache and skips API call", async () => {
-    setAuthUser("admin@example.com");
-    const profile = makeProfile();
-    // The hook stores ProfileWithTtl in state when reading from cache.
-    // Use objectContaining to match profile fields without asserting ttl.
-    const profileWithTtl = { ...profile, ttl: Date.now() + 60_000 };
-    sessionStorage.setItem("myc-profile", JSON.stringify(profileWithTtl));
-
-    const { result } = renderHook(() => useProfile());
-
-    await waitFor(() => {
-      expect(result.current.profile).toMatchObject(profile);
-    });
-
-    expect(mockProfileGet).not.toHaveBeenCalled();
-  });
-
-  it("evicts stale cache entry and re-fetches", async () => {
-    setAuthUser("admin@example.com");
-    const staleProfile = makeProfile();
-    const staleEntry = { ...staleProfile, ttl: Date.now() - 1 };
-    sessionStorage.setItem("myc-profile", JSON.stringify(staleEntry));
-
-    const freshProfile = makeProfile({ isManager: true });
-    mockProfileGet.mockResolvedValueOnce(freshProfile);
-
-    const { result } = renderHook(() => useProfile());
-
-    await waitFor(() => {
-      expect(result.current.profile?.isManager).toBe(true);
-    });
-
+    await waitFor(() => expect(result.current.profile).toEqual(fresh));
     expect(mockProfileGet).toHaveBeenCalledOnce();
   });
 
-  it("evicts cache when stored email does not match current user", async () => {
+  it("returns null when the profile belongs to another user", async () => {
     setAuthUser("other@example.com");
-    const profile = makeProfile(); // owners has admin@example.com
-    const profileWithTtl = { ...profile, ttl: Date.now() + 60_000 };
-    sessionStorage.setItem("myc-profile", JSON.stringify(profileWithTtl));
+    mockProfileGet.mockResolvedValueOnce(makeProfile()); // owner admin@
 
-    const correctProfile = makeProfile({
-      owners: [{ email: "other@example.com", name: null, uuid: "u2" }],
-    });
-    mockProfileGet.mockResolvedValueOnce(correctProfile);
+    const { result } = renderHook(() => useProfile(), { wrapper });
 
-    const { result } = renderHook(() => useProfile());
-
-    await waitFor(() => {
-      expect(result.current.profile).toEqual(correctProfile);
-    });
-
-    expect(mockProfileGet).toHaveBeenCalledOnce();
+    await waitFor(() => expect(mockProfileGet).toHaveBeenCalledOnce());
+    expect(result.current.profile).toBeNull();
   });
 });
 
@@ -191,8 +156,9 @@ describe("useProfile — hasEnoughPermissions", () => {
     setAuthUser("admin@example.com");
     mockProfileGet.mockResolvedValueOnce(makeProfile({ isStaff: true }));
 
-    const { result } = renderHook(() =>
-      useProfile({ roles: ["SystemAccountManager"] })
+    const { result } = renderHook(
+      () => useProfile({ roles: ["SystemAccountManager"] }),
+      { wrapper }
     );
 
     await waitFor(() => expect(result.current.hasEnoughPermissions).toBe(true));
@@ -202,13 +168,13 @@ describe("useProfile — hasEnoughPermissions", () => {
     setAuthUser("admin@example.com");
     mockProfileGet.mockResolvedValueOnce(makeProfile({ isManager: true }));
 
-    const { result } = renderHook(() => useProfile());
+    const { result } = renderHook(() => useProfile(), { wrapper });
 
     await waitFor(() => expect(result.current.hasEnoughPermissions).toBe(true));
   });
 
   it("returns false when no profile", () => {
-    const { result } = renderHook(() => useProfile());
+    const { result } = renderHook(() => useProfile(), { wrapper });
     expect(result.current.hasEnoughPermissions).toBe(false);
   });
 
@@ -216,7 +182,9 @@ describe("useProfile — hasEnoughPermissions", () => {
     setAuthUser("admin@example.com");
     mockProfileGet.mockResolvedValueOnce(makeProfile({ isStaff: true }));
 
-    const { result } = renderHook(() => useProfile({ denyStaff: true }));
+    const { result } = renderHook(() => useProfile({ denyStaff: true }), {
+      wrapper,
+    });
 
     await waitFor(() => expect(result.current.profile?.isStaff).toBe(true));
     expect(result.current.hasEnoughPermissions).toBe(false);
@@ -233,8 +201,9 @@ describe("useProfile — hasEnoughPermissions", () => {
     });
     mockProfileGet.mockResolvedValueOnce(profileWithResources);
 
-    const { result } = renderHook(() =>
-      useProfile({ roles: ["SystemAccountManager"] })
+    const { result } = renderHook(
+      () => useProfile({ roles: ["SystemAccountManager"] }),
+      { wrapper }
     );
 
     await waitFor(() => expect(result.current.hasEnoughPermissions).toBe(true));
@@ -254,10 +223,34 @@ describe("useProfile — auth errors", () => {
       error: authError,
     });
 
-    renderHook(() => useProfile());
+    renderHook(() => useProfile(), { wrapper });
 
     await waitFor(() => {
       expect(mockParseAuthError).toHaveBeenCalledWith(authError);
     });
+  });
+});
+
+describe("useProfile — invalidateProfile", () => {
+  it("loads the profile once the account exists (onboarding)", async () => {
+    // Global SWR cache on purpose: invalidateProfile revalidates it. A unique
+    // email keeps this test from sharing cache entries with others.
+    setAuthUser("onboarding@example.com");
+    const profile = makeProfile({
+      owners: [{ email: "onboarding@example.com", name: null, uuid: "u2" }],
+    });
+
+    // Signed in before the account existed: the gateway answers 403
+    mockProfileGet.mockRejectedValueOnce(new Error("403"));
+    const { result } = renderHook(() => useProfile());
+
+    await waitFor(() => expect(mockProfileGet).toHaveBeenCalledOnce());
+    expect(result.current.profile).toBeNull();
+
+    // Account created
+    mockProfileGet.mockResolvedValueOnce(profile);
+    await invalidateProfile();
+
+    await waitFor(() => expect(result.current.profile).toEqual(profile));
   });
 });

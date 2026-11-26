@@ -1,6 +1,13 @@
 import type { paths } from "./mycelium-schema";
 
-export const MYCELIUM_API_URL = import.meta.env.VITE_MYCELIUM_API_URL;
+/** Gateway URL without a trailing slash; empty means the page's own origin. */
+export function resolveApiUrl(value: string | undefined): string {
+  return (value ?? "").trim().replace(/\/+$/, "");
+}
+
+export const MYCELIUM_API_URL = resolveApiUrl(
+  import.meta.env.VITE_MYCELIUM_API_URL
+);
 
 export const buildPath = (
     path: keyof paths,
@@ -9,7 +16,7 @@ export const buildPath = (
         path?: Record<string, string>,
     }
 ) => {
-    const url = new URL(`${MYCELIUM_API_URL}${path}`);
+    const url = new URL(`${MYCELIUM_API_URL}${path}`, window.location.origin);
 
     if (params?.path) {
         Object.entries(params.path).forEach(([key, value]) => {

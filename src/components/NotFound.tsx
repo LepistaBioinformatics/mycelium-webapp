@@ -8,6 +8,7 @@ import useProfile from "@/hooks/use-profile";
 import { useCallback } from "react";
 import Countdown from "react-countdown";
 import Divider from "./ui/Divider";
+import { withBasePath } from "@/functions/with-base-path";
 
 export default function NotFound() {
   const navigate = useNavigate();
@@ -61,7 +62,7 @@ export default function NotFound() {
               )}
 
               <img
-                src="/undraw.co/undraw_server-down_lxs9.svg"
+                src={withBasePath("undraw.co/undraw_server-down_lxs9.svg")}
                 alt="Unexpected error"
                 width={250}
                 height={250}

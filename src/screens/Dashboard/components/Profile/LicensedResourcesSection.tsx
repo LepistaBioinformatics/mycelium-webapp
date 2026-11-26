@@ -1,29 +1,19 @@
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeadCell,
-  TableRow,
-} from "flowbite-react";
-import { TbSortDescending2Filled } from "react-icons/tb";
 import Card from "@/components/ui/Card";
 import Typography from "@/components/ui/Typography";
 import { components } from "@/services/openapi/mycelium-schema";
 import { RiRobot2Line } from "react-icons/ri";
-import TenantBasicInfo from "./TenantBasicInfo";
-import PermissionIcon from "@/components/ui/PermissionIcon";
-import MiniBox from "@/components/ui/MiniBox";
-import IntroSection from "@/components/ui/IntroSection";
+import PermissionBadge from "@/components/ui/PermissionBadge";
+import { buttonStyles } from "@/components/ui/button-styles";
+import { BadgeCheck, Clock, KeyRound } from "lucide-react";
+import { ActiveTab } from "./active-tab";
 import { useTranslation } from "react-i18next";
 import { MycRole } from "@/types/MyceliumRole";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { useMemo, useState } from "react";
 import CreateConnectionStringModal from "../CreateConnectionStringModal";
 import { MycPermission } from "@/types/MyceliumPermission";
-import Button from "@/components/ui/Button";
-import { FaKey } from "react-icons/fa";
 import { GrUserManager } from "react-icons/gr";
+import useAccountDetailsLink from "@/hooks/use-account-details-link";
 
 type LicensedResource = components["schemas"]["LicensedResource"];
 type Permission = components["schemas"]["Permission"];
@@ -43,11 +33,6 @@ interface CustomLicensedResource {
   }[];
 }
 
-enum SortBy {
-  Name = "name",
-  Tenant = "tenant",
-}
-
 interface Props {
   licensedResources: LicensedResource[] | null;
 }
@@ -55,7 +40,7 @@ interface Props {
 export default function LicensedResourcesSection({ licensedResources }: Props) {
   const { t } = useTranslation();
 
-  const [sortBy, setSortBy] = useState<SortBy>(SortBy.Name);
+  const navigate = useNavigate();
 
   const [accountId, setAccountId] = useState<string | null>(null);
 
@@ -173,40 +158,14 @@ export default function LicensedResourcesSection({ licensedResources }: Props) {
     };
   };
 
-  const HeaderHeader = ({ resource }: { resource: CustomLicensedResource }) => {
-    return (
-      <div className="flex items-center gap-2">
-        <Typography
-          truncate
-          width="fit"
-          as="h5"
-          decoration="bold"
-          title={t(
-            "screens.Dashboard.LicensedResourcesSection.accountName.title",
-            {
-              accName: resource.name,
-            }
-          )}
-        >
-          {resource.role === MycRole.TenantManager ? (
-            <Link
-              to={`/dashboard/tenants/${resource.tenantId}`}
-              className="text-brand-violet-500 dark:text-brand-violet-500 hover:underline"
-            >
-              {resource.name}
-            </Link>
-          ) : (
-            <Link
-              to={`/dashboard/tenants/${resource.tenantId}/accounts/?accountId=${resource.id}`}
-              className="text-brand-violet-500 dark:text-brand-violet-500 hover:underline"
-            >
-              {resource.name}
-            </Link>
-          )}
-        </Typography>
-      </div>
-    );
-  };
+  const accountDetailsLink = useAccountDetailsLink();
+
+  // Accounts open their details on top of the profile; a namespace's
+  // management account opens the namespace itself.
+  const resourceHref = (resource: CustomLicensedResource) =>
+    resource.role === MycRole.TenantManager
+      ? `/dashboard/tenants/${resource.tenantId}`
+      : accountDetailsLink(resource.id, resource.tenantId);
 
   if (!licensedResources || licensedResources.length === 0) {
     return (
@@ -236,209 +195,107 @@ export default function LicensedResourcesSection({ licensedResources }: Props) {
   return (
     <>
       <Card padding="sm" width="alwaysFull" height="fit">
-          <Card.Header>
-            <Typography as="h5" decoration="faded">
-              {t("screens.Dashboard.LicensedResourcesSection.title")}
-            </Typography>
-          </Card.Header>
+        <Card.Header>
+          <Typography as="h5" decoration="faded">
+            {t("screens.Dashboard.LicensedResourcesSection.title")}
+          </Typography>
+        </Card.Header>
 
-          <Card.Body width="full">
-            <div className="hidden sm:block">
-              <div className="overflow-x-auto scrollbar">
-                <Table
-                  striped
-                  theme={{
-                    root: {
-                      base: "w-full text-left text-sm text-zinc-500 dark:text-zinc-400",
-                    },
-                    head: {
-                      cell: {
-                        base: "bg-zinc-50 px-6 py-3 group-first/head:first:rounded-tl-lg group-first/head:last:rounded-tr-lg dark:bg-brand-900",
-                      },
-                    },
-                    body: {
-                      base: "bg-zinc-50 dark:bg-brand-900",
-                      cell: {
-                        base: "bg-zinc-50 dark:bg-brand-950 group-hover/row:bg-zinc-100 dark:group-hover/row:bg-brand-900 px-6 py-4 group-first/body:group-first/row:first:rounded-tl-lg group-first/body:group-first/row:last:rounded-tr-lg group-last/body:group-last/row:first:rounded-bl-lg group-last/body:group-last/row:last:rounded-br-lg",
-                      },
-                    },
-                    row: {
-                      base: "group/row bg-transparent",
-                      hovered: "hover:bg-zinc-100 dark:hover:bg-brand-900",
-                      striped:
-                        "odd:bg-white even:bg-zinc-50 odd:dark:bg-brand-950 even:dark:bg-brand-900",
-                    },
-                  }}
-                >
-                  <TableHead>
-                    <TableHeadCell>
-                      <div className="flex items-center gap-3 group/sort">
-                        <TbSortDescending2Filled
-                          size={16}
-                          title="Sort by name"
-                          className="inline-block group-hover/sort:text-brand-violet-500 dark:group-hover/sort:text-brand-violet-500 cursor-pointer"
-                          onClick={() => setSortBy(SortBy.Name)}
-                        />
-                        <span>
-                          {t(
-                            "screens.Dashboard.LicensedResourcesSection.accountName.title"
+        <Card.Body width="full">
+          <ul className="flex flex-col gap-2 w-full">
+            {[...(uniqueAccounts ?? [])]
+              .sort((a, b) => a.name.localeCompare(b.name))
+              .map((resource) => {
+                const accountType = getAccountType(resource);
+
+                return (
+                  <li
+                    key={`${resource.tenantId}-${resource.id}`}
+                    className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-lg border border-border bg-card px-4 py-3 shadow-xs transition-[box-shadow,border-color] hover:shadow-card hover:border-brand-600/40 dark:hover:border-brand-400/30 cursor-pointer"
+                    onClick={() => navigate(resourceHref(resource))}
+                  >
+                    <div className="flex flex-col gap-2 min-w-0">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <Link
+                          to={resourceHref(resource)}
+                          onClick={(event) => event.stopPropagation()}
+                          title={t(
+                            "screens.Dashboard.LicensedResourcesSection.accountName.title",
+                            { accName: resource.name }
                           )}
+                          className="font-display text-lg font-semibold text-primary dark:text-brand-300 hover:underline truncate rounded-sm outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
+                        >
+                          {resource.name}
+                        </Link>
+                        <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-muted px-2 py-0.5 text-xs text-muted-foreground dark:bg-surface-800">
+                          <accountType.Icon className="size-3.5" />
+                          {accountType.text}
                         </span>
                       </div>
-                    </TableHeadCell>
-                    <TableHeadCell>
-                      {t(
-                        "screens.Dashboard.LicensedResourcesSection.accountType.title"
-                      )}
-                    </TableHeadCell>
-                    <TableHeadCell>
-                      {t(
-                        "screens.Dashboard.LicensedResourcesSection.role.prefix"
-                      )}
-                    </TableHeadCell>
-                    <TableHeadCell
-                      className="cursor-help"
+
+                      <div className="flex flex-wrap items-center gap-2">
+                        {resource.roles.map((role) => (
+                          <span
+                            key={`${role.role}-${role.perm}`}
+                            title={t(
+                              "screens.Dashboard.LicensedResourcesSection.role.title",
+                              { role: role.role }
+                            )}
+                            className="inline-flex items-center gap-1.5 rounded-md border border-border bg-background px-2 py-0.5 text-sm"
+                          >
+                            <span className="font-mono text-xs text-foreground">
+                              {role.role}
+                            </span>
+                            <PermissionBadge permission={role.perm} />
+                            {role.verified ? (
+                              <span className="inline-flex items-center gap-0.5 text-xs text-green-700 dark:text-green-300">
+                                <BadgeCheck className="size-3.5" />
+                                {t(
+                                  "screens.Dashboard.LicensedResourcesSection.verified"
+                                )}
+                              </span>
+                            ) : (
+                              <Link
+                                to={`/dashboard/profile?tab=${ActiveTab.Invitations}`}
+                                onClick={(event) => event.stopPropagation()}
+                                className="inline-flex items-center gap-0.5 text-xs text-amber-700 dark:text-amber-300 hover:underline"
+                              >
+                                <Clock className="size-3.5" />
+                                {t(
+                                  "screens.Dashboard.LicensedResourcesSection.pending"
+                                )}
+                              </Link>
+                            )}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+
+                    <button
+                      type="button"
                       title={t(
                         "screens.Dashboard.LicensedResourcesSection.createConnectionString.description"
                       )}
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        handleOpenCreateConnectionStringModal(
+                          resource.id,
+                          resource.tenantId
+                        );
+                      }}
+                      className={`${buttonStyles({ intent: "secondary", size: "xs" })} w-fit shrink-0`}
                     >
+                      <KeyRound className="size-3.5" />
                       {t(
                         "screens.Dashboard.LicensedResourcesSection.createConnectionString.title"
                       )}
-                    </TableHeadCell>
-                  </TableHead>
-                  <TableBody className="divide-y">
-                    {uniqueAccounts
-                      ?.sort((a, b) => {
-                        if (sortBy === SortBy.Name) {
-                          return a.name.localeCompare(b.name);
-                        }
-
-                        if (sortBy === SortBy.Tenant) {
-                          return a.tenantId.localeCompare(b.tenantId);
-                        }
-
-                        return 0;
-                      })
-                      ?.map((resource, index) => {
-                        const accountType = getAccountType(resource);
-
-                        return (
-                          <TableRow
-                            key={index}
-                            className="bg-white dark:border-brand-900 dark:bg-brand-950"
-                          >
-                            <TableCell>
-                              <HeaderHeader resource={resource} />
-                            </TableCell>
-                            <TableCell>
-                              <accountType.Icon
-                                className="cursor-help text-brand-violet-500 dark:text-brand-violet-500 text-lg"
-                                title={accountType.text}
-                              />
-                            </TableCell>
-                            <TableCell>
-                              {resource.roles.map((role, index) => (
-                                <div
-                                  key={index + role.role}
-                                  className="whitespace-nowrap"
-                                >
-                                  <span>{role.role}</span>
-                                  <PermissionIcon
-                                    permission={role.perm}
-                                    inline
-                                  />
-                                </div>
-                              ))}
-                            </TableCell>
-                            <TableCell
-                              className="text-right"
-                              title={t(
-                                "screens.Dashboard.LicensedResourcesSection.createConnectionString.title"
-                              )}
-                            >
-                              <Button
-                               
-                                intent="link"
-                                center
-                                onClick={() =>
-                                  handleOpenCreateConnectionStringModal(
-                                    resource.id,
-                                    resource.tenantId
-                                  )
-                                }
-                              >
-                                <FaKey className="inline-block" />
-                              </Button>
-                            </TableCell>
-                          </TableRow>
-                        );
-                      })}
-                  </TableBody>
-                </Table>
-              </div>
-            </div>
-
-            <div className="flex flex-col gap-3 w-full block sm:hidden">
-              {uniqueAccounts
-                ?.sort((a, b) => a.name.localeCompare(b.name))
-                ?.map((resource, index) => (
-                  <MiniBox key={index} width="full">
-                    <IntroSection
-                      title={t(
-                        "screens.Dashboard.LicensedResourcesSection.accountName.title"
-                      )}
-                      prefixProps={{ nowrap: true }}
-                      contentProps={{ truncate: true }}
-                      content={<HeaderHeader resource={resource} />}
-                      as="h3"
-                    >
-                      <TenantBasicInfo
-                        tenantId={resource.tenantId}
-                        tenantName={resource.name}
-                      />
-
-                      {resource.roles.map((role, index) => (
-                        <div
-                          key={index + role.role}
-                          className="border-t-[0.5px] border-brand-violet-100 dark:border-brand-violet-700 p-1"
-                        >
-                          <IntroSection.Item
-                            prefix={t(
-                              "screens.Dashboard.LicensedResourcesSection.role.prefix"
-                            )}
-                            prefixProps={{ nowrap: true }}
-                            title={t(
-                              "screens.Dashboard.LicensedResourcesSection.role.title",
-                              {
-                                role: role.role,
-                              }
-                            )}
-                          >
-                            <span className="whitespace-nowrap group/clip flex items-center gap-1">
-                              {role.role}
-                              <PermissionIcon permission={role.perm} inline />
-                            </span>
-                          </IntroSection.Item>
-
-                          {role.verified && (
-                            <span
-                              className="w-fit rounded-lg text-green-500 dark:text-green-400 bg-green-100 dark:bg-green-500 bg-opacity-50 dark:bg-opacity-20 px-2 py-1 mt-1 text-xs border border-green-500 dark:border-green-400 hover:cursor-help"
-                              title="You have confirmed the invitation to this account"
-                            >
-                              {t(
-                                "screens.Dashboard.LicensedResourcesSection.verified"
-                              )}
-                            </span>
-                          )}
-                        </div>
-                      ))}
-                    </IntroSection>
-                  </MiniBox>
-                ))}
-            </div>
-          </Card.Body>
-        </Card>
+                    </button>
+                  </li>
+                );
+              })}
+          </ul>
+        </Card.Body>
+      </Card>
 
       {isCreateConnectionStringModalOpen && accountId && (
         <CreateConnectionStringModal
@@ -446,6 +303,9 @@ export default function LicensedResourcesSection({ licensedResources }: Props) {
           onClose={handleCloseCreateConnectionStringModal}
           onSuccess={handleSuccessCreateConnectionString}
           accountId={accountId}
+          accountName={
+            uniqueAccounts?.find((account) => account.id === accountId)?.name
+          }
           tenantId={tenantId}
           roles={filteredLicensedResources}
         />

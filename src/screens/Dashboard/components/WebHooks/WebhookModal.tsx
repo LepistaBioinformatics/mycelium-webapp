@@ -9,11 +9,13 @@ import { components } from "@/services/openapi/mycelium-schema";
 import { webhooksCreate, webhooksUpdate } from "@/services/rpc/systemManager";
 import { MycPermission } from "@/types/MyceliumPermission";
 import { MycRole } from "@/types/MyceliumRole";
-import { Select, Textarea, TextInput } from "flowbite-react";
+import { Select, Textarea, TextInput } from "@/components/ui/Input";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { readSecretToken } from "@/functions/read-secret-token";
+import { WEBHOOK_TRIGGERS } from "@/constants/webhook-triggers";
 
 type WebHook = components["schemas"]["WebHook"];
 type WebHookTrigger = components["schemas"]["WebHookTrigger"];
@@ -24,14 +26,7 @@ enum Secret {
   QueryParam = "queryParam",
 }
 
-const triggers: WebHookTrigger[] = [
-  "subscriptionAccount.created",
-  "subscriptionAccount.updated",
-  "subscriptionAccount.deleted",
-  "userAccount.created",
-  "userAccount.updated",
-  "userAccount.deleted",
-];
+const triggers = WEBHOOK_TRIGGERS;
 
 type Inputs = {
   name: string;
@@ -41,27 +36,7 @@ type Inputs = {
   secret?: WebHook["secret"];
 };
 
-const textInputTheme = {
-  field: {
-    input: {
-      colors: {
-        custom:
-          "border-brand-600 bg-brand-violet-50 text-zinc-900 focus:border-infra-400 focus:ring-zinc-500 dark:bg-brand-950 dark:text-white placeholder-zinc-500 dark:placeholder-zinc-400 dark:focus:border-brand-violet-500 dark:focus:ring-brand-violet-500",
-      },
-    },
-  },
-};
 
-const selectTheme = {
-  field: {
-    select: {
-      colors: {
-        custom:
-          "border-brand-600 bg-brand-violet-50 text-zinc-900 focus:border-infra-400 focus:ring-zinc-500 dark:bg-brand-950 dark:text-white placeholder-zinc-500 dark:placeholder-zinc-400 dark:focus:border-brand-violet-500 dark:focus:ring-brand-violet-500",
-      },
-    },
-  },
-};
 
 export interface WebhookModalProps {
   isOpen: boolean;
@@ -157,8 +132,10 @@ export default function WebhookModal({
         initialAuthorizationHeader.prefix = prefix;
       }
 
-      if (token && token !== "" && token !== "REDACTED") {
-        initialAuthorizationHeader.token = token;
+      const tokenValue = readSecretToken(token);
+
+      if (tokenValue && tokenValue !== "REDACTED") {
+        initialAuthorizationHeader.token = tokenValue;
       }
 
       return {
@@ -184,8 +161,10 @@ export default function WebhookModal({
         initialQueryParameter.name = name;
       }
 
-      if (token && token !== "" && token !== "REDACTED") {
-        initialQueryParameter.token = token;
+      const tokenValue = readSecretToken(token);
+
+      if (tokenValue && tokenValue !== "REDACTED") {
+        initialQueryParameter.token = tokenValue;
       }
 
       return {
@@ -275,10 +254,9 @@ export default function WebhookModal({
                 "screens.Dashboard.Webhooks.WebhookModal.formFields.name.placeholder"
               )}
               sizing="lg"
-              color="custom"
               autoFocus
               required
-              theme={textInputTheme}
+             
               {...register("name")}
             />
             {errors.name && <span>This field is required</span>}
@@ -298,13 +276,7 @@ export default function WebhookModal({
                 "screens.Dashboard.Webhooks.WebhookModal.formFields.description.placeholder"
               )}
               rows={4}
-              color="custom"
-              theme={{
-                colors: {
-                  custom:
-                    "border-brand-600 bg-brand-violet-50 text-zinc-900 focus:border-infra-400 focus:ring-zinc-500 dark:bg-brand-950 dark:text-white placeholder-zinc-500 dark:placeholder-zinc-400 dark:focus:border-brand-violet-500 dark:focus:ring-brand-violet-500",
-                },
-              }}
+             
               {...register("description")}
             />
             {errors.description && <span>This field is required</span>}
@@ -325,11 +297,10 @@ export default function WebhookModal({
                 "screens.Dashboard.Webhooks.WebhookModal.formFields.url.placeholder"
               )}
               sizing="lg"
-              color="custom"
               autoFocus
               required
               disabled={!!webhook}
-              theme={textInputTheme}
+             
               {...register("url")}
             />
             {errors.url && <span>This field is required</span>}
@@ -346,8 +317,7 @@ export default function WebhookModal({
             <Select
               id="trigger"
               sizing="lg"
-              color="custom"
-              theme={selectTheme}
+             
               disabled={!!webhook}
               required
               defaultValue={undefined}
@@ -387,8 +357,7 @@ export default function WebhookModal({
           >
             <Select
               sizing="lg"
-              color="custom"
-              theme={selectTheme}
+             
               defaultValue={undefined}
               onChange={(e) => setSecretType(e.target.value as Secret)}
             >
@@ -421,9 +390,8 @@ export default function WebhookModal({
                       "screens.Dashboard.Webhooks.WebhookModal.formFields.secret.options.authorizationHeader.headerName.placeholder"
                     )}
                     sizing="lg"
-                    color="custom"
                     autoFocus
-                    theme={textInputTheme}
+                   
                     {...register("secret.authorizationHeader.headerName")}
                   />
                 </FormField>
@@ -440,8 +408,7 @@ export default function WebhookModal({
                       "screens.Dashboard.Webhooks.WebhookModal.formFields.secret.options.authorizationHeader.prefix.placeholder"
                     )}
                     sizing="lg"
-                    color="custom"
-                    theme={textInputTheme}
+                   
                     {...register("secret.authorizationHeader.prefix")}
                   />
                 </FormField>
@@ -469,8 +436,7 @@ export default function WebhookModal({
                       </Button>
                     )}
                     sizing="lg"
-                    color="custom"
-                    theme={textInputTheme}
+                   
                     {...register("secret.authorizationHeader.token")}
                   />
                 </FormField>
@@ -492,8 +458,7 @@ export default function WebhookModal({
                     )}
                     required={secretType === Secret.QueryParam}
                     sizing="lg"
-                    color="custom"
-                    theme={textInputTheme}
+                   
                     {...register("secret.queryParameter.name")}
                   />
                 </FormField>
@@ -521,8 +486,7 @@ export default function WebhookModal({
                       </Button>
                     )}
                     sizing="lg"
-                    color="custom"
-                    theme={textInputTheme}
+                   
                     {...register("secret.queryParameter.token")}
                   />
                 </FormField>

@@ -20,8 +20,6 @@ function isContactInfoComplete(account: Account | null | undefined): boolean {
 
   return !!(
     meta.phone_number &&
-    meta.emergency_contact_name &&
-    meta.emergency_contact_phone &&
     meta.job_title
   );
 }
@@ -40,6 +38,8 @@ export default function RequiredContactInfoBanner() {
   );
 
   if (!shouldFetch) return null;
+  // `undefined` = still loading: say nothing until the account is known
+  if (account === undefined) return null;
   if (isContactInfoComplete(account)) return null;
 
   const BASE = "components.RequiredContactInfoBanner";

@@ -53,20 +53,12 @@
           "staff": "Usuario del equipo",
           "manager": "Gerente"
         },
-        "createConnectionString": {
-          "cta": "Opciones avanzadas",
-          "title": "Crear cadena de conexión global",
-          "description": "Las cadenas de conexión globales proporcionan acceso completo a su cuenta. Esta cadena de conexión se utilizará para autenticar su cuenta mediante programación.",
-          "button": "Crear"
-        },
         "email": {
           "prefix": "Correo electrónico",
           "title": "Tu correo electrónico"
         },
         "personalInfo": {
-          "phoneNumber": "Teléfono",
-          "emergencyContactName": "Contacto de emergencia",
-          "emergencyContactPhone": "Teléfono de emergencia"
+          "phoneNumber": "Teléfono"
         },
         "ContactInfoSection": {
           "tabName": "Información de contacto",
@@ -83,14 +75,6 @@
             "title": "Cargo",
             "placeholder": "ej: Líder de Infraestructura"
           },
-          "emergencyContactName": {
-            "title": "Nombre del contacto de emergencia",
-            "description": "Alguien a quien podamos contactar en tu nombre si es necesario.",
-            "placeholder": "Nombre completo"
-          },
-          "emergencyContactPhone": {
-            "title": "Teléfono del contacto de emergencia"
-          },
           "save": "Guardar",
           "saving": "Guardando...",
           "error": "Algunos campos no se pudieron guardar"
@@ -98,15 +82,7 @@
       },
       "AdvancedOptionsModal": {
         "title": "Crear cadena de conexión",
-        "tabName": "Opciones avanzadas",
-        "accountId": "Restringido a cuenta",
-        "accountIdDescription": "La cadena de conexión se restringirá a la cuenta con el ID.",
-        "tenantId": "Restringido a inquilino",
-        "tenantIdDescription": "La cadena de conexión se restringirá al inquilino con el ID.",
-        "permissionedRoles": "Roles y permisos",
-        "permissionedRolesDescription": "La cadena de conexión se restringirá a los roles y permisos seleccionados.",
-        "removeRole": "No incluir este rol en el filtro",
-        "explain": "La cadena de conexión se restringirá a cuenta, inquilino, roles y permisos seleccionados en esta etapa. Para verificar si el token generado tiene el ámbito adecuado, utilice herramientas como base64decode.org",
+        "explain": "Una connection string permite que un script u otro servicio llame al gateway en tu nombre. Solo lleva el alcance indicado abajo, hasta que expire.",
         "form": {
           "expiration": {
             "label": "Seleccionar expiración",
@@ -147,6 +123,27 @@
             "serviceAccount": "Cuenta de servicio",
             "roles": "Roles",
             "expiresAt": "Expira en"
+          }
+        },
+        "scope": {
+          "title": "A qué puede acceder esta connection string",
+          "description": "Las solicitudes hechas con ella quedan limitadas a:",
+          "unrestricted": "No se aplica ninguna restricción: esta connection string lleva todos tus permisos actuales. Créala desde un namespace o una cuenta para acotarla.",
+          "tenant": {
+            "label": "Namespace",
+            "hint": "Solo se aceptan solicitudes a este namespace."
+          },
+          "account": {
+            "label": "Cuenta",
+            "hint": "Actúa solo sobre esta cuenta."
+          },
+          "roles": {
+            "label": "Roles",
+            "count": "{{included}} de {{total}} incluidos",
+            "hint": "Solo los roles seleccionados entran en la connection string. Haz clic en un rol para dejarlo fuera.",
+            "noneSelected": "Selecciona al menos un rol.",
+            "remove": "Dejar fuera {{role}}",
+            "include": "Incluir {{role}}"
           }
         }
       },
@@ -247,8 +244,13 @@
           "account": "Cuenta",
           "serviceAccount": "Cuenta de servicio",
           "roles": "Roles",
-          "endpoint": "Endpoint"
-        }
+          "endpoint": "Endpoint",
+          "service": "Servicio autorizado a enviar con esta string",
+          "serviceTag": "servicio: {{service}}"
+        },
+        "issueNotification": "String de notificación",
+        "create": "Crear connection string",
+        "description": "Las strings permiten que scripts y servicios llamen al gateway en tu nombre, limitadas al alcance que elijas."
       },
       "LicensedResourcesSection": {
         "title": "Cuentas a las que tiene acceso",
@@ -267,7 +269,8 @@
           "title": "Permiso atribuido a usted",
           "prefix": "Puede"
         },
-        "verified": "Verificado"
+        "verified": "Verificado",
+        "pending": "Pendiente — acéptela"
       },
       "TelegramConfig": {
         "title": "Integración con Telegram",
@@ -649,6 +652,10 @@
               "desctiption": "Eliminar la invitación eliminará los accesos del usuario invitado.",
               "confirm": "Proceder"
             }
+          },
+          "unverified": {
+            "label": "No verificado",
+            "title": "La persona invitada aún no confirmó esta invitación"
           }
         },
         "AccountDetails": {
@@ -718,6 +725,11 @@
           "yourPermissions": {
             "title": "Sus permisos",
             "prefix": "Sus permisos"
+          },
+          "myGuestsEmpty": "{{email}} no tiene invitaciones en {{tenant}}",
+          "myGuestsNoTenant": {
+            "title": "Selecciona un namespace para ver las invitaciones",
+            "description": "Las invitaciones se listan por namespace. Marca un namespace con la estrella en la pantalla de Namespaces para ver las invitaciones de este usuario en él."
           }
         },
         "AccountModal": {
@@ -766,26 +778,41 @@
           "title": "Invitar a un usuario",
           "form": {
             "email": {
-              "label": "1. Con este correo electrónico",
+              "label": "Correo",
               "placeholder": "ejemplo@email.com",
-              "title": "La dirección de correo electrónico del usuario invitado. El usuario será notificado por correo electrónico sobre la invitación"
+              "title": "La dirección de correo electrónico del usuario invitado. El usuario será notificado por correo electrónico sobre la invitación",
+              "invalid": "Escribe un correo válido"
             },
             "account": {
-              "label": "2. Para esta cuenta",
+              "label": "Invitar a",
               "title": "La cuenta para invitar al usuario"
             },
             "role": {
-              "label": "3. Con esta función",
+              "label": "Rol",
               "title": "La función del usuario invitado"
             },
-            "invite": "Para invitar"
+            "invite": "Enviar invitación"
+          },
+          "steps": {
+            "label": "Pasos de la invitación",
+            "email": "Correo",
+            "role": "Rol"
+          },
+          "continue": "Continuar",
+          "back": "Volver",
+          "changeEmail": "Cambiar",
+          "sending": "Enviando…",
+          "errors": {
+            "missingTenant": "Selecciona un namespace antes de invitar a esta cuenta",
+            "generic": "No se pudo enviar la invitación"
           }
         },
         "DeleteAccount": {
           "title": "Borrar",
           "description": "Eliminar la cuenta eliminará todos los datos de la cuenta y no se puede revertir.",
           "delete": "Borrar",
-          "deleting": "Eliminar ..."
+          "deleting": "Eliminar ...",
+          "deleted": "Cuenta {{name}} eliminada"
         },
         "UnInviteGuestModal": {
           "title": "Eliminar la invitación",
@@ -917,9 +944,27 @@
         "GuestRoleSelector": {
           "label": "Papel infantil",
           "title": "Seleccione un papel infantil",
-          "placeholder": "Seleccione un papel infantil",
-          "loading": "Cargando...",
-          "button": "Haga clic para seleccionar"
+          "placeholder": "Busca roles por nombre…",
+          "change": "Cambiar",
+          "empty": "Ningún rol coincide con la búsqueda",
+          "permissions": {
+            "read": "Lectura",
+            "write": "Escritura"
+          },
+          "unavailable": {
+            "ignored": "Ya asignado",
+            "sameAsParent": "Igual al rol padre",
+            "notBelowParent": "Debe tener un permiso menor que el del rol padre"
+          }
+        },
+        "initializer": {
+          "button": "Roles de sistema",
+          "title": "Inicializar roles de sistema",
+          "description": "Crea los roles de invitado nativos del gateway, uno con permiso de lectura y otro de escritura para cada actor de abajo. Los managers los usan para delegar la administración del gateway.",
+          "idempotent": "Los roles que ya existen se mantienen como están, así que ejecutarlo de nuevo es seguro.",
+          "confirm": "Inicializar",
+          "cancel": "Cancelar",
+          "success": "Roles de sistema listos"
         }
       },
       "ErrorCodes": {
@@ -931,6 +976,18 @@
         "native": "Nativo",
         "yes": "Sí",
         "no": "No"
+      },
+      "Discovery": {
+        "filters": {
+          "origin": "Origen",
+          "hideGateway": "Ocultar endpoints del gateway",
+          "hideGatewayDescription": "Excluye las operaciones del propio API gateway y lista solo los servicios downstream",
+          "method": "Método HTTP"
+        }
+      },
+      "WebhookExecutions": {
+        "title": "Ejecuciones de webhooks",
+        "searchPlaceholder": "Filtra con status:failed o trigger:userAccount.created"
       },
       "Webhooks": {
         "title": "Webhooks",
@@ -1043,6 +1100,40 @@
           "description": "¿Estás seguro de que quieres eliminar el webhook?",
           "button": "Borrar",
           "loading": "Eliminar ..."
+        },
+        "ExecutionEvents": {
+          "title": "Eventos de ejecución",
+          "summaryTitle": "Totales por disparador y estado",
+          "eventsTitle": "Eventos",
+          "empty": "Aún no hay eventos de ejecución.",
+          "loadError": "No se pudieron cargar los eventos de ejecución.",
+          "deliveries": "{{failed}} fallidas de {{total}}",
+          "filters": {
+            "trigger": "Filtrar por disparador",
+            "status": "Filtrar por estado",
+            "allTriggers": "Todos los disparadores",
+            "allStatuses": "Todos los estados"
+          },
+          "columns": {
+            "trigger": "Disparador",
+            "status": "Estado",
+            "count": "Eventos",
+            "latest": "Más reciente",
+            "created": "Creado",
+            "attempts": "Intentos",
+            "deliveries": "Entregas",
+            "lastResponse": "Última respuesta",
+            "attempted": "Último intento"
+          },
+          "statuses": {
+            "pending": "Pendiente",
+            "processing": "Procesando",
+            "success": "Éxito",
+            "failed": "Fallido",
+            "exhausted": "Agotado",
+            "skipped": "Omitido",
+            "unknown": "Desconocido"
+          }
         }
       },
       "Onboarding": {
@@ -1063,12 +1154,6 @@
           "complete": "Cuenta creada"
         },
         "meta": {
-          "telegram": {
-            "title": "Telegram",
-            "linkHint": "Opcional — conecta Telegram para iniciar sesión y recibir notificaciones por el bot.",
-            "linkedHint": "Telegram está conectado.",
-            "button": "Conectar Telegram"
-          },
           "locale": {
             "title": "Idioma preferido",
             "description": "Establece el idioma del panel y de los correos del sistema.",
@@ -1079,7 +1164,199 @@
         "saving": "Guardando...",
         "saved": "Guardado",
         "edit": "Editar información",
-        "error": "Error inesperado"
+        "error": "Error inesperado",
+        "name": {
+          "title": "Tu nombre",
+          "description": "Cómo te verán en el portal y en las invitaciones.",
+          "label": "Nombre completo",
+          "placeholder": "p. ej. Ana Silva"
+        },
+        "contact": {
+          "title": "Contacto laboral",
+          "requiredDescription": "Tu rol tiene privilegios elevados, así que necesitamos una forma de contactarte si algo requiere tu atención.",
+          "optionalDescription": "Opcional: ayuda a los administradores a contactarte si algo requiere tu atención.",
+          "phone": "Teléfono",
+          "jobTitle": "Cargo",
+          "jobTitlePlaceholder": "p. ej. Líder de Infraestructura"
+        }
+      },
+      "Federation": {
+        "title": "Federación",
+        "tabs": {
+          "peers": "Pares",
+          "links": "Vínculos de identidad",
+          "assertions": "Aserciones almacenadas",
+          "translations": "Reglas de traducción"
+        },
+        "peer": "Par",
+        "actions": "Acciones",
+        "cancel": "Cancelar",
+        "working": "Procesando ...",
+        "done": "Hecho",
+        "loadError": "No se pudieron cargar los datos. Inténtelo más tarde.",
+        "empty": "Todavía no hay nada aquí.",
+        "permissions": {
+          "read": "Lectura",
+          "write": "Escritura"
+        },
+        "statuses": {
+          "declared": "Declarado",
+          "handshaking": "En handshake",
+          "active": "Activo",
+          "degraded": "Degradado",
+          "unreachable": "Inalcanzable",
+          "quarantined": "En cuarentena",
+          "untrusted": "No confiable",
+          "pending": "Pendiente",
+          "revoked": "Revocado",
+          "enabled": "Activada",
+          "disabled": "Desactivada"
+        },
+        "Peers": {
+          "title": "Pares de la federación",
+          "columns": {
+            "name": "Nombre",
+            "baseUrl": "URL base",
+            "instanceId": "ID de instancia",
+            "status": "Estado",
+            "kinds": "Tipos negociados",
+            "lastContact": "Último contacto",
+            "failures": "Fallos"
+          },
+          "quarantine": "Cuarentena",
+          "release": "Liberar",
+          "quarantineTitle": "Poner par en cuarentena",
+          "quarantineDescription": "¿Poner {{name}} en cuarentena? Sus solicitudes se rechazan y las aserciones almacenadas de él se descartan hasta que se libere.",
+          "releaseTitle": "Liberar par",
+          "releaseDescription": "¿Liberar {{name}} de la cuarentena? Pasa por un nuevo handshake antes de ser confiable.",
+          "switch": {
+            "title": "Interruptor de federación",
+            "description": "Activa o desactiva la federación en esta instancia. Desactivar es el kill-switch: la instancia deja de responder a los pares y rechaza toda solicitud de par. El gateway no informa el estado actual, así que solo se muestra el resultado de un cambio hecho aquí.",
+            "turnOn": "Activar",
+            "turnOff": "Desactivar",
+            "turnOnTitle": "Activar la federación",
+            "turnOnDescription": "¿Activar la federación? El gateway lo rechaza mientras la federación no esté configurada.",
+            "turnOffTitle": "Desactivar la federación",
+            "turnOffDescription": "¿Desactivar la federación? Toda solicitud de par se rechaza hasta que se vuelva a activar.",
+            "nowOn": "La federación fue activada ({{date}}).",
+            "nowOff": "La federación fue desactivada ({{date}})."
+          }
+        },
+        "Links": {
+          "title": "Vínculos de identidad",
+          "columns": {
+            "email": "Correo local",
+            "status": "Estado",
+            "established": "Establecido",
+            "revoked": "Revocado"
+          },
+          "revoke": "Revocar",
+          "revokeTitle": "Revocar vínculo de identidad",
+          "revokeDescription": "¿Revocar el vínculo de identidad de {{email}}? Las concesiones afirmadas a través de él dejan de aplicarse."
+        },
+        "Assertions": {
+          "title": "Aserciones almacenadas",
+          "columns": {
+            "link": "Vínculo",
+            "kind": "Tipo",
+            "issued": "Emitida",
+            "expires": "Expira",
+            "grants": "Concesiones"
+          }
+        },
+        "Translations": {
+          "title": "Reglas de traducción",
+          "description": "Una regla convierte una concesión del par (tenant, rol y permiso mínimo del emisor) en una concesión de invitado local sobre una cuenta local.",
+          "columns": {
+            "issuerTenant": "Tenant del emisor",
+            "issuerRole": "Rol del emisor",
+            "issuerMinPerm": "Permiso mín. del emisor",
+            "localAccount": "Cuenta local",
+            "localRole": "Rol de invitado local",
+            "localPerm": "Permiso local",
+            "enabled": "Activada"
+          },
+          "create": "Crear regla",
+          "enable": "Activar",
+          "disable": "Desactivar",
+          "delete": "Eliminar",
+          "enableTitle": "Activar regla",
+          "enableDescription": "¿Activar la regla del rol {{role}}? Se aplica desde la próxima solicitud.",
+          "disableTitle": "Desactivar regla",
+          "disableDescription": "¿Desactivar la regla del rol {{role}}? Deja de aplicarse en la próxima solicitud.",
+          "deleteTitle": "Eliminar regla",
+          "deleteDescription": "¿Eliminar la regla del rol {{role}}? Esto no se puede deshacer.",
+          "CreateRule": {
+            "title": "Crear regla de traducción",
+            "description": "Elija un par, luego la concesión del emisor a coincidir y la concesión local en que se convierte.",
+            "peer": "Par",
+            "choosePeer": "Elija un par",
+            "issuerRole": "Rol del emisor",
+            "issuerRoleHint": "El slug del rol en el par",
+            "chooseRole": "Elija un rol",
+            "issuerRolePlaceholder": "Slug del rol, p. ej. editor",
+            "loadingRoles": "Cargando los roles del par ...",
+            "rolesUnknown": "El par no comparte su vocabulario de roles ahora. Escriba el slug del rol.",
+            "rolesRejected": "El vocabulario de roles del par falló la verificación ({{reason}}). Escriba el slug del rol.",
+            "rolesError": "No se pudieron leer los roles del par ({{reason}}). Escriba el slug del rol.",
+            "issuerTenant": "ID del tenant del emisor",
+            "issuerMinPerm": "Permiso mínimo del emisor",
+            "localAccount": "ID de la cuenta local",
+            "localAccountHint": "Una cuenta de tenant local; las cuentas de sistema se rechazan",
+            "localRole": "Rol de invitado local",
+            "localRoleRequired": "Elija un rol de invitado local.",
+            "localPerm": "Permiso local",
+            "required": "Obligatorio",
+            "invalidUuid": "Debe ser un UUID",
+            "submit": "Crear",
+            "created": "Regla de traducción creada"
+          }
+        },
+        "unavailable": {
+          "title": "La federación no está disponible en este gateway",
+          "description": "Esta instancia se compiló sin federación, así que no puede unirse a una red de peers. La federación no es compatible con el modo standalone; requiere un build full o postgres-only con la feature de federación."
+        }
+      },
+      "NotificationConnectionString": {
+        "title": "Connection string de notificación",
+        "description": "Un servicio downstream usa esta string para enviar emails con plantillas a través de Mycelium. Solo envía notificaciones del servicio elegido.",
+        "form": {
+          "name": "Nombre",
+          "service": "Servicio",
+          "tenant": "Namespace",
+          "noTenant": "Sin namespace",
+          "tenantRequired": "Este servicio solo envía emails a miembros de un namespace, así que elige uno.",
+          "expiration": "Expiración",
+          "days_one": "{{count}} día",
+          "days_other": "{{count}} días",
+          "expirationCap_one": "Esta instancia permite como máximo {{count}} día.",
+          "expirationCap_other": "Esta instancia permite como máximo {{count}} días.",
+          "create": "Crear"
+        },
+        "issued": {
+          "warningTitle": "Cópiala ahora: no se volverá a mostrar",
+          "warning": "Es un secreto de larga duración. Guárdalo en el almacén de secretos del servicio downstream. Solo envía notificaciones de este servicio y no funciona en ningún otro lugar del gateway.",
+          "label": "Connection string de notificación",
+          "copy": "Copiar",
+          "copied": "Copiado",
+          "done": "Listo"
+        },
+        "errors": {
+          "invalidRequest": "La expiración supera el límite de la instancia, o este servicio requiere un namespace.",
+          "notificationsDisabled": "Las notificaciones no están habilitadas para este servicio.",
+          "issuerNotAllowed": "No tienes permiso para emitir strings de notificación para este servicio o namespace."
+        }
+      },
+      "PendingInvitationsSection": {
+        "tabName": "Invitaciones",
+        "title": "Invitaciones pendientes",
+        "description": "Te invitaron a colaborar en estas cuentas. Acepta una invitación para empezar a usar el acceso que concede.",
+        "tenant": "Namespace",
+        "accept": "Aceptar",
+        "accepting": "Aceptando…",
+        "accepted": "Invitación aceptada. El nuevo acceso puede tardar hasta un minuto en aplicarse.",
+        "empty": "No hay invitaciones pendientes",
+        "emptyDescription": "Cuando un gestor de cuenta invite tu email a una cuenta, la invitación aparecerá aquí."
       }
     },
     "LoginPage": {
@@ -1096,20 +1373,39 @@
         "invalidCode": "Código inválido o expirado",
         "back": "Atrás"
       }
+    },
+    "HostedLogin": {
+      "signIn": "Acceder al portal",
+      "redirecting": "Redirigiendo al inicio de sesión…",
+      "startError": "No se pudo iniciar el inicio de sesión. Inténtalo de nuevo.",
+      "callback": {
+        "signingIn": "Iniciando sesión…",
+        "failed": "No se pudo iniciar sesión",
+        "failedDetail": "El enlace de acceso no es válido, expiró o se abrió en otro navegador.",
+        "retry": "Intentar de nuevo"
+      }
+    },
+    "PublicErrorCodes": {
+      "title": "Códigos de error",
+      "description": "Consulta un error devuelto por este gateway o por sus servicios. Busca por código (MYC00023), prefijo (MYC) o número (23).",
+      "searchPlaceholder": "Busca por código, p. ej. MYC00023",
+      "back": "Inicio",
+      "empty": "Ningún código de error coincide con la búsqueda",
+      "unavailable": "No se pudieron cargar los códigos de error ahora",
+      "footerLink": "Códigos de error",
+      "loginLink": "¿Recibiste un código de error? Consúltalo"
     }
   },
   "components": {
     "SearchBar": {
       "placeholder": "Resultados de la búsqueda ...",
+      "removeFilter": "Quitar filtro {{filter}}",
+      "clearFilters": "Borrar filtros",
+      "refinePlaceholder": "Refina con un término de búsqueda…",
       "clear": "Borrar búsqueda",
       "commandPalette": {
         "title": "Filtros"
       }
-    },
-    "Pager": {
-      "records": "{{number}} resultados",
-      "prev": "Anterior",
-      "next": "Próximo"
     },
     "RequiredContactInfoBanner": {
       "title": "Completa tu información de contacto",
@@ -1125,6 +1421,32 @@
         "title": "Actualizado por",
         "prefix": "Actualizado por"
       }
+    },
+    "Skeleton": {
+      "loading": "Cargando…"
+    },
+    "GatewayUnavailableOverlay": {
+      "title": "Servicio no disponible",
+      "description": "No podemos comunicarnos con la API de Mycelium en este momento. El portal queda en pausa para no mostrar información incorrecta y se reanuda en cuanto vuelva la conexión.",
+      "retry": "Intentar ahora",
+      "retrying": "Comprobando…"
+    },
+    "AccountName": {
+      "serviceAccount": "Cuenta de servicio",
+      "tenantManager": "Gestión del namespace",
+      "role": "Rol {{role}}",
+      "actor": "{{actor}}"
+    },
+    "LoadMore": {
+      "showing": "Mostrando {{loaded}} de {{total}}",
+      "button": "Cargar más",
+      "loading": "Cargando…"
+    },
+    "PendingInvitationsBanner": {
+      "title_one": "Tienes {{count}} invitación pendiente",
+      "title_other": "Tienes {{count}} invitaciones pendientes",
+      "description": "Revisa las cuentas a las que te invitaron y acepta las invitaciones que esperabas.",
+      "button": "Ver invitaciones"
     }
   },
   "Menu": {
@@ -1138,8 +1460,12 @@
     "accounts": "Cuentas",
     "guestRoles": "Roles de invitado",
     "webhooks": "Webhooks",
+    "webhookExecutions": "Ejecuciones de webhooks",
     "errorCodes": "Códigos de error",
     "operations": "Operaciones",
-    "dashboard": "Panel"
+    "dashboard": "Panel",
+    "federation": "Federación",
+    "gettingStarted": "Primeros pasos",
+    "onboardingProgress": "{{percent}}% configurado"
   }
 }

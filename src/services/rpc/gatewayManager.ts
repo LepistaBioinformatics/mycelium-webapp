@@ -10,6 +10,8 @@ export interface ListOperationsParams {
   query?: string;
   method?: string;
   scoreCutoff?: number;
+  /** Leave out the gateway's own operations */
+  excludeGateway?: boolean;
   pageSize?: number;
   skip?: number;
 }

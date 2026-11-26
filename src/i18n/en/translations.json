@@ -53,20 +53,12 @@
           "staff": "Team user",
           "manager": "Manager"
         },
-        "createConnectionString": {
-          "cta": "Advanced options",
-          "title": "Create global connection string",
-          "description": "Global connection strings provide full access to your account. This connection string will be used to authenticate your account programmatically.",
-          "button": "To create"
-        },
         "email": {
           "prefix": "E-mail",
           "title": "Your email"
         },
         "personalInfo": {
-          "phoneNumber": "Phone",
-          "emergencyContactName": "Emergency contact",
-          "emergencyContactPhone": "Emergency phone"
+          "phoneNumber": "Phone"
         },
         "ContactInfoSection": {
           "tabName": "Contact Info",
@@ -83,14 +75,6 @@
             "title": "Job title",
             "placeholder": "e.g. Infrastructure Lead"
           },
-          "emergencyContactName": {
-            "title": "Emergency contact name",
-            "description": "Someone we can reach on your behalf if needed.",
-            "placeholder": "Full name"
-          },
-          "emergencyContactPhone": {
-            "title": "Emergency contact phone"
-          },
           "save": "Save",
           "saving": "Saving...",
           "error": "Some fields failed to save"
@@ -98,15 +82,7 @@
       },
       "AdvancedOptionsModal": {
         "title": "Create Connection String",
-        "tabName": "Advanced Options",
-        "accountId": "Restricted to account",
-        "accountIdDescription": "The connection string will be restricted to the account with the ID.",
-        "tenantId": "Restricted to tenant",
-        "tenantIdDescription": "The connection string will be restricted to the tenant with the ID.",
-        "permissionedRoles": "Roles and permissions",
-        "permissionedRolesDescription": "The connection string will be restricted to the roles and permissions selected.",
-        "removeRole": "Do not include this role in the filter",
-        "explain": "The connection string will be restricted to account, tenant, roles and permissions selected in this step. To verify if the generated token has the appropriate scope, use tools like base64decode.org",
+        "explain": "A connection string lets a script or another service call the gateway on your behalf. It only carries the scope listed below, until it expires.",
         "form": {
           "expiration": {
             "label": "Select expiration",
@@ -147,6 +123,27 @@
             "serviceAccount": "Service account",
             "roles": "Roles",
             "expiresAt": "Expires at"
+          }
+        },
+        "scope": {
+          "title": "What this connection string can access",
+          "description": "Requests made with it are limited to:",
+          "unrestricted": "No restriction applies: this connection string carries all of your current permissions. Create it from a namespace or an account to narrow it down.",
+          "tenant": {
+            "label": "Namespace",
+            "hint": "Only requests to this namespace are accepted."
+          },
+          "account": {
+            "label": "Account",
+            "hint": "It acts only on this account."
+          },
+          "roles": {
+            "label": "Roles",
+            "count": "{{included}} of {{total}} included",
+            "hint": "Only the selected roles go into the connection string. Click a role to leave it out.",
+            "noneSelected": "Select at least one role.",
+            "remove": "Leave out {{role}}",
+            "include": "Include {{role}}"
           }
         }
       },
@@ -247,8 +244,13 @@
           "account": "Account",
           "serviceAccount": "Service account",
           "roles": "Roles",
-          "endpoint": "Endpoint"
-        }
+          "endpoint": "Endpoint",
+          "service": "Service allowed to send with this string",
+          "serviceTag": "service: {{service}}"
+        },
+        "issueNotification": "Notification string",
+        "create": "Create connection string",
+        "description": "Strings let scripts and services call the gateway on your behalf, limited to the scope you choose."
       },
       "LicensedResourcesSection": {
         "title": "Accounts you have access",
@@ -283,7 +285,8 @@
           "description": "Create a connection string for the account. This connection string will be used to authenticate your account programmatically.",
           "button": "Create"
         },
-        "verified": "Verified"
+        "verified": "Verified",
+        "pending": "Pending — accept it"
       },
       "TelegramConfig": {
         "title": "Telegram Integration",
@@ -693,6 +696,10 @@
               "desctiption": "Removing the invitation will remove the accesses from the invited user.",
               "confirm": "Proceed"
             }
+          },
+          "unverified": {
+            "label": "Not verified",
+            "title": "The guest has not confirmed this invitation yet"
           }
         },
         "AccountDetails": {
@@ -788,6 +795,11 @@
           "withPermission": {
             "title": "Permission",
             "prefix": "With permission"
+          },
+          "myGuestsEmpty": "{{email}} has no invitations in {{tenant}}",
+          "myGuestsNoTenant": {
+            "title": "Select a namespace to see the invitations",
+            "description": "Invitations are listed per namespace. Mark a namespace with the star on the Namespaces screen to see this user's invitations in it."
           }
         },
         "PermissionsOnAccount": {
@@ -845,26 +857,41 @@
           "title": "Invite a user",
           "form": {
             "email": {
-              "label": "1. With this email",
+              "label": "E-mail",
               "placeholder": "example@email.com",
-              "title": "The invited user's email address. "
+              "title": "The invited user's email address. ",
+              "invalid": "Type a valid e-mail address"
             },
             "account": {
-              "label": "2. For this account",
+              "label": "Invite to",
               "title": "The account to invite the user"
             },
             "role": {
-              "label": "3. With this function",
+              "label": "Role",
               "title": "The function of the invited user"
             },
-            "invite": "To invite"
+            "invite": "Send invite"
+          },
+          "steps": {
+            "label": "Invitation steps",
+            "email": "E-mail",
+            "role": "Role"
+          },
+          "continue": "Continue",
+          "back": "Back",
+          "changeEmail": "Change",
+          "sending": "Sending…",
+          "errors": {
+            "missingTenant": "Select a namespace before inviting to this account",
+            "generic": "The invitation could not be sent"
           }
         },
         "DeleteAccount": {
           "title": "Delete",
           "description": "Deleting the account will remove all account data and cannot be reversed.",
           "delete": "Delete",
-          "deleting": "Deleting ..."
+          "deleting": "Deleting ...",
+          "deleted": "Account {{name}} deleted"
         },
         "UnInviteGuestModal": {
           "title": "Remove invitation",
@@ -996,9 +1023,27 @@
         "GuestRoleSelector": {
           "label": "Child role",
           "title": "Select a child role",
-          "placeholder": "Select a child role",
-          "loading": "Loading...",
-          "button": "Click to Select"
+          "placeholder": "Search roles by name…",
+          "change": "Change",
+          "empty": "No roles match this search",
+          "permissions": {
+            "read": "Read",
+            "write": "Write"
+          },
+          "unavailable": {
+            "ignored": "Already assigned",
+            "sameAsParent": "Same as the parent role",
+            "notBelowParent": "Must have a lower permission than the parent role"
+          }
+        },
+        "initializer": {
+          "button": "System roles",
+          "title": "Initialize system roles",
+          "description": "Creates the gateway's built-in guest roles, one with read and one with write permission for each actor below. Managers use them to delegate gateway administration.",
+          "idempotent": "Roles that already exist are kept as they are, so running this again is safe.",
+          "confirm": "Initialize",
+          "cancel": "Cancel",
+          "success": "System roles are ready"
         }
       },
       "ErrorCodes": {
@@ -1029,12 +1074,6 @@
           "complete": "Account created"
         },
         "meta": {
-          "telegram": {
-            "title": "Telegram",
-            "linkHint": "Optional — connect Telegram to sign in and receive notifications through the bot.",
-            "linkedHint": "Telegram is connected.",
-            "button": "Connect Telegram"
-          },
           "locale": {
             "title": "Preferred language",
             "description": "Sets the language for the dashboard and system emails.",
@@ -1045,7 +1084,33 @@
         "saving": "Saving...",
         "saved": "Saved",
         "edit": "Edit information",
-        "error": "Unexpected error"
+        "error": "Unexpected error",
+        "name": {
+          "title": "Your name",
+          "description": "How people will see you across the portal and in invitations.",
+          "label": "Full name",
+          "placeholder": "e.g. Ana Silva"
+        },
+        "contact": {
+          "title": "Work contact",
+          "requiredDescription": "Your role has elevated privileges, so we need a way to reach you if something needs your attention.",
+          "optionalDescription": "Optional — helps administrators reach you if something needs your attention.",
+          "phone": "Phone number",
+          "jobTitle": "Job title",
+          "jobTitlePlaceholder": "e.g. Infrastructure Lead"
+        }
+      },
+      "Discovery": {
+        "filters": {
+          "origin": "Origin",
+          "hideGateway": "Hide gateway endpoints",
+          "hideGatewayDescription": "Leave out the API gateway's own operations and list only downstream services",
+          "method": "HTTP method"
+        }
+      },
+      "WebhookExecutions": {
+        "title": "Webhook executions",
+        "searchPlaceholder": "Filter with status:failed or trigger:userAccount.created"
       },
       "Webhooks": {
         "title": "Webhooks",
@@ -1158,7 +1223,219 @@
           "description": "Are you sure you want to delete webhook?",
           "button": "Delete",
           "loading": "Deleting ..."
+        },
+        "ExecutionEvents": {
+          "title": "Execution events",
+          "summaryTitle": "Totals by trigger and status",
+          "eventsTitle": "Events",
+          "empty": "No execution events yet.",
+          "loadError": "Could not load execution events.",
+          "deliveries": "{{failed}} failed of {{total}}",
+          "filters": {
+            "trigger": "Filter by trigger",
+            "status": "Filter by status",
+            "allTriggers": "All triggers",
+            "allStatuses": "All statuses"
+          },
+          "columns": {
+            "trigger": "Trigger",
+            "status": "Status",
+            "count": "Events",
+            "latest": "Latest",
+            "created": "Created",
+            "attempts": "Attempts",
+            "deliveries": "Deliveries",
+            "lastResponse": "Last response",
+            "attempted": "Last attempt"
+          },
+          "statuses": {
+            "pending": "Pending",
+            "processing": "Processing",
+            "success": "Success",
+            "failed": "Failed",
+            "exhausted": "Exhausted",
+            "skipped": "Skipped",
+            "unknown": "Unknown"
+          }
         }
+      },
+      "Federation": {
+        "title": "Federation",
+        "tabs": {
+          "peers": "Peers",
+          "links": "Identity links",
+          "assertions": "Stored assertions",
+          "translations": "Translation rules"
+        },
+        "peer": "Peer",
+        "actions": "Actions",
+        "cancel": "Cancel",
+        "working": "Working ...",
+        "done": "Done",
+        "loadError": "Could not load the data. Try again later.",
+        "empty": "Nothing here yet.",
+        "permissions": {
+          "read": "Read",
+          "write": "Write"
+        },
+        "statuses": {
+          "declared": "Declared",
+          "handshaking": "Handshaking",
+          "active": "Active",
+          "degraded": "Degraded",
+          "unreachable": "Unreachable",
+          "quarantined": "Quarantined",
+          "untrusted": "Untrusted",
+          "pending": "Pending",
+          "revoked": "Revoked",
+          "enabled": "Enabled",
+          "disabled": "Disabled"
+        },
+        "Peers": {
+          "title": "Federation peers",
+          "columns": {
+            "name": "Display name",
+            "baseUrl": "Base URL",
+            "instanceId": "Instance ID",
+            "status": "Status",
+            "kinds": "Negotiated kinds",
+            "lastContact": "Last contact",
+            "failures": "Failures"
+          },
+          "quarantine": "Quarantine",
+          "release": "Release",
+          "quarantineTitle": "Quarantine peer",
+          "quarantineDescription": "Quarantine {{name}}? Its requests are refused and the assertions stored from it are dropped until it is released.",
+          "releaseTitle": "Release peer",
+          "releaseDescription": "Release {{name}} from quarantine? It is handshaken again before it is trusted.",
+          "switch": {
+            "title": "Federation switch",
+            "description": "Turns federation on or off for this instance. Off is the kill-switch: the instance stops answering peers and refuses every peer request. The gateway does not report the current state, so only the result of a switch made here is shown.",
+            "turnOn": "Turn on",
+            "turnOff": "Turn off",
+            "turnOnTitle": "Turn federation on",
+            "turnOnDescription": "Turn federation on? The gateway refuses this while federation is not configured.",
+            "turnOffTitle": "Turn federation off",
+            "turnOffDescription": "Turn federation off? Every peer request is refused until it is turned on again.",
+            "nowOn": "Federation was turned on ({{date}}).",
+            "nowOff": "Federation was turned off ({{date}})."
+          }
+        },
+        "Links": {
+          "title": "Identity links",
+          "columns": {
+            "email": "Local email",
+            "status": "Status",
+            "established": "Established",
+            "revoked": "Revoked"
+          },
+          "revoke": "Revoke",
+          "revokeTitle": "Revoke identity link",
+          "revokeDescription": "Revoke the identity link of {{email}}? Grants asserted through it stop applying."
+        },
+        "Assertions": {
+          "title": "Stored assertions",
+          "columns": {
+            "link": "Link",
+            "kind": "Kind",
+            "issued": "Issued",
+            "expires": "Expires",
+            "grants": "Grants"
+          }
+        },
+        "Translations": {
+          "title": "Translation rules",
+          "description": "A rule turns a peer grant (issuer tenant, role and minimum permission) into a local guest grant on a local account.",
+          "columns": {
+            "issuerTenant": "Issuer tenant",
+            "issuerRole": "Issuer role",
+            "issuerMinPerm": "Issuer min. permission",
+            "localAccount": "Local account",
+            "localRole": "Local guest role",
+            "localPerm": "Local permission",
+            "enabled": "Enabled"
+          },
+          "create": "Create rule",
+          "enable": "Enable",
+          "disable": "Disable",
+          "delete": "Delete",
+          "enableTitle": "Enable rule",
+          "enableDescription": "Enable the rule for issuer role {{role}}? It applies on the next request.",
+          "disableTitle": "Disable rule",
+          "disableDescription": "Disable the rule for issuer role {{role}}? It stops applying on the next request.",
+          "deleteTitle": "Delete rule",
+          "deleteDescription": "Delete the rule for issuer role {{role}}? This cannot be undone.",
+          "CreateRule": {
+            "title": "Create translation rule",
+            "description": "Pick a peer, then the issuer grant to match and the local grant it becomes.",
+            "peer": "Peer",
+            "choosePeer": "Choose a peer",
+            "issuerRole": "Issuer role",
+            "issuerRoleHint": "The slug of the role on the peer",
+            "chooseRole": "Choose a role",
+            "issuerRolePlaceholder": "Role slug, e.g. editor",
+            "loadingRoles": "Loading the peer's roles ...",
+            "rolesUnknown": "The peer does not share its role vocabulary now. Type the role slug.",
+            "rolesRejected": "The peer's role vocabulary failed verification ({{reason}}). Type the role slug.",
+            "rolesError": "Could not read the peer's roles ({{reason}}). Type the role slug.",
+            "issuerTenant": "Issuer tenant ID",
+            "issuerMinPerm": "Issuer minimum permission",
+            "localAccount": "Local account ID",
+            "localAccountHint": "A local tenant account; system accounts are refused",
+            "localRole": "Local guest role",
+            "localRoleRequired": "Choose a local guest role.",
+            "localPerm": "Local permission",
+            "required": "Required",
+            "invalidUuid": "Must be a UUID",
+            "submit": "Create",
+            "created": "Translation rule created"
+          }
+        },
+        "unavailable": {
+          "title": "Federation is not available on this gateway",
+          "description": "This instance was built without federation, so it cannot join a peer mesh. Federation is not supported in standalone mode; it needs a full or postgres-only build with the federation feature."
+        }
+      },
+      "NotificationConnectionString": {
+        "title": "Notification connection string",
+        "description": "A downstream service uses this string to send templated emails through Mycelium. It can only send notifications for the service you pick.",
+        "form": {
+          "name": "Name",
+          "service": "Service",
+          "tenant": "Namespace",
+          "noTenant": "No namespace",
+          "tenantRequired": "This service only emails members of a namespace, so pick one.",
+          "expiration": "Expiration",
+          "days_one": "{{count}} day",
+          "days_other": "{{count}} days",
+          "expirationCap_one": "This instance allows at most {{count}} day.",
+          "expirationCap_other": "This instance allows at most {{count}} days.",
+          "create": "Create"
+        },
+        "issued": {
+          "warningTitle": "Copy it now: it will not be shown again",
+          "warning": "This is a long-lived secret. Store it in the downstream service's secret store. It only sends notifications for this service and works nowhere else in the gateway.",
+          "label": "Notification connection string",
+          "copy": "Copy",
+          "copied": "Copied",
+          "done": "Done"
+        },
+        "errors": {
+          "invalidRequest": "The expiration is above the instance limit, or this service needs a namespace.",
+          "notificationsDisabled": "Notifications are not enabled for this service.",
+          "issuerNotAllowed": "You are not allowed to issue notification strings for this service or namespace."
+        }
+      },
+      "PendingInvitationsSection": {
+        "tabName": "Invitations",
+        "title": "Pending invitations",
+        "description": "You were invited to collaborate on these accounts. Accept an invitation to start using the access it grants.",
+        "tenant": "Namespace",
+        "accept": "Accept",
+        "accepting": "Accepting…",
+        "accepted": "Invitation accepted. The new access can take up to a minute to apply.",
+        "empty": "No pending invitations",
+        "emptyDescription": "When an account manager invites your email to an account, the invitation shows up here."
       }
     },
     "LoginPage": {
@@ -1175,20 +1452,39 @@
         "invalidCode": "Invalid or expired code",
         "back": "Back"
       }
+    },
+    "HostedLogin": {
+      "signIn": "Continue to the portal",
+      "redirecting": "Redirecting to sign in…",
+      "startError": "Could not start the sign-in. Try again.",
+      "callback": {
+        "signingIn": "Signing you in…",
+        "failed": "Sign-in failed",
+        "failedDetail": "The sign-in link is invalid, expired, or was opened in another browser.",
+        "retry": "Try again"
+      }
+    },
+    "PublicErrorCodes": {
+      "title": "Error codes",
+      "description": "Look up an error returned by this gateway or its services. Search by code (MYC00023), prefix (MYC) or number (23).",
+      "searchPlaceholder": "Search by code, e.g. MYC00023",
+      "back": "Home",
+      "empty": "No error code matches this search",
+      "unavailable": "Error codes could not be loaded right now",
+      "footerLink": "Error codes",
+      "loginLink": "Got an error code? Look it up"
     }
   },
   "components": {
     "SearchBar": {
       "placeholder": "Search results ...",
+      "removeFilter": "Remove filter {{filter}}",
+      "clearFilters": "Clear filters",
+      "refinePlaceholder": "Refine with a search term…",
       "clear": "Clear search",
       "commandPalette": {
         "title": "Filters"
       }
-    },
-    "Pager": {
-      "records": "{{number}} results",
-      "prev": "Previous",
-      "next": "Next"
     },
     "RequiredContactInfoBanner": {
       "title": "Complete your contact information",
@@ -1204,6 +1500,32 @@
         "title": "Updated by",
         "prefix": "Updated by"
       }
+    },
+    "Skeleton": {
+      "loading": "Loading…"
+    },
+    "GatewayUnavailableOverlay": {
+      "title": "Service unavailable",
+      "description": "We can't reach the Mycelium API right now. The portal is paused to avoid showing wrong information and will resume as soon as the connection is back.",
+      "retry": "Try again now",
+      "retrying": "Checking…"
+    },
+    "AccountName": {
+      "serviceAccount": "Service account",
+      "tenantManager": "Namespace management",
+      "role": "{{role}} role",
+      "actor": "{{actor}}"
+    },
+    "LoadMore": {
+      "showing": "Showing {{loaded}} of {{total}}",
+      "button": "Load more",
+      "loading": "Loading…"
+    },
+    "PendingInvitationsBanner": {
+      "title_one": "You have {{count}} pending invitation",
+      "title_other": "You have {{count}} pending invitations",
+      "description": "Review the accounts you were invited to and accept the invitations you were expecting.",
+      "button": "Review invitations"
     }
   },
   "Menu": {
@@ -1217,8 +1539,12 @@
     "accounts": "Accounts",
     "guestRoles": "Guest Roles",
     "webhooks": "Webhooks",
+    "webhookExecutions": "Webhook executions",
     "errorCodes": "Error codes",
     "operations": "Operations",
-    "dashboard": "Dashboard"
+    "dashboard": "Dashboard",
+    "federation": "Federation",
+    "gettingStarted": "Getting started",
+    "onboardingProgress": "{{percent}}% set up"
   }
 }

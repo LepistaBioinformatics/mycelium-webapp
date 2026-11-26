@@ -12,6 +12,7 @@ import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
+import { fieldStyles } from "@/components/ui/field-styles";
 
 type Tenant = components["schemas"]["Tenant"];
 
@@ -26,8 +27,7 @@ interface FormValues {
 
 const BASE = "screens.Dashboard.TelegramConfig";
 
-const INPUT =
-  "w-full bg-transparent border-b border-zinc-300 dark:border-zinc-700 px-0 py-1.5 text-sm text-zinc-800 dark:text-zinc-200 focus:outline-none focus:border-brand-violet-500 dark:focus:border-brand-violet-400 placeholder-zinc-400 dark:placeholder-zinc-600";
+const INPUT = fieldStyles();
 const LABEL =
   "text-xs font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wide";
 
@@ -38,7 +38,7 @@ export default function TelegramConfigCard({ tenant }: Props) {
   const [copied, setCopied] = useState(false);
   const copyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const webhookUrl = `${MYCELIUM_API_URL}/auth/telegram/webhook/${tenant.id}`;
+  const webhookUrl = `${MYCELIUM_API_URL || window.location.origin}/auth/telegram/webhook/${tenant.id}`;
 
   const handleCopy = () => {
     navigator.clipboard.writeText(webhookUrl);

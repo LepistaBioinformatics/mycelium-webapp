@@ -19,8 +19,9 @@ yarn build
 # Lint
 yarn lint
 
-# E2E (Cypress installed; cypress/e2e/ is currently empty — no specs exist yet)
-yarn cy:open
+# E2E (Cypress; the gateway is fully stubbed with cy.intercept)
+yarn e2e:serve   # dev server on :4173 pointed at the fake host http://gateway.test
+yarn e2e         # headless run of cypress/e2e/**/*.cy.ts (or `yarn cy:open`)
 ```
 
 ## Architecture
@@ -30,7 +31,7 @@ yarn cy:open
 StrictMode
   ReduxProvider (store)
     PersistGate (loading=null — UI is blank until store rehydrates)
-      ThemeProvider (Flowbite)
+      ThemeProvider (dark class from OS preference)
         Auth0Provider
           App
 ```
@@ -55,9 +56,10 @@ const { data, mutate } = useSWR(url, fetcher, {
 });
 ```
 
-**Design system** — `src/components/ui/` built with `class-variance-authority`. Shared tokens
-in `src/constants/shared-component-styles.ts`. Use the CVA primitives; avoid direct Flowbite
-component imports outside the ui/ wrappers.
+**Design system** — Tailwind CSS v4 + shadcn/ui. `src/components/ui/` holds the CVA
+primitives the screens use, built on the shadcn components in `src/components/shadcn/`.
+Tokens live in `src/index.css` (`@theme` palette + shadcn semantic variables). See the
+monorepo rule `.claude/rules/design-system.md`.
 
 **Type safety** — `src/services/openapi/mycelium-schema.d.ts` is generated from the gateway's
 OpenAPI spec via `openapi-typescript`. Use `components["schemas"]["X"]` types for all gateway

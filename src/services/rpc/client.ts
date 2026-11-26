@@ -17,7 +17,7 @@ interface RpcSuccess<R> {
 
 interface RpcError {
   jsonrpc: "2.0";
-  error: { code: number; message: string };
+  error: { code: number; message: string; data?: { code?: string } | null };
   id: number;
 }
 
@@ -30,6 +30,24 @@ export interface BatchRequest<P = unknown> {
 }
 
 export type BatchResult<R = unknown> = RpcSuccess<R> | RpcError;
+
+/**
+ * A JSON-RPC error answered by the gateway. `message` keeps the full
+ * "RPC error (code) in method: detail" form; `detail` is the gateway's own
+ * message, the one to show to people.
+ */
+export class RpcCallError extends Error {
+  constructor(
+    readonly code: number,
+    readonly method: string,
+    readonly detail: string,
+    /** The gateway error code (e.g. `MYC00037`), from `error.data.code` */
+    readonly errorCode: string | null = null
+  ) {
+    super(`RPC error (${code}) in ${method}: ${detail}`);
+    this.name = "RpcCallError";
+  }
+}
 
 function isRpcError<R>(res: RpcResponse<R>): res is RpcError {
   return "error" in res;
@@ -65,8 +83,11 @@ export async function rpcCall<P, R>(
   const json: RpcResponse<R> = await res.json();
 
   if (isRpcError(json)) {
-    throw new Error(
-      `RPC error (${json.error.code}) in ${method}: ${json.error.message}`
+    throw new RpcCallError(
+      json.error.code,
+      method,
+      json.error.message,
+      json.error.data?.code ?? null
     );
   }
 
