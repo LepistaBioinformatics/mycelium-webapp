@@ -4,6 +4,7 @@
 export enum ActiveTab {
   Overview = "overview",
   LicensedResources = "licensedResources",
+  Invitations = "invitations",
   TenantOwnership = "tenantOwnership",
   ListConnectionStrings = "listConnectionStrings",
   TelegramIdentity = "telegramIdentity",

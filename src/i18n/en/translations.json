@@ -285,7 +285,8 @@
           "description": "Create a connection string for the account. This connection string will be used to authenticate your account programmatically.",
           "button": "Create"
         },
-        "verified": "Verified"
+        "verified": "Verified",
+        "pending": "Pending — accept it"
       },
       "TelegramConfig": {
         "title": "Telegram Integration",
@@ -1424,6 +1425,17 @@
           "notificationsDisabled": "Notifications are not enabled for this service.",
           "issuerNotAllowed": "You are not allowed to issue notification strings for this service or namespace."
         }
+      },
+      "PendingInvitationsSection": {
+        "tabName": "Invitations",
+        "title": "Pending invitations",
+        "description": "You were invited to collaborate on these accounts. Accept an invitation to start using the access it grants.",
+        "tenant": "Namespace",
+        "accept": "Accept",
+        "accepting": "Accepting…",
+        "accepted": "Invitation accepted. The new access can take up to a minute to apply.",
+        "empty": "No pending invitations",
+        "emptyDescription": "When an account manager invites your email to an account, the invitation shows up here."
       }
     },
     "LoginPage": {
@@ -1508,6 +1520,12 @@
       "showing": "Showing {{loaded}} of {{total}}",
       "button": "Load more",
       "loading": "Loading…"
+    },
+    "PendingInvitationsBanner": {
+      "title_one": "You have {{count}} pending invitation",
+      "title_other": "You have {{count}} pending invitations",
+      "description": "Review the accounts you were invited to and accept the invitations you were expecting.",
+      "button": "Review invitations"
     }
   },
   "Menu": {

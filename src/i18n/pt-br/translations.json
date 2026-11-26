@@ -269,7 +269,8 @@
           "title": "Permissão atribuída a você",
           "prefix": "Você pode"
         },
-        "verified": "Verificado"
+        "verified": "Verificado",
+        "pending": "Pendente — aceite o convite"
       },
       "TelegramConfig": {
         "title": "Integração com Telegram",
@@ -1345,6 +1346,17 @@
           "notificationsDisabled": "As notificações não estão habilitadas para este serviço.",
           "issuerNotAllowed": "Você não tem permissão para emitir strings de notificação para este serviço ou namespace."
         }
+      },
+      "PendingInvitationsSection": {
+        "tabName": "Convites",
+        "title": "Convites pendentes",
+        "description": "Você foi convidado a colaborar nestas contas. Aceite um convite para começar a usar o acesso que ele concede.",
+        "tenant": "Namespace",
+        "accept": "Aceitar",
+        "accepting": "Aceitando…",
+        "accepted": "Convite aceito. O novo acesso pode levar até um minuto para ser aplicado.",
+        "empty": "Nenhum convite pendente",
+        "emptyDescription": "Quando um gestor de conta convidar o seu email para uma conta, o convite aparece aqui."
       }
     },
     "LoginPage": {
@@ -1429,6 +1441,12 @@
       "showing": "Mostrando {{loaded}} de {{total}}",
       "button": "Carregar mais",
       "loading": "Carregando…"
+    },
+    "PendingInvitationsBanner": {
+      "title_one": "Você tem {{count}} convite pendente",
+      "title_other": "Você tem {{count}} convites pendentes",
+      "description": "Revise as contas para as quais você foi convidado e aceite os convites que você esperava.",
+      "button": "Ver convites"
     }
   },
   "Menu": {

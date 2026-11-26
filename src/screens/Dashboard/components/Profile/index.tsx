@@ -16,6 +16,8 @@ import LicensedResourcesSection from "./LicensedResourcesSection";
 import ListConnectionStringsSection from "./ListConnectionStringsSection";
 import IdentitySection from "./IdentitySection";
 import ContactInfoSection from "./ContactInfoSection";
+import PendingInvitationsSection from "./PendingInvitationsSection";
+import { MdOutlineMarkEmailUnread } from "react-icons/md";
 import { GiWizardStaff } from "react-icons/gi";
 import { GrUserAdmin } from "react-icons/gr";
 import IntroSection from "@/components/ui/IntroSection";
@@ -54,6 +56,11 @@ const NAV_ITEMS: NavItem[] = [
     tab: ActiveTab.LicensedResources,
     labelKey: "screens.Dashboard.LicensedResourcesSection.tabName",
     icon: <MdManageAccounts size={16} />,
+  },
+  {
+    tab: ActiveTab.Invitations,
+    labelKey: "screens.Dashboard.PendingInvitationsSection.tabName",
+    icon: <MdOutlineMarkEmailUnread size={16} />,
   },
   {
     tab: ActiveTab.TenantOwnership,
@@ -249,6 +256,10 @@ export default function Profile() {
                 <LicensedResourcesSection
                   licensedResources={licensedResources}
                 />
+              )}
+
+              {activeTab === ActiveTab.Invitations && (
+                <PendingInvitationsSection />
               )}
 
               {activeTab === ActiveTab.TenantOwnership && (

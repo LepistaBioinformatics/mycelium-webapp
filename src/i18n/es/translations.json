@@ -269,7 +269,8 @@
           "title": "Permiso atribuido a usted",
           "prefix": "Puede"
         },
-        "verified": "Verificado"
+        "verified": "Verificado",
+        "pending": "Pendiente — acéptela"
       },
       "TelegramConfig": {
         "title": "Integración con Telegram",
@@ -1345,6 +1346,17 @@
           "notificationsDisabled": "Las notificaciones no están habilitadas para este servicio.",
           "issuerNotAllowed": "No tienes permiso para emitir strings de notificación para este servicio o namespace."
         }
+      },
+      "PendingInvitationsSection": {
+        "tabName": "Invitaciones",
+        "title": "Invitaciones pendientes",
+        "description": "Te invitaron a colaborar en estas cuentas. Acepta una invitación para empezar a usar el acceso que concede.",
+        "tenant": "Namespace",
+        "accept": "Aceptar",
+        "accepting": "Aceptando…",
+        "accepted": "Invitación aceptada. El nuevo acceso puede tardar hasta un minuto en aplicarse.",
+        "empty": "No hay invitaciones pendientes",
+        "emptyDescription": "Cuando un gestor de cuenta invite tu email a una cuenta, la invitación aparecerá aquí."
       }
     },
     "LoginPage": {
@@ -1429,6 +1441,12 @@
       "showing": "Mostrando {{loaded}} de {{total}}",
       "button": "Cargar más",
       "loading": "Cargando…"
+    },
+    "PendingInvitationsBanner": {
+      "title_one": "Tienes {{count}} invitación pendiente",
+      "title_other": "Tienes {{count}} invitaciones pendientes",
+      "description": "Revisa las cuentas a las que te invitaron y acepta las invitaciones que esperabas.",
+      "button": "Ver invitaciones"
     }
   },
   "Menu": {

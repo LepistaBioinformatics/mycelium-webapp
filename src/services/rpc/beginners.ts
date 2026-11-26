@@ -234,3 +234,25 @@ export function tokensDelete(
 
 // Re-export TenantStatus for convenience
 export type { TenantStatus };
+
+// ---------------------------------------------------------------------------
+// Guests — accept own invitation
+// ---------------------------------------------------------------------------
+
+export interface GuestsAcceptInvitationParams {
+  accountId: string;
+  guestRoleName: string;
+  /** 0 = read, 1 = write */
+  permission: number;
+}
+
+export function guestsAcceptInvitation(
+  params: GuestsAcceptInvitationParams,
+  getToken: () => Promise<string>
+): Promise<unknown> {
+  return rpcCall<GuestsAcceptInvitationParams, unknown>(
+    "beginners.guests.acceptInvitation",
+    params,
+    getToken
+  );
+}

@@ -11,6 +11,7 @@ import buildRoutes from "@/constants/routes";
 import useProfile from "@/hooks/use-profile";
 import AppNotifications from "@/components/AppNotifications";
 import RequiredContactInfoBanner from "@/components/RequiredContactInfoBanner";
+import PendingInvitationsBanner from "@/components/PendingInvitationsBanner";
 import MobileNavbar from "@/components/ui/MobileNavbar";
 import { useTranslation } from "react-i18next";
 import { accountsGet } from "@/services/rpc/beginners";
@@ -72,6 +73,7 @@ export default function Dashboard() {
 
       <div className="flex-1 overflow-y-auto scrollbar pb-16 sm:pb-0">
         <RequiredContactInfoBanner />
+        <PendingInvitationsBanner />
         <Outlet />
         {/* Account details open on top of any page (?accountId=) */}
         <AccountDetails />
