@@ -1,3 +1,30 @@
+# [1.2.0](https://github.com/LepistaBioinformatics/mycelium-webapp/compare/v1.1.2...v1.2.0) (2026-11-26)
+
+
+### Bug Fixes
+
+* **deps:** resolve Dependabot alerts (critical and high first) ([c7d3aea](https://github.com/LepistaBioinformatics/mycelium-webapp/commit/c7d3aea61934b5bc893a6720647bb2e79ef2deb1)), closes [#36](https://github.com/LepistaBioinformatics/mycelium-webapp/issues/36)
+* **deps:** resolve Dependabot alerts and merge main back into develop ([4e144b3](https://github.com/LepistaBioinformatics/mycelium-webapp/commit/4e144b37f6f54848a7e40cd3983f0b4e7e06a655))
+* **errors:** show RPC failures and handle account deletion ([a67363c](https://github.com/LepistaBioinformatics/mycelium-webapp/commit/a67363c090e4685e005bd6f7bfecad1154e84cf9))
+* **federation:** read a peer's role vocabulary once per pick ([4e70ee4](https://github.com/LepistaBioinformatics/mycelium-webapp/commit/4e70ee4b93f36101eb41c7fac67b1f8d0ec1b998))
+* **health:** pause the UI while the API gateway is unreachable ([706b89d](https://github.com/LepistaBioinformatics/mycelium-webapp/commit/706b89d739a3d80b58eb83ce8e1c35487e23cfb8)), closes [#30](https://github.com/LepistaBioinformatics/mycelium-webapp/issues/30)
+* **profile:** keep the profile fresh so dashboard routes resolve ([78ce9ed](https://github.com/LepistaBioinformatics/mycelium-webapp/commit/78ce9ed00af052ff68d82e2d9e0243f5574a6449)), closes [#27](https://github.com/LepistaBioinformatics/mycelium-webapp/issues/27)
+
+
+### Features
+
+* **auth:** support the gateway-hosted email login ([dc0fc86](https://github.com/LepistaBioinformatics/mycelium-webapp/commit/dc0fc863906aec01430e5ce438cb4c00dfb436b9)), closes [#26](https://github.com/LepistaBioinformatics/mycelium-webapp/issues/26)
+* build the webapp to be served by the gateway under /_app ([e7c7328](https://github.com/LepistaBioinformatics/mycelium-webapp/commit/e7c7328471d6ccd43e1a56f18dad7afe7f34d94c))
+* **connection-strings:** issue and revoke notification-scoped strings ([fbf6186](https://github.com/LepistaBioinformatics/mycelium-webapp/commit/fbf6186cefe29c9c69f73d622a9811df30ad46b8)), closes [#45](https://github.com/LepistaBioinformatics/mycelium-webapp/issues/45)
+* **federation:** staff operator screens for instance federation ([7337e10](https://github.com/LepistaBioinformatics/mycelium-webapp/commit/7337e105cc6ee60835568501560d4dee5a2f98fd))
+* **federation:** typed RPC wrappers for the federation.* staff scope ([ee9f31d](https://github.com/LepistaBioinformatics/mycelium-webapp/commit/ee9f31d4323f1c9f15658d892c383b614a7beb81))
+* **guest-roles:** let GuestRoleSelector take an explicit tenant ([e589275](https://github.com/LepistaBioinformatics/mycelium-webapp/commit/e58927557549d95d997e1ac2c04f46949a5c5498))
+* **invitations:** list and accept pending guest invitations ([f1be30b](https://github.com/LepistaBioinformatics/mycelium-webapp/commit/f1be30b7ce2db3fd77545962ba933214208bd791))
+* **theme:** neutral dark-mode surfaces and palette as CSS variables ([949f047](https://github.com/LepistaBioinformatics/mycelium-webapp/commit/949f0471bb728e2382761553eb3e33bcfe759e2e)), closes [#28](https://github.com/LepistaBioinformatics/mycelium-webapp/issues/28)
+* **ui:** loading skeletons across the app ([50bc27b](https://github.com/LepistaBioinformatics/mycelium-webapp/commit/50bc27b99d01810aa029e06fefa6e1b03f002f51)), closes [#29](https://github.com/LepistaBioinformatics/mycelium-webapp/issues/29)
+* **ui:** migrate to Tailwind v4 + shadcn/ui and modernize the screens ([c5226c9](https://github.com/LepistaBioinformatics/mycelium-webapp/commit/c5226c93d5ab72b0add8ca8a41fa154150990740))
+* **webhooks:** screen to check webhook execution events ([5e6fcd6](https://github.com/LepistaBioinformatics/mycelium-webapp/commit/5e6fcd6d4bce2981b6ad40dd42cb7568155f7eec)), closes [#40](https://github.com/LepistaBioinformatics/mycelium-webapp/issues/40)
+
 ## [1.1.2](https://github.com/LepistaBioinformatics/mycelium-webapp/compare/v1.1.1...v1.1.2) (2026-07-13)
 
 
