@@ -17,7 +17,7 @@
     "autoprefixer": "^10.4.20",
     "class-variance-authority": "^0.7.1",
     "flowbite-react": "^0.10.2",
-    "i18next": "^25.2.1",
+    "i18next": "^26.3.4",
     "isbot": "^5",
     "postcss": "^8.5.23",
     "react": "^19.0.0",
