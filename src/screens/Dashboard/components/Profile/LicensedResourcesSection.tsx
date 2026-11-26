@@ -4,7 +4,8 @@ import { components } from "@/services/openapi/mycelium-schema";
 import { RiRobot2Line } from "react-icons/ri";
 import PermissionBadge from "@/components/ui/PermissionBadge";
 import { buttonStyles } from "@/components/ui/button-styles";
-import { BadgeCheck, KeyRound } from "lucide-react";
+import { BadgeCheck, Clock, KeyRound } from "lucide-react";
+import { ActiveTab } from "./active-tab";
 import { useTranslation } from "react-i18next";
 import { MycRole } from "@/types/MyceliumRole";
 import { Link, useNavigate } from "react-router";
@@ -246,13 +247,24 @@ export default function LicensedResourcesSection({ licensedResources }: Props) {
                               {role.role}
                             </span>
                             <PermissionBadge permission={role.perm} />
-                            {role.verified && (
+                            {role.verified ? (
                               <span className="inline-flex items-center gap-0.5 text-xs text-green-700 dark:text-green-300">
                                 <BadgeCheck className="size-3.5" />
                                 {t(
                                   "screens.Dashboard.LicensedResourcesSection.verified"
                                 )}
                               </span>
+                            ) : (
+                              <Link
+                                to={`/dashboard/profile?tab=${ActiveTab.Invitations}`}
+                                onClick={(event) => event.stopPropagation()}
+                                className="inline-flex items-center gap-0.5 text-xs text-amber-700 dark:text-amber-300 hover:underline"
+                              >
+                                <Clock className="size-3.5" />
+                                {t(
+                                  "screens.Dashboard.LicensedResourcesSection.pending"
+                                )}
+                              </Link>
                             )}
                           </span>
                         ))}
